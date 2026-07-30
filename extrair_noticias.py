@@ -37,7 +37,6 @@ from openpyxl.utils import get_column_letter
 # CONFIGURAÇÃO — manter alinhada com o painel HTML
 # ---------------------------------------------------------------------------
 EDICAO = {"hl": "pt-PT", "gl": "PT", "ceid": "PT:pt-150"}
-MAX_PALAVRAS = 6
 EXCLUSOES_DOMINIO = ["site:.br", "site:globo.com", "site:r7.com",
                      "site:metropoles.com", "site:abril.com"]
 
@@ -110,7 +109,7 @@ AZUL, CINZA = "2B5683", "F2F5F8"
 # Construção das consultas
 # ---------------------------------------------------------------------------
 def consulta(palavras, excluir, periodo, so_nacionais=True):
-    termos = "(" + " OR ".join(f'"{p}"' for p in palavras[:MAX_PALAVRAS]) + ")"
+    termos = "(" + " OR ".join(f'"{p}"' for p in palavras) + ")"
     termos += "".join(f' -"{t}"' for t in excluir)
     if so_nacionais:
         termos += " " + " ".join(f"-{d}" for d in EXCLUSOES_DOMINIO)

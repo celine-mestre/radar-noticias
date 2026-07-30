@@ -517,6 +517,9 @@ const CONFIG = {
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
   versao: "2026-07-30 · xlsx",
+  /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
+     em hora de ponta passam facilmente de meio minuto. */
+  tempoLimiteRecolha: 60000,
   /* Domínios excluídos quando o filtro de fontes nacionais está ativo.
      Acrescentar aqui outros domínios ou domínios de topo, sempre precedidos de "site:". */
   exclusoes: ["site:.br", "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com"],
@@ -636,7 +639,7 @@ function sufixo(){
 
 /* Consulta enviada ao Google Notícias: palavras-chave da área, exclusões e janela temporal */
 function consulta(a){
-  const termos = "(" + a.palavras.slice(0, CONFIG.maxPalavrasConsulta).map(p => `"${p}"`).join(" OR ") + ")";
+  const termos = "(" + a.palavras.map(p => `"${p}"`).join(" OR ") + ")";
   const excl = (a.excluir || []).map(t => ` -"${t}"`).join("");
   return termos + excl + sufixo();
 }
@@ -775,12 +778,12 @@ function abrirDetalhe(id){
       <button class="btn" data-copiar-rss="${a.id}" style="margin-left:auto">Feed RSS</button>
     </div>`;
   $("#veu").classList.add("aberto");
-  definirConsulta(a, consulta(a), "todas as palavras-chave da área");
+  definirConsulta(a, consulta(a), a.palavras.join("; "));
 }
 
 function abrirExportacao(id){
   const a = AREAS.find(x => x.id === id);
-  if(!consultaAtiva || consultaAtiva.area.id !== a.id) definirConsulta(a, consulta(a), "todas as palavras-chave da área");
+  if(!consultaAtiva || consultaAtiva.area.id !== a.id) definirConsulta(a, consulta(a), a.palavras.join("; "));
   const rotulo = consultaAtiva.rotulo;
 
   $("#modal").innerHTML = `
@@ -788,7 +791,7 @@ function abrirExportacao(id){
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></div>
       <div>
         <h3>Exportar notícias</h3>
-        <p>${a.nome} · ${rotulo} · ${ROTULO_PERIODO[periodo]}</p>
+        <p>${a.nome} · ${ROTULO_PERIODO[periodo]}${soNacionais ? " · só fontes nacionais" : ""}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -875,7 +878,7 @@ function abrirNota(){
          <p class="nota-aviso">A coluna do resumo fica frequentemente vazia. O serviço não fornece resumos: o campo de descrição repete o título e o nome da publicação. Prefere-se a célula vazia a texto sem valor. As ligações são reencaminhamentos e servem para abrir, não para citar.</p>`)}
 
       ${bloco(ic.chave, "Palavras-chave",
-        `<p>Cada área tem entre seis e nove palavras-chave. A consulta usa as ${CONFIG.maxPalavrasConsulta} primeiras, para se manter legível; todas ficam visíveis no detalhe da área e cada uma pode ser pesquisada isoladamente.</p>
+        `<p>Cada área tem entre seis e nove palavras-chave, todas usadas na consulta e todas visíveis no detalhe da área. Cada uma pode também ser pesquisada isoladamente, bastando clicar nela.</p>
          <p>O critério é o da expressão e não o da palavra solta. Termos como “clima” ou “energia” têm sentidos que nada têm que ver com a área governativa — clima de negócios, falta de energia, suplementos alimentares — pelo que são substituídos por expressões que só existem no domínio pretendido: “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. A pesquisa por expressão exata é a única operação que o Google honra de forma fiável.</p>
          <p class="nota-aviso">Quando uma expressão ainda deixa passar ruído previsível, a área pode declarar termos a excluir, no campo <code>excluir</code> da sua definição. É o caso do Ambiente e Energia, que afasta “clima de negócios” e expressões afins.</p>`)}
     </div>
@@ -899,7 +902,6 @@ const METODOS = [
   { nome:"allorigins",          tipo:"fetch",  url:u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}` },
   { nome:"allorigins (script)", tipo:"script", url:u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}` },
   { nome:"codetabs",            tipo:"fetch",  url:u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}` },
-  { nome:"r.jina.ai",           tipo:"fetch",  url:u => `https://r.jina.ai/${u}` },
   { nome:"leitura direta",      tipo:"fetch",  url:u => u }
 ];
 
@@ -965,7 +967,10 @@ async function deDadosPublicados(){
     const t = simplificar(consultaAtiva.termo);
     itens = itens.filter(n => simplificar(n.titulo + " " + (n.resumo || "")).includes(t));
   }
-  itens = itens.map(n => Object.assign({}, n, { consulta: consultaAtiva.rotulo }));
+  itens = itens.map(n => Object.assign({}, n, {
+    consulta: consultaAtiva.rotulo,
+    ligacao: ligacaoDireta(n.ligacao)
+  }));
   return { itens, origem: "recolha agendada de " + (dados.gerado || "data desconhecida") };
 }
 
@@ -973,10 +978,10 @@ async function deDadosPublicados(){
 async function tentarVia(m, endereco){
   let texto;
   if(m.tipo === "script"){
-    texto = await porScript(m.url(endereco), 9000);
+    texto = await porScript(m.url(endereco), CONFIG.tempoLimiteRecolha);
   }else{
     const controlo = typeof AbortController !== "undefined" ? new AbortController() : null;
-    const relogio = controlo ? setTimeout(() => controlo.abort(), 9000) : null;
+    const relogio = controlo ? setTimeout(() => controlo.abort(), CONFIG.tempoLimiteRecolha) : null;
     try{
       const r = await fetch(m.url(endereco), controlo ? { cache:"no-store", signal:controlo.signal } : { cache:"no-store" });
       if(!r.ok) throw new Error("estado " + r.status);
@@ -1023,14 +1028,22 @@ async function recolherConsulta(){
   }catch(e){ /* segue para a recolha em direto */ }
 
   /* As restantes vias correm em simultâneo; vale a primeira que responder */
+  const arranque = Date.now();
+  const contador = setInterval(() => {
+    const seg = Math.round((Date.now() - arranque) / 1000);
+    estado.innerHTML = `A recolher… <span style="color:var(--texto-ligeiro);font-size:.8rem">${METODOS.length} vias em simultâneo · ${seg}s</span>`;
+  }, 1000);
   estado.innerHTML = `A recolher… <span style="color:var(--texto-ligeiro);font-size:.8rem">${METODOS.length} vias em simultâneo</span>`;
+
   try{
     const { itens, origem } = await primeiraQueResulte(
       METODOS.map(m => tentarVia(m, endereco).catch(e => { throw new Error(m.nome + ": " + e.message); }))
     );
+    clearInterval(contador);
     btn.disabled = false;
     assentarRecolha(itens, origem);
   }catch(agregado){
+    clearInterval(contador);
     const erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
     btn.disabled = false;
     estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias.</span>
@@ -1097,7 +1110,8 @@ function analisarPorPadrao(texto, area){
     let resumo = campo(b, "description");
     if(!resumo || simplificar(resumo).startsWith(simplificar(titulo).slice(0, 45))) resumo = "";
     return { area:area.nome, grupo:nomeGrupo(area.grupo), data:dataLegivel(campo(b, "pubDate")),
-             fonte, dominio:"", titulo, resumo, ligacao:campo(b, "link"), consulta:consultaAtiva.rotulo };
+             fonte, dominio:"", titulo, resumo, ligacao:ligacaoDireta(campo(b, "link")),
+             consulta:consultaAtiva.rotulo };
   });
 }
 
@@ -1130,7 +1144,8 @@ function analisarFeed(bruto, area){
     let resumo = limparTexto(ler("description"));
     if(!resumo || simplificar(resumo).startsWith(simplificar(titulo).slice(0, 45))) resumo = "";
     return { area:area.nome, grupo:nomeGrupo(area.grupo), data:dataLegivel(ler("pubDate")),
-             fonte, dominio, titulo, resumo, ligacao:ler("link").trim(), consulta:consultaAtiva.rotulo };
+             fonte, dominio, titulo, resumo, ligacao:ligacaoDireta(ler("link").trim()),
+             consulta:consultaAtiva.rotulo };
   });
 }
 
@@ -1138,13 +1153,34 @@ function analisarFeed(bruto, area){
 
 const COLUNAS = [
   ["area","Área governativa"], ["grupo","Agrupamento temático"], ["data","Data de publicação"],
-  ["fonte","Fonte"], ["dominio","Domínio"], ["titulo","Título"], ["resumo","Resumo"],
-  ["ligacao","Ligação"], ["consulta","Consulta"]
+  ["fonte","Fonte"], ["dominio","Domínio"], ["titulo","Título"],
+  ["ligacao","Ligação"], ["consulta","Palavras-chave da consulta"]
 ];
+
+/* As ligações do Google Notícias são reencaminhamentos: o endereço do artigo vai
+   codificado no próprio identificador. Quando é possível descodificá-lo, devolve-se
+   o endereço do jornal; caso contrário mantém-se o do Google, que abre na mesma. */
+function ligacaoDireta(url){
+  if(!url || url.indexOf("news.google.com") === -1) return url;
+  try{
+    const id = url.split("/articles/")[1];
+    if(!id) return url;
+    let b = id.split("?")[0].replace(/-/g, "+").replace(/_/g, "/");
+    while(b.length % 4) b += "=";
+    const bruto = atob(b);
+    const achado = bruto.match(/https?:\/\/[^\s\x00-\x1f"'<>]{10,}/);
+    if(!achado) return url;
+    return achado[0].replace(/[^\w\/\-.~:?#\[\]@!$&'()*+,;=%]+$/, "");
+  }catch(e){ return url; }
+}
 
 function nomeFicheiro(ext){
   const d = new Date(), c = n => String(n).padStart(2, "0");
-  return `radar_noticias_${d.getFullYear()}${c(d.getMonth()+1)}${c(d.getDate())}_${c(d.getHours())}${c(d.getMinutes())}.${ext}`;
+  const area = consultaAtiva && consultaAtiva.area
+    ? consultaAtiva.area.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "")
+    : "radar";
+  return `radar_${area}_${d.getFullYear()}${c(d.getMonth()+1)}${c(d.getDate())}_${c(d.getHours())}${c(d.getMinutes())}.${ext}`;
 }
 
 function descarregar(conteudo, tipo, nome){
@@ -1224,7 +1260,7 @@ function escXML(v){
 }
 
 function descarregarXLSX(){
-  const larguras = [24, 22, 17, 18, 18, 52, 52, 40, 30];
+  const larguras = [24, 22, 17, 18, 18, 60, 46, 60];
   const letra = i => String.fromCharCode(65 + i);
 
   const linhaXML = (valores, num, estilo) =>
@@ -1245,16 +1281,54 @@ function descarregarXLSX(){
 
   const estilos = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-<fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="10"/><name val="Arial"/></font></fonts>
+<fonts count="3"><font><sz val="10"/><name val="Arial"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><name val="Arial"/></font></fonts>
 <fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF2B5683"/><bgColor indexed="64"/></patternFill></fill></fills>
 <borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
 <cellStyleXfs count="1"><xf/></cellStyleXfs>
-<cellXfs count="3"><xf/><xf fontId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf fontId="1" fillId="2" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf></cellXfs>
+<cellXfs count="4"><xf/><xf fontId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf fontId="1" fillId="2" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf><xf fontId="2" applyFont="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs>
 </styleSheet>`;
+
+  /* Segunda folha: especificações da consulta que originou estas notícias */
+  const espec = [
+    ["Área governativa", consultaAtiva.area.nome],
+    ["Agrupamento temático", nomeGrupo(consultaAtiva.area.grupo)],
+    ["Palavras-chave da consulta", consultaAtiva.rotulo],
+    ["Termos excluídos", (consultaAtiva.area.excluir || []).join("; ") || "—"],
+    ["Janela temporal", ROTULO_PERIODO[periodo]],
+    ["Restrição a fontes nacionais", soNacionais ? "sim" : "não"],
+    ["Domínios excluídos", soNacionais ? CONFIG.exclusoes.join("; ") : "—"],
+    ["Origem", "Google Notícias, edição portuguesa (hl=pt-PT, gl=PT, ceid=PT:pt-150)"],
+    ["Consulta enviada", consultaAtiva.q],
+    ["Notícias exportadas", String(recolha.length)],
+    ["Data da exportação", new Date().toLocaleString("pt-PT")],
+    ["Versão do painel", CONFIG.versao],
+    ["", ""],
+    ["Limite de resultados",
+     "O serviço devolve no máximo cerca de 100 artigos por consulta, sem paginação. " +
+     "Alargar a janela temporal não traz mais artigos: distribui os mesmos 100 por mais tempo. " +
+     "As contagens medem exposição mediática indexada e não são comparáveis entre áreas, " +
+     "porque uma área muito noticiada é truncada e uma pouco noticiada não é."],
+    ["Ordenação",
+     "Os resultados são ordenados por relevância e não por data. O operador de tempo atua " +
+     "sobre a data de indexação, que pode não coincidir com a da publicação."],
+    ["Ligações",
+     "Quando foi possível descodificar o reencaminhamento do Google, a coluna Ligação contém " +
+     "o endereço do jornal; nos restantes casos mantém o endereço do Google, que abre o artigo."]
+  ];
+
+  const folha2 = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<cols><col min="1" max="1" width="30" customWidth="1"/><col min="2" max="2" width="105" customWidth="1"/></cols>
+<sheetData>${espec.map((l, i) =>
+  `<row r="${i+1}">` +
+  `<c r="A${i+1}" t="inlineStr" s="${i === 0 ? 2 : 3}"><is><t xml:space="preserve">${escXML(l[0])}</t></is></c>` +
+  `<c r="B${i+1}" t="inlineStr" s="${i === 0 ? 2 : 1}"><is><t xml:space="preserve">${escXML(l[1])}</t></is></c>` +
+  `</row>`).join("")}</sheetData>
+</worksheet>`;
 
   const livro = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-<sheets><sheet name="Notícias" sheetId="1" r:id="rId1"/></sheets></workbook>`;
+<sheets><sheet name="Notícias" sheetId="1" r:id="rId1"/><sheet name="Especificações" sheetId="2" r:id="rId2"/></sheets></workbook>`;
 
   const tipos = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
@@ -1262,6 +1336,7 @@ function descarregarXLSX(){
 <Default Extension="xml" ContentType="application/xml"/>
 <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
 <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+<Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
 <Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
 </Types>`;
 
@@ -1273,7 +1348,8 @@ function descarregarXLSX(){
   const relLivro = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
-<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>
+<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
 </Relationships>`;
 
   const zip = zipSemCompressao([
@@ -1282,7 +1358,8 @@ function descarregarXLSX(){
     ["xl/workbook.xml", livro],
     ["xl/_rels/workbook.xml.rels", relLivro],
     ["xl/styles.xml", estilos],
-    ["xl/worksheets/sheet1.xml", folha]
+    ["xl/worksheets/sheet1.xml", folha],
+    ["xl/worksheets/sheet2.xml", folha2]
   ]);
 
   const l = document.createElement("a");
