@@ -512,6 +512,10 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
 const CONFIG = {
   edicao: { hl:"pt-PT", gl:"PT", ceid:"PT:pt-150" },   // edição portuguesa do Google Notícias
   maxPalavrasConsulta: 6,
+  /* Endereço do painel publicado no GitHub Pages. Preenchido, permite que este
+     ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
+     Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
+  enderecoDados: "",
   /* Domínios excluídos quando o filtro de fontes nacionais está ativo.
      Acrescentar aqui outros domínios ou domínios de topo, sempre precedidos de "site:". */
   exclusoes: ["site:.br", "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com"],
@@ -922,11 +926,30 @@ function definirConsulta(area, q, rotulo, termo){
 /* Dados recolhidos pela tarefa agendada e publicados ao lado do painel.
    Vêm do mesmo endereço que serve o próprio HTML, pelo que nenhuma rede os
    bloqueia: para o navegador é apenas mais um ficheiro da mesma página. */
+function enderecosDados(){
+  const lista = ["noticias.json"];
+  let base = (CONFIG.enderecoDados || "").trim();
+  if(base){
+    base = base.replace(/[#?].*$/, "");
+    if(/\.html?$/i.test(base)) base = base.replace(/[^/]+$/, "");
+    if(!base.endsWith("/")) base += "/";
+    lista.push(base + "noticias.json");
+  }
+  return lista;
+}
+
 async function deDadosPublicados(){
-  const r = await fetch("noticias.json", { cache:"no-store" });
-  if(!r.ok) throw new Error("sem ficheiro de dados junto ao painel");
-  const dados = await r.json();
-  if(!dados || !Array.isArray(dados.noticias)) throw new Error("ficheiro de dados ilegível");
+  let dados = null, ultimo = "";
+  for(const endereco of enderecosDados()){
+    try{
+      const r = await fetch(endereco, { cache:"no-store" });
+      if(!r.ok) throw new Error("estado " + r.status);
+      dados = await r.json();
+      break;
+    }catch(e){ ultimo = e.message; }
+  }
+  if(!dados) throw new Error("sem ficheiro de dados (" + ultimo + ")");
+  if(!Array.isArray(dados.noticias)) throw new Error("ficheiro de dados ilegível");
   let itens = dados.noticias.filter(n => n.area === consultaAtiva.area.nome);
   if(consultaAtiva.termo){
     const t = simplificar(consultaAtiva.termo);
@@ -983,8 +1006,8 @@ async function recolherConsulta(){
   }
 
   btn.disabled = false;
-  estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias nesta rede.</span>
-    <br><span style="font-size:.84rem">Este painel fica plenamente funcional quando alojado no GitHub Pages ao lado do ficheiro de dados da recolha agendada — aí, este botão responde sempre e o Excel sai na hora.</span>
+  estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias.</span>
+    <br><span style="font-size:.84rem">Para este ficheiro recolher a partir do disco, abra o código e preencha <code>CONFIG.enderecoDados</code> com o endereço do painel publicado no GitHub Pages — a recolha agendada grava aí o ficheiro de dados que este botão lê. Em alternativa, use diretamente o painel publicado.</span>
     <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Ver o que falhou, para reportar à área de sistemas</summary>
     <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${falhas.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
 }
@@ -1112,33 +1135,131 @@ function descarregarCSV(){
 }
 
 /* Excel em formato SpreadsheetML, que o Excel abre sem qualquer biblioteca externa */
-function descarregarXLSX(){
-  const esc = v => String(v == null ? "" : v)
+/* ---------- Gerador de .xlsx verdadeiro ----------
+   Um .xlsx é um arquivo ZIP com XMLs. Constrói-se aqui um ZIP sem compressão,
+   suficiente e universalmente legível, sem qualquer biblioteca externa. */
+
+const TABELA_CRC = (() => {
+  const t = new Uint32Array(256);
+  for(let n = 0; n < 256; n++){
+    let c = n;
+    for(let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+
+function crc32(dados){
+  let c = 0xFFFFFFFF;
+  for(let i = 0; i < dados.length; i++) c = TABELA_CRC[(c ^ dados[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+
+function zipSemCompressao(ficheiros){
+  const cod = new TextEncoder();
+  const partes = [], centro = [];
+  let posicao = 0;
+  const u16 = v => new Uint8Array([v & 255, (v >> 8) & 255]);
+  const u32 = v => new Uint8Array([v & 255, (v >> 8) & 255, (v >> 16) & 255, (v >> 24) & 255]);
+
+  for(const [nome, conteudo] of ficheiros){
+    const nomeB = cod.encode(nome);
+    const dados = typeof conteudo === "string" ? cod.encode(conteudo) : conteudo;
+    const crc = crc32(dados);
+    const cab = [u32(0x04034b50), u16(20), u16(0x0800), u16(0), u16(0), u16(0),
+                 u32(crc), u32(dados.length), u32(dados.length), u16(nomeB.length), u16(0)];
+    centro.push({ nomeB, crc, tamanho: dados.length, posicao });
+    for(const p of cab) partes.push(p);
+    partes.push(nomeB, dados);
+    posicao += 30 + nomeB.length + dados.length;
+  }
+
+  let tamanhoCentro = 0;
+  const inicioCentro = posicao;
+  for(const f of centro){
+    const cab = [u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0),
+                 u32(f.crc), u32(f.tamanho), u32(f.tamanho), u16(f.nomeB.length),
+                 u16(0), u16(0), u16(0), u16(0), u32(0), u32(f.posicao)];
+    for(const p of cab) partes.push(p);
+    partes.push(f.nomeB);
+    tamanhoCentro += 46 + f.nomeB.length;
+  }
+  partes.push(u32(0x06054b50), u16(0), u16(0), u16(centro.length), u16(centro.length),
+              u32(tamanhoCentro), u32(inicioCentro), u16(0));
+  return new Blob(partes, { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+}
+
+function escXML(v){
+  return String(v == null ? "" : v)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;").replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
-  const celula = (v, estilo) => `<Cell${estilo ? ` ss:StyleID="${estilo}"` : ""}><Data ss:Type="String">${esc(v)}</Data></Cell>`;
-  const cabecalho = `<Row ss:StyleID="cab">${COLUNAS.map(c => celula(c[1], "cab")).join("")}</Row>`;
-  const corpo = recolha.map(r => `<Row>${COLUNAS.map(c => celula(r[c[0]])).join("")}</Row>`).join("");
+}
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<?mso-application progid="Excel.Sheet"?>
-<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
- xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
- <Styles>
-  <Style ss:ID="cab"><Font ss:Bold="1" ss:Color="#FFFFFF" ss:FontName="Arial" ss:Size="10"/>
-   <Interior ss:Color="#2B5683" ss:Pattern="Solid"/><Alignment ss:Vertical="Center"/></Style>
-  <Style ss:ID="Default"><Font ss:FontName="Arial" ss:Size="10"/><Alignment ss:Vertical="Top"/></Style>
- </Styles>
- <Worksheet ss:Name="Notícias">
-  <Table>
-   <Column ss:Width="170"/><Column ss:Width="160"/><Column ss:Width="110"/><Column ss:Width="130"/>
-   <Column ss:Width="130"/><Column ss:Width="340"/><Column ss:Width="340"/><Column ss:Width="260"/><Column ss:Width="200"/>
-   ${cabecalho}${corpo}
-  </Table>
-  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><SplitHorizontal>1</SplitHorizontal><TopRowBottomPane>1</TopRowBottomPane></WorksheetOptions>
- </Worksheet>
-</Workbook>`;
-  descarregar(xml, "application/vnd.ms-excel;charset=utf-8", nomeFicheiro("xls"));
+function descarregarXLSX(){
+  const larguras = [24, 22, 17, 18, 18, 52, 52, 40, 30];
+  const letra = i => String.fromCharCode(65 + i);
+
+  const linhaXML = (valores, num, estilo) =>
+    `<row r="${num}">` + valores.map((v, i) =>
+      `<c r="${letra(i)}${num}" t="inlineStr"${estilo ? ` s="${estilo}"` : ` s="1"`}><is><t xml:space="preserve">${escXML(v)}</t></is></c>`
+    ).join("") + `</row>`;
+
+  const linhas = [linhaXML(COLUNAS.map(c => c[1]), 1, 2)]
+    .concat(recolha.map((r, i) => linhaXML(COLUNAS.map(c => r[c[0]]), i + 2)));
+
+  const folha = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
+<cols>${larguras.map((w, i) => `<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols>
+<sheetData>${linhas.join("")}</sheetData>
+<autoFilter ref="A1:${letra(COLUNAS.length-1)}${recolha.length + 1}"/>
+</worksheet>`;
+
+  const estilos = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="10"/><name val="Arial"/></font></fonts>
+<fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF2B5683"/><bgColor indexed="64"/></patternFill></fill></fills>
+<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
+<cellStyleXfs count="1"><xf/></cellStyleXfs>
+<cellXfs count="3"><xf/><xf fontId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf><xf fontId="1" fillId="2" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf></cellXfs>
+</styleSheet>`;
+
+  const livro = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheets><sheet name="Notícias" sheetId="1" r:id="rId1"/></sheets></workbook>`;
+
+  const tipos = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+</Types>`;
+
+  const relRaiz = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`;
+
+  const relLivro = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`;
+
+  const zip = zipSemCompressao([
+    ["[Content_Types].xml", tipos],
+    ["_rels/.rels", relRaiz],
+    ["xl/workbook.xml", livro],
+    ["xl/_rels/workbook.xml.rels", relLivro],
+    ["xl/styles.xml", estilos],
+    ["xl/worksheets/sheet1.xml", folha]
+  ]);
+
+  const l = document.createElement("a");
+  l.href = URL.createObjectURL(zip); l.download = nomeFicheiro("xlsx"); l.click();
+  URL.revokeObjectURL(l.href);
   mostrarAviso("Ficheiro Excel descarregado");
 }
 
