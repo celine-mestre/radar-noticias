@@ -516,6 +516,7 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
+  versao: "2026-07-30 · xlsx",
   /* Domínios excluídos quando o filtro de fontes nacionais está ativo.
      Acrescentar aqui outros domínios ou domínios de topo, sempre precedidos de "site:". */
   exclusoes: ["site:.br", "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com"],
@@ -800,6 +801,7 @@ function abrirExportacao(id){
         <p id="expEstado" style="font-size:.88rem;color:var(--texto-suave);margin-top:.9rem">Sem notícias recolhidas.</p>
       </div>
     <div class="modal-rodape">
+      <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
       <button class="btn" data-detalhe="${a.id}">Voltar</button>
       <button class="btn primario" id="btnXLSX" disabled style="margin-left:auto">Descarregar Excel</button>
       <button class="btn" id="btnCSV" disabled>CSV</button>
@@ -893,15 +895,23 @@ function abrirNota(){
 /* Vias de recolha, tentadas por esta ordem até uma resultar. A primeira usa
    carregamento de script, que contorna as restrições de leitura entre domínios. */
 const METODOS = [
-  { nome:"allorigins (script)", tipo:"script", url:u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}` },
-  { nome:"allorigins",          tipo:"fetch",  url:u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}` },
-  { nome:"codetabs",            tipo:"fetch",  url:u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}` },
   { nome:"corsproxy",           tipo:"fetch",  url:u => `https://corsproxy.io/?url=${encodeURIComponent(u)}` },
+  { nome:"allorigins",          tipo:"fetch",  url:u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}` },
+  { nome:"allorigins (script)", tipo:"script", url:u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}` },
+  { nome:"codetabs",            tipo:"fetch",  url:u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}` },
   { nome:"r.jina.ai",           tipo:"fetch",  url:u => `https://r.jina.ai/${u}` },
   { nome:"leitura direta",      tipo:"fetch",  url:u => u }
 ];
 
-function porScript(endereco, tempoLimite = 15000){
+/* fetch com tempo de espera curto, para a cadeia avançar depressa */
+function pedirComLimite(endereco, ms = 6000){
+  const controlador = new AbortController();
+  const relogio = setTimeout(() => controlador.abort(), ms);
+  return fetch(endereco, { cache:"no-store", signal:controlador.signal })
+    .finally(() => clearTimeout(relogio));
+}
+
+function porScript(endereco, tempoLimite = 6000){
   return new Promise((resolve, reject) => {
     const nome = "radarCB" + Math.random().toString(36).slice(2, 9);
     const marca = document.createElement("script");
@@ -959,57 +969,75 @@ async function deDadosPublicados(){
   return { itens, origem: "recolha agendada de " + (dados.gerado || "data desconhecida") };
 }
 
+/* Tenta uma via, com limite de tempo próprio */
+async function tentarVia(m, endereco){
+  let texto;
+  if(m.tipo === "script"){
+    texto = await porScript(m.url(endereco), 9000);
+  }else{
+    const controlo = typeof AbortController !== "undefined" ? new AbortController() : null;
+    const relogio = controlo ? setTimeout(() => controlo.abort(), 9000) : null;
+    try{
+      const r = await fetch(m.url(endereco), controlo ? { cache:"no-store", signal:controlo.signal } : { cache:"no-store" });
+      if(!r.ok) throw new Error("estado " + r.status);
+      texto = await r.text();
+    }finally{ if(relogio) clearTimeout(relogio); }
+  }
+  const itens = analisarFeed(texto, consultaAtiva.area);
+  if(!itens.length) throw new Error("sem notícias");
+  return { itens, origem:m.nome };
+}
+
+/* Primeira promessa a cumprir-se; se todas falharem, devolve a lista de erros */
+function primeiraQueResulte(promessas){
+  if(Promise.any) return Promise.any(promessas);
+  return new Promise((resolve, reject) => {
+    let falhas = 0; const erros = [];
+    promessas.forEach((p, i) => p.then(resolve).catch(e => {
+      erros[i] = e; if(++falhas === promessas.length) reject({ errors:erros });
+    }));
+  });
+}
+
+function assentarRecolha(itens, origem){
+  const vistos = new Set();
+  recolha = itens.filter(it => (vistos.has(it.ligacao) ? false : (vistos.add(it.ligacao), true)));
+  recolha.sort((x, y) => (y.data || "").localeCompare(x.data || ""));
+  mostrarEstadoRecolha(origem);
+}
+
 async function recolherConsulta(){
   if(!consultaAtiva) return;
   const btn = $("#btnRecolher"), estado = $("#expEstado");
   btn.disabled = true;
   recolha = [];
   const endereco = urlRSS(consultaAtiva.q);
-  const falhas = [];
 
-  /* Via preferida: os dados publicados pela tarefa agendada */
-  estado.innerHTML = "A recolher… dos dados publicados";
+  /* Via preferida: dados publicados pela recolha agendada, no mesmo endereço do painel */
+  estado.innerHTML = "A recolher…";
   try{
     const { itens, origem } = await deDadosPublicados();
-    const vistos = new Set();
-    recolha = itens.filter(it => (vistos.has(it.ligacao) ? false : (vistos.add(it.ligacao), true)));
-    recolha.sort((x, y) => (y.data || "").localeCompare(x.data || ""));
     btn.disabled = false;
-    mostrarEstadoRecolha(origem);
+    assentarRecolha(itens, origem);
     return;
-  }catch(erro){
-    falhas.push(`dados publicados: ${erro.message}`);
-  }
+  }catch(e){ /* segue para a recolha em direto */ }
 
-  for(let i = 0; i < METODOS.length; i++){
-    const m = METODOS[i];
-    estado.innerHTML = `A recolher… via ${m.nome} <span style="color:var(--texto-ligeiro);font-size:.8rem">(${i+1} de ${METODOS.length})</span>`;
-    try{
-      let texto;
-      if(m.tipo === "script"){
-        texto = await porScript(m.url(endereco));
-      }else{
-        const r = await fetch(m.url(endereco), { cache:"no-store" });
-        if(!r.ok) throw new Error("estado " + r.status);
-        texto = await r.text();
-      }
-      const itens = analisarFeed(texto, consultaAtiva.area);
-      const vistos = new Set();
-      recolha = itens.filter(it => (vistos.has(it.ligacao) ? false : (vistos.add(it.ligacao), true)));
-      recolha.sort((x, y) => (y.data || "").localeCompare(x.data || ""));
-      btn.disabled = false;
-      mostrarEstadoRecolha(m.nome);
-      return;
-    }catch(erro){
-      falhas.push(`${m.nome}: ${erro.message}`);
-    }
+  /* As restantes vias correm em simultâneo; vale a primeira que responder */
+  estado.innerHTML = `A recolher… <span style="color:var(--texto-ligeiro);font-size:.8rem">${METODOS.length} vias em simultâneo</span>`;
+  try{
+    const { itens, origem } = await primeiraQueResulte(
+      METODOS.map(m => tentarVia(m, endereco).catch(e => { throw new Error(m.nome + ": " + e.message); }))
+    );
+    btn.disabled = false;
+    assentarRecolha(itens, origem);
+  }catch(agregado){
+    const erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
+    btn.disabled = false;
+    estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias.</span>
+      <br><span style="font-size:.84rem">Publique o painel no GitHub Pages ao lado do ficheiro da recolha agendada, ou preencha <code>CONFIG.enderecoDados</code> no código com esse endereço.</span>
+      <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Ver o que falhou</summary>
+      <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
   }
-
-  btn.disabled = false;
-  estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias.</span>
-    <br><span style="font-size:.84rem">Para este ficheiro recolher a partir do disco, abra o código e preencha <code>CONFIG.enderecoDados</code> com o endereço do painel publicado no GitHub Pages — a recolha agendada grava aí o ficheiro de dados que este botão lê. Em alternativa, use diretamente o painel publicado.</span>
-    <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Ver o que falhou, para reportar à área de sistemas</summary>
-    <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${falhas.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
 }
 
 /* Lê notícias a partir de texto — ficheiro guardado do feed ou colagem */
@@ -1268,7 +1296,7 @@ function mostrarEstadoRecolha(origem){
   const estado = $("#expEstado");
   if(!estado) return;
   estado.innerHTML = recolha.length
-    ? `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar <span style="color:var(--texto-ligeiro);font-size:.8rem">· ${origem}</span>`
+    ? `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar <span style="color:var(--texto-ligeiro);font-size:.8rem">· ${origem} · ficheiro .xlsx</span>`
     : `<span style="color:var(--vermelho)">Não foram encontradas notícias.</span>`;
   const x = $("#btnXLSX"), c = $("#btnCSV");
   if(x) x.disabled = recolha.length === 0;
