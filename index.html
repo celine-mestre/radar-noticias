@@ -239,6 +239,12 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .sin-nota{font-size:.78rem;color:var(--texto-ligeiro);margin-top:.7rem;line-height:1.5}
 
 /* --- Síntese: elementos gráficos --- */
+.sin-teto{display:flex;gap:.85rem;align-items:flex-start;margin:1.2rem 0 0;padding:.85rem 1rem;
+  border-radius:var(--raio-s);background:rgba(190,156,84,.09);border-left:3px solid var(--dourado)}
+.sin-teto svg{width:19px;height:19px;flex:none;stroke:var(--dourado);fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;margin-top:.1rem}
+.sin-teto p{font-size:.82rem;color:var(--texto-suave);line-height:1.55}
+.sin-teto strong{color:var(--texto);font-weight:600}
 .sin-anel{display:flex;align-items:center;gap:1.6rem;flex-wrap:wrap;margin:.5rem 0 .2rem}
 .sin-anel svg{flex:none}
 .anel-n{font-size:26px;font-weight:600;fill:var(--texto);font-family:var(--fonte);letter-spacing:-.03em}
@@ -703,10 +709,10 @@ const CONFIG = {
   /* Ligação a um modelo de linguagem para sínteses. Deixe vazio enquanto não
      houver ponto de acesso; o painel funciona na mesma e a síntese local
      continua disponível. Preenchido, ativa o botão de síntese redigida.
-     Exemplo (serviço compatível com a interface OpenAI):
+     A interface é a que a documentação do AMALIA indica para servir o modelo:
        amalia: { endereco:"https://<ponto-de-acesso>/v1/chat/completions",
-                 modelo:"amalia-9b", chave:"" }  */
-  amalia: { endereco: "", modelo: "amalia", chave: "" },
+                 modelo:"amalia-llm/AMALIA-9B-0626-DPO", chave:"" }  */
+  amalia: { endereco: "", modelo: "amalia-llm/AMALIA-9B-0626-DPO", chave: "" },
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 60000,
@@ -1050,7 +1056,8 @@ const MANUAL = [
       <dt>Distribuição por dia</dt><dd>Colunas com o número de notícias por dia, para distinguir um pico de uma cobertura constante.</dd>
     </dl>
     <p>Tudo isto é contagem, não interpretação. Serve para orientar a leitura, não para a dispensar.</p>
-    <p class="man-aviso">Se estiver configurada uma ligação a um modelo de linguagem, fica também disponível uma síntese redigida. Sem essa configuração, a síntese local funciona na mesma.</p>` },
+    <p class="man-aviso">O teto de 100 notícias por consulta aplica-se qualquer que seja o período escolhido. Uma área que o atinja está truncada, pelo que as contagens medem o que foi indexado e devolvido, não o total noticiado.</p>
+    <p>Está prevista uma síntese redigida por modelo de linguagem, que fica disponível quando existir um ponto de acesso ao AMALIA. Entretanto, a leitura acima é integralmente calculada no painel.</p>` },
 
   { n:"6", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <dl>
@@ -1215,6 +1222,11 @@ function abrirSintese(){
     </div>
     <div class="modal-corpo">
 
+      <div class="sin-teto">
+        <svg viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+        <p><strong>Teto de 100 notícias por consulta.</strong> É limite do serviço e não do painel: qualquer que seja o período escolhido, uma consulta nunca devolve mais de cerca de 100 artigos, e não há paginação para lá disso. Alargar a janela temporal não traz mais notícias — distribui as mesmas 100 por mais tempo, tornando-as em média mais antigas. Uma área que atinja o teto está truncada, pelo que os números abaixo medem o que foi indexado e devolvido, não o total noticiado.</p>
+      </div>
+
       <div class="sin-kpis">
         ${kpi(recolha.length, "notícias recolhidas", corA)}
         ${kpi(fontes.length, fontes.length === 1 ? "publicação" : "publicações", "var(--azul)")}
@@ -1256,14 +1268,13 @@ function abrirSintese(){
         <p class="sin-nota">${comData} das ${recolha.length} notícias têm data reconhecida. O serviço ordena por relevância e a data é a de indexação, pelo que a distribuição é indicativa.</p>
       </div>
 
+      ${comIA ? `
       <div class="bloco" id="blocoIA" style="margin-bottom:.4rem">
         <h4>Síntese redigida</h4>
-        ${comIA
-          ? `<p style="font-size:.85rem;color:var(--texto-suave);margin-bottom:.6rem">Envia os títulos recolhidos ao modelo configurado e devolve um texto de leitura.</p>
-             <button class="btn primario" id="btnIA">Redigir síntese</button>
-             <div id="saidaIA"></div>`
-          : `<p style="font-size:.85rem;color:var(--texto-suave)">Não está configurada nenhuma ligação a modelo de linguagem. Para ativar, preencha <code>CONFIG.amalia</code> no início do código com o ponto de acesso, o nome do modelo e, se necessário, a chave. O painel envia apenas os títulos e as fontes já recolhidos.</p>`}
-      </div>
+        <p style="font-size:.85rem;color:var(--texto-suave);margin-bottom:.6rem">Envia os títulos recolhidos ao modelo configurado e devolve um texto de leitura.</p>
+        <button class="btn primario" id="btnIA">Redigir síntese</button>
+        <div id="saidaIA"></div>
+      </div>` : ""}
     </div>
     <div class="modal-rodape">
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
@@ -1562,9 +1573,9 @@ async function recolherConsulta(){
   const arranque = Date.now();
   const contador = setInterval(() => {
     const seg = Math.round((Date.now() - arranque) / 1000);
-    estado.innerHTML = `A recolher… <span style="color:var(--texto-ligeiro);font-size:.8rem">${METODOS.length} vias em simultâneo · ${seg}s</span>`;
+    estado.innerHTML = `A recolher… <span style="color:var(--texto-ligeiro);font-size:.8rem">${seg}s</span>`;
   }, 1000);
-  estado.innerHTML = `A recolher… <span style="color:var(--texto-ligeiro);font-size:.8rem">${METODOS.length} vias em simultâneo</span>`;
+  estado.innerHTML = "A recolher…";
 
   try{
     const { itens, origem } = await primeiraQueResulte(
