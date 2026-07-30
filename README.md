@@ -22,6 +22,8 @@ Unidade de Pesquisa e Estatísticas
   consulta.
 - Síntese visual da recolha: distribuição por publicação, assuntos recorrentes,
   cobertura das palavras-chave e distribuição por dia.
+- Evolução da área ao longo dos dias, a partir das recolhas agendadas, com folha
+  própria no ficheiro Excel.
 - Manual de utilização embutido no próprio painel.
 
 ---
@@ -34,6 +36,7 @@ Unidade de Pesquisa e Estatísticas
 | `extrair_noticias.py` | Recolha das 16 áreas. Produz o Excel do dia e o `noticias.json`. |
 | `.github/workflows/radar-noticias.yml` | Tarefa agendada que corre a recolha nos servidores do GitHub. |
 | `noticias.json` | Gerado pela recolha. É o que o painel lê quando carrega em *Recolher notícias*. |
+| `historico.json` | Série diária, uma linha por dia e por área. Alimenta o bloco *Evolução*. |
 
 ---
 
@@ -45,8 +48,10 @@ portuguesa, e abre os resultados no serviço.
 Para exportar, precisa de as ler — e o navegador não pode ler diretamente respostas
 de outro domínio. Daí a arquitetura em duas peças:
 
-1. **Recolha agendada.** Corre no GitHub, de segunda a sexta às 7h00, e grava o
-   `noticias.json` na raiz do repositório.
+1. **Recolha agendada.** Corre no GitHub, de segunda a sexta às 7h00, com janela de
+   24 horas. Grava o `noticias.json` do dia e acrescenta uma linha por área ao
+   `historico.json`, que é o que torna possível ver evolução ao fim de algumas
+   semanas.
 2. **Painel publicado.** Alojado no GitHub Pages, ao lado desse ficheiro. Como o lê
    do mesmo endereço, nenhuma rede o bloqueia. Se o ficheiro não existir, o painel
    tenta ainda a recolha em direto.

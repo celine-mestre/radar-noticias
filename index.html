@@ -239,6 +239,14 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .sin-nota{font-size:.78rem;color:var(--texto-ligeiro);margin-top:.7rem;line-height:1.5}
 
 /* --- Síntese: elementos gráficos --- */
+.evo-topo{display:flex;gap:1.8rem;flex-wrap:wrap;margin:.3rem 0 .9rem}
+.evo-topo div{display:flex;flex-direction:column}
+.evo-topo strong{font-size:1.4rem;font-weight:600;letter-spacing:-.02em;color:var(--texto);line-height:1.15}
+.evo-topo span{font-size:.74rem;color:var(--texto-ligeiro)}
+.evo-grafico{display:flex;align-items:flex-end;gap:2px;height:110px;padding-top:.3rem}
+.evo-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.evo-haste{width:100%;max-width:16px;border-radius:3px 3px 1px 1px;display:block;transition:.2s}
+.evo-dia{font-size:.6rem;color:var(--texto-ligeiro);margin-top:.3rem;white-space:nowrap;height:.9rem}
 .sin-teto{display:flex;gap:.85rem;align-items:flex-start;margin:1.2rem 0 0;padding:.85rem 1rem;
   border-radius:var(--raio-s);background:rgba(190,156,84,.09);border-left:3px solid var(--dourado)}
 .sin-teto svg{width:19px;height:19px;flex:none;stroke:var(--dourado);fill:none;stroke-width:1.8;
@@ -1006,6 +1014,7 @@ function abrirExportacao(id){
   $("#btnCSV").addEventListener("click", descarregarCSV);
   $("#btnSintese").addEventListener("click", abrirSintese);
   if(recolha.length) mostrarEstadoRecolha("recolha anterior");
+  carregarHistorico();
 }
 
 function fecharModal(){ $("#veu").classList.remove("aberto"); }
@@ -1050,6 +1059,8 @@ const MANUAL = [
     </dl>
     <p>Tudo isto é contagem, não interpretação. Serve para orientar a leitura, não para a dispensar.</p>
     <p class="man-aviso">O teto de 100 notícias por consulta aplica-se qualquer que seja o período escolhido. Uma área que o atinja está truncada, pelo que as contagens medem o que foi indexado e devolvido, não o total noticiado.</p>
+    <p><strong>Evolução da área.</strong> A partir de três dias de recolhas agendadas, aparece um bloco com a série diária: quantas notícias por dia, a média dos dias anteriores e a variação do último dia face a essa média. O ficheiro Excel ganha então uma terceira folha, <em>Evolução</em>, com uma linha por dia.</p>
+    <p>Como todas as recolhas usam a mesma janela e o mesmo método, a comparação da área consigo própria é legítima — ao contrário da comparação entre áreas, que o teto dos 100 distorce.</p>
     <p>Toda a leitura acima é calculada no painel, a partir das notícias recolhidas. Nada é enviado para fora.</p>` },
 
   { n:"6", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
@@ -1188,6 +1199,41 @@ function cobertura(itens, area){
   }).sort((x, y) => y.n - x.n);
 }
 
+/* Evolução da área ao longo dos dias, a partir da série publicada.
+   Só aparece quando existem pelo menos três dias registados. */
+function blocoEvolucao(area){
+  const serie = serieDaArea(area.nome);
+  if(serie.length < 3) return "";
+
+  const recentes = serie.slice(-30);
+  const ultimo = recentes[recentes.length - 1];
+  const anteriores = recentes.slice(0, -1);
+  const media = anteriores.reduce((soma, d) => soma + d.noticias, 0) / anteriores.length;
+  const variacao = media ? Math.round((ultimo.noticias - media) / media * 100) : 0;
+  const sinal = variacao > 0 ? "+" : "";
+  const corVar = variacao > 15 ? "var(--vermelho)" : variacao < -15 ? "var(--azul)" : "var(--texto-suave)";
+  const maximo = Math.max(...recentes.map(d => d.noticias));
+  const etiqueta = d => { const [, m, x] = d.split("-"); return `${x}/${m}`; };
+  const passo = Math.ceil(recentes.length / 10);
+
+  return `
+    <div class="bloco">
+      <h4>Evolução da área</h4>
+      <div class="evo-topo">
+        <div><strong>${ultimo.noticias}</strong><span>na última recolha</span></div>
+        <div><strong>${media.toFixed(1).replace(".", ",")}</strong><span>média dos ${anteriores.length} dias anteriores</span></div>
+        <div><strong style="color:${corVar}">${sinal}${variacao}%</strong><span>face a essa média</span></div>
+      </div>
+      <div class="evo-grafico">${recentes.map((d, i) => `
+        <div class="evo-col" title="${d.data}: ${d.noticias} notícias, ${d.fontes} publicações">
+          <span class="evo-haste" style="height:${Math.max(4, Math.round(d.noticias / maximo * 88))}px;
+            background:${i === recentes.length - 1 ? cor(area.grupo) : "color-mix(in srgb, " + cor(area.grupo) + " 40%, transparent)"}"></span>
+          <span class="evo-dia">${i % passo === 0 || i === recentes.length - 1 ? etiqueta(d.data) : ""}</span>
+        </div>`).join("")}</div>
+      <p class="sin-nota">Série construída pelas recolhas agendadas, uma por dia útil, sempre com a mesma janela e o mesmo método. Por isso a comparação da área consigo própria é legítima — ao contrário da comparação entre áreas, que o teto dos 100 distorce. ${serie.length} dias registados.</p>
+    </div>`;
+}
+
 function abrirSintese(){
   if(!recolha.length) return;
   const a = consultaAtiva.area, corA = cor(a.grupo);
@@ -1253,6 +1299,8 @@ function abrirSintese(){
           </div>`).join("")}</div>
         <p class="sin-nota">Quantas das notícias recolhidas contêm cada palavra-chave no título. Palavras a zero indicam termos que não estão a puxar cobertura no período escolhido.</p>
       </div>
+
+      ${blocoEvolucao(a)}
 
       <div class="bloco">
         <h4>Distribuição por dia</h4>
@@ -1439,6 +1487,30 @@ function enderecosDados(){
     lista.push(base + "noticias.json");
   }
   return lista;
+}
+
+let historico = null;   // série diária publicada pela recolha agendada
+
+async function carregarHistorico(){
+  if(historico !== null) return historico;
+  for(const base of enderecosDados()){
+    try{
+      const r = await fetch(base.replace("noticias.json", "historico.json"), { cache:"no-store" });
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(d && Array.isArray(d.dias)){ historico = d; return historico; }
+    }catch(e){ /* segue para o endereço seguinte */ }
+  }
+  historico = { dias: [] };
+  return historico;
+}
+
+/* Série diária de uma área: [{data, noticias, fontes}] */
+function serieDaArea(nome){
+  if(!historico || !historico.dias.length) return [];
+  return historico.dias
+    .filter(d => d.areas && d.areas[nome])
+    .map(d => ({ data:d.data, noticias:d.areas[nome].noticias, fontes:d.areas[nome].fontes }));
 }
 
 async function deDadosPublicados(){
@@ -1756,6 +1828,8 @@ function escXML(v){
 
 function descarregarXLSX(){
   const larguras = [24, 22, 17, 18, 18, 60, 46, 60];
+  const serie = serieDaArea(consultaAtiva.area.nome);
+  const temSerie = serie.length >= 2;
   const letra = i => String.fromCharCode(65 + i);
 
   const linhaXML = (valores, num, estilo) =>
@@ -1797,6 +1871,7 @@ function descarregarXLSX(){
     ["Notícias exportadas", String(recolha.length)],
     ["Data da exportação", new Date().toLocaleString("pt-PT")],
     ["Versão do painel", CONFIG.versao],
+    ["Série diária disponível", serie.length ? `${serie.length} dias (folha Evolução)` : "ainda sem histórico"],
     ["", ""],
     ["Limite de resultados",
      "O serviço devolve no máximo cerca de 100 artigos por consulta, sem paginação. " +
@@ -1821,9 +1896,33 @@ function descarregarXLSX(){
   `</row>`).join("")}</sheetData>
 </worksheet>`;
 
+  /* Terceira folha: série diária da área, quando existe histórico publicado */
+  const linhaEvo = (vals, num, estilo) =>
+    `<row r="${num}">` + vals.map((v, i) =>
+      `<c r="${letra(i)}${num}" t="inlineStr" s="${estilo}"><is><t xml:space="preserve">${escXML(v)}</t></is></c>`
+    ).join("") + `</row>`;
+
+  const folha3 = !temSerie ? "" : `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
+<cols><col min="1" max="1" width="16" customWidth="1"/><col min="2" max="2" width="30" customWidth="1"/>
+<col min="3" max="3" width="20" customWidth="1"/><col min="4" max="4" width="24" customWidth="1"/>
+<col min="5" max="5" width="26" customWidth="1"/></cols>
+<sheetData>
+${linhaEvo(["Data", "Área governativa", "Notícias recolhidas", "Publicações distintas", "Variação face ao dia anterior"], 1, 2)}
+${serie.map((d, i) => {
+  const anterior = i > 0 ? serie[i-1].noticias : null;
+  const variacao = anterior ? `${d.noticias - anterior > 0 ? "+" : ""}${d.noticias - anterior}` : "—";
+  return linhaEvo([d.data, consultaAtiva.area.nome, String(d.noticias), String(d.fontes), variacao], i + 2, 1);
+}).join("")}
+</sheetData>
+<autoFilter ref="A1:E${serie.length + 1}"/>
+</worksheet>`;
+
   const livro = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-<sheets><sheet name="Notícias" sheetId="1" r:id="rId1"/><sheet name="Especificações" sheetId="2" r:id="rId2"/></sheets></workbook>`;
+<sheets><sheet name="Notícias" sheetId="1" r:id="rId1"/><sheet name="Especificações" sheetId="2" r:id="rId2"/>${
+  temSerie ? `<sheet name="Evolução" sheetId="3" r:id="rId3"/>` : ""}</sheets></workbook>`;
 
   const tipos = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
@@ -1831,7 +1930,8 @@ function descarregarXLSX(){
 <Default Extension="xml" ContentType="application/xml"/>
 <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
 <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
-<Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+<Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>${
+  temSerie ? `<Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>` : ""}
 <Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
 </Types>`;
 
@@ -1843,8 +1943,9 @@ function descarregarXLSX(){
   const relLivro = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
-<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>
-<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>${
+  temSerie ? `<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/>` : ""}
+<Relationship Id="rId${temSerie ? 4 : 3}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
 </Relationships>`;
 
   const zip = zipSemCompressao([
@@ -1855,7 +1956,7 @@ function descarregarXLSX(){
     ["xl/styles.xml", estilos],
     ["xl/worksheets/sheet1.xml", folha],
     ["xl/worksheets/sheet2.xml", folha2]
-  ]);
+  ].concat(temSerie ? [["xl/worksheets/sheet3.xml", folha3]] : []));
 
   const l = document.createElement("a");
   l.href = URL.createObjectURL(zip); l.download = nomeFicheiro("xlsx"); l.click();

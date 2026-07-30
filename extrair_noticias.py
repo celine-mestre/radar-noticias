@@ -19,6 +19,7 @@ Requisitos: Python 3.9 ou superior e a biblioteca openpyxl (pip install openpyxl
 import argparse
 import html
 import json
+import os
 import re
 import sys
 import time
@@ -397,6 +398,8 @@ def principal():
                     help="grava também um ficheiro JSON com as notícias (para publicar junto ao painel)")
     ap.add_argument("--sem-resolver-ligacoes", action="store_true",
                     help="não converter os reencaminhamentos do Google no endereço do jornal")
+    ap.add_argument("--historico", default=None,
+                    help="ficheiro JSON de série diária, atualizado a cada recolha")
     args = ap.parse_args()
 
     if args.area and args.area not in {a[0] for a in AREAS}:
@@ -427,8 +430,50 @@ def principal():
         with open(args.json, "w", encoding="utf-8") as destino:
             json.dump(pacote, destino, ensure_ascii=False, indent=1)
         print(f"{len(noticias)} notícias gravadas em {args.json}")
+
+    if args.historico:
+        atualizar_historico(args.historico, linhas, args.periodo)
     if falhas:
         print(f"{len(falhas)} áreas falharam — ver a folha Falhas.")
+
+
+def atualizar_historico(caminho, linhas, periodo):
+    """Acrescenta à série diária o retrato de hoje, por área governativa.
+
+    Guarda apenas agregados — número de notícias e de publicações distintas por
+    área e por dia. É deliberadamente pequeno: cresce cerca de 2 KB por dia e
+    pode ser lido de uma vez pelo painel.
+    """
+    hoje = datetime.now().strftime("%Y-%m-%d")
+
+    serie = {"atualizado": hoje, "dias": []}
+    if os.path.exists(caminho):
+        try:
+            with open(caminho, encoding="utf-8") as origem:
+                anterior = json.load(origem)
+            if isinstance(anterior.get("dias"), list):
+                serie["dias"] = [d for d in anterior["dias"] if d.get("data") != hoje]
+        except (json.JSONDecodeError, OSError):
+            pass                                   # série ilegível: recomeça-se
+
+    por_area = {}
+    for l in linhas:
+        registo = por_area.setdefault(l[0], {"noticias": 0, "fontes": set()})
+        registo["noticias"] += 1
+        if l[3]:
+            registo["fontes"].add(l[3])
+
+    serie["dias"].append({
+        "data": hoje,
+        "periodo": periodo or "sem limite",
+        "areas": {nome: {"noticias": v["noticias"], "fontes": len(v["fontes"])}
+                  for nome, v in sorted(por_area.items())},
+    })
+    serie["dias"].sort(key=lambda d: d["data"])
+
+    with open(caminho, "w", encoding="utf-8") as destino:
+        json.dump(serie, destino, ensure_ascii=False, indent=1)
+    print(f"série diária atualizada: {len(serie['dias'])} dias em {caminho}")
 
 
 if __name__ == "__main__":
