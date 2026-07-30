@@ -164,6 +164,53 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
   display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;font-style:italic;
 }
 .btn-nota:hover .i{background:#fff;color:var(--azul)}
+.sin-assuntos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.6rem;margin-bottom:.8rem}
+.sin-assunto{padding:.7rem .85rem;border-radius:var(--raio-s);
+  background:color-mix(in srgb, var(--cor) 5%, transparent);
+  border:1px solid color-mix(in srgb, var(--cor) 20%, transparent)}
+.sin-topo{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem}
+.sin-topo strong{font-size:.9rem;font-weight:600;color:var(--cor)}
+.sin-topo span{font-size:.72rem;color:var(--texto-ligeiro);white-space:nowrap}
+.sin-assunto p{font-size:.78rem;color:var(--texto-suave);margin-top:.3rem;line-height:1.45;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sin-linha{display:flex;align-items:center;gap:.7rem;padding:.22rem 0;font-size:.82rem}
+.sin-rot{width:34%;color:var(--texto-suave);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sin-barra{flex:1;height:8px;border-radius:99px;background:var(--superficie-alt);overflow:hidden}
+.sin-barra i{display:block;height:100%;border-radius:99px}
+.sin-n{width:34px;text-align:right;font-variant-numeric:tabular-nums;color:var(--texto-ligeiro);font-size:.78rem}
+.sin-nota{font-size:.78rem;color:var(--texto-ligeiro);margin-top:.7rem;line-height:1.5}
+.sin-ia{margin-top:.8rem;padding:1rem 1.1rem;border-radius:var(--raio-s);background:var(--superficie-alt);
+  border-left:3px solid var(--verde);font-size:.88rem;color:var(--texto);line-height:1.65}
+.sin-ia p + p{margin-top:.6rem}
+.man-corpo{padding:0 1.6rem 1.2rem}
+.man-indice{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.3rem;
+  padding:1.1rem 0 1.2rem;border-bottom:1px solid var(--borda);margin-bottom:.3rem}
+.man-indice a{display:flex;align-items:center;gap:.55rem;padding:.42rem .6rem;border-radius:var(--raio-s);
+  text-decoration:none;color:var(--texto);font-size:.83rem;transition:.16s}
+.man-indice a:hover{background:color-mix(in srgb, var(--cor) 9%, transparent)}
+.man-indice a span{width:22px;height:22px;border-radius:6px;background:var(--cor);color:#fff;
+  font-size:.7rem;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none}
+.man-sec{padding:1.2rem 0;border-bottom:1px solid var(--borda);scroll-margin-top:1rem}
+.man-sec:last-child{border-bottom:none}
+.man-cab{display:flex;align-items:center;gap:.9rem;margin-bottom:.8rem}
+.man-ic{width:40px;height:40px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb, var(--cor) 13%, transparent);
+  border:1px solid color-mix(in srgb, var(--cor) 26%, transparent)}
+.man-ic svg{width:20px;height:20px;stroke:var(--cor);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.man-n{font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--cor);font-weight:600}
+.man-cab h4{font-size:1.02rem;font-weight:600;color:var(--texto);letter-spacing:-.015em;text-transform:none;margin:0}
+.man-txt{font-size:.87rem;color:var(--texto-suave);line-height:1.62}
+.man-txt p + p, .man-txt dl + p{margin-top:.6rem}
+.man-txt strong{color:var(--texto);font-weight:500}
+.man-txt dl{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:.4rem 1rem;margin:.5rem 0}
+.man-txt dt{font-weight:500;color:var(--texto)}
+.man-aviso{margin-top:.7rem;padding:.55rem .8rem;border-radius:0 var(--raio-s) var(--raio-s) 0;
+  border-left:3px solid color-mix(in srgb, var(--cor) 55%, transparent);
+  background:color-mix(in srgb, var(--cor) 5%, transparent);font-size:.83rem}
+.man-tabela{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.83rem}
+.man-tabela td{padding:.5rem .7rem;border-bottom:1px solid var(--borda);vertical-align:top}
+.man-tabela td:first-child{font-weight:500;color:var(--texto);width:38%}
+.man-tabela tr:last-child td{border-bottom:none}
 .nota-cab{background:linear-gradient(115deg,var(--azul),#23506f);border-bottom:none}
 .nota-cab h3,.nota-cab p{color:#fff}
 .nota-cab p{opacity:.8}
@@ -178,10 +225,16 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .nota-bloco{display:grid;grid-template-columns:40px 1fr;gap:1rem;padding:1.15rem 0;border-bottom:1px solid var(--borda)}
 .nota-bloco:last-child{border-bottom:none;padding-bottom:.4rem}
 .nota-ic{
-  width:40px;height:40px;border-radius:12px;background:rgba(43,86,131,.09);
+  width:40px;height:40px;border-radius:12px;flex:none;
+  background:color-mix(in srgb, var(--cor) 13%, transparent);
+  border:1px solid color-mix(in srgb, var(--cor) 26%, transparent);
   display:flex;align-items:center;justify-content:center;
 }
-.nota-ic svg{width:20px;height:20px;stroke:var(--azul);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nota-ic svg{width:20px;height:20px;stroke:var(--cor);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nota-bloco h4::after{
+  content:"";display:block;width:26px;height:2px;border-radius:2px;
+  background:var(--cor);margin-top:.42rem;opacity:.75;
+}
 .nota-bloco h4{
   font-size:.93rem;font-weight:600;color:var(--texto);letter-spacing:-.01em;
   text-transform:none;margin-bottom:.4rem;
@@ -190,8 +243,10 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .nota-bloco p + p,.nota-bloco .lista-fontes + p{margin-top:.65rem}
 .nota-bloco .lista-fontes{margin-top:.7rem}
 .nota-aviso{
-  font-size:.81rem;color:var(--texto-ligeiro);border-left:2px solid var(--dourado);
-  padding-left:.8rem;
+  font-size:.81rem;color:var(--texto-ligeiro);
+  border-left:3px solid color-mix(in srgb, var(--cor) 55%, transparent);
+  background:color-mix(in srgb, var(--cor) 5%, transparent);
+  padding:.55rem .8rem;border-radius:0 var(--raio-s) var(--raio-s) 0;
 }
 .nota-bloco code{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;
@@ -413,20 +468,52 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
         </div>
       </div>
       <div class="ilustra">
-        <svg viewBox="0 0 320 250" aria-hidden="true">
-          <g fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.4">
-            <circle cx="160" cy="125" r="96" stroke-opacity=".25"/>
-            <circle cx="160" cy="125" r="66" stroke-opacity=".35"/>
-            <circle cx="160" cy="125" r="36" stroke-opacity=".5"/>
-            <path d="M160 29v192M64 125h192"/>
-            <path d="M92 57l136 136M228 57L92 193" stroke-opacity=".18"/>
+        <svg viewBox="0 0 340 260" aria-hidden="true">
+          <defs>
+            <linearGradient id="varrimento" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#FFD200" stop-opacity=".55"/>
+              <stop offset="100%" stop-color="#FFD200" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- círculos do radar -->
+          <g fill="none" stroke="#fff" stroke-width="1.3">
+            <circle cx="150" cy="132" r="104" stroke-opacity=".2"/>
+            <circle cx="150" cy="132" r="76" stroke-opacity=".28"/>
+            <circle cx="150" cy="132" r="48" stroke-opacity=".36"/>
+            <path d="M150 28v208M46 132h208" stroke-opacity=".22"/>
           </g>
-          <g fill="#FFD200">
-            <circle cx="160" cy="59" r="5"/><circle cx="216" cy="149" r="5"/><circle cx="106" cy="163" r="5"/>
+          <path d="M150 132 L150 28 A104 104 0 0 1 223 59 Z" fill="url(#varrimento)"/>
+
+          <!-- jornal, ao centro -->
+          <g transform="translate(150 132)">
+            <rect x="-40" y="-30" width="72" height="60" rx="4" fill="#fff" fill-opacity=".97"/>
+            <path d="M32 -22h12a5 5 0 0 1 5 5v42a5 5 0 0 1-5 5H32z" fill="#fff" fill-opacity=".55"/>
+            <g fill="#2B5683">
+              <rect x="-32" y="-22" width="56" height="9" rx="1.5" fill-opacity=".85"/>
+              <rect x="-32" y="-8" width="26" height="19" rx="1.5" fill-opacity=".28"/>
+              <rect x="-2" y="-8" width="26" height="2.6" rx="1.3"/>
+              <rect x="-2" y="-2.5" width="26" height="2.6" rx="1.3"/>
+              <rect x="-2" y="3" width="26" height="2.6" rx="1.3"/>
+              <rect x="-2" y="8.5" width="18" height="2.6" rx="1.3"/>
+              <rect x="-32" y="17" width="56" height="2.6" rx="1.3" fill-opacity=".6"/>
+              <rect x="-32" y="23" width="38" height="2.6" rx="1.3" fill-opacity=".6"/>
+            </g>
           </g>
+
+          <!-- ondas de difusão -->
+          <g fill="none" stroke="#FFD200" stroke-width="2.2" stroke-linecap="round" opacity=".95">
+            <path d="M243 74a26 26 0 0 1 0 34"/>
+            <path d="M254 62a42 42 0 0 1 0 58"/>
+            <path d="M265 50a58 58 0 0 1 0 82" stroke-opacity=".5"/>
+          </g>
+          <circle cx="236" cy="91" r="6" fill="#FFD200"/>
+
+          <!-- pontos de sinal -->
           <g fill="#fff">
-            <circle cx="196" cy="89" r="3.5"/><circle cx="124" cy="101" r="3.5"/><circle cx="160" cy="191" r="3.5"/>
-            <circle cx="160" cy="125" r="7"/>
+            <circle cx="96" cy="86" r="3.6" fill-opacity=".9"/>
+            <circle cx="88" cy="176" r="3.6" fill-opacity=".7"/>
+            <circle cx="196" cy="196" r="3.6" fill-opacity=".8"/>
           </g>
         </svg>
       </div>
@@ -458,6 +545,10 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <span class="via"></span>
       <span>Só fontes nacionais</span>
       <span class="estado" id="estadoNacionais">ativo</span>
+    </button>
+    <button class="btn" id="btnManual">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Manual
     </button>
     <button class="btn-nota" id="btnNota">
       <span class="i">i</span>
@@ -516,7 +607,14 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
-  versao: "2026-07-30 · xlsx",
+  versao: "2026-07-31 · manual + síntese",
+  /* Ligação a um modelo de linguagem para sínteses. Deixe vazio enquanto não
+     houver ponto de acesso; o painel funciona na mesma e a síntese local
+     continua disponível. Preenchido, ativa o botão de síntese redigida.
+     Exemplo (serviço compatível com a interface OpenAI):
+       amalia: { endereco:"https://<ponto-de-acesso>/v1/chat/completions",
+                 modelo:"amalia-9b", chave:"" }  */
+  amalia: { endereco: "", modelo: "amalia", chave: "" },
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 60000,
@@ -806,7 +904,8 @@ function abrirExportacao(id){
     <div class="modal-rodape">
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
       <button class="btn" data-detalhe="${a.id}">Voltar</button>
-      <button class="btn primario" id="btnXLSX" disabled style="margin-left:auto">Descarregar Excel</button>
+      <button class="btn" id="btnSintese" disabled style="margin-left:auto">Síntese</button>
+      <button class="btn primario" id="btnXLSX" disabled>Descarregar Excel</button>
       <button class="btn" id="btnCSV" disabled>CSV</button>
     </div>`;
   $("#veu").classList.add("aberto");
@@ -814,14 +913,259 @@ function abrirExportacao(id){
   $("#btnRecolher").addEventListener("click", recolherConsulta);
   $("#btnXLSX").addEventListener("click", descarregarXLSX);
   $("#btnCSV").addEventListener("click", descarregarCSV);
+  $("#btnSintese").addEventListener("click", abrirSintese);
   if(recolha.length) mostrarEstadoRecolha("recolha anterior");
 }
 
 function fecharModal(){ $("#veu").classList.remove("aberto"); }
 
+/* =========================================================================
+   MANUAL DE UTILIZAÇÃO — embutido no painel
+   ========================================================================= */
+const MANUAL = [
+  { n:"1", titulo:"O que é o radar", cor:"var(--azul)", icone:"bussola", corpo:`
+    <p>Painel de acesso rápido à comunicação social, organizado pelas 16 áreas governativas do XXV Governo Constitucional. Não substitui a leitura de imprensa: serve para saber, em segundos, o que está a ser noticiado numa área e para levar essa recolha para uma folha de cálculo.</p>
+    <p>O painel não guarda notícias. Constrói consultas ao Google Notícias a partir das palavras-chave de cada área. A exportação é gerada no momento, no seu computador.</p>` },
+
+  { n:"2", titulo:"Navegar", cor:"var(--verde)", icone:"grelha", corpo:`
+    <dl>
+      <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
+      <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas suas palavras-chave. É pesquisa dentro do painel, não nas notícias.</dd>
+      <dt>Período</dt><dd>Janela temporal das consultas, entre 24 horas e um ano. Predefinição: sete dias.</dd>
+      <dt>Só fontes nacionais</dt><dd>Ativo por predefinição. Exclui as publicações brasileiras, que a edição portuguesa não filtra por escreverem na mesma língua.</dd>
+    </dl>` },
+
+  { n:"3", titulo:"Detalhe de uma área", cor:"var(--dourado)", icone:"lupa", corpo:`
+    <p>Clicar num cartão abre as palavras-chave da área e um campo de pesquisa específica.</p>
+    <dl>
+      <dt>Palavras-chave</dt><dd>Clicar numa delas pesquisa apenas esse termo, e a etiqueta fica marcada. Útil para isolar um assunto dentro de uma área extensa.</dd>
+      <dt>Pesquisa específica</dt><dd>Para o que as palavras-chave não cobrem: uma entidade, um diploma, um nome próprio. Aceita aspas para expressão exata.</dd>
+    </dl>
+    <p class="man-aviso">A exportação segue sempre a consulta ativa: se clicou numa palavra-chave, exporta só essa; caso contrário, exporta a área completa.</p>` },
+
+  { n:"4", titulo:"Exportar para Excel", cor:"var(--verde)", icone:"descarregar", corpo:`
+    <p><strong>Recolher notícias</strong> procura os artigos da consulta ativa. O painel tenta primeiro o ficheiro da recolha agendada, publicado ao seu lado, e só depois as vias em direto, todas em simultâneo.</p>
+    <p>O ficheiro tem duas folhas. <strong>Notícias</strong>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta. <strong>Especificações</strong>, com o período, os termos excluídos, a consulta enviada, o número de notícias e a versão do painel — é esta folha que dá rasto ao ficheiro.</p>
+    <p>O nome identifica a área e o momento, por exemplo <code>radar_saude_20260731_0915.xlsx</code>.</p>` },
+
+  { n:"5", titulo:"Síntese da recolha", cor:"var(--teal)", icone:"grafico", corpo:`
+    <p>Depois de recolher, o botão <strong>Síntese</strong> apresenta uma leitura do conjunto, calculada no seu computador: assuntos recorrentes, distribuição por publicação e por dia.</p>
+    <p>Os assuntos resultam de contagem de expressões nos títulos, não de interpretação. Servem para orientar a leitura, não para a dispensar.</p>
+    <p class="man-aviso">Se estiver configurada uma ligação a um modelo de linguagem, fica também disponível uma síntese redigida. Sem essa configuração, a síntese local funciona na mesma.</p>` },
+
+  { n:"6", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
+    <dl>
+      <dt>Cerca de 100 artigos</dt><dd>Por consulta, sem paginação. Alargar o período não traz mais artigos: distribui os mesmos 100 por mais tempo.</dd>
+      <dt>Contagens não comparáveis</dt><dd>Entre áreas. Uma área muito noticiada é truncada nos 100; uma discreta não é.</dd>
+      <dt>Ordenação por relevância</dt><dd>Não por data. O operador de tempo atua sobre a data de indexação.</dd>
+      <dt>Ligações</dt><dd>São reencaminhamentos. O painel converte-as no endereço do jornal quando a codificação o permite; a recolha agendada resolve mais casos.</dd>
+    </dl>` },
+
+  { n:"7", titulo:"Recolha agendada", cor:"var(--azul)", icone:"engrenagem", corpo:`
+    <p>Corre nos servidores do GitHub, de segunda a sexta às 7h00. Produz o Excel do dia, na página da execução, e o ficheiro <code>noticias.json</code> que o painel lê.</p>
+    <p>Para executar fora de horas: separador <strong>Actions</strong>, <em>Radar de Notícias por Área Governativa</em>, <strong>Run workflow</strong>.</p>
+    <p>Para usar o ficheiro guardado no computador, abra-o num editor de texto e preencha <code>enderecoDados</code> com o endereço do painel publicado.</p>` },
+
+  { n:"8", titulo:"Se algo correr mal", cor:"var(--teal)", icone:"chave", corpo:`
+    <table class="man-tabela">
+      <tr><td>“Sem acesso às notícias”</td><td>Use o painel publicado, ou preencha <code>enderecoDados</code>.</td></tr>
+      <tr><td>A recolha demora</td><td>Até cerca de um minuto pelas vias em direto. Pelo ficheiro agendado é imediata.</td></tr>
+      <tr><td>Erro 404 no endereço</td><td>Falta o nome do ficheiro no fim, ou o painel não se chama <code>index.html</code>.</td></tr>
+      <tr><td>Notícias brasileiras</td><td>Confirme o interruptor de fontes nacionais. O filtro é subtrativo.</td></tr>
+      <tr><td>Resultados fora do tema</td><td>Assinale qual e em que área: acrescenta-se um termo a excluir.</td></tr>
+    </table>` }
+];
+
+const ICONES_MANUAL = {
+  bussola:'<circle cx="12" cy="12" r="9"/><path d="m15 9-2 6-4 2 2-6z"/>',
+  grelha:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  lupa:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  descarregar:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>',
+  grafico:'<path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/>',
+  aviso:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+  engrenagem:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/>',
+  chave:'<path d="M20.6 3.4a5.5 5.5 0 0 1-7.1 8.3L11 14.2 8.8 12 3 17.8V21h3.2l8.6-8.6"/><circle cx="17" cy="7" r="1.2"/>'
+};
+
+/* =========================================================================
+   SÍNTESE DA RECOLHA
+   Tudo o que se segue é contagem sobre os títulos recolhidos, feita no
+   computador do utilizador. Não há interpretação: há frequência.
+   ========================================================================= */
+const VAZIAS = new Set(("a o as os um uma uns umas de do da dos das em no na nos nas por para com sem sob sobre " +
+  "e ou mas que se ao aos à às pelo pela pelos pelas este esta estes estas esse essa isso aquele aquela " +
+  "seu sua seus suas meu minha nosso nossa mais menos muito muitos pouco poucos já não sim como quando " +
+  "onde qual quais quem depois antes entre até desde após ser estar ter haver vai vão foi foram é são " +
+  "está estão tem têm pode podem deve devem faz fazem diz dizem sao ha há novo nova novos novas grande " +
+  "grandes primeiro primeira último última anos ano dia dias hoje ontem agora ainda apenas cerca contra " +
+  "mil milhões euros porque assim também só nem entre").split(" "));
+
+function palavrasSignificativas(texto){
+  return simplificar(texto).split(/\s+/).filter(p => p.length > 3 && !VAZIAS.has(p));
+}
+
+function assuntosRecorrentes(itens, quantos = 8){
+  const contagem = new Map(), exemplos = new Map();
+  itens.forEach(it => {
+    new Set(palavrasSignificativas(it.titulo)).forEach(p => {
+      contagem.set(p, (contagem.get(p) || 0) + 1);
+      if(!exemplos.has(p)) exemplos.set(p, it.titulo);
+    });
+  });
+  return [...contagem.entries()]
+    .filter(([, n]) => n > 1)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, quantos)
+    .map(([termo, n]) => ({ termo, n, exemplo: exemplos.get(termo) }));
+}
+
+function contarPor(itens, campo){
+  const m = new Map();
+  itens.forEach(it => { const v = it[campo] || "sem indicação"; m.set(v, (m.get(v) || 0) + 1); });
+  return [...m.entries()].sort((a, b) => b[1] - a[1]);
+}
+
+function barras(pares, cor, limite = 8){
+  const total = pares.reduce((s, p) => s + p[1], 0) || 1;
+  return pares.slice(0, limite).map(([rotulo, n]) => `
+    <div class="sin-linha">
+      <span class="sin-rot" title="${rotulo}">${rotulo}</span>
+      <span class="sin-barra"><i style="width:${Math.max(3, Math.round(n / total * 100))}%;background:${cor}"></i></span>
+      <span class="sin-n">${n}</span>
+    </div>`).join("");
+}
+
+function abrirSintese(){
+  if(!recolha.length) return;
+  const a = consultaAtiva.area;
+  const assuntos = assuntosRecorrentes(recolha);
+  const fontes = contarPor(recolha, "fonte");
+  const dias = contarPor(recolha.map(it => ({ dia: (it.data || "").slice(0, 10) || "sem data" })), "dia")
+                 .sort((x, y) => x[0].localeCompare(y[0]));
+  const comIA = !!(CONFIG.amalia && CONFIG.amalia.endereco);
+
+  $("#modal").innerHTML = `
+    <div class="modal-cab nota-cab">
+      <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg></div>
+      <div>
+        <h3>Síntese da recolha</h3>
+        <p>${a.nome} · ${recolha.length} notícias · ${ROTULO_PERIODO[periodo]}</p>
+      </div>
+      <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="modal-corpo">
+      <div class="bloco">
+        <h4>Assuntos recorrentes</h4>
+        ${assuntos.length
+          ? `<div class="sin-assuntos">${assuntos.map(x => `
+              <div class="sin-assunto" style="--cor:${cor(a.grupo)}">
+                <div class="sin-topo"><strong>${x.termo}</strong><span>${x.n} notícias</span></div>
+                <p>${x.exemplo}</p>
+              </div>`).join("")}</div>`
+          : `<p style="font-size:.86rem;color:var(--texto-suave)">Sem expressões repetidas em mais do que uma notícia — a cobertura está dispersa por assuntos distintos.</p>`}
+        <p class="sin-nota">Contagem de expressões nos títulos, não interpretação de conteúdo. Serve para orientar a leitura, não para a dispensar.</p>
+      </div>
+
+      <div class="bloco">
+        <h4>Publicações</h4>
+        ${barras(fontes, cor(a.grupo))}
+        <p class="sin-nota">${fontes.length} publicações distintas. A distribuição reflete o que o serviço indexou e ordenou por relevância, não a produção editorial de cada título.</p>
+      </div>
+
+      <div class="bloco" style="margin-bottom:.4rem">
+        <h4>Distribuição por dia</h4>
+        ${barras(dias, "var(--azul)", 14)}
+      </div>
+
+      <div class="bloco" id="blocoIA" style="margin-bottom:.4rem">
+        <h4>Síntese redigida</h4>
+        ${comIA
+          ? `<p style="font-size:.85rem;color:var(--texto-suave);margin-bottom:.6rem">Envia os títulos recolhidos ao modelo configurado e devolve um texto de leitura.</p>
+             <button class="btn primario" id="btnIA">Redigir síntese</button>
+             <div id="saidaIA"></div>`
+          : `<p style="font-size:.85rem;color:var(--texto-suave)">Não está configurada nenhuma ligação a modelo de linguagem. Para ativar, preencha <code>CONFIG.amalia</code> no início do código com o ponto de acesso, o nome do modelo e, se necessário, a chave. O painel envia apenas os títulos e as fontes já recolhidos.</p>`}
+      </div>
+    </div>
+    <div class="modal-rodape">
+      <button class="btn" data-exportar="${a.id}">Voltar</button>
+      <button class="btn primario" id="btnXLSX2" style="margin-left:auto">Descarregar Excel</button>
+    </div>`;
+  $("#veu").classList.add("aberto");
+  $("#btnXLSX2").addEventListener("click", descarregarXLSX);
+  if(comIA) $("#btnIA").addEventListener("click", redigirSintese);
+}
+
+/* Envia os títulos ao modelo configurado (interface compatível com a norma
+   de mercado). Nada é enviado sem o utilizador carregar no botão. */
+async function redigirSintese(){
+  const btn = $("#btnIA"), saida = $("#saidaIA");
+  btn.disabled = true; btn.textContent = "A redigir…";
+  const lista = recolha.slice(0, 60).map((it, i) => `${i+1}. ${it.titulo} (${it.fonte || "fonte não indicada"})`).join("\n");
+  const pedido = `És um analista da Unidade de Pesquisa e Estatísticas da Secretaria-Geral do Governo. ` +
+    `Recebes títulos de notícias da área governativa "${consultaAtiva.area.nome}", recolhidos em ${ROTULO_PERIODO[periodo]}. ` +
+    `Redige uma síntese em português europeu, com 120 a 180 palavras, em prosa corrida e registo institucional. ` +
+    `Identifica os assuntos dominantes e assinala divergências de enquadramento entre publicações, se existirem. ` +
+    `Não inventes factos nem números que não constem dos títulos. Não uses listas nem títulos.\n\nTítulos:\n${lista}`;
+
+  try{
+    const cabecalhos = { "Content-Type": "application/json" };
+    if(CONFIG.amalia.chave) cabecalhos["Authorization"] = "Bearer " + CONFIG.amalia.chave;
+    const r = await fetch(CONFIG.amalia.endereco, {
+      method: "POST", headers: cabecalhos,
+      body: JSON.stringify({
+        model: CONFIG.amalia.modelo,
+        messages: [{ role: "user", content: pedido }],
+        temperature: 0.2, max_tokens: 500
+      })
+    });
+    if(!r.ok) throw new Error("estado " + r.status);
+    const d = await r.json();
+    const texto = (d.choices && d.choices[0] && (d.choices[0].message || {}).content)
+      || d.content || d.text || "";
+    if(!texto) throw new Error("resposta sem texto");
+    saida.innerHTML = `<div class="sin-ia">${texto.trim().replace(/\n{2,}/g, "</p><p>").replace(/^/, "<p>").replace(/$/, "</p>")}</div>
+      <p class="sin-nota">Texto gerado por modelo de linguagem a partir dos títulos recolhidos. Tem de ser lido e validado por quem o usar: a responsabilidade editorial é sempre humana.</p>`;
+    btn.textContent = "Redigir de novo";
+  }catch(erro){
+    saida.innerHTML = `<p style="color:var(--vermelho);font-size:.85rem;margin-top:.6rem">Sem resposta do modelo: ${erro.message}. Verifique o ponto de acesso configurado.</p>`;
+    btn.textContent = "Redigir síntese";
+  }
+  btn.disabled = false;
+}
+
+function abrirManual(){
+  $("#modal").innerHTML = `
+    <div class="modal-cab nota-cab">
+      <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+      <div>
+        <h3>Manual de utilização</h3>
+        <p>Radar de Notícias por Área Governativa · versão ${CONFIG.versao}</p>
+      </div>
+      <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="modal-corpo man-corpo">
+      <nav class="man-indice">
+        ${MANUAL.map(c => `<a href="#man${c.n}" style="--cor:${c.cor}"><span>${c.n}</span>${c.titulo}</a>`).join("")}
+      </nav>
+      ${MANUAL.map(c => `
+        <section class="man-sec" id="man${c.n}" style="--cor:${c.cor}">
+          <div class="man-cab">
+            <div class="man-ic"><svg viewBox="0 0 24 24">${ICONES_MANUAL[c.icone]}</svg></div>
+            <div><span class="man-n">Capítulo ${c.n}</span><h4>${c.titulo}</h4></div>
+          </div>
+          <div class="man-txt">${c.corpo}</div>
+        </section>`).join("")}
+    </div>
+    <div class="modal-rodape nota-rodape">
+      <span>Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas</span>
+      <button class="btn" onclick="fecharModal()">Fechar</button>
+    </div>`;
+  $("#veu").classList.add("aberto");
+}
+
 function abrirNota(){
-  const bloco = (icone, titulo, corpo) => `
-    <div class="nota-bloco">
+  const bloco = (icone, titulo, corpo, cor) => `
+    <div class="nota-bloco" style="--cor:${cor || 'var(--azul)'}">
       <div class="nota-ic"><svg viewBox="0 0 24 24">${icone}</svg></div>
       <div>
         <h4>${titulo}</h4>
@@ -851,36 +1195,36 @@ function abrirNota(){
       <p class="nota-intro">Este painel não guarda notícias. Constrói consultas ao Google Notícias a partir das palavras-chave de cada área governativa e abre os resultados no serviço. O que se segue descreve as regras dessa construção e os seus limites.</p>
 
       ${bloco(ic.origem, "Origem das notícias",
-        `<p>Todas as áreas são servidas por uma pesquisa no Google Notícias, na edição portuguesa. A consulta combina por disjunção as ${CONFIG.maxPalavrasConsulta} primeiras palavras-chave da área e acrescenta a janela temporal escolhida na barra superior.</p>`)}
+        `<p>Todas as áreas são servidas por uma pesquisa no Google Notícias, na edição portuguesa. A consulta combina por disjunção todas as palavras-chave da área e acrescenta a janela temporal escolhida na barra superior.</p>`, "var(--azul)")}
 
       ${bloco(ic.limite, "Limite de resultados",
         `<p>Cada consulta devolve no máximo cerca de 100 artigos, sem paginação. O teto é do serviço e não do painel: alargar a janela temporal não traz mais artigos, distribui os mesmos 100 por mais tempo.</p>
-         <p class="nota-aviso">Consequência a reter: as contagens não são comparáveis entre áreas. Uma área muito noticiada é truncada e uma pouco noticiada não é.</p>`)}
+         <p class="nota-aviso">Consequência a reter: as contagens não são comparáveis entre áreas. Uma área muito noticiada é truncada e uma pouco noticiada não é.</p>`, "var(--dourado)")}
 
       ${bloco(ic.tempo, "Período e ordenação",
         `<p>O seletor aplica o operador <code>when:</code> e admite janelas entre 24 horas e um ano. O horizonte útil ronda um ano, pelo que este painel não serve para série histórica.</p>
          <p>Dentro da janela, os resultados não vêm por ordem cronológica: o Google ordena por relevância e agrupa notícias em histórias. Acresce que o operador atua sobre a data de indexação, que pode não coincidir com a da publicação — artigos atualizados voltam a ser datados.</p>
-         <p class="nota-aviso">Para leitura por ordem de data, copie o endereço do feed RSS no detalhe da área e subscreva-o num leitor de feeds, que ordena sempre pela data do artigo.</p>`)}
+         <p class="nota-aviso">Para leitura por ordem de data, copie o endereço do feed RSS no detalhe da área e subscreva-o num leitor de feeds, que ordena sempre pela data do artigo.</p>`, "var(--teal)")}
 
       ${bloco(ic.nacional, "Restrição a fontes nacionais",
         `<p>A edição portuguesa não impede a entrada de publicações brasileiras, que escrevem na mesma língua. O interruptor “Só fontes nacionais”, ativo por predefinição, exclui da consulta o domínio de topo brasileiro e os principais grupos de comunicação social do Brasil que não o usam.</p>
          <p class="nota-aviso">O filtro é subtrativo: só retira resultados, nunca acrescenta. Não é uma lista branca de fontes portuguesas, pelo que uma publicação estrangeira fora da lista pode ainda aparecer.</p>
-         <p class="nota-aviso">Com o filtro ativo, o Google apresenta o aviso de que o operador <code>site:</code> mostra artigos de todas as páginas indexadas do sítio indicado. É um texto genérico associado ao operador e não descreve o que aqui sucede: a utilização é negativa, não há nenhum sítio a ser expandido.</p>`)}
+         <p class="nota-aviso">Com o filtro ativo, o Google apresenta o aviso de que o operador <code>site:</code> mostra artigos de todas as páginas indexadas do sítio indicado. É um texto genérico associado ao operador e não descreve o que aqui sucede: a utilização é negativa, não há nenhum sítio a ser expandido.</p>`, "var(--vermelho)")}
 
       ${bloco(ic.fontes, "Fontes",
         `<p>A pesquisa abrange todas as publicações indexadas pelo Google Notícias na edição portuguesa, entre as quais os seguintes títulos nacionais:</p>
          <div class="lista-fontes">${FONTES_REFERENCIA.map(f => `<span>${f.nome}</span>`).join("")}</div>
-         <p class="nota-aviso">O painel não oferece filtro por título. O operador <code>site:</code> não se combina de forma fiável com o tema quando são indicados vários domínios, devolvendo notícias dessas publicações sem relação com a área.</p>`)}
+         <p class="nota-aviso">O painel não oferece filtro por título. O operador <code>site:</code> não se combina de forma fiável com o tema quando são indicados vários domínios, devolvendo notícias dessas publicações sem relação com a área.</p>`, "var(--azul)")}
 
       ${bloco(ic.limite, "Exportação de notícias",
         `<p>No detalhe de cada área é possível exportar os resultados da consulta em curso, em Excel ou em CSV, com área, agrupamento, data, fonte, domínio, título, resumo, ligação e a consulta que os originou. Exporta a consulta que estiver ativa: por predefinição todas as palavras-chave da área, ou apenas uma palavra-chave ou pesquisa específica, se tiver feito alguma.</p>
          <p>A recolha passa por um serviço público de reencaminhamento, porque o navegador não pode ler diretamente respostas de outro domínio. Se a rede bloquear esses serviços, a alternativa é executar a recolha fora do navegador — por programa próprio ou por tarefa agendada — e é essa a via recomendada para utilização regular.</p>
-         <p class="nota-aviso">A coluna do resumo fica frequentemente vazia. O serviço não fornece resumos: o campo de descrição repete o título e o nome da publicação. Prefere-se a célula vazia a texto sem valor. As ligações são reencaminhamentos e servem para abrir, não para citar.</p>`)}
+         <p class="nota-aviso">A coluna do resumo fica frequentemente vazia. O serviço não fornece resumos: o campo de descrição repete o título e o nome da publicação. Prefere-se a célula vazia a texto sem valor. As ligações são reencaminhamentos e servem para abrir, não para citar.</p>`, "var(--verde)")}
 
       ${bloco(ic.chave, "Palavras-chave",
         `<p>Cada área tem entre seis e nove palavras-chave, todas usadas na consulta e todas visíveis no detalhe da área. Cada uma pode também ser pesquisada isoladamente, bastando clicar nela.</p>
          <p>O critério é o da expressão e não o da palavra solta. Termos como “clima” ou “energia” têm sentidos que nada têm que ver com a área governativa — clima de negócios, falta de energia, suplementos alimentares — pelo que são substituídos por expressões que só existem no domínio pretendido: “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. A pesquisa por expressão exata é a única operação que o Google honra de forma fiável.</p>
-         <p class="nota-aviso">Quando uma expressão ainda deixa passar ruído previsível, a área pode declarar termos a excluir, no campo <code>excluir</code> da sua definição. É o caso do Ambiente e Energia, que afasta “clima de negócios” e expressões afins.</p>`)}
+         <p class="nota-aviso">Quando uma expressão ainda deixa passar ruído previsível, a área pode declarar termos a excluir, no campo <code>excluir</code> da sua definição. É o caso do Ambiente e Energia, que afasta “clima de negócios” e expressões afins.</p>`, "var(--verde)")}
     </div>
     <div class="modal-rodape nota-rodape">
       <span>Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas · ${CONFIG.atualizacao}</span>
@@ -1167,10 +1511,14 @@ function ligacaoDireta(url){
     if(!id) return url;
     let b = id.split("?")[0].replace(/-/g, "+").replace(/_/g, "/");
     while(b.length % 4) b += "=";
-    const bruto = atob(b);
-    const achado = bruto.match(/https?:\/\/[^\s\x00-\x1f"'<>]{10,}/);
+    let bruto = "";
+    try{ bruto = atob(b); }catch(e){ return url; }
+    /* Formato antigo: o endereço do jornal está em claro nos bytes descodificados */
+    const achado = bruto.match(/https?:\/\/[A-Za-z0-9\-._~:\/?#\[\]@!$&'()*+,;=%]{12,}/);
+    /* Formato recente: vem cifrado e só o Google o resolve — fica o reencaminhamento,
+       que abre o artigo à mesma. A recolha agendada resolve-o pelo lado do servidor. */
     if(!achado) return url;
-    return achado[0].replace(/[^\w\/\-.~:?#\[\]@!$&'()*+,;=%]+$/, "");
+    return achado[0];
   }catch(e){ return url; }
 }
 
@@ -1375,9 +1723,10 @@ function mostrarEstadoRecolha(origem){
   estado.innerHTML = recolha.length
     ? `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar <span style="color:var(--texto-ligeiro);font-size:.8rem">· ${origem} · ficheiro .xlsx</span>`
     : `<span style="color:var(--vermelho)">Não foram encontradas notícias.</span>`;
-  const x = $("#btnXLSX"), c = $("#btnCSV");
+  const x = $("#btnXLSX"), c = $("#btnCSV"), sn = $("#btnSintese");
   if(x) x.disabled = recolha.length === 0;
   if(c) c.disabled = recolha.length === 0;
+  if(sn) sn.disabled = recolha.length === 0;
 }
 
 /* =========================================================================
@@ -1443,6 +1792,7 @@ document.addEventListener("keydown", e => {
 $("#campoPesquisa").addEventListener("input", e => { termoPesquisa = e.target.value; desenhar(); });
 
 $("#btnNota").addEventListener("click", abrirNota);
+$("#btnManual").addEventListener("click", abrirManual);
 
 $("#btnNacionais").addEventListener("click", () => {
   soNacionais = !soNacionais;

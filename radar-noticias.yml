@@ -5,9 +5,9 @@ name: Radar de Notícias por Área Governativa
 # GitHub, fora da rede da Secretaria-Geral.
 #
 # Instalação, uma única vez:
-#   1. Repositório com estes ficheiros na raiz:
-#        extrair_noticias.py · radar_noticias_areas_governativas_v1.html ·
-#        .github/workflows/radar-noticias.yml
+#   1. Repositório com estes ficheiros:
+#        index.html (o painel) e extrair_noticias.py na raiz;
+#        radar-noticias.yml em .github/workflows/
 #   2. Em Settings > Pages, escolher "Deploy from a branch", ramo principal, pasta raiz.
 #   3. O painel passa a estar em https://<utilizador>.github.io/<repositório>/radar_noticias_areas_governativas_v1.html
 #      e o botão "Recolher notícias" responde sempre, porque lê o noticias.json publicado ao lado.

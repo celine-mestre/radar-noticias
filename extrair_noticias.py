@@ -25,6 +25,8 @@ import time
 from datetime import datetime
 from email.utils import parsedate_to_datetime
 from html.entities import name2codepoint
+from base64 import urlsafe_b64decode
+from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import quote, urlparse
 from urllib.request import Request, urlopen
 from xml.etree import ElementTree
@@ -135,6 +137,60 @@ def limpar(texto):
     return re.sub(r"\s+", " ", texto).strip()
 
 
+def endereco_do_artigo(ligacao, tempo_limite=12):
+    """Converte o reencaminhamento do Google no endereço do jornal.
+
+    Primeiro tenta descodificar o identificador, onde as versões mais antigas
+    trazem o endereço em claro. Não resultando, segue o reencaminhamento na rede
+    e devolve o endereço final. Falhando ambos, devolve a ligação original, que
+    abre o artigo à mesma.
+    """
+    if not ligacao or "news.google.com" not in ligacao:
+        return ligacao
+
+    identificador = ligacao.split("/articles/")[-1].split("?")[0]
+    try:
+        bruto = urlsafe_b64decode(identificador + "=" * (-len(identificador) % 4))
+        achado = re.search(rb"https?://[A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]{12,}", bruto)
+        if achado:
+            return achado.group(0).decode("utf-8", "replace").rstrip("\x00 ")
+    except Exception:                                          # noqa: BLE001
+        pass
+
+    try:
+        pedido = Request(ligacao, headers={"User-Agent": "Mozilla/5.0 SGGov-UPE-Radar/1.0"})
+        with urlopen(pedido, timeout=tempo_limite) as resposta:
+            final = resposta.geturl()
+            if final and "news.google.com" not in final:
+                return final
+            corpo = resposta.read(20000).decode("utf-8", "replace")
+        for padrao in (r'data-n-au="([^"]+)"', r'<meta[^>]+url=([^">]+)', r'href="(https?://(?!\w*\.?google\.)[^"]+)"'):
+            achado = re.search(padrao, corpo)
+            if achado:
+                return html.unescape(achado.group(1))
+    except Exception:                                          # noqa: BLE001
+        pass
+
+    return ligacao
+
+
+def resolver_ligacoes(linhas, trabalhadores=8):
+    """Resolve em paralelo os reencaminhamentos de todas as notícias."""
+    enderecos = [l[6] for l in linhas]
+    unicos = list(dict.fromkeys(enderecos))
+    print(f"A resolver {len(unicos)} ligações…", end=" ", flush=True)
+    with ThreadPoolExecutor(max_workers=trabalhadores) as piscina:
+        resolvidos = dict(zip(unicos, piscina.map(endereco_do_artigo, unicos)))
+    convertidas = 0
+    for l in linhas:
+        novo = resolvidos.get(l[6], l[6])
+        if novo != l[6]:
+            convertidas += 1
+            l[6] = novo
+    print(f"{convertidas} convertidas em endereço do jornal")
+    return linhas
+
+
 def ler_feed(url, tempo_limite=30):
     pedido = Request(url, headers={"User-Agent": "SGGov-UPE-Radar/1.0"})
     with urlopen(pedido, timeout=tempo_limite) as resposta:
@@ -224,7 +280,7 @@ def recolher(periodo, apenas=None, so_nacionais=True, pausa=1.5):
                 continue
             vistos.add(chave)
             linhas.append([nome, GRUPOS[grupo], it["data"], it["fonte"], it["dominio"],
-                           it["titulo"], it["resumo"], it["ligacao"]])
+                           it["titulo"], it["ligacao"]])
             novos += 1
         print(f"{novos} notícias")
         if i < len(alvo):
@@ -250,7 +306,7 @@ def gravar(linhas, falhas, caminho, periodo, so_nacionais):
     ws = wb.active
     ws.title = "Notícias"
     cabecalhos = ["Área governativa", "Agrupamento temático", "Data de publicação", "Fonte",
-                  "Domínio", "Título", "Resumo", "Ligação"]
+                  "Domínio", "Título", "Ligação"]
     for j, h in enumerate(cabecalhos, 1):
         c = ws.cell(row=1, column=j, value=h)
         c.font = fonte(bold=True, color="FFFFFF", size=10)
@@ -263,19 +319,19 @@ def gravar(linhas, falhas, caminho, periodo, so_nacionais):
             c = ws.cell(row=i, column=j, value=v)
             c.font = fonte(size=10)
             c.border = borda
-            c.alignment = Alignment(vertical="top", wrap_text=(j in (6, 7)))
+            c.alignment = Alignment(vertical="top", wrap_text=(j == 6))
             if i % 2 == 0:
                 c.fill = alt
             if j == 3 and v is not None:
                 c.number_format = "yyyy-mm-dd hh:mm"
-            if j == 8 and v:
+            if j == 7 and v:
                 c.hyperlink = v
                 c.font = fonte(size=10, color="2B5683", underline="single")
 
-    for j, w in enumerate([30, 28, 19, 24, 22, 62, 62, 46], 1):
+    for j, w in enumerate([30, 28, 19, 24, 22, 62, 52], 1):
         ws.column_dimensions[get_column_letter(j)].width = w
     ws.freeze_panes = "A2"
-    ws.auto_filter.ref = f"A1:H{max(2, len(linhas) + 1)}"
+    ws.auto_filter.ref = f"A1:G{max(2, len(linhas) + 1)}"
 
     # --- Folha de síntese ---
     wr = wb.create_sheet("Síntese")
@@ -339,6 +395,8 @@ def principal():
     ap.add_argument("--saida", default=None, help="nome do ficheiro Excel a criar")
     ap.add_argument("--json", default=None,
                     help="grava também um ficheiro JSON com as notícias (para publicar junto ao painel)")
+    ap.add_argument("--sem-resolver-ligacoes", action="store_true",
+                    help="não converter os reencaminhamentos do Google no endereço do jornal")
     args = ap.parse_args()
 
     if args.area and args.area not in {a[0] for a in AREAS}:
@@ -348,11 +406,13 @@ def principal():
     so_nacionais = not args.todas_as_fontes
 
     linhas, falhas = recolher(args.periodo, args.area, so_nacionais)
+    if not args.sem_resolver_ligacoes and linhas:
+        linhas = resolver_ligacoes(linhas)
     gravar(linhas, falhas, saida, args.periodo, so_nacionais)
     print(f"\n{len(linhas)} notícias gravadas em {saida}")
 
     if args.json:
-        campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "resumo", "ligacao"]
+        campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "ligacao"]
         noticias = []
         for l in linhas:
             registo = dict(zip(campos, l))
