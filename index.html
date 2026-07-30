@@ -1206,13 +1206,15 @@ function blocoEvolucao(area){
   if(serie.length < 3) return "";
 
   const recentes = serie.slice(-30);
+  const temNovas = recentes.every(d => d.novas != null);
+  const valor = d => temNovas ? d.novas : d.noticias;
   const ultimo = recentes[recentes.length - 1];
   const anteriores = recentes.slice(0, -1);
-  const media = anteriores.reduce((soma, d) => soma + d.noticias, 0) / anteriores.length;
-  const variacao = media ? Math.round((ultimo.noticias - media) / media * 100) : 0;
+  const media = anteriores.reduce((soma, d) => soma + valor(d), 0) / anteriores.length;
+  const variacao = media ? Math.round((valor(ultimo) - media) / media * 100) : 0;
   const sinal = variacao > 0 ? "+" : "";
   const corVar = variacao > 15 ? "var(--vermelho)" : variacao < -15 ? "var(--azul)" : "var(--texto-suave)";
-  const maximo = Math.max(...recentes.map(d => d.noticias));
+  const maximo = Math.max(...recentes.map(valor)) || 1;
   const etiqueta = d => { const [, m, x] = d.split("-"); return `${x}/${m}`; };
   const passo = Math.ceil(recentes.length / 10);
 
@@ -1220,17 +1222,20 @@ function blocoEvolucao(area){
     <div class="bloco">
       <h4>Evolução da área</h4>
       <div class="evo-topo">
-        <div><strong>${ultimo.noticias}</strong><span>na última recolha</span></div>
+        <div><strong>${valor(ultimo)}</strong><span>${temNovas ? "notícias novas no último dia" : "notícias no último dia"}</span></div>
         <div><strong>${media.toFixed(1).replace(".", ",")}</strong><span>média dos ${anteriores.length} dias anteriores</span></div>
         <div><strong style="color:${corVar}">${sinal}${variacao}%</strong><span>face a essa média</span></div>
       </div>
       <div class="evo-grafico">${recentes.map((d, i) => `
-        <div class="evo-col" title="${d.data}: ${d.noticias} notícias, ${d.fontes} publicações">
-          <span class="evo-haste" style="height:${Math.max(4, Math.round(d.noticias / maximo * 88))}px;
+        <div class="evo-col" title="${d.data}: ${d.noticias} notícias${d.novas != null ? ", " + d.novas + " novas" : ""}, ${d.fontes} publicações">
+          <span class="evo-haste" style="height:${Math.max(4, Math.round(valor(d) / maximo * 88))}px;
             background:${i === recentes.length - 1 ? cor(area.grupo) : "color-mix(in srgb, " + cor(area.grupo) + " 40%, transparent)"}"></span>
           <span class="evo-dia">${i % passo === 0 || i === recentes.length - 1 ? etiqueta(d.data) : ""}</span>
         </div>`).join("")}</div>
-      <p class="sin-nota">Série construída pelas recolhas agendadas, uma por dia útil, sempre com a mesma janela e o mesmo método. Por isso a comparação da área consigo própria é legítima — ao contrário da comparação entre áreas, que o teto dos 100 distorce. ${serie.length} dias registados.</p>
+      <p class="sin-nota">${temNovas
+        ? "A série conta <strong>notícias novas</strong>: as que não constavam já da recolha da véspera. As janelas de 24 horas não são perfeitamente disjuntas — o operador de tempo do Google atua sobre a data de indexação e um artigo reindexado reaparece —, pelo que contar apenas o que é novo evita somar repetições."
+        : "A série conta as notícias devolvidas em cada recolha. Pode incluir repetições entre dias consecutivos, porque o operador de tempo do Google atua sobre a data de indexação."}
+        Todas as recolhas usam a mesma janela e o mesmo método, pelo que a comparação da área consigo própria é legítima — ao contrário da comparação entre áreas, que o teto dos 100 distorce. ${serie.length} dias registados.</p>
     </div>`;
 }
 
@@ -1510,7 +1515,9 @@ function serieDaArea(nome){
   if(!historico || !historico.dias.length) return [];
   return historico.dias
     .filter(d => d.areas && d.areas[nome])
-    .map(d => ({ data:d.data, noticias:d.areas[nome].noticias, fontes:d.areas[nome].fontes }));
+    .map(d => ({ data:d.data, noticias:d.areas[nome].noticias,
+                 novas: d.areas[nome].novas != null ? d.areas[nome].novas : null,
+                 fontes:d.areas[nome].fontes }));
 }
 
 async function deDadosPublicados(){
@@ -1909,12 +1916,10 @@ function descarregarXLSX(){
 <col min="3" max="3" width="20" customWidth="1"/><col min="4" max="4" width="24" customWidth="1"/>
 <col min="5" max="5" width="26" customWidth="1"/></cols>
 <sheetData>
-${linhaEvo(["Data", "Área governativa", "Notícias recolhidas", "Publicações distintas", "Variação face ao dia anterior"], 1, 2)}
-${serie.map((d, i) => {
-  const anterior = i > 0 ? serie[i-1].noticias : null;
-  const variacao = anterior ? `${d.noticias - anterior > 0 ? "+" : ""}${d.noticias - anterior}` : "—";
-  return linhaEvo([d.data, consultaAtiva.area.nome, String(d.noticias), String(d.fontes), variacao], i + 2, 1);
-}).join("")}
+${linhaEvo(["Data", "Área governativa", "Notícias recolhidas", "Notícias novas", "Publicações distintas"], 1, 2)}
+${serie.map((d, i) => linhaEvo(
+  [d.data, consultaAtiva.area.nome, String(d.noticias),
+   d.novas != null ? String(d.novas) : "—", String(d.fontes)], i + 2, 1)).join("")}
 </sheetData>
 <autoFilter ref="A1:E${serie.length + 1}"/>
 </worksheet>`;

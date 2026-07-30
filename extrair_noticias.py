@@ -414,6 +414,8 @@ def principal():
     gravar(linhas, falhas, saida, args.periodo, so_nacionais)
     print(f"\n{len(linhas)} notícias gravadas em {saida}")
 
+    vistos_anteriores = ligacoes_da_recolha_anterior(args.json) if (args.json and args.historico) else {}
+
     if args.json:
         campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "ligacao"]
         noticias = []
@@ -432,18 +434,40 @@ def principal():
         print(f"{len(noticias)} notícias gravadas em {args.json}")
 
     if args.historico:
-        atualizar_historico(args.historico, linhas, args.periodo)
+        atualizar_historico(args.historico, linhas, args.periodo, vistos_anteriores)
     if falhas:
         print(f"{len(falhas)} áreas falharam — ver a folha Falhas.")
 
 
-def atualizar_historico(caminho, linhas, periodo):
+def ligacoes_da_recolha_anterior(caminho_json):
+    """Ligações da recolha anterior, para distinguir o que é novo.
+
+    As janelas de 24 horas não são perfeitamente disjuntas: o operador de tempo
+    do Google atua sobre a data de indexação e um artigo reindexado volta a
+    aparecer. Comparar com a véspera é o que permite contar notícias novas em
+    vez de contar repetições.
+    """
+    if not os.path.exists(caminho_json):
+        return {}
+    try:
+        with open(caminho_json, encoding="utf-8") as origem:
+            anterior = json.load(origem)
+    except (json.JSONDecodeError, OSError):
+        return {}
+    vistos = {}
+    for n in anterior.get("noticias", []):
+        vistos.setdefault(n.get("area", ""), set()).add(n.get("ligacao", ""))
+    return vistos
+
+
+def atualizar_historico(caminho, linhas, periodo, vistos=None):
     """Acrescenta à série diária o retrato de hoje, por área governativa.
 
-    Guarda apenas agregados — número de notícias e de publicações distintas por
-    área e por dia. É deliberadamente pequeno: cresce cerca de 2 KB por dia e
-    pode ser lido de uma vez pelo painel.
+    Guarda apenas agregados — notícias recolhidas, notícias novas face à recolha
+    anterior e publicações distintas. É deliberadamente pequeno: cresce cerca de
+    2 KB por dia e pode ser lido de uma vez pelo painel.
     """
+    vistos = vistos or {}
     hoje = datetime.now().strftime("%Y-%m-%d")
 
     serie = {"atualizado": hoje, "dias": []}
@@ -458,15 +482,17 @@ def atualizar_historico(caminho, linhas, periodo):
 
     por_area = {}
     for l in linhas:
-        registo = por_area.setdefault(l[0], {"noticias": 0, "fontes": set()})
+        registo = por_area.setdefault(l[0], {"noticias": 0, "novas": 0, "fontes": set()})
         registo["noticias"] += 1
+        if l[6] and l[6] not in vistos.get(l[0], set()):
+            registo["novas"] += 1
         if l[3]:
             registo["fontes"].add(l[3])
 
     serie["dias"].append({
         "data": hoje,
         "periodo": periodo or "sem limite",
-        "areas": {nome: {"noticias": v["noticias"], "fontes": len(v["fontes"])}
+        "areas": {nome: {"noticias": v["noticias"], "novas": v["novas"], "fontes": len(v["fontes"])}
                   for nome, v in sorted(por_area.items())},
     })
     serie["dias"].sort(key=lambda d: d["data"])
