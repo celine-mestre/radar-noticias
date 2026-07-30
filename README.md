@@ -99,8 +99,9 @@ python extrair_noticias.py --periodo 7d --json noticias.json
 Todos do serviço de origem, e todos documentados na nota metodológica do painel.
 
 - **Teto de 100 artigos por consulta**, sem paginação. Qualquer que seja o período
-  escolhido, uma consulta não devolve mais do que isso: alargar a janela distribui
-  as mesmas 100 notícias por mais tempo.
+  escolhido, uma consulta não devolve mais do que isso. O período não altera quantas
+  notícias vêm — altera quais: janelas curtas trazem o que é recente, janelas longas
+  trazem as mesmas 100 espalhadas por mais tempo. A predefinição são 24 horas.
 - **Contagens não comparáveis entre áreas.** Uma área muito noticiada é truncada no
   teto; uma área discreta não é.
 - **Ordenação por relevância**, não por data. O operador de tempo atua sobre a data
@@ -109,28 +110,6 @@ Todos do serviço de origem, e todos documentados na nota metodológica do paine
 - **Ligações.** São reencaminhamentos do Google. São convertidas no endereço do
   jornal sempre que a codificação o permite; a recolha agendada resolve mais casos,
   por seguir o reencaminhamento do lado do servidor.
-
----
-
-## Síntese redigida por modelo de linguagem
-
-O painel está preparado para gerar uma síntese redigida a partir dos títulos
-recolhidos, através do **AMALIA**, o modelo de linguagem para português europeu
-desenvolvido sob coordenação da ARTE e disponibilizado em código aberto.
-
-Falta apenas um ponto de acesso. Existindo, preenche-se no início do código:
-
-```js
-amalia: {
-  endereco: "https://<ponto-de-acesso>/v1/chat/completions",
-  modelo:   "amalia-llm/AMALIA-9B-0626-DPO",
-  chave:    ""
-},
-```
-
-A interface esperada é a que a documentação do AMALIA indica para servir o modelo.
-Sem configuração, o bloco não aparece e a síntese calculada no painel funciona na
-mesma.
 
 ---
 

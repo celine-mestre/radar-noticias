@@ -630,10 +630,10 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       <span class="rot">Período</span>
       <select id="campoPeriodo" aria-label="Período das notícias">
-        <option value="24h">Últimas 24 horas</option>
+        <option value="24h" selected>Últimas 24 horas</option>
         <option value="48h">Últimas 48 horas</option>
         <option value="72h">Últimas 72 horas</option>
-        <option value="7d" selected>Últimos 7 dias</option>
+        <option value="7d">Últimos 7 dias</option>
         <option value="30d">Últimos 30 dias</option>
         <option value="365d">Último ano</option>
         <option value="">Sem limite de tempo</option>
@@ -706,13 +706,6 @@ const CONFIG = {
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
   versao: "2026-07-31 · manual + síntese",
-  /* Ligação a um modelo de linguagem para sínteses. Deixe vazio enquanto não
-     houver ponto de acesso; o painel funciona na mesma e a síntese local
-     continua disponível. Preenchido, ativa o botão de síntese redigida.
-     A interface é a que a documentação do AMALIA indica para servir o modelo:
-       amalia: { endereco:"https://<ponto-de-acesso>/v1/chat/completions",
-                 modelo:"amalia-llm/AMALIA-9B-0626-DPO", chave:"" }  */
-  amalia: { endereco: "", modelo: "amalia-llm/AMALIA-9B-0626-DPO", chave: "" },
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 60000,
@@ -815,7 +808,7 @@ const AREAS = [
    ESTADO DA APLICAÇÃO
    ========================================================================= */
 let filtroAtual = "todas";
-let periodo = "7d";       // operador when: do Google Notícias
+let periodo = "24h";      // operador when: do Google Notícias
 let soNacionais = true;   // exclui os domínios listados em CONFIG.exclusoes
 const ROTULO_PERIODO = {
   "24h":"últimas 24 horas", "48h":"últimas 48 horas", "72h":"últimas 72 horas",
@@ -1029,7 +1022,7 @@ const MANUAL = [
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas suas palavras-chave. É pesquisa dentro do painel, não nas notícias.</dd>
-      <dt>Período</dt><dd>Janela temporal das consultas, entre 24 horas e um ano. Predefinição: sete dias.</dd>
+      <dt>Período</dt><dd>Janela temporal das consultas, entre 24 horas e um ano. Predefinição: 24 horas. Como o teto de 100 notícias se aplica sempre, o período não altera quantas notícias vêm — altera quais: janelas curtas devolvem o que é recente, janelas longas devolvem o que o serviço considera mais relevante ao longo do tempo.</dd>
       <dt>Só fontes nacionais</dt><dd>Ativo por predefinição. Exclui as publicações brasileiras, que a edição portuguesa não filtra por escreverem na mesma língua.</dd>
     </dl>` },
 
@@ -1042,7 +1035,7 @@ const MANUAL = [
     <p class="man-aviso">A exportação segue sempre a consulta ativa: se clicou numa palavra-chave, exporta só essa; caso contrário, exporta a área completa.</p>` },
 
   { n:"4", titulo:"Exportar para Excel", cor:"var(--verde)", icone:"descarregar", corpo:`
-    <p><strong>Recolher notícias</strong> procura os artigos da consulta ativa. O painel tenta primeiro o ficheiro da recolha agendada, publicado ao seu lado, e só depois as vias em direto, todas em simultâneo.</p>
+    <p><strong>Recolher notícias</strong> procura os artigos da consulta ativa. O painel usa primeiro o ficheiro da recolha agendada, publicado ao seu lado, e recorre à recolha em direto quando esse ficheiro não existe.</p>
     <p>O ficheiro tem duas folhas. <strong>Notícias</strong>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta. <strong>Especificações</strong>, com o período, os termos excluídos, a consulta enviada, o número de notícias e a versão do painel — é esta folha que dá rasto ao ficheiro.</p>
     <p>O nome identifica a área e o momento, por exemplo <code>radar_saude_20260731_0915.xlsx</code>.</p>` },
 
@@ -1057,7 +1050,7 @@ const MANUAL = [
     </dl>
     <p>Tudo isto é contagem, não interpretação. Serve para orientar a leitura, não para a dispensar.</p>
     <p class="man-aviso">O teto de 100 notícias por consulta aplica-se qualquer que seja o período escolhido. Uma área que o atinja está truncada, pelo que as contagens medem o que foi indexado e devolvido, não o total noticiado.</p>
-    <p>Está prevista uma síntese redigida por modelo de linguagem, que fica disponível quando existir um ponto de acesso ao AMALIA. Entretanto, a leitura acima é integralmente calculada no painel.</p>` },
+    <p>Toda a leitura acima é calculada no painel, a partir das notícias recolhidas. Nada é enviado para fora.</p>` },
 
   { n:"6", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <dl>
@@ -1205,7 +1198,6 @@ function abrirSintese(){
                  .sort((x, y) => x[0].localeCompare(y[0]));
   const comData = recolha.filter(it => it.data).length;
   const diasUteis = dias.filter(d => d[0] !== "sem data").length;
-  const comIA = !!(CONFIG.amalia && CONFIG.amalia.endereco);
   const maxAssunto = assuntos.length ? assuntos[0].n : 1;
 
   const kpi = (valor, rotulo, cor2) =>
@@ -1224,14 +1216,14 @@ function abrirSintese(){
 
       <div class="sin-teto">
         <svg viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
-        <p><strong>Teto de 100 notícias por consulta.</strong> É limite do serviço e não do painel: qualquer que seja o período escolhido, uma consulta nunca devolve mais de cerca de 100 artigos, e não há paginação para lá disso. Alargar a janela temporal não traz mais notícias — distribui as mesmas 100 por mais tempo, tornando-as em média mais antigas. Uma área que atinja o teto está truncada, pelo que os números abaixo medem o que foi indexado e devolvido, não o total noticiado.</p>
+        <p><strong>Teto de 100 notícias por consulta.</strong> É limite do serviço e não do painel: qualquer que seja o período escolhido, uma consulta nunca devolve mais de cerca de 100 artigos, e não há paginação para lá disso. O período não altera quantas notícias vêm — altera quais: janelas curtas trazem o que é recente, janelas longas trazem as mesmas 100 espalhadas por mais tempo. Uma área que atinja o teto está truncada, pelo que os números abaixo medem o que foi indexado e devolvido, não o total noticiado.</p>
       </div>
 
       <div class="sin-kpis">
         ${kpi(recolha.length, "notícias recolhidas", corA)}
         ${kpi(fontes.length, fontes.length === 1 ? "publicação" : "publicações", "var(--azul)")}
         ${kpi(diasUteis || "—", diasUteis === 1 ? "dia com notícias" : "dias com notícias", "var(--teal)")}
-        ${kpi(diasUteis ? (comData / diasUteis).toFixed(1).replace(".", ",") : "—", "notícias por dia", "var(--dourado)")}
+        ${kpi(diasUteis ? (comData / diasUteis).toFixed(1).replace(".", ",") : "—", "média de notícias por dia", "var(--dourado)")}
       </div>
 
       <div class="bloco">
@@ -1268,13 +1260,6 @@ function abrirSintese(){
         <p class="sin-nota">${comData} das ${recolha.length} notícias têm data reconhecida. O serviço ordena por relevância e a data é a de indexação, pelo que a distribuição é indicativa.</p>
       </div>
 
-      ${comIA ? `
-      <div class="bloco" id="blocoIA" style="margin-bottom:.4rem">
-        <h4>Síntese redigida</h4>
-        <p style="font-size:.85rem;color:var(--texto-suave);margin-bottom:.6rem">Envia os títulos recolhidos ao modelo configurado e devolve um texto de leitura.</p>
-        <button class="btn primario" id="btnIA">Redigir síntese</button>
-        <div id="saidaIA"></div>
-      </div>` : ""}
     </div>
     <div class="modal-rodape">
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
@@ -1283,46 +1268,10 @@ function abrirSintese(){
     </div>`;
   $("#veu").classList.add("aberto");
   $("#btnXLSX2").addEventListener("click", descarregarXLSX);
-  if(comIA) $("#btnIA").addEventListener("click", redigirSintese);
 }
 
 /* Envia os títulos ao modelo configurado (interface compatível com a norma
    de mercado). Nada é enviado sem o utilizador carregar no botão. */
-async function redigirSintese(){
-  const btn = $("#btnIA"), saida = $("#saidaIA");
-  btn.disabled = true; btn.textContent = "A redigir…";
-  const lista = recolha.slice(0, 60).map((it, i) => `${i+1}. ${it.titulo} (${it.fonte || "fonte não indicada"})`).join("\n");
-  const pedido = `És um analista da Unidade de Pesquisa e Estatísticas da Secretaria-Geral do Governo. ` +
-    `Recebes títulos de notícias da área governativa "${consultaAtiva.area.nome}", recolhidos em ${ROTULO_PERIODO[periodo]}. ` +
-    `Redige uma síntese em português europeu, com 120 a 180 palavras, em prosa corrida e registo institucional. ` +
-    `Identifica os assuntos dominantes e assinala divergências de enquadramento entre publicações, se existirem. ` +
-    `Não inventes factos nem números que não constem dos títulos. Não uses listas nem títulos.\n\nTítulos:\n${lista}`;
-
-  try{
-    const cabecalhos = { "Content-Type": "application/json" };
-    if(CONFIG.amalia.chave) cabecalhos["Authorization"] = "Bearer " + CONFIG.amalia.chave;
-    const r = await fetch(CONFIG.amalia.endereco, {
-      method: "POST", headers: cabecalhos,
-      body: JSON.stringify({
-        model: CONFIG.amalia.modelo,
-        messages: [{ role: "user", content: pedido }],
-        temperature: 0.2, max_tokens: 500
-      })
-    });
-    if(!r.ok) throw new Error("estado " + r.status);
-    const d = await r.json();
-    const texto = (d.choices && d.choices[0] && (d.choices[0].message || {}).content)
-      || d.content || d.text || "";
-    if(!texto) throw new Error("resposta sem texto");
-    saida.innerHTML = `<div class="sin-ia">${texto.trim().replace(/\n{2,}/g, "</p><p>").replace(/^/, "<p>").replace(/$/, "</p>")}</div>
-      <p class="sin-nota">Texto gerado por modelo de linguagem a partir dos títulos recolhidos. Tem de ser lido e validado por quem o usar: a responsabilidade editorial é sempre humana.</p>`;
-    btn.textContent = "Redigir de novo";
-  }catch(erro){
-    saida.innerHTML = `<p style="color:var(--vermelho);font-size:.85rem;margin-top:.6rem">Sem resposta do modelo: ${erro.message}. Verifique o ponto de acesso configurado.</p>`;
-    btn.textContent = "Redigir síntese";
-  }
-  btn.disabled = false;
-}
 
 function abrirManual(n){
   const atual = n || "1";
@@ -1400,7 +1349,7 @@ function abrirNota(){
          <p class="nota-aviso">Consequência a reter: as contagens não são comparáveis entre áreas. Uma área muito noticiada é truncada e uma pouco noticiada não é.</p>`, "var(--dourado)")}
 
       ${bloco(ic.tempo, "Período e ordenação",
-        `<p>O seletor aplica o operador <code>when:</code> e admite janelas entre 24 horas e um ano. O horizonte útil ronda um ano, pelo que este painel não serve para série histórica.</p>
+        `<p>O seletor aplica o operador <code>when:</code> e admite janelas entre 24 horas e um ano, com predefinição de 24 horas. Como o teto de cerca de 100 artigos se aplica a qualquer janela, o período não determina quantas notícias vêm, mas quais: uma janela de 24 horas devolve o que é recente; uma janela longa devolve o que o serviço considera mais relevante distribuído por esse intervalo, com idade média muito superior.</p>
          <p>Dentro da janela, os resultados não vêm por ordem cronológica: o Google ordena por relevância e agrupa notícias em histórias. Acresce que o operador atua sobre a data de indexação, que pode não coincidir com a da publicação — artigos atualizados voltam a ser datados.</p>
          <p class="nota-aviso">Para leitura por ordem de data, copie o endereço do feed RSS no detalhe da área e subscreva-o num leitor de feeds, que ordena sempre pela data do artigo.</p>`, "var(--teal)")}
 
@@ -1569,7 +1518,7 @@ async function recolherConsulta(){
     return;
   }catch(e){ /* segue para a recolha em direto */ }
 
-  /* As restantes vias correm em simultâneo; vale a primeira que responder */
+  /* Recolha em direto: as vias disponíveis correm em simultâneo e vale a primeira */
   const arranque = Date.now();
   const contador = setInterval(() => {
     const seg = Math.round((Date.now() - arranque) / 1000);
@@ -1590,7 +1539,7 @@ async function recolherConsulta(){
     btn.disabled = false;
     estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias.</span>
       <br><span style="font-size:.84rem">Publique o painel no GitHub Pages ao lado do ficheiro da recolha agendada, ou preencha <code>CONFIG.enderecoDados</code> no código com esse endereço.</span>
-      <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Ver o que falhou</summary>
+      <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico, para reportar à área de sistemas</summary>
       <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
   }
 }
