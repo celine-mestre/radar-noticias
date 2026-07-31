@@ -136,6 +136,14 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
   color:#fff;cursor:pointer;outline:none;padding-right:.1rem;
 }
 .periodo select option{color:var(--texto);background:var(--superficie)}
+.segmentado{display:inline-flex;border:1px solid var(--borda-forte);border-radius:999px;
+  background:var(--superficie);padding:2px;gap:2px}
+.segmentado button{
+  padding:.38rem .85rem;border:none;border-radius:999px;background:transparent;
+  font-family:var(--fonte);font-size:.8rem;font-weight:500;color:var(--texto-suave);cursor:pointer;transition:.16s;
+}
+.segmentado button:hover{color:var(--texto)}
+.segmentado button.ativo{background:var(--verde);color:#fff}
 .interruptor{
   display:inline-flex;align-items:center;gap:.6rem;padding:.44rem 1rem .44rem .6rem;
   border:1px solid var(--borda-forte);border-radius:999px;background:var(--superficie);
@@ -709,11 +717,11 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
         <option value="">Sem limite de tempo</option>
       </select>
     </label>
-    <button class="interruptor" id="btnNacionais" aria-pressed="true">
-      <span class="via"></span>
-      <span>Só fontes nacionais</span>
-      <span class="estado" id="estadoNacionais">ativo</span>
-    </button>
+    <div class="segmentado" id="filtroFontes" role="group" aria-label="Origem das fontes">
+      <button data-fonte="nacionais" class="ativo">Nacionais</button>
+      <button data-fonte="internacionais">Internacionais</button>
+      <button data-fonte="todas">Todas</button>
+    </div>
     <button class="btn-nota" id="btnManual">
       <span class="i">i</span>
       Manual e método
@@ -776,16 +784,14 @@ const CONFIG = {
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 25000,
-  /* Domínios excluídos quando o filtro de fontes nacionais está ativo.
-     Acrescentar aqui outros domínios ou domínios de topo, sempre precedidos de "site:". */
-  /* Domínios excluídos quando o interruptor "só fontes nacionais" está ativo.
-     Cobre os domínios de topo dos restantes países de língua portuguesa e os
-     grupos de comunicação social que não os usam. */
-  exclusoes: [
-    "site:.br", "site:.ao", "site:.mz", "site:.cv", "site:.st", "site:.gw", "site:.tl", "site:.mo",
-    "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com", "site:uol.com.br",
-    "site:novojornal.co.ao", "site:jornaldeangola.ao", "site:verangola.net",
-    "site:opais.co.mz", "site:verdade.co.mz", "site:expressodasilhas.cv", "site:asemana.publ.cv"
+  /* Fontes nacionais: o operador de exclusão por domínio não é honrado pelo
+     serviço, pelo que a restrição é aplicada às notícias já recolhidas. São
+     nacionais os domínios .pt e os títulos portugueses que usam outro domínio. */
+  /* Títulos portugueses que não usam domínio .pt — o resto é reconhecido pelo domínio */
+  dominiosNacionais: [
+    "noticiasaominuto.com", "theportugalnews.com", "portugalresident.com",
+    "lusa.pt", "agencialusa.com", "cnnportugal.iol.pt", "iol.pt",
+    "eco.sapo.pt", "sapo.pt", "aeiou.pt", "impresa.pt", "medialivre.pt"
   ],
   atualizacao: "30 de julho de 2026"
 };
@@ -884,7 +890,14 @@ const AREAS = [
    ========================================================================= */
 let filtroAtual = "todas";
 let periodo = "24h";      // operador when: do Google Notícias
-let soNacionais = true;   // exclui os domínios listados em CONFIG.exclusoes
+let filtroFontes = "nacionais";   // nacionais · internacionais · todas
+let soNacionais = true;           // atalho para o caso mais frequente
+const ROTULO_FONTES = {
+  nacionais: "só fontes nacionais",
+  internacionais: "só fontes internacionais",
+  todas: "todas as fontes"
+};
+
 const ROTULO_PERIODO = {
   "24h":"últimas 24 horas", "48h":"últimas 48 horas", "72h":"últimas 72 horas",
   "7d":"últimos 7 dias", "30d":"últimos 30 dias", "365d":"último ano", "":"sem limite de tempo"
@@ -897,7 +910,7 @@ const nomeGrupo = idGrupo => (GRUPOS.find(g => g.id === idGrupo) || {}).nome || 
 
 /* Sufixo comum: exclusão de domínios estrangeiros e janela temporal */
 function sufixo(){
-  const excl = soNacionais ? " " + CONFIG.exclusoes.map(d => `-${d}`).join(" ") : "";
+  const excl = "";   // a restrição de fontes é aplicada às notícias recolhidas
   return excl + (periodo ? ` when:${periodo}` : "");
 }
 
@@ -1015,7 +1028,7 @@ function abrirDetalhe(id){
       <div class="icone"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
       <div>
         <h3>${a.nome}</h3>
-        <p>${nomeGrupo(a.grupo)} · ${ROTULO_PERIODO[periodo]}${soNacionais ? " · só fontes nacionais" : ""}</p>
+        <p>${nomeGrupo(a.grupo)} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -1063,7 +1076,7 @@ function abrirExportacao(id){
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></div>
       <div>
         <h3>Exportar notícias</h3>
-        <p>${a.nome} · ${ROTULO_PERIODO[periodo]}${soNacionais ? " · só fontes nacionais" : ""}</p>
+        <p>${a.nome} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -1137,7 +1150,8 @@ const MANUAL = [
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: 24 horas. Como o teto de 100 notícias se aplica sempre, o período não altera <em>quantas</em> notícias vêm — altera <em>quais</em>.</dd>
-      <dt>Só fontes nacionais</dt><dd>Ativo por predefinição. Exclui as publicações dos restantes países de língua portuguesa, que a edição portuguesa não filtra por escreverem no mesmo idioma. É um filtro subtrativo: retira resultados, nunca acrescenta, pelo que uma publicação fora da lista pode ainda aparecer.</dd>
+      <dt>Origem das fontes</dt><dd>Três posições. <strong>Nacionais</strong>, por predefinição, mantém apenas domínios <code>.pt</code> e os títulos portugueses conhecidos que usam outro domínio. <strong>Internacionais</strong> mostra exatamente o contrário, o que é útil para ver como uma matéria portuguesa está a ser tratada lá fora. <strong>Todas</strong> não filtra.</dd>
+      <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida — e não apenas pela consulta enviada ao serviço. É por isso que funciona mesmo sobre as notícias da recolha agendada.</dd>
     </dl>` },
 
   { n:"3", titulo:"Detalhe de uma área", cor:"var(--dourado)", icone:"lupa", corpo:`
@@ -1290,10 +1304,11 @@ function anel(pares, tamanho = 168){
 function colunas(pares, corBarra){
   if(!pares.length) return "";
   const maximo = Math.max(...pares.map(p => p[1]));
+  const anoAtual = String(new Date().getFullYear());
   const dia = d => {
     if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) return "s/ data";
-    const [, m, x] = d.split("-");
-    return `${x}/${m}`;
+    const [a, m, x] = d.split("-");
+    return a === anoAtual ? `${x}/${m}` : `${x}/${m}/${a.slice(2)}`;
   };
   return `<div class="sin-colunas">${pares.map(([d, n]) => `
     <div class="sin-col" title="${d}: ${n} notícias">
@@ -1329,7 +1344,11 @@ function blocoEvolucao(area){
   const sinal = variacao > 0 ? "+" : "";
   const corVar = variacao > 15 ? "var(--vermelho)" : variacao < -15 ? "var(--azul)" : "var(--texto-suave)";
   const maximo = Math.max(...recentes.map(valor)) || 1;
-  const etiqueta = d => { const [, m, x] = d.split("-"); return `${x}/${m}`; };
+  const anoCorrente = String(new Date().getFullYear());
+  const etiqueta = d => {
+    const [a, m, x] = d.split("-");
+    return a === anoCorrente ? `${x}/${m}` : `${x}/${m}/${a.slice(2)}`;
+  };
   const passo = Math.ceil(recentes.length / 10);
 
   return `
@@ -1373,9 +1392,11 @@ function abrirLeitura(){
                  "agosto","setembro","outubro","novembro","dezembro"];
   const rotuloDia = d => {
     const [ano, mes, dia] = d.split("-");
-    const hoje = new Date().toISOString().slice(0, 10);
+    const agora = new Date();
+    const hoje = agora.toISOString().slice(0, 10);
     if(d === hoje) return "Hoje";
-    return `${Number(dia)} de ${MESES[Number(mes) - 1]}`;
+    const sufixo = ano === String(agora.getFullYear()) ? "" : ` de ${ano}`;
+    return `${Number(dia)} de ${MESES[Number(mes) - 1]}${sufixo}`;
   };
   const hora = n => (n.data || "").slice(11, 16);
 
@@ -1439,7 +1460,7 @@ function abrirSintese(){
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg></div>
       <div>
         <h3>Síntese da recolha</h3>
-        <p>${a.nome} · ${ROTULO_PERIODO[periodo]}${soNacionais ? " · só fontes nacionais" : ""}</p>
+        <p>${a.nome} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -1714,11 +1735,41 @@ function primeiraQueResulte(promessas){
 
 /* Identidade de uma notícia: título e fonte. Não se usa a ligação, porque um
    reencaminhamento mal resolvido pode ser igual para artigos diferentes. */
+/* Uma notícia é nacional se o domínio termina em .pt ou consta da lista de
+   títulos portugueses com outro domínio. Sem domínio conhecido, mantém-se:
+   mais vale deixar passar do que apagar por engano. */
+function fonteNacional(it){
+  const d = (it.dominio || "").toLowerCase().replace(/^www\./, "");
+  if(!d) return true;
+  if(d === "pt" || d.endsWith(".pt")) return true;
+  return CONFIG.dominiosNacionais.some(x => d === x || d.endsWith("." + x));
+}
+
 function chaveNoticia(it){
   return simplificar((it.titulo || "") + "|" + (it.fonte || ""));
 }
 
+const HORAS_PERIODO = { "24h":24, "48h":48, "72h":72, "7d":168, "30d":720, "365d":8760 };
+
+/* O operador de tempo do serviço atua sobre a data de indexação e deixa passar
+   artigos antigos. Esta verificação usa a data de publicação do próprio artigo. */
+function dentroDoPeriodo(it){
+  const horas = HORAS_PERIODO[periodo];
+  if(!horas || !it.data) return true;                 // sem limite, ou sem data conhecida
+  const d = new Date(it.data.replace(" ", "T"));
+  if(isNaN(d)) return true;
+  return d.getTime() >= Date.now() - horas * 3600 * 1000;
+}
+
 function assentarRecolha(itens, origem){
+  const total = itens.length;
+  if(filtroFontes === "nacionais") itens = itens.filter(fonteNacional);
+  else if(filtroFontes === "internacionais") itens = itens.filter(it => !fonteNacional(it));
+  const porOrigem = total - itens.length;
+  const antesDoTempo = itens.length;
+  itens = itens.filter(dentroDoPeriodo);
+  const porData = antesDoTempo - itens.length;
+  const retiradas = { origem: porOrigem, data: porData };
   const vistos = new Set();
   recolha = itens.filter(it => {
     const k = chaveNoticia(it);
@@ -1726,7 +1777,7 @@ function assentarRecolha(itens, origem){
     vistos.add(k); return true;
   });
   recolha.sort((x, y) => (y.data || "").localeCompare(x.data || ""));
-  mostrarEstadoRecolha(origem);
+  mostrarEstadoRecolha(origem, retiradas);
 }
 
 async function recolherConsulta(){
@@ -2020,8 +2071,11 @@ function descarregarXLSX(){
     ["Palavras-chave da consulta", consultaAtiva.rotulo],
     ["Termos excluídos", (consultaAtiva.area.excluir || []).join("; ") || "—"],
     ["Janela temporal", ROTULO_PERIODO[periodo]],
-    ["Restrição a fontes nacionais", soNacionais ? "sim" : "não"],
-    ["Domínios excluídos", soNacionais ? CONFIG.exclusoes.join("; ") : "—"],
+    ["Origem das fontes", {
+      nacionais: "só nacionais — domínios .pt e títulos portugueses reconhecidos",
+      internacionais: "só internacionais — tudo o que não seja fonte portuguesa",
+      todas: "todas as fontes, sem restrição"
+    }[filtroFontes]],
     ["Origem", "Google Notícias, edição portuguesa (hl=pt-PT, gl=PT, ceid=PT:pt-150)"],
     ["Consulta enviada", consultaAtiva.q],
     ["Notícias exportadas", String(recolha.length)],
@@ -2119,11 +2173,16 @@ ${serie.map((d, i) => linhaEvo(
 }
 
 
-function mostrarEstadoRecolha(origem){
+function mostrarEstadoRecolha(origem, retiradas){
+  retiradas = retiradas || { origem:0, data:0 };
   const estado = $("#expEstado");
   if(!estado) return;
+  const partes = [];
+  if(retiradas.origem) partes.push(`${retiradas.origem} pelo filtro de origem`);
+  if(retiradas.data) partes.push(`${retiradas.data} fora do período`);
+  const nota = partes.length ? ` · ${partes.join(", ")}` : "";
   estado.innerHTML = recolha.length
-    ? `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar <span style="color:var(--texto-ligeiro);font-size:.8rem">· ${origem} · ficheiro .xlsx</span>`
+    ? `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar <span style="color:var(--texto-ligeiro);font-size:.8rem">· ${origem}${nota}</span>`
     : `<span style="color:var(--vermelho)">Não foram encontradas notícias.</span>`;
   const passo2 = $("#passo2");
   if(passo2) passo2.hidden = recolha.length === 0;
@@ -2198,11 +2257,13 @@ $("#campoPesquisa").addEventListener("input", e => { termoPesquisa = e.target.va
 
 $("#btnManual").addEventListener("click", () => abrirManual("1"));
 
-$("#btnNacionais").addEventListener("click", () => {
-  soNacionais = !soNacionais;
-  $("#btnNacionais").setAttribute("aria-pressed", soNacionais ? "true" : "false");
-  $("#estadoNacionais").textContent = soNacionais ? "ativo" : "inativo";
-  mostrarAviso(soNacionais ? "Fontes estrangeiras excluídas" : "Sem exclusão de fontes estrangeiras");
+$("#filtroFontes").addEventListener("click", e => {
+  const b = e.target.closest("[data-fonte]");
+  if(!b) return;
+  filtroFontes = b.dataset.fonte;
+  soNacionais = filtroFontes === "nacionais";
+  document.querySelectorAll("#filtroFontes button").forEach(x => x.classList.toggle("ativo", x === b));
+  mostrarAviso(ROTULO_FONTES[filtroFontes]);
 });
 
 $("#campoPeriodo").addEventListener("change", e => {
