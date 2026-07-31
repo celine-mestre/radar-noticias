@@ -790,7 +790,7 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
-  versao: "31 de julho, 14h",
+  versao: "31 de julho, 15h",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 25000,
@@ -1107,7 +1107,7 @@ function abrirExportacao(id){
       </div>
 
       <p class="aviso-alcance" id="avisoAlcance" hidden>
-        Estes resultados vêm do instantâneo diário da área, recolhido de manhã. Uma pesquisa por palavra-chave ou um período mais largo precisam de consultar o serviço, que não respondeu — para ver tudo o que existe sobre o termo, use “Abrir no Google Notícias”.
+        O serviço de pesquisa não respondeu, pelo que estes resultados vêm do retrato diário da área, sem a janela temporal aplicada. Para ver tudo o que existe sobre o termo, use “Abrir no Google Notícias”.
       </p>
 
       <div class="passo" id="passo1">
@@ -1814,7 +1814,7 @@ function dentroDoPeriodo(it){
   return d.getTime() >= Date.now() - horas * 3600 * 1000;
 }
 
-function assentarRecolha(itens, origem){
+function assentarRecolha(itens, origem, ignorarPeriodo){
   const total = itens.length;
   if(semRedes){
     itens = itens.filter(it => !ehRedeSocial(it));
@@ -1825,7 +1825,7 @@ function assentarRecolha(itens, origem){
   else if(filtroFontes === "internacionais") itens = itens.filter(it => !fonteNacional(it));
   const porOrigem = antesOrigem - itens.length;
   const antesDoTempo = itens.length;
-  itens = itens.filter(dentroDoPeriodo);
+  if(!ignorarPeriodo) itens = itens.filter(dentroDoPeriodo);
   const porData = antesDoTempo - itens.length;
   const retiradas = { origem: porOrigem, data: porData, redes: porRedes };
   const vistos = new Set();
@@ -1846,29 +1846,27 @@ async function recolherConsulta(){
   btn.disabled = true;
   recolha = [];
   const endereco = urlRSS(consultaAtiva.q);
-  let faltaFicheiro = "";
+  const aviso = $("#avisoAlcance");
+  if(aviso) aviso.hidden = true;
+  let faltaFicheiro = "", doFicheiro = null;
 
-  /* O ficheiro da recolha agendada é um instantâneo diário da área completa:
-     serve na perfeição a consulta predefinida, mas não substitui uma pesquisa
-     quando se escolhem palavras-chave ou se alarga o período além das 24 horas.
-     Nesses casos vai-se primeiro ao serviço, que pesquisa todo o arquivo. */
+  /* O ficheiro da recolha agendada é o retrato diário da área completa. Serve a
+     consulta predefinida enquanto for recente; não serve pesquisas por termo,
+     períodos mais largos, nem um retrato já vencido. */
   const horas = HORAS_PERIODO[periodo];
-  const ficheiroServe = !consultaAtiva.termos && horas && horas <= 24;
+  const podeServir = !consultaAtiva.termos && horas && horas <= 24;
 
-  const doFicheiro = async () => {
-    const { itens, origem } = await deDadosPublicados();
-    if(!valido()) return true;
-    btn.disabled = false;
-    assentarRecolha(itens, origem + (ficheiroServe ? "" : " · instantâneo diário da área"));
-    return true;
-  };
-
-  if(ficheiroServe){
-    estado.innerHTML = "A recolher…";
-    try{ if(await doFicheiro()) return; }
-    catch(e){ faltaFicheiro = e.message; }
+  estado.innerHTML = "A recolher…";
+  try{
+    doFicheiro = await deDadosPublicados();
     if(!valido()) return;
-  }
+    if(podeServir && doFicheiro.itens.filter(dentroDoPeriodo).length){
+      btn.disabled = false;
+      assentarRecolha(doFicheiro.itens, doFicheiro.origem);
+      return;
+    }
+  }catch(e){ faltaFicheiro = e.message; }
+  if(!valido()) return;
 
   /* Recolha em direto: as vias disponíveis correm em simultâneo e vale a primeira */
   const arranque = Date.now();
@@ -1877,6 +1875,7 @@ async function recolherConsulta(){
     estado.innerHTML = `A recolher… <span style="color:var(--texto-ligeiro);font-size:.8rem">${seg}s</span>`;
   }, 1000);
   estado.innerHTML = "A recolher…";
+  let erros = [];
 
   try{
     const { itens, origem } = await primeiraQueResulte(
@@ -1890,27 +1889,24 @@ async function recolherConsulta(){
   }catch(agregado){
     clearInterval(contador);
     if(!valido()) return;
-    var erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
+    erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
   }
 
-  /* O serviço não respondeu: resta o instantâneo diário, com a devida ressalva */
-  if(!ficheiroServe){
-    try{
-      if(await doFicheiro()){
-        const nota = $("#avisoAlcance");
-        if(nota) nota.hidden = false;
-        return;
-      }
-    }catch(e){ faltaFicheiro = e.message; }
+  /* O serviço não respondeu: resta o retrato diário, com a devida ressalva */
+  if(doFicheiro && doFicheiro.itens.length){
+    btn.disabled = false;
+    assentarRecolha(doFicheiro.itens, doFicheiro.origem + " · retrato diário da área", true);
+    if(aviso) aviso.hidden = false;
+    return;
   }
 
   btn.disabled = false;
-  $("#expEstado").innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias neste momento.</span>
+  estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias neste momento.</span>
     <br><span style="font-size:.84rem">${faltaFicheiro
       ? "Não foi encontrado o ficheiro <code>noticias.json</code> da recolha agendada junto ao painel, e os serviços de recolha em direto estão bloqueados ou indisponíveis."
       : "Os serviços de recolha em direto estão indisponíveis ou bloqueados."}</span>
     <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico, para comunicar à Unidade de Pesquisa e Estatísticas</summary>
-    <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${(erros || []).map(f => `<li>${f}</li>`).join("")}</ul></details>`;
+    <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
 }
 
 /* Lê notícias a partir de texto — ficheiro guardado do feed ou colagem */
