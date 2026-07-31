@@ -797,7 +797,8 @@ const CONFIG = {
   versao: "julho de 2026",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
-  tempoLimiteRecolha: 40000,
+  tempoLimiteRecolha: 12000,   // limite de cada tentativa
+  tempoTotalRecolha: 22000,    // limite da recolha em direto, ao todo
   /* Fontes nacionais: o operador de exclusão por domínio não é honrado pelo
      serviço, pelo que a restrição é aplicada às notícias já recolhidas. São
      nacionais os domínios .pt e os títulos portugueses que usam outro domínio. */
@@ -1682,9 +1683,9 @@ function irParaCapitulo(n){
    responde, ainda que por vezes com sobrecarga temporária (estado 503). É por isso
    tentado várias vezes, com intervalo, em paralelo com as alternativas. */
 const METODOS = [
-  { nome:"corsproxy",           tipo:"fetch",  tentativas:6, espera:1200,
+  { nome:"corsproxy",           tipo:"fetch",  tentativas:4, espera:900,
     url:u => `https://corsproxy.io/?url=${encodeURIComponent(u)}` },
-  { nome:"corsproxy (variante)", tipo:"fetch", tentativas:5, espera:1600,
+  { nome:"corsproxy (variante)", tipo:"fetch", tentativas:3, espera:1200,
     url:u => `https://corsproxy.io/?${encodeURIComponent(u)}` },
   { nome:"cors.lol",            tipo:"fetch",  tentativas:3, espera:1500,
     url:u => `https://api.cors.lol/?url=${encodeURIComponent(u)}` },
@@ -1973,41 +1974,39 @@ async function recolherConsulta(){
   const aviso = $("#avisoAlcance");
   if(aviso) aviso.hidden = true;
   const horas = HORAS_PERIODO[periodo];
-  let guardado = null, faltaFicheiro = "";
+  let guardado = null;
 
   estado.innerHTML = "A recolher…";
 
-  /* 1 — Retrato do dia, quando a consulta é a predefinida e a janela é de 24 horas */
-  if(!consultaAtiva.termos && horas && horas <= 24){
-    try{
-      const r = await deDadosPublicados();
-      if(!valido()) return;
-      guardado = r;
-      if(r.itens.filter(dentroDoPeriodo).length){
-        btn.disabled = false;
-        assentarRecolha(r.itens, r.origem);
-        return;
-      }
-    }catch(e){ faltaFicheiro = e.message; }
+  /* 1 — Retrato do dia. Serve a consulta predefinida em 24 horas e fica sempre
+         guardado como último recurso, qualquer que seja a consulta. */
+  try{
+    const r = await deDadosPublicados();
     if(!valido()) return;
-  }
+    guardado = r;
+    if(!consultaAtiva.termos && horas && horas <= 24 && r.itens.filter(dentroDoPeriodo).length){
+      btn.disabled = false;
+      assentarRecolha(r.itens, r.origem);
+      return;
+    }
+  }catch(e){ /* sem retrato do dia */ }
+  if(!valido()) return;
 
   /* 2 — Arquivo dos últimos dias: cobre pesquisas por termo e janelas maiores */
   try{
     const r = await doArquivo();
     if(!valido()) return;
-    const cobre = horas && r.dias && horas <= r.dias * 24;
     const dentro = r.itens.filter(dentroDoPeriodo);
-    if(cobre && dentro.length){
+    if(horas && r.dias && horas <= r.dias * 24 && dentro.length){
       btn.disabled = false;
       assentarRecolha(r.itens, r.origem);
       return;
     }
-    if(!guardado && r.itens.length) guardado = r;
-  }catch(e){ if(!faltaFicheiro) faltaFicheiro = e.message; }
+    if(r.itens.length && (!guardado || r.itens.length > guardado.itens.length)) guardado = r;
+  }catch(e){ /* sem arquivo */ }
   if(!valido()) return;
 
-  /* 3 — Serviço em direto, para o que o arquivo não cobre */
+  /* 3 — Serviço em direto, para o que os ficheiros não cobrem */
   const arranque = Date.now();
   const contador = setInterval(() => {
     const seg = Math.round((Date.now() - arranque) / 1000);
@@ -2016,9 +2015,13 @@ async function recolherConsulta(){
   let erros = [];
 
   try{
-    const { itens, origem } = await primeiraQueResulte(
+    const corrida = primeiraQueResulte(
       METODOS.map(m => tentarVia(m, endereco).catch(e => { throw new Error(m.nome + ": " + e.message); }))
     );
+    const desistir = new Promise((_, rej) =>
+      setTimeout(() => rej({ errors:[new Error("o serviço não respondeu em " + Math.round(CONFIG.tempoTotalRecolha/1000) + " segundos")] }),
+                 CONFIG.tempoTotalRecolha));
+    const { itens, origem } = await Promise.race([corrida, desistir]);
     clearInterval(contador);
     if(!valido()) return;
     btn.disabled = false;
@@ -2040,9 +2043,7 @@ async function recolherConsulta(){
 
   btn.disabled = false;
   estado.innerHTML = `<span style="color:var(--vermelho)">Sem notícias para esta consulta.</span>
-    <br><span style="font-size:.84rem">${faltaFicheiro
-      ? "Não há ficheiros da recolha agendada junto ao painel e o serviço de pesquisa não respondeu."
-      : "Nem o arquivo local nem o serviço de pesquisa devolveram resultados. Pode não haver notícias que cumpram estes critérios — experimente alargar o período ou desligar um dos filtros."}</span>
+    <br><span style="font-size:.84rem">O serviço de pesquisa não respondeu e não há ficheiros da recolha agendada junto ao painel com notícias desta área. Pode também não haver notícias que cumpram estes critérios — experimente alargar o período ou usar “Abrir no Google Notícias”.</span>
     <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico</summary>
     <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
 }
