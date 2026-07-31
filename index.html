@@ -1153,7 +1153,7 @@ function abrirExportacao(id){
       </div>
 
       <p class="aviso-alcance" id="avisoAlcance" hidden>
-        O serviço de pesquisa não respondeu, pelo que estes resultados vêm do retrato diário da área, sem a janela temporal aplicada. Para ver tudo o que existe sobre o termo, use “Abrir no Google Notícias”.
+        O serviço de pesquisa não respondeu. Estes resultados vêm dos ficheiros da recolha agendada, que contêm apenas o que a consulta da área trouxe — numa pesquisa por termo, são um subconjunto do que existe. Para ver tudo, use “Abrir no Google Notícias”.
       </p>
 
       <div class="passo" id="passo1">
@@ -1974,66 +1974,85 @@ async function recolherConsulta(){
   const aviso = $("#avisoAlcance");
   if(aviso) aviso.hidden = true;
   const horas = HORAS_PERIODO[periodo];
+  const porTermo = !!consultaAtiva.termos;
   let guardado = null;
 
   estado.innerHTML = "A recolher…";
 
-  /* 1 — Retrato do dia. Serve a consulta predefinida em 24 horas e fica sempre
-         guardado como último recurso, qualquer que seja a consulta. */
-  try{
-    const r = await deDadosPublicados();
-    if(!valido()) return;
-    guardado = r;
-    if(!consultaAtiva.termos && horas && horas <= 24 && r.itens.filter(dentroDoPeriodo).length){
-      btn.disabled = false;
-      assentarRecolha(r.itens, r.origem);
-      return;
-    }
-  }catch(e){ /* sem retrato do dia */ }
-  if(!valido()) return;
+  /* Os ficheiros da recolha agendada contêm o que a consulta da área trouxe.
+     Para a consulta predefinida são a resposta completa e imediata; para uma
+     pesquisa por termo são apenas um subconjunto, porque o termo pode ter no
+     serviço muitas notícias que a consulta da área não apanhou. Daí a ordem
+     ser diferente num caso e no outro. */
 
-  /* 2 — Arquivo dos últimos dias: cobre pesquisas por termo e janelas maiores */
-  try{
-    const r = await doArquivo();
-    if(!valido()) return;
-    const dentro = r.itens.filter(dentroDoPeriodo);
-    if(horas && r.dias && horas <= r.dias * 24 && dentro.length){
-      btn.disabled = false;
-      assentarRecolha(r.itens, r.origem);
-      return;
-    }
-    if(r.itens.length && (!guardado || r.itens.length > guardado.itens.length)) guardado = r;
-  }catch(e){ /* sem arquivo */ }
-  if(!valido()) return;
+  const dosFicheiros = async () => {
+    try{
+      const r = await deDadosPublicados();
+      if(r.itens.length) guardado = r;
+      if(!porTermo && horas && horas <= 24 && r.itens.filter(dentroDoPeriodo).length) return r;
+    }catch(e){ /* sem retrato do dia */ }
+    try{
+      const r = await doArquivo();
+      if(r.itens.length && (!guardado || r.itens.length > guardado.itens.length)) guardado = r;
+      if(!porTermo && horas && r.dias && horas <= r.dias * 24 && r.itens.filter(dentroDoPeriodo).length) return r;
+    }catch(e){ /* sem arquivo */ }
+    return null;
+  };
 
-  /* 3 — Serviço em direto, para o que os ficheiros não cobrem */
-  const arranque = Date.now();
-  const contador = setInterval(() => {
-    const seg = Math.round((Date.now() - arranque) / 1000);
-    estado.innerHTML = `A recolher no serviço… <span style="color:var(--texto-ligeiro);font-size:.8rem">${seg}s</span>`;
-  }, 1000);
+  const doServico = async () => {
+    const arranque = Date.now();
+    const contador = setInterval(() => {
+      const seg = Math.round((Date.now() - arranque) / 1000);
+      estado.innerHTML = `A pesquisar no serviço… <span style="color:var(--texto-ligeiro);font-size:.8rem">${seg}s</span>`;
+    }, 1000);
+    try{
+      const corrida = primeiraQueResulte(
+        METODOS.map(m => tentarVia(m, endereco).catch(e => { throw new Error(m.nome + ": " + e.message); }))
+      );
+      const desistir = new Promise((_, rej) => setTimeout(
+        () => rej({ errors:[new Error("o serviço não respondeu em " + Math.round(CONFIG.tempoTotalRecolha/1000) + " segundos")] }),
+        CONFIG.tempoTotalRecolha));
+      return await Promise.race([corrida, desistir]);
+    }finally{ clearInterval(contador); }
+  };
+
   let erros = [];
 
-  try{
-    const corrida = primeiraQueResulte(
-      METODOS.map(m => tentarVia(m, endereco).catch(e => { throw new Error(m.nome + ": " + e.message); }))
-    );
-    const desistir = new Promise((_, rej) =>
-      setTimeout(() => rej({ errors:[new Error("o serviço não respondeu em " + Math.round(CONFIG.tempoTotalRecolha/1000) + " segundos")] }),
-                 CONFIG.tempoTotalRecolha));
-    const { itens, origem } = await Promise.race([corrida, desistir]);
-    clearInterval(contador);
+  if(porTermo){
+    /* Pesquisa por termo: o serviço tem o arquivo todo e é ele que responde */
+    try{
+      const r = await doServico();
+      if(!valido()) return;
+      btn.disabled = false;
+      assentarRecolha(r.itens, r.origem);
+      return;
+    }catch(agregado){
+      erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
+    }
     if(!valido()) return;
-    btn.disabled = false;
-    assentarRecolha(itens, origem);
-    return;
-  }catch(agregado){
-    clearInterval(contador);
+    await dosFicheiros();
     if(!valido()) return;
-    erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
+  }else{
+    const r = await dosFicheiros();
+    if(!valido()) return;
+    if(r){
+      btn.disabled = false;
+      assentarRecolha(r.itens, r.origem);
+      return;
+    }
+    try{
+      const v = await doServico();
+      if(!valido()) return;
+      btn.disabled = false;
+      assentarRecolha(v.itens, v.origem);
+      return;
+    }catch(agregado){
+      if(!valido()) return;
+      erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
+    }
   }
 
-  /* 4 — O serviço não respondeu: vale o que estiver guardado, com ressalva */
+  /* Recurso: o que estiver nos ficheiros, assinalado como tal */
   if(guardado && guardado.itens.length){
     btn.disabled = false;
     assentarRecolha(guardado.itens, guardado.origem, true);
@@ -2043,7 +2062,7 @@ async function recolherConsulta(){
 
   btn.disabled = false;
   estado.innerHTML = `<span style="color:var(--vermelho)">Sem notícias para esta consulta.</span>
-    <br><span style="font-size:.84rem">O serviço de pesquisa não respondeu e não há ficheiros da recolha agendada junto ao painel com notícias desta área. Pode também não haver notícias que cumpram estes critérios — experimente alargar o período ou usar “Abrir no Google Notícias”.</span>
+    <br><span style="font-size:.84rem">O serviço de pesquisa não respondeu e os ficheiros da recolha agendada não têm notícias desta área. Experimente alargar o período ou usar “Abrir no Google Notícias”.</span>
     <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico</summary>
     <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
 }
