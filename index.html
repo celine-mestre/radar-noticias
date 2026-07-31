@@ -334,7 +334,7 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .man-corpo{padding:0 1.6rem 1.2rem}
 .man-abas{
   display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:.4rem;
-  padding:.9rem 1.3rem;flex:none;
+  padding:.9rem 1.3rem;flex:none;position:sticky;top:0;z-index:2;
   background:var(--superficie-alt);border-bottom:1px solid var(--borda);
 }
 @media(max-width:620px){.man-abas{grid-template-columns:repeat(2, minmax(0, 1fr))}}
@@ -351,7 +351,9 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
   box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--cor) 18%, transparent)}
 .man-aba-n{width:19px;height:19px;border-radius:6px;background:var(--cor);color:#fff;
   font-size:.66rem;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none;opacity:.9}
-.man-sec{padding:1.3rem 0 .6rem}
+.man-sec{padding:1.4rem 0;border-bottom:1px solid var(--borda);scroll-margin-top:1rem}
+.man-sec:first-child{padding-top:1rem}
+.man-sec:last-child{border-bottom:none;padding-bottom:.8rem}
 .man-cab{display:flex;align-items:center;gap:.9rem;margin-bottom:.8rem}
 .man-ic{width:40px;height:40px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center;
   background:color-mix(in srgb, var(--cor) 13%, transparent);
@@ -791,7 +793,7 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
-  versao: "31 de julho, 18h",
+  versao: "julho de 2026",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 40000,
@@ -1113,15 +1115,26 @@ function abrirDetalhe(id){
 
 function abrirExportacao(id){
   const a = AREAS.find(x => x.id === id);
-  if(!consultaAtiva || consultaAtiva.area.id !== a.id) definirConsulta(a, consulta(a), a.palavras.join("; "));
-  const rotulo = consultaAtiva.rotulo;
+  if(!consultaAtiva || consultaAtiva.area.id !== a.id){
+    definirConsulta(a, consulta(a), a.palavras.join("; "));
+  }else{
+    /* Mesma área: refaz-se a consulta com o período e os filtros em vigor,
+       que podem ter mudado desde que foi definida. */
+    const termos = consultaAtiva.termos;
+    const q = termos
+      ? "(" + termos.map(t => `"${t}"`).join(" OR ") + ")" + sufixo()
+      : consulta(a);
+    consultaAtiva = { area:a, q, rotulo:consultaAtiva.rotulo, termos };
+  }
+  /* A recolha guardada só vale se corresponder exatamente a este pedido */
+  if(assinaturaRecolha !== assinaturaConsulta()) recolha = [];
 
   $("#modal").innerHTML = `
     <div class="modal-cab nota-cab">
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></div>
       <div>
         <h3>Exportar notícias</h3>
-        <p>${a.nome} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
+        <p>${a.nome}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -1182,6 +1195,7 @@ function abrirExportacao(id){
   $("#btnSintese").addEventListener("click", abrirSintese);
   $("#btnLer").addEventListener("click", abrirLeitura);
   if(recolha.length) mostrarEstadoRecolha("recolha anterior");
+  else { const p2 = $("#passo2"); if(p2) p2.hidden = true; }
   carregarHistorico();
 }
 
@@ -1587,33 +1601,32 @@ function abrirSintese(){
    de mercado). Nada é enviado sem o utilizador carregar no botão. */
 
 function abrirManual(n){
-  const atual = n || "1";
-  const c = MANUAL.find(x => x.n === atual) || MANUAL[0];
   $("#modal").innerHTML = `
     <div class="modal-cab nota-cab">
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
       <div>
         <h3>Manual de utilização</h3>
-        <p>Radar de Notícias por Área Governativa · v. ${CONFIG.versao}</p>
+        <p>Radar de Notícias por Área Governativa · ${CONFIG.versao}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
 
     <nav class="man-abas">
       ${MANUAL.map(x => `
-        <button class="man-aba${x.n === atual ? " ativa" : ""}" data-manual="${x.n}" style="--cor:${x.cor}">
+        <button class="man-aba" data-manual="${x.n}" style="--cor:${x.cor}">
           <span class="man-aba-n">${x.n}</span><span>${x.titulo}</span>
         </button>`).join("")}
     </nav>
 
-    <div class="modal-corpo man-corpo">
-      <section class="man-sec" style="--cor:${c.cor}">
-        <div class="man-cab">
-          <div class="man-ic"><svg viewBox="0 0 24 24">${ICONES_MANUAL[c.icone]}</svg></div>
-          <div><span class="man-n">Capítulo ${c.n} de ${MANUAL.length}</span><h4>${c.titulo}</h4></div>
-        </div>
-        <div class="man-txt">${c.corpo}</div>
-      </section>
+    <div class="modal-corpo man-corpo" id="manualCorpo">
+      ${MANUAL.map(c => `
+        <section class="man-sec" id="man${c.n}" style="--cor:${c.cor}">
+          <div class="man-cab">
+            <div class="man-ic"><svg viewBox="0 0 24 24">${ICONES_MANUAL[c.icone]}</svg></div>
+            <div><span class="man-n">Capítulo ${c.n} de ${MANUAL.length}</span><h4>${c.titulo}</h4></div>
+          </div>
+          <div class="man-txt">${c.corpo}</div>
+        </section>`).join("")}
     </div>
 
     <div class="modal-rodape nota-rodape">
@@ -1621,6 +1634,33 @@ function abrirManual(n){
       <button class="btn" onclick="fecharModal()">Fechar</button>
     </div>`;
   $("#veu").classList.add("aberto");
+  marcarCapitulo(n || "1");
+  if(n && n !== "1") irParaCapitulo(n);
+
+  /* O separador ativo acompanha a leitura */
+  const corpo = $("#manualCorpo");
+  corpo.addEventListener("scroll", () => {
+    const topo = corpo.getBoundingClientRect().top + 90;
+    let atual = MANUAL[0].n;
+    MANUAL.forEach(c => {
+      const sec = document.getElementById("man" + c.n);
+      if(sec && sec.getBoundingClientRect().top <= topo) atual = c.n;
+    });
+    marcarCapitulo(atual);
+  });
+}
+
+function marcarCapitulo(n){
+  document.querySelectorAll(".man-aba").forEach(b => b.classList.toggle("ativa", b.dataset.manual === n));
+}
+
+function irParaCapitulo(n){
+  const sec = document.getElementById("man" + n);
+  const corpo = $("#manualCorpo");
+  if(!sec || !corpo) return;
+  const destino = sec.offsetTop - corpo.offsetTop - 8;
+  if(typeof corpo.scrollTo === "function") corpo.scrollTo({ top: destino, behavior: "smooth" });
+  else corpo.scrollTop = destino;
 }
 
 
@@ -1674,13 +1714,23 @@ function porScript(endereco, tempoLimite = 6000){
 }
 
 let recolha = [];          // linhas da última recolha
+let assinaturaRecolha = ""; // a que consulta pertence a recolha guardada
 let pedidoAtual = 0;       // identifica a recolha em curso; anula resultados atrasados
 let consultaAtiva = null;  // { area, q, rotulo } — consulta em curso no detalhe aberto
 
 /* Define a consulta que o detalhe está a mostrar e que será exportada */
+/* Identifica por completo o que está a ser pedido. Se algum destes elementos
+   mudar, a recolha anterior deixa de servir e é descartada. */
+function assinaturaConsulta(){
+  if(!consultaAtiva) return "";
+  return [consultaAtiva.area.id, (consultaAtiva.termos || []).join("|"),
+          periodo, filtroFontes, semRedes ? "sr" : "cr"].join("::");
+}
+
 function definirConsulta(area, q, rotulo, termos){
   consultaAtiva = { area, q, rotulo, termos: termos && termos.length ? termos : null };
   recolha = [];
+  assinaturaRecolha = "";
 }
 
 /* Consulta a partir das palavras-chave selecionadas. Nenhuma selecionada
@@ -1906,6 +1956,7 @@ function assentarRecolha(itens, origem, ignorarPeriodo){
     vistos.add(k); return true;
   });
   recolha.sort((x, y) => (y.data || "").localeCompare(x.data || ""));
+  assinaturaRecolha = assinaturaConsulta();
   mostrarEstadoRecolha(origem, retiradas);
 }
 
@@ -2384,7 +2435,7 @@ document.addEventListener("click", e => {
   if(ex){ abrirExportacao(ex.dataset.exportar); return; }
 
   const mn = e.target.closest("[data-manual]");
-  if(mn){ abrirManual(mn.dataset.manual); return; }
+  if(mn){ marcarCapitulo(mn.dataset.manual); irParaCapitulo(mn.dataset.manual); return; }
 
   const det = e.target.closest("[data-detalhe]");
   if(det){ abrirDetalhe(det.dataset.detalhe); return; }
@@ -2431,6 +2482,7 @@ $("#btnManual").addEventListener("click", () => abrirManual("1"));
 $("#btnRedes").addEventListener("click", () => {
   semRedes = !semRedes;
   $("#btnRedes").setAttribute("aria-pressed", semRedes ? "true" : "false");
+  recolha = []; assinaturaRecolha = "";
   mostrarAviso(semRedes ? "Redes sociais excluídas" : "Redes sociais incluídas");
 });
 
@@ -2440,11 +2492,13 @@ $("#filtroFontes").addEventListener("click", e => {
   filtroFontes = b.dataset.fonte;
   soNacionais = filtroFontes === "nacionais";
   document.querySelectorAll("#filtroFontes button").forEach(x => x.classList.toggle("ativo", x === b));
+  recolha = []; assinaturaRecolha = "";
   mostrarAviso(ROTULO_FONTES[filtroFontes]);
 });
 
 $("#campoPeriodo").addEventListener("change", e => {
   periodo = e.target.value;
+  recolha = []; assinaturaRecolha = "";
   mostrarAviso(`Período: ${ROTULO_PERIODO[periodo]}`);
 });
 
