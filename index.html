@@ -996,7 +996,12 @@ function exclusoesGoogle(){
 
 /* Consulta para abrir no Google Notícias: a mesma, com as exclusões possíveis */
 function consultaGoogle(q){
-  return q + exclusoesGoogle();
+  /* Query completa para o Google Notícias web: base + exclusões de domínio + redes */
+  const dom = filtroFontes === "nacionais" ? " " + CONFIG.exclusoesDominio.map(d => `-${d}`).join(" ") : "";
+  const redes = [];
+  if(filtroRedes === "sem") redes.push(...CONFIG.redesSociais.slice(0, 12));
+  const redesStr = redes.length ? " " + redes.map(d => `-site:${d}`).join(" ") : "";
+  return q + dom + redesStr;
 }
 
 function parametros(){
@@ -1154,7 +1159,6 @@ function abrirExportacao(id){
   /* A recolha guardada só vale se corresponder exatamente a este pedido */
   if(assinaturaRecolha !== assinaturaConsulta()) recolha = [];
 
-  const queryExata = consultaAtiva.q;
   $("#modal").innerHTML = `
     <div class="modal-cab nota-cab">
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></div>
@@ -1169,21 +1173,6 @@ function abrirExportacao(id){
         <span>A recolher</span>
         <strong>${consultaAtiva.termos ? `apenas ${consultaAtiva.rotulo}` : `todas as palavras-chave de ${a.nome}`}</strong>
         <em>${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${ROTULO_REDES[filtroRedes]}</em>
-      </div>
-
-      <div class="bloco" style="margin-bottom:1.2rem">
-        <h4>Consulta enviada ao Google Notícias</h4>
-        <p class="marca-selecao" style="margin-bottom:.4rem">Query exata enviada ao Google Notícias. Pode copiá-la e colá-la manualmente no serviço para comparar resultados.</p>
-        <div class="consulta-txt" id="queryVisivel">${queryExata.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}</div>
-        <div style="display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap">
-          <button class="btn" id="btnCopiarQuery">
-            <svg viewBox="0 0 24 24" style="width:16px;height:16px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            Copiar query
-          </button>
-          <span style="font-size:.78rem;color:var(--texto-ligeiro);align-self:center">
-            A query acima pode ser copiada e colada diretamente no Google Notícias.
-          </span>
-        </div>
       </div>
 
       <p class="aviso-alcance" id="avisoAlcance" hidden>
@@ -1229,7 +1218,7 @@ function abrirExportacao(id){
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
       <button class="btn" data-detalhe="${a.id}" style="margin-left:auto">Voltar</button>
     </div>`;
-  $("#btnCopiarQuery").addEventListener("click", () => copiar(queryExata, "Query copiada"));
+
   $("#veu").classList.add("aberto");
 
   $("#btnRecolher").addEventListener("click", recolherConsulta);
@@ -1772,8 +1761,9 @@ function assinaturaConsulta(){
 }
 
 function definirConsulta(area, q, rotulo, termos){
-  const dom = filtroFontes === "nacionais" ? " " + CONFIG.exclusoesDominio.map(d => `-${d}`).join(" ") : "";
-  consultaAtiva = { area, q: q + dom, rotulo, termos: termos && termos.length ? termos : null };
+  /* q é a query base (termos + sufixo/período). As exclusões são adicionadas
+     no momento de envio, para evitar duplicação entre RSS e web. */
+  consultaAtiva = { area, q, rotulo, termos: termos && termos.length ? termos : null };
   recolha = [];
   recolhaBruta = [];
   assinaturaRecolha = "";
@@ -2049,7 +2039,7 @@ async function recolherConsulta(){
   const valido = () => meu === pedidoAtual;
   btn.disabled = true;
   recolha = [];
-  const endereco = urlRSS(consultaAtiva.q);
+  const endereco = urlRSS(consultaAtiva.q + exclusoesDominioQuery());
   const aviso = $("#avisoAlcance");
   if(aviso) aviso.hidden = true;
   const horas = HORAS_PERIODO[periodo];
@@ -2582,9 +2572,9 @@ document.addEventListener("click", e => {
   const fd = e.target.closest("[data-feed]");
   if(fd){
     const a = AREAS.find(x => x.id === fd.dataset.feed);
-    /* Query para a web: a mesma da recolha RSS, sem duplicar exclusões */
+    /* Query completa para o Google: base + todas as exclusões (domínio + redes) */
     const q = (consultaAtiva && consultaAtiva.area.id === a.id)
-      ? consultaAtiva.q  /* já tem exclusões de domínio; consultaGoogle() duplicaria */
+      ? consultaGoogle(consultaAtiva.q)
       : consultaGoogle(consulta(a));
     window.open(`https://news.google.com/search?q=${encodeURIComponent(q)}&${parametros()}`,
       "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
