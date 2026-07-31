@@ -790,16 +790,23 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
-  versao: "31 de julho, 15h",
+  versao: "31 de julho, 16h",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
-  tempoLimiteRecolha: 25000,
+  tempoLimiteRecolha: 40000,
   /* Fontes nacionais: o operador de exclusão por domínio não é honrado pelo
      serviço, pelo que a restrição é aplicada às notícias já recolhidas. São
      nacionais os domínios .pt e os títulos portugueses que usam outro domínio. */
   /* Títulos portugueses que não usam domínio .pt — o resto é reconhecido pelo domínio */
   /* Plataformas que não são publicações noticiosas. O Google Notícias indexa
      páginas destas plataformas, que aparecem misturadas com os jornais. */
+  /* Publicações estrangeiras de língua portuguesa com maior presença nos
+     resultados. Usadas nas exclusões da janela do Google. */
+  publicacoesEstrangeiras: [
+    "globo.com", "g1.globo.com", "uol.com.br", "r7.com", "metropoles.com", "abril.com",
+    "conjur.com.br", "migalhas.com.br", "jota.info", "exame.com",
+    "jornaldeangola.ao", "novojornal.co.ao", "verangola.net", "opais.co.mz", "idolo.co.mz"
+  ],
   redesSociais: [
     "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
     "youtube.com", "youtu.be", "linkedin.com", "reddit.com", "threads.net", "threads.com",
@@ -940,13 +947,30 @@ function consulta(a){
   return termos + excl + sufixo();
 }
 
+/* Os filtros de origem e de redes sociais são aplicados às notícias recolhidas,
+   porque o operador site: não exclui domínios de topo de forma fiável. Para a
+   janela do Google, onde não há filtragem posterior possível, acrescentam-se as
+   exclusões que esse operador honra: domínios concretos, não domínios de topo.
+   É melhoria de aproximação, não garantia. */
+function exclusoesGoogle(){
+  const fora = [];
+  if(semRedes) fora.push(...CONFIG.redesSociais.slice(0, 12));
+  if(filtroFontes === "nacionais") fora.push(...CONFIG.publicacoesEstrangeiras);
+  return fora.length ? " " + fora.map(d => `-site:${d}`).join(" ") : "";
+}
+
+/* Consulta para abrir no Google Notícias: a mesma, com as exclusões possíveis */
+function consultaGoogle(q){
+  return q + exclusoesGoogle();
+}
+
 function parametros(){
   const e = CONFIG.edicao;
   return `hl=${e.hl}&gl=${e.gl}&ceid=${e.ceid}`;
 }
 
 function urlFonte(a){
-  return `https://news.google.com/search?q=${encodeURIComponent(consulta(a))}&${parametros()}`;
+  return `https://news.google.com/search?q=${encodeURIComponent(consultaGoogle(consulta(a)))}&${parametros()}`;
 }
 
 /* Endereço RSS de qualquer consulta */
@@ -1176,6 +1200,7 @@ const MANUAL = [
       <dt>Período</dt><dd>Predefinição: 24 horas. Como o teto de 100 notícias se aplica sempre, o período não altera <em>quantas</em> notícias vêm — altera <em>quais</em>.</dd>
       <dt>Origem das fontes</dt><dd>Três posições. <strong>Nacionais</strong>, por predefinição, mantém apenas domínios <code>.pt</code> e os títulos portugueses conhecidos que usam outro domínio. <strong>Internacionais</strong> mostra exatamente o contrário, o que é útil para ver como uma matéria portuguesa está a ser tratada lá fora. <strong>Todas</strong> não filtra.</dd>
       <dt>Sem redes sociais</dt><dd>Ativo por predefinição. O serviço indexa páginas do Instagram, Facebook, YouTube, X e plataformas afins, que aparecem misturadas com os jornais. Este interruptor deixa-as de fora.</dd>
+      <dt>Onde se aplicam</dt><dd>A janela temporal aplica-se sempre, nas duas vias. Os filtros de origem e de redes sociais são aplicados com exatidão às notícias recolhidas no painel; na janela do Google seguem como exclusões de domínio, que o serviço honra para publicações concretas mas não para domínios de topo — pode por isso escapar alguma.</dd>
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida — e não apenas pela consulta enviada ao serviço. É por isso que funciona mesmo sobre as notícias da recolha agendada.</dd>
     </dl>` },
 
@@ -1603,10 +1628,14 @@ function abrirManual(n){
    responde, ainda que por vezes com sobrecarga temporária (estado 503). É por isso
    tentado várias vezes, com intervalo, em paralelo com as alternativas. */
 const METODOS = [
-  { nome:"corsproxy",           tipo:"fetch",  tentativas:4, espera:1500,
+  { nome:"corsproxy",           tipo:"fetch",  tentativas:6, espera:1200,
     url:u => `https://corsproxy.io/?url=${encodeURIComponent(u)}` },
-  { nome:"corsproxy (variante)", tipo:"fetch", tentativas:3, espera:2000,
+  { nome:"corsproxy (variante)", tipo:"fetch", tentativas:5, espera:1600,
     url:u => `https://corsproxy.io/?${encodeURIComponent(u)}` },
+  { nome:"cors.lol",            tipo:"fetch",  tentativas:3, espera:1500,
+    url:u => `https://api.cors.lol/?url=${encodeURIComponent(u)}` },
+  { nome:"thingproxy",          tipo:"fetch",  tentativas:2, espera:2000,
+    url:u => `https://thingproxy.freeboard.io/fetch/${u}` },
   { nome:"allorigins",          tipo:"fetch",  url:u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}` },
   { nome:"allorigins (script)", tipo:"script", url:u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}` },
   { nome:"codetabs",            tipo:"fetch",  url:u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}` },
@@ -2291,7 +2320,7 @@ document.addEventListener("click", e => {
   if(fd){
     const a = AREAS.find(x => x.id === fd.dataset.feed);
     const q = (consultaAtiva && consultaAtiva.area.id === a.id) ? consultaAtiva.q : consulta(a);
-    window.open(`https://news.google.com/search?q=${encodeURIComponent(q)}&${parametros()}`,
+    window.open(`https://news.google.com/search?q=${encodeURIComponent(consultaGoogle(q))}&${parametros()}`,
       "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
     return;
   }
@@ -2331,7 +2360,7 @@ function pesquisaLivre(){
   document.querySelectorAll(".chip[data-termo]").forEach(c => c.classList.remove("sel"));
   const alvo = $("#consultaTxt");
   if(alvo) alvo.textContent = q;
-  window.open(`https://news.google.com/search?q=${encodeURIComponent(q)}&${parametros()}`,
+  window.open(`https://news.google.com/search?q=${encodeURIComponent(consultaGoogle(q))}&${parametros()}`,
     "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
 }
 
