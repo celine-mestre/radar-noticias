@@ -40,8 +40,17 @@ from openpyxl.utils import get_column_letter
 # CONFIGURAÇÃO — manter alinhada com o painel HTML
 # ---------------------------------------------------------------------------
 EDICAO = {"hl": "pt-PT", "gl": "PT", "ceid": "PT:pt-150"}
-EXCLUSOES_DOMINIO = ["site:.br", "site:globo.com", "site:r7.com",
-                     "site:metropoles.com", "site:abril.com"]
+# Domínios excluídos quando se restringe a fontes nacionais: domínios de topo dos
+# restantes países de língua portuguesa e grupos de comunicação social que usam
+# domínios genéricos.
+EXCLUSOES_DOMINIO = [
+    "site:.br", "site:.ao", "site:.mz", "site:.cv", "site:.st", "site:.gw",
+    "site:.tl", "site:.mo",
+    "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com",
+    "site:uol.com.br", "site:novojornal.co.ao", "site:jornaldeangola.ao",
+    "site:verangola.net", "site:opais.co.mz", "site:verdade.co.mz",
+    "site:expressodasilhas.cv", "site:asemana.publ.cv",
+]
 
 GRUPOS = {
     "soberania": "Estado e soberania",
@@ -243,13 +252,35 @@ def limpar(texto):
     return re.sub(r"\s+", " ", texto).strip()
 
 
+DOMINIOS_ALHEIOS = ("google.com", "google.pt", "gstatic.com", "googleusercontent.com",
+                    "googleapis.com", "policies.google", "accounts.google", "consent.google")
+
+FICHEIROS_DE_IMAGEM = re.compile(r"\.(png|jpe?g|gif|webp|svg|ico|bmp)(\?|#|$)", re.IGNORECASE)
+
+
+def endereco_plausivel(url):
+    """Verifica se o endereço encontrado é mesmo o artigo de um jornal.
+
+    Sem esta verificação, a leitura da página de reencaminhamento devolve o
+    primeiro endereço que lá encontra — que costuma ser uma imagem alojada nos
+    servidores do próprio Google, igual para todos os artigos.
+    """
+    if not url or not url.lower().startswith(("http://", "https://")) or len(url) < 24:
+        return False
+    if any(d in url for d in DOMINIOS_ALHEIOS):
+        return False
+    if FICHEIROS_DE_IMAGEM.search(url):
+        return False
+    return True
+
+
 def endereco_do_artigo(ligacao, tempo_limite=12):
     """Converte o reencaminhamento do Google no endereço do jornal.
 
     Primeiro tenta descodificar o identificador, onde as versões mais antigas
     trazem o endereço em claro. Não resultando, segue o reencaminhamento na rede
     e devolve o endereço final. Falhando ambos, devolve a ligação original, que
-    abre o artigo à mesma.
+    abre o artigo à mesma — é preferível a devolver um endereço errado.
     """
     if not ligacao or "news.google.com" not in ligacao:
         return ligacao
@@ -257,9 +288,10 @@ def endereco_do_artigo(ligacao, tempo_limite=12):
     identificador = ligacao.split("/articles/")[-1].split("?")[0]
     try:
         bruto = urlsafe_b64decode(identificador + "=" * (-len(identificador) % 4))
-        achado = re.search(rb"https?://[A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]{12,}", bruto)
-        if achado:
-            return achado.group(0).decode("utf-8", "replace").rstrip("\x00 ")
+        for achado in re.findall(rb"https?://[A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]{20,}", bruto):
+            candidato = achado.decode("utf-8", "replace")
+            if endereco_plausivel(candidato):
+                return candidato
     except Exception:                                          # noqa: BLE001
         pass
 
@@ -267,13 +299,17 @@ def endereco_do_artigo(ligacao, tempo_limite=12):
         pedido = Request(ligacao, headers={"User-Agent": "Mozilla/5.0 SGGov-UPE-Radar/1.0"})
         with urlopen(pedido, timeout=tempo_limite) as resposta:
             final = resposta.geturl()
-            if final and "news.google.com" not in final:
+            if endereco_plausivel(final):
                 return final
-            corpo = resposta.read(20000).decode("utf-8", "replace")
-        for padrao in (r'data-n-au="([^"]+)"', r'<meta[^>]+url=([^">]+)', r'href="(https?://(?!\w*\.?google\.)[^"]+)"'):
-            achado = re.search(padrao, corpo)
-            if achado:
-                return html.unescape(achado.group(1))
+            corpo = resposta.read(60000).decode("utf-8", "replace")
+        # O atributo data-n-au traz o endereço do artigo na página de reencaminhamento
+        for padrao in (r'data-n-au="([^"]+)"',
+                       r'<meta[^>]+http-equiv="refresh"[^>]+url=([^">]+)',
+                       r'<link[^>]+rel="canonical"[^>]+href="([^"]+)"'):
+            for achado in re.findall(padrao, corpo, re.IGNORECASE):
+                candidato = html.unescape(achado).strip()
+                if endereco_plausivel(candidato):
+                    return candidato
     except Exception:                                          # noqa: BLE001
         pass
 

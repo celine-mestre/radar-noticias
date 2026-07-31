@@ -778,7 +778,15 @@ const CONFIG = {
   tempoLimiteRecolha: 25000,
   /* Domínios excluídos quando o filtro de fontes nacionais está ativo.
      Acrescentar aqui outros domínios ou domínios de topo, sempre precedidos de "site:". */
-  exclusoes: ["site:.br", "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com"],
+  /* Domínios excluídos quando o interruptor "só fontes nacionais" está ativo.
+     Cobre os domínios de topo dos restantes países de língua portuguesa e os
+     grupos de comunicação social que não os usam. */
+  exclusoes: [
+    "site:.br", "site:.ao", "site:.mz", "site:.cv", "site:.st", "site:.gw", "site:.tl", "site:.mo",
+    "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com", "site:uol.com.br",
+    "site:novojornal.co.ao", "site:jornaldeangola.ao", "site:verangola.net",
+    "site:opais.co.mz", "site:verdade.co.mz", "site:expressodasilhas.cv", "site:asemana.publ.cv"
+  ],
   atualizacao: "30 de julho de 2026"
 };
 
@@ -1129,7 +1137,7 @@ const MANUAL = [
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: 24 horas. Como o teto de 100 notícias se aplica sempre, o período não altera <em>quantas</em> notícias vêm — altera <em>quais</em>.</dd>
-      <dt>Só fontes nacionais</dt><dd>Ativo por predefinição. Exclui as publicações brasileiras, que a edição portuguesa não filtra por escreverem na mesma língua.</dd>
+      <dt>Só fontes nacionais</dt><dd>Ativo por predefinição. Exclui as publicações dos restantes países de língua portuguesa, que a edição portuguesa não filtra por escreverem no mesmo idioma. É um filtro subtrativo: retira resultados, nunca acrescenta, pelo que uma publicação fora da lista pode ainda aparecer.</dd>
     </dl>` },
 
   { n:"3", titulo:"Detalhe de uma área", cor:"var(--dourado)", icone:"lupa", corpo:`
@@ -1158,7 +1166,7 @@ const MANUAL = [
   { n:"6", titulo:"Como o radar pesquisa", cor:"var(--azul)", icone:"chave", corpo:`
     <p>Todas as áreas são servidas por uma pesquisa no Google Notícias, edição portuguesa. A consulta combina por disjunção todas as palavras-chave da área e acrescenta a janela temporal.</p>
     <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. A pesquisa por expressão exata é a única operação que o serviço honra de forma fiável. Onde o ruído persiste, a área declara termos a excluir.</p>
-    <p><strong>Fontes.</strong> A pesquisa abrange todas as publicações indexadas na edição portuguesa. Entre os títulos nacionais: ${FONTES_REFERENCIA.map(f => f.nome).join(", ")}.</p>
+    <p><strong>Fontes.</strong> Com o filtro ativo, ficam de fora os domínios de topo do Brasil, Angola, Moçambique, Cabo Verde, São Tomé e Príncipe, Guiné-Bissau, Timor-Leste e Macau, e os grupos de comunicação social desses países que usam domínios genéricos. A pesquisa abrange as restantes publicações indexadas na edição portuguesa. Entre os títulos nacionais: ${FONTES_REFERENCIA.map(f => f.nome).join(", ")}.</p>
     <p class="man-aviso">Não há filtro por título. O operador <code>site:</code> não se combina de forma fiável com o tema quando se indicam vários domínios — só funciona bem no uso negativo, que é o do filtro de fontes nacionais.</p>` },
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
@@ -1704,9 +1712,19 @@ function primeiraQueResulte(promessas){
   });
 }
 
+/* Identidade de uma notícia: título e fonte. Não se usa a ligação, porque um
+   reencaminhamento mal resolvido pode ser igual para artigos diferentes. */
+function chaveNoticia(it){
+  return simplificar((it.titulo || "") + "|" + (it.fonte || ""));
+}
+
 function assentarRecolha(itens, origem){
   const vistos = new Set();
-  recolha = itens.filter(it => (vistos.has(it.ligacao) ? false : (vistos.add(it.ligacao), true)));
+  recolha = itens.filter(it => {
+    const k = chaveNoticia(it);
+    if(vistos.has(k)) return false;
+    vistos.add(k); return true;
+  });
   recolha.sort((x, y) => (y.data || "").localeCompare(x.data || ""));
   mostrarEstadoRecolha(origem);
 }
