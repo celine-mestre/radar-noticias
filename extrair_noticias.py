@@ -327,11 +327,12 @@ def endereco_do_artigo(ligacao, tempo_limite=12):
     return ligacao
 
 
-def resolver_ligacoes(linhas, trabalhadores=8):
+def resolver_ligacoes(linhas, trabalhadores=12):
     """Resolve em paralelo os reencaminhamentos de todas as notícias."""
     enderecos = [l[6] for l in linhas]
     unicos = list(dict.fromkeys(enderecos))
     print(f"A resolver {len(unicos)} ligações…", end=" ", flush=True)
+    # Aumentar o número de trabalhadores para acelerar a resolução
     with ThreadPoolExecutor(max_workers=trabalhadores) as piscina:
         resolvidos = dict(zip(unicos, piscina.map(endereco_do_artigo, unicos)))
     convertidas = 0
@@ -411,48 +412,6 @@ def extrair_itens(xml_bruto):
     return itens
 
 
-def recolher_palavras(periodo, alvo, pausa=1.0, teto=60):
-    """Uma consulta por palavra-chave, além da consulta da área.
-
-    É isto que permite ao painel responder a pesquisas por palavra-chave sem
-    interrogar o serviço: os resultados de cada termo ficam nos ficheiros.
-    Cada notícia guarda as palavras-chave que a trouxeram.
-    """
-    encontradas = {}
-    total = sum(len(a[3]) for a in alvo)
-    feitas = 0
-
-    for ident, nome, grupo, palavras, excluir in alvo:
-        for palavra in palavras:
-            feitas += 1
-            q = f'"{palavra}"'
-            if periodo:
-                q += f" when:{periodo}"
-            try:
-                itens = extrair_itens(ler_feed(url_feed(q)))[:teto]
-            except Exception as erro:                          # noqa: BLE001
-                print(f"  [{feitas}/{total}] {palavra}: falhou ({erro})")
-                continue
-            novas = 0
-            for it in itens:
-                # o serviço faz correspondência aproximada: confirma-se o termo
-                texto = (it["titulo"] + " " + (it["resumo"] or "")).lower()
-                if palavra.lower() not in texto:
-                    continue
-                chave = (nome, it["titulo"].lower(), (it["fonte"] or "").lower())
-                if chave in encontradas:
-                    encontradas[chave]["palavras"].add(palavra)
-                else:
-                    registo = dict(it)
-                    registo.update({"area": nome, "grupo": GRUPOS[grupo], "palavras": {palavra}})
-                    encontradas[chave] = registo
-                    novas += 1
-            print(f"  [{feitas}/{total}] {palavra}: {novas} novas")
-            time.sleep(pausa)
-
-    return list(encontradas.values())
-
-
 def recolher(periodo, apenas=None, so_nacionais=True, pausa=1.5):
     linhas, falhas = [], []
     vistos = set()
@@ -461,6 +420,8 @@ def recolher(periodo, apenas=None, so_nacionais=True, pausa=1.5):
     for i, (ident, nome, grupo, palavras, excluir) in enumerate(alvo, 1):
         q = consulta(palavras, excluir, periodo, so_nacionais)
         print(f"[{i}/{len(alvo)}] {nome}…", end=" ", flush=True)
+        # Se quiser ver a query enviada ao Google, descomente a linha abaixo
+        # print(f"\n  Query: {q}")
         try:
             itens = extrair_itens(ler_feed(url_feed(q)))
         except Exception as erro:                              # noqa: BLE001
@@ -598,8 +559,6 @@ def principal():
                     help="ficheiro JSON com as notícias dos últimos dias, acumulado a cada recolha")
     ap.add_argument("--dias-arquivo", type=int, default=7,
                     help="dias a manter no arquivo (predefinição: 7)")
-    ap.add_argument("--por-palavra", action="store_true",
-                    help="recolher também uma consulta por cada palavra-chave")
     args = ap.parse_args()
 
     if args.area and args.area not in {a[0] for a in AREAS}:
@@ -636,23 +595,8 @@ def principal():
             json.dump(pacote, destino, ensure_ascii=False, indent=1)
         print(f"{len(noticias)} notícias gravadas em {args.json}")
 
-    por_palavra = []
-    if args.por_palavra:
-        alvo = [a for a in AREAS if args.area is None or a[0] == args.area]
-        print("\nRecolha por palavra-chave:")
-        por_palavra = recolher_palavras(args.periodo, alvo)
-        if not args.sem_resolver_ligacoes and por_palavra:
-            enderecos = {n["ligacao"] for n in por_palavra}
-            print(f"A resolver {len(enderecos)} ligações…", end=" ", flush=True)
-            with ThreadPoolExecutor(max_workers=8) as piscina:
-                mapa = dict(zip(enderecos, piscina.map(endereco_do_artigo, enderecos)))
-            for n in por_palavra:
-                n["ligacao"] = mapa.get(n["ligacao"], n["ligacao"])
-            print("feito")
-        print(f"{len(por_palavra)} notícias com palavra-chave identificada")
-
     if args.arquivo:
-        atualizar_arquivo(args.arquivo, linhas, args.dias_arquivo, por_palavra)
+        atualizar_arquivo(args.arquivo, linhas, args.dias_arquivo)
 
     if args.historico:
         atualizar_historico(args.historico, linhas, args.periodo, vistos_anteriores)
@@ -681,7 +625,7 @@ def ligacoes_da_recolha_anterior(caminho_json):
     return vistos
 
 
-def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
+def atualizar_arquivo(caminho, linhas, dias=7):
     """Acumula as notícias dos últimos dias num único ficheiro.
 
     É o que permite ao painel responder a pesquisas por palavra-chave e a
@@ -704,28 +648,15 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
         r["data"] = r["data"].strftime("%Y-%m-%d %H:%M") if r["data"] else ""
         return r
 
-    novas = [registo(l) for l in linhas]
-    for n in (por_palavra or []):
-        novas.append({
-            "area": n["area"], "grupo": n["grupo"],
-            "data": n["data"].strftime("%Y-%m-%d %H:%M") if n["data"] else "",
-            "fonte": n["fonte"], "dominio": n["dominio"], "titulo": n["titulo"],
-            "ligacao": n["ligacao"], "palavras": sorted(n["palavras"]),
-        })
-
-    juntas = anteriores + novas
-    vistos, mantidas = {}, []
+    juntas = anteriores + [registo(l) for l in linhas]
+    vistos, mantidas = set(), []
     for n in juntas:
         if n.get("data", "")[:10] < limite:
             continue
         chave = (n.get("area", ""), n.get("titulo", "").lower(), n.get("fonte", "").lower())
         if chave in vistos:
-            # já existe: junta-se apenas as palavras-chave que a trouxeram
-            anterior = vistos[chave]
-            if n.get("palavras"):
-                anterior["palavras"] = sorted(set(anterior.get("palavras", [])) | set(n["palavras"]))
             continue
-        vistos[chave] = n
+        vistos.add(chave)
         mantidas.append(n)
 
     mantidas.sort(key=lambda n: n.get("data", ""), reverse=True)

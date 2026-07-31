@@ -277,13 +277,6 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .ler-item svg{width:14px;height:14px;stroke:var(--texto-ligeiro);fill:none;stroke-width:1.9;
   stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:.14s;margin-top:.2rem}
 .ler-item:hover svg{opacity:1;stroke:var(--azul)}
-.atalhos{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem}
-.btn-atalho{
-  padding:.35rem .75rem;border-radius:999px;border:1px solid var(--azul);
-  background:rgba(43,86,131,.07);color:var(--azul);font-family:var(--fonte);
-  font-size:.78rem;font-weight:500;cursor:pointer;transition:.16s;
-}
-.btn-atalho:hover{background:var(--azul);color:#fff}
 .alvo{
   display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;margin:1.1rem 0 0;
   padding:.7rem .95rem;border-radius:var(--raio-s);background:var(--superficie-alt);
@@ -831,10 +824,7 @@ const CONFIG = {
   dominiosNacionais: [
     "noticiasaominuto.com", "theportugalnews.com", "portugalresident.com",
     "lusa.pt", "agencialusa.com", "cnnportugal.iol.pt", "iol.pt",
-    "eco.sapo.pt", "sapo.pt", "aeiou.pt", "impresa.pt", "medialivre.pt",
-    "euronews.com", "pt.euronews.com", "msn.com", "yahoo.com",
-    "observador.pt", "pplware.sapo.pt", "executivedigest.sapo.pt",
-    "portugal.gov.pt", "parlamento.pt", "presidencia.pt", "bportugal.pt"
+    "eco.sapo.pt", "sapo.pt", "aeiou.pt", "impresa.pt", "medialivre.pt"
   ],
   atualizacao: "30 de julho de 2026"
 };
@@ -1251,7 +1241,7 @@ const MANUAL = [
     <p>A janela de exportação tem dois passos. Primeiro <strong>Recolher notícias</strong>, que procura por esta ordem:</p>
     <dl>
       <dt>Retrato do dia</dt><dd>Para a consulta predefinida da área com janela de 24 horas. Imediato.</dd>
-      <dt>Arquivo de sete dias</dt><dd>Acumulado pelas recolhas agendadas, que pesquisam cada palavra-chave separadamente e marcam cada notícia com os termos que a trouxeram. É por isso que uma pesquisa por palavra-chave responde de imediato e sem depender da rede.</dd>
+      <dt>Arquivo de sete dias</dt><dd>Acumulado pelas recolhas agendadas. Cobre pesquisas por palavra-chave e janelas até uma semana, também sem depender da rede.</dd>
       <dt>Serviço de pesquisa</dt><dd>Só para o que o arquivo não cobre. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem em arquivo e avisa.</dd>
     </dl>
     <p>Concluído, aparece o segundo passo, com <strong>Ler notícias</strong>, <strong>Ver síntese</strong> e <strong>Descarregar Excel</strong>.</p>
@@ -1775,14 +1765,30 @@ function definirPorSelecao(area){
    bloqueia: para o navegador é apenas mais um ficheiro da mesma página. */
 function enderecosDados(){
   const lista = ["noticias.json"];
+  // Se estivermos a correr localmente ou no preview, tentamos caminhos relativos primeiro
+  if (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    // Já está na lista como "noticias.json"
+  }
+  
   let base = (CONFIG.enderecoDados || "").trim();
   if(base){
     base = base.replace(/[#?].*$/, "");
     if(/\.html?$/i.test(base)) base = base.replace(/[^/]+$/, "");
     if(!base.endsWith("/")) base += "/";
-    lista.push(base + "noticias.json");
+    const fullUrl = base + "noticias.json";
+    if (!lista.includes(fullUrl)) lista.push(fullUrl);
   }
-  return lista;
+  
+  // Se estivermos no GitHub Pages, tentamos o caminho absoluto do repositório
+  if (window.location.hostname.endsWith('github.io')) {
+    const pathParts = window.location.pathname.split('/');
+    if (pathParts.length > 2) {
+      const repoPath = '/' + pathParts[1] + '/noticias.json';
+      if (!lista.includes(repoPath)) lista.push(repoPath);
+    }
+  }
+  
+  return [...new Set(lista)]; // Remover duplicados
 }
 
 let historico = null;   // série diária publicada pela recolha agendada
@@ -1852,21 +1858,9 @@ function paraConsulta(lista){
   let itens = lista.filter(n => n.area === consultaAtiva.area.nome);
   if(consultaAtiva.termos){
     const alvos = consultaAtiva.termos.map(simplificar);
-    /* A recolha agendada marca cada notícia com as palavras-chave que a
-       trouxeram. Havendo essa marca, é ela que decide; caso contrário
-       procura-se o termo no título. */
-    itens = itens.filter(n =>
-      (n.palavras && n.palavras.some(p => alvos.includes(simplificar(p))))
-      || alvos.some(t => n._b.includes(t)));
+    itens = itens.filter(n => alvos.some(t => n._b.includes(t)));
   }
   return itens.map(n => Object.assign({}, n, { consulta: consultaAtiva.rotulo }));
-}
-
-/* O arquivo cobre uma pesquisa por termo quando foi recolhido por palavra-chave */
-function arquivoCobreTermos(lista){
-  if(!consultaAtiva || !consultaAtiva.termos) return false;
-  const alvos = consultaAtiva.termos.map(simplificar);
-  return lista.some(n => n.palavras && n.palavras.some(p => alvos.includes(simplificar(p))));
 }
 
 async function deDadosPublicados(){
@@ -2044,7 +2038,7 @@ async function recolherConsulta(){
     const arranque = Date.now();
     const contador = setInterval(() => {
       const seg = Math.round((Date.now() - arranque) / 1000);
-      estado.innerHTML = `A pesquisar no serviço… <span style="color:var(--texto-ligeiro);font-size:.8rem">${seg}s</span>`;
+      estado.innerHTML = `A pesquisar no serviço (pode ser lento)… <span style="color:var(--texto-ligeiro);font-size:.8rem">${seg}s</span>`;
     }, 1000);
     try{
       const corrida = primeiraQueResulte(
@@ -2060,24 +2054,7 @@ async function recolherConsulta(){
   let erros = [];
 
   if(porTermo){
-    /* Se a recolha agendada já pesquisou esta palavra-chave, o arquivo tem a
-       resposta completa e não é preciso ir ao serviço. */
-    try{
-      const a = await carregarArquivo();
-      if(!valido()) return;
-      if(arquivoCobreTermos(a.noticias)){
-        const r = { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias` };
-        if(r.itens.filter(dentroDoPeriodo).length){
-          btn.disabled = false;
-          assentarRecolha(r.itens, r.origem);
-          return;
-        }
-        if(r.itens.length) guardado = r;
-      }
-    }catch(e){ /* sem arquivo por palavra-chave */ }
-    if(!valido()) return;
-
-    /* Caso contrário, o serviço é quem tem o arquivo todo */
+    /* Pesquisa por termo: o serviço tem o arquivo todo e é ele que responde */
     try{
       const r = await doServico();
       if(!valido()) return;
@@ -2478,38 +2455,19 @@ function mostrarEstadoRecolha(origem, retiradas){
   retiradas = retiradas || { origem:0, data:0, redes:0, termo:0 };
   const estado = $("#expEstado");
   if(!estado) return;
-
   const partes = [];
   if(retiradas.termo) partes.push(`${retiradas.termo} sem o termo pesquisado`);
   if(retiradas.redes) partes.push(`${retiradas.redes} de redes sociais`);
-  if(retiradas.origem) partes.push(`${retiradas.origem} por não serem fontes nacionais`);
+  if(retiradas.origem) partes.push(`${retiradas.origem} pelo filtro de origem`);
   if(retiradas.data) partes.push(`${retiradas.data} fora do período`);
-  const fora = retiradas.termo + retiradas.redes + retiradas.origem + retiradas.data;
-
-  /* Atalhos para desfazer o filtro que mais cortou, sem sair da janela */
-  const atalhos = [];
-  if(retiradas.origem && filtroFontes === "nacionais") atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Aceitar todas as fontes</button>`);
-  if(retiradas.redes && filtroRedes === "sem") atalhos.push(`<button class="btn-atalho" data-afrouxar="redes">Incluir redes sociais</button>`);
-  if(retiradas.data) atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
-  const barra = atalhos.length ? `<div class="atalhos">${atalhos.join("")}</div>` : "";
-
-  if(recolha.length){
-    estado.innerHTML =
-      `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar` +
-      `<span style="color:var(--texto-ligeiro);font-size:.8rem"> · ${origem}</span>` +
-      (fora ? `<br><span style="font-size:.8rem;color:var(--texto-ligeiro)">Foram retiradas ${fora}: ${partes.join(", ")}.</span>${barra}` : "");
-  }else{
-    estado.innerHTML = fora
-      ? `<span style="color:var(--vermelho)">As ${fora} notícias recolhidas foram todas retiradas pelos filtros.</span>
-         <br><span style="font-size:.84rem">${partes.join(", ")}.</span>${barra}`
-      : `<span style="color:var(--vermelho)">Não foram encontradas notícias.</span>
-         <br><span style="font-size:.84rem">A consulta não devolveu resultados para este período.</span>${barra}`;
-  }
-
-  const p2 = $("#passo2");
-  if(p2) p2.hidden = recolha.length === 0;
-  const p1 = $("#passo1");
-  if(p1) p1.classList.toggle("feito", recolha.length > 0);
+  const nota = partes.length ? ` · ${partes.join(", ")}` : "";
+  estado.innerHTML = recolha.length
+    ? `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar <span style="color:var(--texto-ligeiro);font-size:.8rem">· ${origem}${nota}</span>`
+    : `<span style="color:var(--vermelho)">Não foram encontradas notícias.</span>`;
+  const passo2 = $("#passo2");
+  if(passo2) passo2.hidden = recolha.length === 0;
+  const passo1 = $("#passo1");
+  if(passo1) passo1.classList.toggle("feito", recolha.length > 0);
 }
 
 /* =========================================================================
@@ -2539,25 +2497,6 @@ document.addEventListener("click", e => {
   }
   const ex = e.target.closest("[data-exportar]");
   if(ex){ abrirExportacao(ex.dataset.exportar); return; }
-
-  const af = e.target.closest("[data-afrouxar]");
-  if(af){
-    if(af.dataset.afrouxar === "fontes"){
-      filtroFontes = "todas";
-      document.querySelectorAll("#filtroFontes button").forEach(x => x.classList.toggle("ativo", x.dataset.fonte === "todas"));
-    }else if(af.dataset.afrouxar === "redes"){
-      filtroRedes = "com";
-      document.querySelectorAll("#filtroRedes button").forEach(x => x.classList.toggle("ativo", x.dataset.redes === "com"));
-    }else{
-      periodo = "7d";
-      const sel = $("#campoPeriodo") || document.querySelector("select");
-      if(sel) sel.value = "7d";
-    }
-    recolha = []; assinaturaRecolha = "";
-    if(consultaAtiva) abrirExportacao(consultaAtiva.area.id);
-    setTimeout(recolherConsulta, 30);
-    return;
-  }
 
   const mn = e.target.closest("[data-manual]");
   if(mn){ marcarCapitulo(mn.dataset.manual); irParaCapitulo(mn.dataset.manual); return; }

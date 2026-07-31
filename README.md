@@ -34,7 +34,7 @@ Unidade de Pesquisa e Estatísticas
 | `extrair_noticias.py` | A recolha das 16 áreas. Produz o Excel do dia e os três ficheiros de dados. |
 | `.github/workflows/radar-noticias.yml` | Tarefa agendada que corre a recolha nos servidores do GitHub. |
 | `noticias.json` | **Retrato do dia.** As notícias das últimas 24 horas de cada área. É o que o painel lê na consulta predefinida — resposta imediata. |
-| `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas diárias, sem repetições. Cada recolha pesquisa também cada palavra-chave separadamente e marca as notícias com os termos que as trouxeram — é o que permite pesquisar por palavra-chave sem depender de serviços externos. |
+| `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas diárias, sem repetições. Permite pesquisar por palavra-chave e usar janelas até uma semana sem depender de serviços externos. |
 | `historico.json` | **Série diária.** Uma linha por dia e por área, com o número de notícias, de notícias novas e de publicações distintas. Alimenta o bloco *Evolução* e a folha homónima do Excel. |
 
 Os três ficheiros de dados são gerados e atualizados pela recolha agendada. Não
@@ -73,14 +73,21 @@ servidor nenhum.
 
 ## Instalação
 
-1. Colocar `index.html`, `extrair_noticias.py` e `README.md` na raiz do repositório,
-   e `radar-noticias.yml` em `.github/workflows/`.
-2. Em **Settings › Pages**, escolher *Deploy from a branch*, ramo `main`, pasta `/ (root)`.
-3. Em **Settings › Actions › General › Workflow permissions**, escolher
-   *Read and write permissions* — é o que permite ao fluxo gravar os ficheiros de dados.
-4. Em **Actions**, correr *Radar de Noticias* uma primeira vez.
+1. Colocar `index.html`, `extrair_noticias.py` e `README.md` na raiz do repositório.
+2. Criar a pasta `.github/workflows/` e colocar lá o ficheiro `radar-noticias.yml`.
+3. No GitHub, em **Settings › Pages**, escolher *Deploy from a branch*, ramo `main`, pasta `/ (root)`.
+4. Em **Settings › Actions › General › Workflow permissions**, escolher
+   **Read and write permissions** — isto é fundamental para permitir que o script grave os ficheiros de dados (`noticias.json`, etc.).
+5. No separador **Actions**, escolher "Radar de Noticias" e clicar em **Run workflow** para gerar os primeiros dados.
 
-O painel fica em `https://<utilizador>.github.io/<repositório>/`.
+O painel ficará disponível em `https://<utilizador>.github.io/<repositório>/`.
+
+### Notas sobre Performance e Dados
+- **Lentidão:** O painel é instantâneo quando lê os ficheiros `noticias.json` e `arquivo.json`. Se estiver lento, é porque não encontrou estes ficheiros e está a tentar contactar o Google através de "proxies" públicos (que são lentos e instáveis). Certifique-se de que a recolha agendada correu com sucesso e os ficheiros existem no repositório.
+- **Diferença para o Google:** Os resultados podem não ser idênticos aos da pesquisa web do Google porque:
+  1. O script usa o feed RSS (que o Google limita a 100 resultados por consulta).
+  2. O script aplica filtros automáticos para excluir fontes não-portuguesas (como sites brasileiros, angolanos, etc.) para manter o foco em notícias nacionais.
+  3. A ordenação no painel é estritamente cronológica, enquanto no Google Web é muitas vezes por "relevância".
 
 ### Usar o ficheiro guardado no computador
 
