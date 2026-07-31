@@ -539,6 +539,7 @@ main{padding:2.2rem 0 4rem}
 .via-ic svg{width:19px;height:19px;stroke:var(--cor);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .via-txt strong{display:block;font-size:.88rem;font-weight:600;color:var(--texto);line-height:1.25}
 .via-txt em{font-style:normal;font-size:.76rem;color:var(--texto-ligeiro);line-height:1.35}
+.marca-selecao{font-size:.78rem;color:var(--texto-ligeiro);margin:-.2rem 0 .55rem}
 .consulta-txt{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;line-height:1.6;
   background:var(--superficie-alt);border:1px solid var(--borda);border-radius:var(--raio-s);
@@ -722,6 +723,10 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <button data-fonte="internacionais">Internacionais</button>
       <button data-fonte="todas">Todas</button>
     </div>
+    <button class="interruptor" id="btnRedes" aria-pressed="true">
+      <span class="via"></span>
+      <span>Sem redes sociais</span>
+    </button>
     <button class="btn-nota" id="btnManual">
       <span class="i">i</span>
       Manual e método
@@ -780,7 +785,7 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
-  versao: "31 de julho, 11h",
+  versao: "31 de julho, 13h",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 25000,
@@ -788,6 +793,14 @@ const CONFIG = {
      serviço, pelo que a restrição é aplicada às notícias já recolhidas. São
      nacionais os domínios .pt e os títulos portugueses que usam outro domínio. */
   /* Títulos portugueses que não usam domínio .pt — o resto é reconhecido pelo domínio */
+  /* Plataformas que não são publicações noticiosas. O Google Notícias indexa
+     páginas destas plataformas, que aparecem misturadas com os jornais. */
+  redesSociais: [
+    "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
+    "youtube.com", "youtu.be", "linkedin.com", "reddit.com", "threads.net", "threads.com",
+    "bsky.app", "t.me", "telegram.me", "whatsapp.com", "pinterest.com", "tumblr.com",
+    "flipboard.com", "medium.com", "substack.com", "blogspot.com", "wordpress.com"
+  ],
   dominiosNacionais: [
     "noticiasaominuto.com", "theportugalnews.com", "portugalresident.com",
     "lusa.pt", "agencialusa.com", "cnnportugal.iol.pt", "iol.pt",
@@ -891,6 +904,7 @@ const AREAS = [
 let filtroAtual = "todas";
 let periodo = "24h";      // operador when: do Google Notícias
 let filtroFontes = "nacionais";   // nacionais · internacionais · todas
+let semRedes = true;              // exclui plataformas sociais e blogues
 let soNacionais = true;           // atalho para o caso mais frequente
 const ROTULO_FONTES = {
   nacionais: "só fontes nacionais",
@@ -1034,7 +1048,8 @@ function abrirDetalhe(id){
     </div>
     <div class="modal-corpo">
       <div class="bloco">
-        <h4>Palavras-chave · clique para pesquisar só esse termo</h4>
+        <h4>Palavras-chave · clique para selecionar, pode escolher várias</h4>
+        <p id="marcaSelecao" class="marca-selecao">Nenhuma selecionada — pesquisa a área completa</p>
         <div class="chips">${a.palavras.map(p =>
           `<span class="chip" data-termo="${p}" style="--cor:${cor(a.grupo)}">${p}</span>`).join("")}</div>
       </div>
@@ -1059,7 +1074,7 @@ function abrirDetalhe(id){
         <span class="via-ic" style="--cor:var(--verde)">
           <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg>
         </span>
-        <span class="via-txt"><strong>Trabalhar no painel</strong><em>Ler por data, ver síntese, exportar Excel</em></span>
+        <span class="via-txt"><strong>Visualizar no painel</strong><em>Ler por data, ver síntese, exportar Excel</em></span>
       </button>
     </div>`;
   $("#veu").classList.add("aberto");
@@ -1083,7 +1098,7 @@ function abrirExportacao(id){
     <div class="modal-corpo">
       <div class="alvo">
         <span>A recolher</span>
-        <strong>${consultaAtiva.termo ? `apenas “${consultaAtiva.termo}”` : `todas as palavras-chave de ${a.nome}`}</strong>
+        <strong>${consultaAtiva.termos ? `apenas ${consultaAtiva.rotulo}` : `todas as palavras-chave de ${a.nome}`}</strong>
       </div>
 
       <div class="passo" id="passo1">
@@ -1151,6 +1166,7 @@ const MANUAL = [
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: 24 horas. Como o teto de 100 notícias se aplica sempre, o período não altera <em>quantas</em> notícias vêm — altera <em>quais</em>.</dd>
       <dt>Origem das fontes</dt><dd>Três posições. <strong>Nacionais</strong>, por predefinição, mantém apenas domínios <code>.pt</code> e os títulos portugueses conhecidos que usam outro domínio. <strong>Internacionais</strong> mostra exatamente o contrário, o que é útil para ver como uma matéria portuguesa está a ser tratada lá fora. <strong>Todas</strong> não filtra.</dd>
+      <dt>Sem redes sociais</dt><dd>Ativo por predefinição. O serviço indexa páginas do Instagram, Facebook, YouTube, X e plataformas afins, que aparecem misturadas com os jornais. Este interruptor deixa-as de fora.</dd>
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida — e não apenas pela consulta enviada ao serviço. É por isso que funciona mesmo sobre as notícias da recolha agendada.</dd>
     </dl>` },
 
@@ -1615,9 +1631,25 @@ let pedidoAtual = 0;       // identifica a recolha em curso; anula resultados at
 let consultaAtiva = null;  // { area, q, rotulo } — consulta em curso no detalhe aberto
 
 /* Define a consulta que o detalhe está a mostrar e que será exportada */
-function definirConsulta(area, q, rotulo, termo){
-  consultaAtiva = { area, q, rotulo, termo: termo || null };
+function definirConsulta(area, q, rotulo, termos){
+  consultaAtiva = { area, q, rotulo, termos: termos && termos.length ? termos : null };
   recolha = [];
+}
+
+/* Consulta a partir das palavras-chave selecionadas. Nenhuma selecionada
+   significa a área completa. */
+function definirPorSelecao(area){
+  const sel = [...document.querySelectorAll(".chip.sel[data-termo]")].map(c => c.dataset.termo);
+  if(!sel.length){
+    definirConsulta(area, consulta(area), area.palavras.join("; "), null);
+  }else{
+    const q = "(" + sel.map(t => `"${t}"`).join(" OR ") + ")" + sufixo();
+    const rotulo = sel.length === 1 ? `“${sel[0]}”` : sel.map(t => `“${t}”`).join(" ou ");
+    definirConsulta(area, q, rotulo, sel);
+  }
+  const alvo = $("#consultaTxt");
+  if(alvo) alvo.textContent = consultaAtiva.q;
+  return consultaAtiva;
 }
 
 /* Dados recolhidos pela tarefa agendada e publicados ao lado do painel.
@@ -1674,9 +1706,12 @@ async function deDadosPublicados(){
   if(!dados) throw new Error("sem ficheiro de dados (" + ultimo + ")");
   if(!Array.isArray(dados.noticias)) throw new Error("ficheiro de dados ilegível");
   let itens = dados.noticias.filter(n => n.area === consultaAtiva.area.nome);
-  if(consultaAtiva.termo){
-    const t = simplificar(consultaAtiva.termo);
-    itens = itens.filter(n => simplificar(n.titulo + " " + (n.resumo || "")).includes(t));
+  if(consultaAtiva.termos){
+    const alvos = consultaAtiva.termos.map(simplificar);
+    itens = itens.filter(n => {
+      const texto = simplificar(n.titulo + " " + (n.resumo || ""));
+      return alvos.some(t => texto.includes(t));
+    });
   }
   itens = itens.map(n => Object.assign({}, n, {
     consulta: consultaAtiva.rotulo,
@@ -1738,6 +1773,14 @@ function primeiraQueResulte(promessas){
 /* Uma notícia é nacional se o domínio termina em .pt ou consta da lista de
    títulos portugueses com outro domínio. Sem domínio conhecido, mantém-se:
    mais vale deixar passar do que apagar por engano. */
+/* Distingue publicações noticiosas de plataformas sociais e de blogues */
+function ehRedeSocial(it){
+  const d = (it.dominio || "").toLowerCase().replace(/^www\./, "");
+  const f = simplificar(it.fonte || "");
+  if(!d && !f) return false;
+  return CONFIG.redesSociais.some(r => d === r || d.endsWith("." + r) || d.includes(r) || f === simplificar(r.split(".")[0]));
+}
+
 function fonteNacional(it){
   const d = (it.dominio || "").toLowerCase().replace(/^www\./, "");
   if(!d) return true;
@@ -1763,13 +1806,18 @@ function dentroDoPeriodo(it){
 
 function assentarRecolha(itens, origem){
   const total = itens.length;
+  if(semRedes){
+    itens = itens.filter(it => !ehRedeSocial(it));
+  }
+  const porRedes = total - itens.length;
+  const antesOrigem = itens.length;
   if(filtroFontes === "nacionais") itens = itens.filter(fonteNacional);
   else if(filtroFontes === "internacionais") itens = itens.filter(it => !fonteNacional(it));
-  const porOrigem = total - itens.length;
+  const porOrigem = antesOrigem - itens.length;
   const antesDoTempo = itens.length;
   itens = itens.filter(dentroDoPeriodo);
   const porData = antesDoTempo - itens.length;
-  const retiradas = { origem: porOrigem, data: porData };
+  const retiradas = { origem: porOrigem, data: porData, redes: porRedes };
   const vistos = new Set();
   recolha = itens.filter(it => {
     const k = chaveNoticia(it);
@@ -2174,10 +2222,11 @@ ${serie.map((d, i) => linhaEvo(
 
 
 function mostrarEstadoRecolha(origem, retiradas){
-  retiradas = retiradas || { origem:0, data:0 };
+  retiradas = retiradas || { origem:0, data:0, redes:0 };
   const estado = $("#expEstado");
   if(!estado) return;
   const partes = [];
+  if(retiradas.redes) partes.push(`${retiradas.redes} de redes sociais`);
   if(retiradas.origem) partes.push(`${retiradas.origem} pelo filtro de origem`);
   if(retiradas.data) partes.push(`${retiradas.data} fora do período`);
   const nota = partes.length ? ` · ${partes.join(", ")}` : "";
@@ -2196,18 +2245,23 @@ function mostrarEstadoRecolha(origem, retiradas){
 document.addEventListener("click", e => {
   const chip = e.target.closest(".chip[data-termo]");
   if(chip){
-    const palavra = chip.dataset.termo;
-    const q = `"${palavra}"` + sufixo();
-    if(consultaAtiva) definirConsulta(consultaAtiva.area, q, `palavra-chave “${palavra}”`, palavra);
-    document.querySelectorAll(".chip[data-termo]").forEach(c => c.classList.toggle("sel", c === chip));
-    window.open(`https://news.google.com/search?q=${encodeURIComponent(q)}&${parametros()}`,
-      "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
+    chip.classList.toggle("sel");                 // seleção múltipla
+    if(consultaAtiva) definirPorSelecao(consultaAtiva.area);
+    const marca = $("#marcaSelecao");
+    if(marca){
+      const n = document.querySelectorAll(".chip.sel[data-termo]").length;
+      marca.textContent = n
+        ? `${n} ${n === 1 ? "palavra-chave selecionada" : "palavras-chave selecionadas"}`
+        : "Nenhuma selecionada — pesquisa a área completa";
+    }
     return;
   }
   const fd = e.target.closest("[data-feed]");
   if(fd){
     const a = AREAS.find(x => x.id === fd.dataset.feed);
-    window.open(urlFonte(a), "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
+    const q = (consultaAtiva && consultaAtiva.area.id === a.id) ? consultaAtiva.q : consulta(a);
+    window.open(`https://news.google.com/search?q=${encodeURIComponent(q)}&${parametros()}`,
+      "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
     return;
   }
   const ex = e.target.closest("[data-exportar]");
@@ -2242,8 +2296,10 @@ function pesquisaLivre(){
   const termo = (campo && campo.value || "").trim();
   if(!termo) { if(campo) campo.focus(); return; }
   const q = termo + sufixo();
-  if(consultaAtiva) definirConsulta(consultaAtiva.area, q, `pesquisa “${termo}”`, termo);
+  if(consultaAtiva) definirConsulta(consultaAtiva.area, q, `“${termo}”`, [termo]);
   document.querySelectorAll(".chip[data-termo]").forEach(c => c.classList.remove("sel"));
+  const alvo = $("#consultaTxt");
+  if(alvo) alvo.textContent = q;
   window.open(`https://news.google.com/search?q=${encodeURIComponent(q)}&${parametros()}`,
     "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
 }
@@ -2256,6 +2312,11 @@ document.addEventListener("keydown", e => {
 $("#campoPesquisa").addEventListener("input", e => { termoPesquisa = e.target.value; desenhar(); });
 
 $("#btnManual").addEventListener("click", () => abrirManual("1"));
+$("#btnRedes").addEventListener("click", () => {
+  semRedes = !semRedes;
+  $("#btnRedes").setAttribute("aria-pressed", semRedes ? "true" : "false");
+  mostrarAviso(semRedes ? "Redes sociais excluídas" : "Redes sociais incluídas");
+});
 
 $("#filtroFontes").addEventListener("click", e => {
   const b = e.target.closest("[data-fonte]");
