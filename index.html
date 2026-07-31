@@ -539,6 +539,11 @@ main{padding:2.2rem 0 4rem}
 .via-ic svg{width:19px;height:19px;stroke:var(--cor);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .via-txt strong{display:block;font-size:.88rem;font-weight:600;color:var(--texto);line-height:1.25}
 .via-txt em{font-style:normal;font-size:.76rem;color:var(--texto-ligeiro);line-height:1.35}
+.aviso-alcance{
+  margin:.9rem 0 0;padding:.7rem .9rem;border-radius:var(--raio-s);
+  background:rgba(190,156,84,.09);border-left:3px solid var(--dourado);
+  font-size:.82rem;color:var(--texto-suave);line-height:1.5;
+}
 .marca-selecao{font-size:.78rem;color:var(--texto-ligeiro);margin:-.2rem 0 .55rem}
 .consulta-txt{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;line-height:1.6;
@@ -785,7 +790,7 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
-  versao: "31 de julho, 13h",
+  versao: "31 de julho, 14h",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 25000,
@@ -1101,6 +1106,10 @@ function abrirExportacao(id){
         <strong>${consultaAtiva.termos ? `apenas ${consultaAtiva.rotulo}` : `todas as palavras-chave de ${a.nome}`}</strong>
       </div>
 
+      <p class="aviso-alcance" id="avisoAlcance" hidden>
+        Estes resultados vêm do instantâneo diário da área, recolhido de manhã. Uma pesquisa por palavra-chave ou um período mais largo precisam de consultar o serviço, que não respondeu — para ver tudo o que existe sobre o termo, use “Abrir no Google Notícias”.
+      </p>
+
       <div class="passo" id="passo1">
         <div class="passo-n">1</div>
         <div class="passo-corpo">
@@ -1179,7 +1188,7 @@ const MANUAL = [
     <p class="man-aviso">A exportação segue sempre a consulta ativa: se clicou numa palavra-chave, exporta só essa; caso contrário, exporta a área completa.</p>` },
 
   { n:"4", titulo:"Recolher e exportar", cor:"var(--verde)", icone:"descarregar", corpo:`
-    <p>A janela de exportação tem dois passos. Primeiro <strong>Recolher notícias</strong>, que usa o ficheiro da recolha agendada publicado ao lado do painel e recorre à recolha em direto quando esse ficheiro não existe. Concluído, aparece o segundo passo, com <strong>Ler notícias</strong>, <strong>Ver síntese</strong> e <strong>Descarregar Excel</strong>.</p>
+    <p>A janela de exportação tem dois passos. Primeiro <strong>Recolher notícias</strong>. Na consulta predefinida da área, com janela de 24 horas, usa o instantâneo produzido de manhã pela recolha agendada, que é imediato. Se selecionar palavras-chave ou alargar o período, pesquisa o serviço, porque o instantâneo é apenas o retrato diário da área e não contém o arquivo. Concluído, aparece o segundo passo, com <strong>Ler notícias</strong>, <strong>Ver síntese</strong> e <strong>Descarregar Excel</strong>.</p>
     <p><strong>Ler notícias</strong> apresenta a lista por ordem cronológica, da mais recente para a mais antiga — a ordenação que o serviço não dá.</p>
     <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, as exclusões, a consulta enviada e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
 
@@ -1201,6 +1210,7 @@ const MANUAL = [
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <dl>
+      <dt>Instantâneo e arquivo</dt><dd>A recolha agendada guarda o retrato diário de cada área, com o teto de 100. Filtrar esse retrato por uma palavra-chave devolve só o que lá está — muito menos do que existe no serviço. Para pesquisar o arquivo, o painel consulta o serviço em direto; não conseguindo, avisa que os resultados vêm do instantâneo.</dd>
       <dt>Cerca de 100 artigos</dt><dd>Por consulta, sem paginação. Qualquer que seja o período. Alargar a janela distribui as mesmas 100 por mais tempo.</dd>
       <dt>Contagens não comparáveis</dt><dd>Entre áreas. Uma área muito noticiada é truncada no teto; uma discreta não é.</dd>
       <dt>Ordenação por relevância</dt><dd>Não por data, e o operador de tempo atua sobre a data de indexação. O botão <strong>Ler notícias</strong> resolve isto, ordenando pela data do artigo.</dd>
@@ -1836,17 +1846,29 @@ async function recolherConsulta(){
   btn.disabled = true;
   recolha = [];
   const endereco = urlRSS(consultaAtiva.q);
+  let faltaFicheiro = "";
 
-  /* Via preferida: dados publicados pela recolha agendada, no mesmo endereço do painel */
-  estado.innerHTML = "A recolher…";
-  try{
+  /* O ficheiro da recolha agendada é um instantâneo diário da área completa:
+     serve na perfeição a consulta predefinida, mas não substitui uma pesquisa
+     quando se escolhem palavras-chave ou se alarga o período além das 24 horas.
+     Nesses casos vai-se primeiro ao serviço, que pesquisa todo o arquivo. */
+  const horas = HORAS_PERIODO[periodo];
+  const ficheiroServe = !consultaAtiva.termos && horas && horas <= 24;
+
+  const doFicheiro = async () => {
     const { itens, origem } = await deDadosPublicados();
-    if(!valido()) return;
+    if(!valido()) return true;
     btn.disabled = false;
-    assentarRecolha(itens, origem);
-    return;
-  }catch(e){ faltaFicheiro = e.message; /* segue para a recolha em direto */ }
-  if(!valido()) return;
+    assentarRecolha(itens, origem + (ficheiroServe ? "" : " · instantâneo diário da área"));
+    return true;
+  };
+
+  if(ficheiroServe){
+    estado.innerHTML = "A recolher…";
+    try{ if(await doFicheiro()) return; }
+    catch(e){ faltaFicheiro = e.message; }
+    if(!valido()) return;
+  }
 
   /* Recolha em direto: as vias disponíveis correm em simultâneo e vale a primeira */
   const arranque = Date.now();
@@ -1864,18 +1886,31 @@ async function recolherConsulta(){
     if(!valido()) return;
     btn.disabled = false;
     assentarRecolha(itens, origem);
+    return;
   }catch(agregado){
     clearInterval(contador);
     if(!valido()) return;
-    const erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
-    btn.disabled = false;
-    estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias neste momento.</span>
-      <br><span style="font-size:.84rem">${faltaFicheiro
-        ? "Não foi encontrado o ficheiro <code>noticias.json</code> da recolha agendada junto ao painel, e os serviços de recolha em direto estão bloqueados ou indisponíveis. Enquanto a recolha agendada não correr pelo menos uma vez, o painel fica dependente desses serviços."
-        : "Os serviços de recolha em direto estão indisponíveis ou bloqueados."}</span>
-      <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico, para comunicar à Unidade de Pesquisa e Estatísticas</summary>
-      <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
+    var erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
   }
+
+  /* O serviço não respondeu: resta o instantâneo diário, com a devida ressalva */
+  if(!ficheiroServe){
+    try{
+      if(await doFicheiro()){
+        const nota = $("#avisoAlcance");
+        if(nota) nota.hidden = false;
+        return;
+      }
+    }catch(e){ faltaFicheiro = e.message; }
+  }
+
+  btn.disabled = false;
+  $("#expEstado").innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias neste momento.</span>
+    <br><span style="font-size:.84rem">${faltaFicheiro
+      ? "Não foi encontrado o ficheiro <code>noticias.json</code> da recolha agendada junto ao painel, e os serviços de recolha em direto estão bloqueados ou indisponíveis."
+      : "Os serviços de recolha em direto estão indisponíveis ou bloqueados."}</span>
+    <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico, para comunicar à Unidade de Pesquisa e Estatísticas</summary>
+    <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${(erros || []).map(f => `<li>${f}</li>`).join("")}</ul></details>`;
 }
 
 /* Lê notícias a partir de texto — ficheiro guardado do feed ou colagem */
