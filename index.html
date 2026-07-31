@@ -731,10 +731,10 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <button data-fonte="internacionais">Internacionais</button>
       <button data-fonte="todas">Todas</button>
     </div>
-    <div class="segmentado" id="filtroRedes" role="group" aria-label="Redes sociais">
-      <button data-redes="sem" class="ativo">Sem redes sociais</button>
-      <button data-redes="so">Só redes sociais</button>
-      <button data-redes="com">Com redes sociais</button>
+    <div class="segmentado" id="filtroRedes" role="group" aria-label="Tipo de fonte">
+      <button data-redes="sem" class="ativo">Imprensa</button>
+      <button data-redes="so">Redes sociais</button>
+      <button data-redes="com">Todas</button>
     </div>
     <button class="btn-nota" id="btnManual">
       <span class="i">i</span>
@@ -922,9 +922,9 @@ let periodo = "24h";      // operador when: do Google Notícias
 let filtroFontes = "nacionais";   // nacionais · internacionais · todas
 let filtroRedes = "sem";          // sem · so · com
 const ROTULO_REDES = {
-  sem: "sem redes sociais",
+  sem: "só imprensa",
   so: "só redes sociais",
-  com: "com redes sociais"
+  com: "imprensa e redes sociais"
 };
 let soNacionais = true;           // atalho para o caso mais frequente
 const ROTULO_FONTES = {
@@ -1202,7 +1202,6 @@ function abrirExportacao(id){
   $("#btnLer").addEventListener("click", abrirLeitura);
   if(recolha.length) mostrarEstadoRecolha("recolha anterior");
   else { const p2 = $("#passo2"); if(p2) p2.hidden = true; }
-  carregarHistorico();
 }
 
 function fecharModal(){ $("#veu").classList.remove("aberto"); }
@@ -1221,7 +1220,7 @@ const MANUAL = [
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: 24 horas. Como o teto de 100 notícias se aplica sempre, o período não altera <em>quantas</em> notícias vêm — altera <em>quais</em>.</dd>
       <dt>Origem das fontes</dt><dd>Três posições. <strong>Nacionais</strong>, por predefinição, mantém apenas domínios <code>.pt</code> e os títulos portugueses conhecidos que usam outro domínio. <strong>Internacionais</strong> mostra exatamente o contrário, o que é útil para ver como uma matéria portuguesa está a ser tratada lá fora. <strong>Todas</strong> não filtra.</dd>
-      <dt>Redes sociais</dt><dd>Três posições. <strong>Sem</strong>, por predefinição, deixa de fora as páginas do Instagram, Facebook, YouTube, X e plataformas afins, que o serviço indexa misturadas com os jornais. <strong>Só</strong> mostra apenas essas, útil para ver o que circula fora da imprensa. <strong>Com</strong> não filtra.</dd>
+      <dt>Tipo de fonte</dt><dd>Três posições. <strong>Imprensa</strong>, por predefinição, mostra apenas publicações noticiosas — jornais, rádios, televisões e agências. <strong>Redes sociais</strong> mostra o oposto: páginas do Instagram, Facebook, YouTube, X e plataformas de blogues, que o serviço indexa misturadas com a imprensa; é onde se vê o que circula fora dos meios noticiosos. <strong>Todas</strong> não filtra.</dd>
       <dt>Onde se aplicam</dt><dd>A janela temporal aplica-se sempre, nas duas vias. Os filtros de origem e de redes sociais são aplicados com exatidão às notícias recolhidas no painel; na janela do Google seguem como exclusões de domínio, que o serviço honra para publicações concretas mas não para domínios de topo — pode por isso escapar alguma.</dd>
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida — e não apenas pela consulta enviada ao serviço. É por isso que funciona mesmo sobre as notícias da recolha agendada.</dd>
     </dl>` },
@@ -1519,8 +1518,9 @@ function abrirLeitura(){
   $("#veu").classList.add("aberto");
 }
 
-function abrirSintese(){
+async function abrirSintese(){
   if(!recolha.length) return;
+  await carregarHistorico();
   const a = consultaAtiva.area, corA = cor(a.grupo);
   const assuntos = assuntosRecorrentes(recolha, 14);
   const fontes = contarPor(recolha, "fonte");
@@ -1776,7 +1776,7 @@ async function carregarHistorico(){
   if(historico !== null) return historico;
   for(const base of enderecosDados()){
     try{
-      const r = await fetch(base.replace("noticias.json", "historico.json"), { cache:"no-store" });
+      const r = await fetch(base.replace("noticias.json", "historico.json"));
       if(!r.ok) continue;
       const d = await r.json();
       if(d && Array.isArray(d.dias)){ historico = d; return historico; }
@@ -1799,62 +1799,53 @@ function serieDaArea(nome){
 let arquivo = null;   // notícias dos últimos dias, acumuladas pela recolha agendada
 
 async function carregarArquivo(){
-  if(arquivo !== null) return arquivo;
-  for(const base of enderecosDados()){
-    try{
-      const r = await fetch(base.replace("noticias.json", "arquivo.json"), { cache:"no-store" });
-      if(!r.ok) continue;
-      const d = await r.json();
-      if(d && Array.isArray(d.noticias)){ arquivo = d; return arquivo; }
-    }catch(e){ /* segue */ }
-  }
-  arquivo = { noticias: [], dias: 0 };
-  return arquivo;
+  try{ return await lerFicheiroDados("arquivo.json"); }
+  catch(e){ return { noticias: [], dias: 0 }; }
 }
 
 /* Notícias do arquivo que servem a consulta em curso */
 async function doArquivo(){
   const a = await carregarArquivo();
   if(!a.noticias.length) throw new Error("sem arquivo publicado");
-  let itens = a.noticias.filter(n => n.area === consultaAtiva.area.nome);
-  if(consultaAtiva.termos){
-    const alvos = consultaAtiva.termos.map(simplificar);
-    itens = itens.filter(n => {
-      const texto = simplificar(n.titulo + " " + (n.resumo || ""));
-      return alvos.some(t => texto.includes(t));
-    });
-  }
-  itens = itens.map(n => Object.assign({}, n, {
-    consulta: consultaAtiva.rotulo, ligacao: ligacaoDireta(n.ligacao)
-  }));
-  return { itens, origem: `arquivo de ${a.dias} dias`, dias: a.dias };
+  return { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias`, dias: a.dias };
 }
 
-async function deDadosPublicados(){
+/* Os ficheiros de dados são lidos uma vez por sessão e ficam em memória: a
+   recolha seguinte é filtragem local, sem qualquer pedido à rede. */
+const cache = {};
+
+async function lerFicheiroDados(nome){
+  if(cache[nome]) return cache[nome];
   let dados = null, ultimo = "";
   for(const endereco of enderecosDados()){
     try{
-      const r = await fetch(endereco, { cache:"no-store" });
+      const r = await fetch(endereco.replace("noticias.json", nome));
       if(!r.ok) throw new Error("estado " + r.status);
       dados = await r.json();
       break;
     }catch(e){ ultimo = e.message; }
   }
-  if(!dados) throw new Error("sem ficheiro de dados (" + ultimo + ")");
-  if(!Array.isArray(dados.noticias)) throw new Error("ficheiro de dados ilegível");
-  let itens = dados.noticias.filter(n => n.area === consultaAtiva.area.nome);
+  if(!dados || !Array.isArray(dados.noticias)) throw new Error("sem " + nome + " (" + ultimo + ")");
+  /* Índice de pesquisa pré-calculado, para não repetir o trabalho a cada consulta */
+  dados.noticias.forEach(n => { if(!n._b) n._b = simplificar(n.titulo || ""); });
+  cache[nome] = dados;
+  return dados;
+}
+
+/* Aplica a área e as palavras-chave da consulta em curso a um conjunto de notícias */
+function paraConsulta(lista){
+  let itens = lista.filter(n => n.area === consultaAtiva.area.nome);
   if(consultaAtiva.termos){
     const alvos = consultaAtiva.termos.map(simplificar);
-    itens = itens.filter(n => {
-      const texto = simplificar(n.titulo + " " + (n.resumo || ""));
-      return alvos.some(t => texto.includes(t));
-    });
+    itens = itens.filter(n => alvos.some(t => n._b.includes(t)));
   }
-  itens = itens.map(n => Object.assign({}, n, {
-    consulta: consultaAtiva.rotulo,
-    ligacao: ligacaoDireta(n.ligacao)
-  }));
-  return { itens, origem: "recolha agendada de " + (dados.gerado || "data desconhecida") };
+  return itens.map(n => Object.assign({}, n, { consulta: consultaAtiva.rotulo }));
+}
+
+async function deDadosPublicados(){
+  const dados = await lerFicheiroDados("noticias.json");
+  return { itens: paraConsulta(dados.noticias),
+           origem: "recolha agendada de " + (dados.gerado || "data desconhecida") };
 }
 
 /* Tenta uma via, com limite de tempo próprio */
@@ -2154,6 +2145,7 @@ function analisarFeed(bruto, area){
 
 /* ---------- Escrita dos ficheiros ---------- */
 
+/* Campo auxiliar do índice de pesquisa, que não deve sair nos ficheiros */
 const COLUNAS = [
   ["area","Área governativa"], ["grupo","Agrupamento temático"], ["data","Data de publicação"],
   ["fonte","Fonte"], ["dominio","Domínio"], ["titulo","Título"],
@@ -2302,10 +2294,10 @@ function descarregarXLSX(){
       internacionais: "só internacionais — tudo o que não seja fonte portuguesa",
       todas: "todas as fontes, sem restrição"
     }[filtroFontes]],
-    ["Redes sociais", {
-      sem: "excluídas — apenas publicações noticiosas",
-      so: "apenas redes sociais e plataformas de blogues",
-      com: "incluídas, a par das publicações noticiosas"
+    ["Tipo de fonte", {
+      sem: "só imprensa — jornais, rádios, televisões e agências",
+      so: "só redes sociais e plataformas de blogues",
+      com: "imprensa e redes sociais, sem distinção"
     }[filtroRedes]],
     ["Origem", "Google Notícias, edição portuguesa (hl=pt-PT, gl=PT, ceid=PT:pt-150)"],
     ["Consulta enviada", consultaAtiva.q],
