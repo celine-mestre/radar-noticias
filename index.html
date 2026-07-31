@@ -586,7 +586,7 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       Entrar no radar
       <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
-    <p class="capa-rodape">Suporte à Decisão · Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas<br>30 de julho de 2026</p>
+    <p class="capa-rodape">Suporte à Decisão · Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas<br>Versão de <span id="capaVersao">—</span></p>
   </div>
 </div>
 
@@ -756,7 +756,7 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <small>Suporte à Decisão · Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas</small>
     </div>
     <div class="fontes">
-      Fonte: Google Notícias, edição portuguesa. Atualizado em 30 de julho de 2026.
+      Fonte: Google Notícias, edição portuguesa. Versão de <span id="rodapeVersao">—</span>.
     </div>
   </div>
 </footer>
@@ -772,7 +772,7 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
-  versao: "2026-07-31 · manual + síntese",
+  versao: "31 de julho, 11h",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 25000,
@@ -2229,6 +2229,12 @@ function fecharCapa(){
 }
 $("#btnEntrar").addEventListener("click", fecharCapa);
 $("#capa").addEventListener("click", e => { if(e.target.id === "capa") fecharCapa(); });
+
+/* Marca de versão visível, para se confirmar o que está publicado */
+["#capaVersao", "#rodapeVersao"].forEach(id => {
+  const el = $(id);
+  if(el) el.textContent = CONFIG.versao;
+});
 
 /* Arranque */
 desenhar();
