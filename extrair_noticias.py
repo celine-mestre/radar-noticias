@@ -255,6 +255,17 @@ def limpar(texto):
 DOMINIOS_ALHEIOS = ("google.com", "google.pt", "gstatic.com", "googleusercontent.com",
                     "googleapis.com", "policies.google", "accounts.google", "consent.google")
 
+# Publicações dos restantes países de língua portuguesa, para referência de quem
+# analisar os ficheiros. A seleção por origem é feita no painel, sobre o domínio.
+PUBLICACOES_LUSOFONAS = (
+    "globo.com", "uol.com.br", "r7.com", "metropoles.com", "abril.com", "terra.com.br",
+    "conjur.com.br", "migalhas.com.br", "jota.info", "exame.com",
+    "jornaldeangola.ao", "novojornal.co.ao", "verangola.net", "angop.ao",
+    "opais.co.mz", "idolo.co.mz", "verdade.co.mz", "carta.co.mz",
+    "expressodasilhas.cv", "asemana.publ.cv", "inforpress.cv", "vozdoarquipelago.com",
+    "tatoli.tl", "timorpost.com", "stp-press.st", "odemocratagb.com",
+)
+
 FICHEIROS_DE_IMAGEM = re.compile(r"\.(png|jpe?g|gif|webp|svg|ico|bmp)(\?|#|$)", re.IGNORECASE)
 
 

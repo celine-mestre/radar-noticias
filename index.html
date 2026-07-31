@@ -809,8 +809,11 @@ const CONFIG = {
      resultados. Usadas nas exclusões da janela do Google. */
   publicacoesEstrangeiras: [
     "globo.com", "g1.globo.com", "uol.com.br", "r7.com", "metropoles.com", "abril.com",
-    "conjur.com.br", "migalhas.com.br", "jota.info", "exame.com",
-    "jornaldeangola.ao", "novojornal.co.ao", "verangola.net", "opais.co.mz", "idolo.co.mz"
+    "conjur.com.br", "migalhas.com.br", "jota.info", "exame.com", "terra.com.br",
+    "jornaldeangola.ao", "novojornal.co.ao", "verangola.net", "angop.ao",
+    "opais.co.mz", "idolo.co.mz", "verdade.co.mz", "carta.co.mz",
+    "expressodasilhas.cv", "asemana.publ.cv", "inforpress.cv", "vozdoarquipelago.com",
+    "tatoli.tl", "timorpost.com", "stp-press.st", "odemocratagb.com"
   ],
   redesSociais: [
     "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
@@ -1263,6 +1266,7 @@ const MANUAL = [
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <dl>
+      <dt>Correspondência aproximada</dt><dd>O serviço devolve artigos que não contêm o termo pesquisado — uma pesquisa por “CPLP” traz notícias de automóveis. O painel confirma cada resultado contra o termo e descarta os que não o contêm, indicando quantos foram.</dd>
       <dt>Instantâneo e arquivo</dt><dd>A recolha agendada guarda o retrato diário de cada área, com o teto de 100. Filtrar esse retrato por uma palavra-chave devolve só o que lá está — muito menos do que existe no serviço. Para pesquisar o arquivo, o painel consulta o serviço em direto; não conseguindo, avisa que os resultados vêm do instantâneo.</dd>
       <dt>Cerca de 100 artigos</dt><dd>Por consulta, sem paginação. Qualquer que seja o período. Alargar a janela distribui as mesmas 100 por mais tempo.</dd>
       <dt>Contagens não comparáveis</dt><dd>Entre áreas. Uma área muito noticiada é truncada no teto; uma discreta não é.</dd>
@@ -1933,7 +1937,22 @@ function dentroDoPeriodo(it){
   return d.getTime() >= Date.now() - horas * 3600 * 1000;
 }
 
+/* O serviço faz correspondência aproximada e devolve artigos que não contêm o
+   termo pesquisado — uma pesquisa por "CPLP" traz notícias de automóveis. Os
+   resultados vindos do serviço são por isso confirmados contra o termo. */
+function confirmaTermos(itens){
+  if(!consultaAtiva || !consultaAtiva.termos) return { itens, fora:0 };
+  const alvos = consultaAtiva.termos.map(simplificar);
+  const bons = itens.filter(it => {
+    const texto = simplificar((it.titulo || "") + " " + (it.resumo || ""));
+    return alvos.some(t => texto.includes(t));
+  });
+  return { itens: bons, fora: itens.length - bons.length };
+}
+
 function assentarRecolha(itens, origem, ignorarPeriodo){
+  const confirmados = confirmaTermos(itens);
+  itens = confirmados.itens;
   const total = itens.length;
   /* As duas seleções são independentes e uma plataforma social não tem
      nacionalidade: o filtro de origem aplica-se apenas às publicações
@@ -1951,7 +1970,7 @@ function assentarRecolha(itens, origem, ignorarPeriodo){
   const antesDoTempo = itens.length;
   if(!ignorarPeriodo) itens = itens.filter(dentroDoPeriodo);
   const porData = antesDoTempo - itens.length;
-  const retiradas = { origem: porOrigem, data: porData, redes: porRedes };
+  const retiradas = { origem: porOrigem, data: porData, redes: porRedes, termo: confirmados.fora };
   const vistos = new Set();
   recolha = itens.filter(it => {
     const k = chaveNoticia(it);
@@ -2417,10 +2436,11 @@ ${serie.map((d, i) => linhaEvo(
 
 
 function mostrarEstadoRecolha(origem, retiradas){
-  retiradas = retiradas || { origem:0, data:0, redes:0 };
+  retiradas = retiradas || { origem:0, data:0, redes:0, termo:0 };
   const estado = $("#expEstado");
   if(!estado) return;
   const partes = [];
+  if(retiradas.termo) partes.push(`${retiradas.termo} sem o termo pesquisado`);
   if(retiradas.redes) partes.push(`${retiradas.redes} de redes sociais`);
   if(retiradas.origem) partes.push(`${retiradas.origem} pelo filtro de origem`);
   if(retiradas.data) partes.push(`${retiradas.data} fora do período`);
