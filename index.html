@@ -247,6 +247,40 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .evo-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
 .evo-haste{width:100%;max-width:16px;border-radius:3px 3px 1px 1px;display:block;transition:.2s}
 .evo-dia{font-size:.6rem;color:var(--texto-ligeiro);margin-top:.3rem;white-space:nowrap;height:.9rem}
+.ler-corpo{padding:.4rem 1.6rem 1rem}
+.ler-dia{margin-top:1.1rem}
+.ler-dia:first-child{margin-top:.6rem}
+.ler-dia h4{
+  display:flex;align-items:center;gap:.5rem;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--texto-ligeiro);font-weight:600;padding-bottom:.45rem;border-bottom:1px solid var(--borda);margin-bottom:.2rem;
+}
+.ler-dia h4 span{
+  background:var(--superficie-alt);border:1px solid var(--borda);border-radius:999px;
+  padding:.05rem .45rem;font-size:.66rem;letter-spacing:0;color:var(--texto-suave);
+}
+.ler-item{
+  display:grid;grid-template-columns:44px 1fr 16px;gap:.7rem;align-items:start;
+  padding:.6rem .5rem;border-radius:var(--raio-s);text-decoration:none;transition:.14s;
+}
+.ler-item:hover{background:var(--superficie-alt)}
+.ler-hora{font-size:.74rem;color:var(--texto-ligeiro);font-variant-numeric:tabular-nums;padding-top:.1rem}
+.ler-txt strong{display:block;font-size:.88rem;font-weight:400;color:var(--texto);line-height:1.4}
+.ler-txt em{font-style:normal;font-size:.75rem;color:var(--texto-ligeiro)}
+.ler-item svg{width:14px;height:14px;stroke:var(--texto-ligeiro);fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:.14s;margin-top:.2rem}
+.ler-item:hover svg{opacity:1;stroke:var(--azul)}
+.passo{display:grid;grid-template-columns:38px 1fr;gap:1rem;padding:1.3rem 0;border-bottom:1px solid var(--borda)}
+.passo:last-child{border-bottom:none}
+.passo-n{
+  width:38px;height:38px;border-radius:50%;background:var(--superficie-alt);
+  border:1px solid var(--borda-forte);color:var(--texto-ligeiro);
+  display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.95rem;
+}
+.passo.feito .passo-n{background:var(--verde);border-color:var(--verde);color:#fff}
+.passo-corpo h4{font-size:.95rem;font-weight:600;color:var(--texto);text-transform:none;letter-spacing:-.01em;margin-bottom:.25rem}
+.passo-corpo > p{font-size:.84rem;color:var(--texto-suave);margin-bottom:.8rem;line-height:1.5}
+.passo-estado{font-size:.86rem;color:var(--texto-suave);margin:.9rem 0 0}
+.passo-accoes{display:flex;gap:.5rem;flex-wrap:wrap}
 .sin-teto{display:flex;gap:.85rem;align-items:flex-start;margin:1.2rem 0 0;padding:.85rem 1rem;
   border-radius:var(--raio-s);background:rgba(190,156,84,.09);border-left:3px solid var(--dourado)}
 .sin-teto svg{width:19px;height:19px;flex:none;stroke:var(--dourado);fill:none;stroke-width:1.8;
@@ -319,7 +353,7 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
   background:color-mix(in srgb, var(--cor) 5%, transparent);font-size:.83rem}
 .nota-cab{background:linear-gradient(115deg,var(--azul),#23506f);border-bottom:none}
 .nota-cab h3,.nota-cab p{color:#fff}
-.nota-cab p{opacity:.8}
+.nota-cab p{opacity:.97;font-weight:400;font-size:.83rem;letter-spacing:.01em}
 .nota-cab button{color:rgba(255,255,255,.8)}
 .nota-cab .icone{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32)}
 .nota-cab .icone span{color:#fff;font-size:1.3rem;font-weight:700;font-style:italic}
@@ -474,6 +508,11 @@ main{padding:2.2rem 0 4rem}
 .modal-corpo .bloco{margin-bottom:1.6rem}
 .modal-rodape{padding:1rem 1.5rem;border-top:1px solid var(--borda);display:flex;gap:.6rem;flex-wrap:wrap;background:var(--superficie-alt)}
 .campo-livre{font-family:var(--fonte);font-size:.86rem}
+.consulta-txt{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;line-height:1.6;
+  background:var(--superficie-alt);border:1px solid var(--borda);border-radius:var(--raio-s);
+  padding:.75rem .85rem;color:var(--texto-suave);white-space:pre-wrap;word-break:break-word;max-height:150px;overflow-y:auto;
+}
 .campo{width:100%;padding:.6rem .8rem;border:1px solid var(--borda-forte);border-radius:var(--raio-s);
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;background:var(--superficie-alt);color:var(--texto)}
 
@@ -652,14 +691,11 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <span>Só fontes nacionais</span>
       <span class="estado" id="estadoNacionais">ativo</span>
     </button>
-    <button class="btn" id="btnManual">
-      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      Manual
-    </button>
-    <button class="btn-nota" id="btnNota">
+    <button class="btn-nota" id="btnManual">
       <span class="i">i</span>
-      Nota metodológica
+      Manual e método
     </button>
+
     <div class="filtros" id="filtros">
       <button class="ativo" data-f="todas" style="--c:#171715">Todas as áreas</button>
       <button data-f="soberania" style="--c:#2B5683">Estado e soberania</button>
@@ -775,41 +811,41 @@ const ICONES = {
    ========================================================================= */
 const AREAS = [
   { id:"presidencia", nome:"Presidência", grupo:"soberania", icone:"presidencia",
-    palavras:["Conselho de Ministros","Presidência do Conselho de Ministros","comunicação do Governo","transparência administrativa","dados abertos","modernização administrativa"] },
+    palavras:["Conselho de Ministros","Presidência do Conselho de Ministros","Programa do Governo","comunicação do Governo","modernização administrativa","dados abertos","transparência administrativa"] },
   { id:"parlamentares", nome:"Assuntos Parlamentares", grupo:"soberania", icone:"parlamento",
-    palavras:["Assembleia da República","debate parlamentar","interpelação ao Governo","comissão parlamentar de inquérito","regulação da comunicação social","Entidade Reguladora para a Comunicação Social"] },
+    palavras:["Assembleia da República","debate parlamentar","interpelação ao Governo","audição parlamentar","comissão parlamentar de inquérito","regulação da comunicação social","Entidade Reguladora para a Comunicação Social"] },
   { id:"reforma", nome:"Reforma do Estado", grupo:"soberania", icone:"reforma",
-    palavras:["reforma do Estado","Administração Pública","desburocratização","simplificação administrativa","inteligência artificial na Administração Pública","SIADAP"] },
+    palavras:["reforma do Estado","Administração Pública","desburocratização","simplificação administrativa","trabalhadores da Administração Pública","inteligência artificial na Administração Pública","SIADAP"] },
   { id:"estrangeiros", nome:"Negócios Estrangeiros", grupo:"soberania", icone:"estrangeiros",
-    palavras:["política externa portuguesa","Conselho Europeu","CPLP","Nações Unidas","diáspora portuguesa","cooperação para o desenvolvimento","consulado de Portugal"] },
+    palavras:["Ministério dos Negócios Estrangeiros","política externa portuguesa","Conselho Europeu","CPLP","Nações Unidas","diáspora portuguesa","cooperação para o desenvolvimento","rede consular"] },
   { id:"defesa", nome:"Defesa Nacional", grupo:"soberania", icone:"defesa",
-    palavras:["Forças Armadas","NATO","investimento em defesa","indústria de defesa","missões militares internacionais","cibersegurança"] },
+    palavras:["Ministério da Defesa Nacional","Forças Armadas","NATO","investimento em defesa","indústria de defesa","missões militares internacionais","serviço militar"] },
   { id:"interna", nome:"Administração Interna", grupo:"soberania", icone:"interna",
-    palavras:["imigração","pedidos de asilo","controlo de fronteiras","AIMA","proteção civil","segurança interna","GNR","PSP","sinistralidade rodoviária"] },
+    palavras:["Ministério da Administração Interna","imigração","pedidos de asilo","controlo de fronteiras","AIMA","proteção civil","segurança interna","sinistralidade rodoviária"] },
   { id:"justica", nome:"Justiça", grupo:"soberania", icone:"justica",
-    palavras:["tribunais","Ministério Público","pendências processuais","registos e notariado","sistema prisional","reforma da justiça"] },
+    palavras:["Ministério da Justiça","tribunais","Ministério Público","pendências processuais","sistema prisional","registos e notariado","reforma da justiça"] },
 
   { id:"financas", nome:"Finanças", grupo:"economia", icone:"financas",
-    palavras:["Orçamento do Estado","défice orçamental","dívida pública","impostos","IRS","tributação das empresas","execução orçamental","despesa pública"] },
+    palavras:["Ministério das Finanças","Orçamento do Estado","défice orçamental","dívida pública","IRS","tributação das empresas","execução orçamental","Autoridade Tributária"] },
   { id:"economia", nome:"Economia e Coesão Territorial", grupo:"economia", icone:"economia",
-    palavras:["crescimento económico","exportações portuguesas","investimento empresarial","turismo","comércio externo","fundos europeus","coesão territorial","interioridade"] },
+    palavras:["Ministério da Economia","crescimento económico","exportações portuguesas","investimento empresarial","turismo","fundos europeus","coesão territorial","interioridade"] },
   { id:"infraestruturas", nome:"Infraestruturas e Habitação", grupo:"economia", icone:"infraestruturas",
-    palavras:["habitação","arrendamento","obras públicas","ferrovia","novo aeroporto","transportes públicos","licenciamento urbanístico"] },
+    palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","obras públicas","ferrovia","novo aeroporto","transportes públicos","licenciamento urbanístico"] },
 
   { id:"educacao", nome:"Educação, Ciência e Inovação", grupo:"social", icone:"educacao",
-    palavras:["escolas","professores","exames nacionais","ensino superior","bolsas de investigação","investigação científica","abandono escolar"] },
+    palavras:["Ministério da Educação","escolas","professores","exames nacionais","ensino superior","investigação científica","bolsas de investigação","abandono escolar"] },
   { id:"saude", nome:"Saúde", grupo:"social", icone:"saude",
-    palavras:["Serviço Nacional de Saúde","urgências hospitalares","médicos de família","listas de espera","cuidados continuados","medicamentos","saúde mental"] },
+    palavras:["Ministério da Saúde","Serviço Nacional de Saúde","urgências hospitalares","médicos de família","listas de espera","cuidados continuados","medicamentos","saúde mental"] },
   { id:"trabalho", nome:"Trabalho, Solidariedade e Segurança Social", grupo:"social", icone:"trabalho",
-    palavras:["emprego","desemprego","salário mínimo","pensões","segurança social","negociação coletiva","apoios sociais","pobreza"] },
+    palavras:["Ministério do Trabalho","emprego","desemprego","salário mínimo","pensões","segurança social","negociação coletiva","apoios sociais"] },
   { id:"cultura", nome:"Cultura, Juventude e Desporto", grupo:"social", icone:"cultura",
-    palavras:["património cultural","museus","criação artística","políticas de juventude","desporto","alta competição","língua portuguesa"] },
+    palavras:["Ministério da Cultura","património cultural","museus","criação artística","políticas de juventude","desporto","alta competição","língua portuguesa"] },
 
   { id:"ambiente", nome:"Ambiente e Energia", grupo:"ambiente", icone:"ambiente",
-    palavras:["preço da energia","mercado da eletricidade","energias renováveis","alterações climáticas","descarbonização","gestão de resíduos","situação de seca","incêndios florestais"],
+    palavras:["Ministério do Ambiente e Energia","preço da energia","mercado da eletricidade","energias renováveis","alterações climáticas","descarbonização","gestão de resíduos","situação de seca","incêndios florestais"],
     excluir:["clima de negócios","clima organizacional","clima de confiança"] },
   { id:"agricultura", nome:"Agricultura e Mar", grupo:"ambiente", icone:"agricultura",
-    palavras:["agricultura","política agrícola comum","pescas","economia azul","floresta","regadio","segurança alimentar"] }
+    palavras:["Ministério da Agricultura e Mar","política agrícola comum","pescas","economia azul","floresta","regadio","segurança alimentar","produção agrícola"] }
 ];
 
 /* =========================================================================
@@ -958,9 +994,14 @@ function abrirDetalhe(id){
         <div class="chips">${a.palavras.map(p =>
           `<span class="chip" data-termo="${p}" style="--cor:${cor(a.grupo)}">${p}</span>`).join("")}</div>
       </div>
-      <div class="bloco" style="margin-bottom:.4rem">
+      <div class="bloco">
         <h4>Pesquisa específica</h4>
         <input class="campo campo-livre" id="campoLivre" placeholder="Termo ou expressão · prima Enter">
+      </div>
+      <div class="bloco" style="margin-bottom:.4rem">
+        <h4>Consulta enviada ao Google Notícias</h4>
+        <pre class="consulta-txt" id="consultaTxt">${consulta(a)}</pre>
+        <p style="font-size:.8rem;color:var(--texto-ligeiro);margin-top:.5rem">As expressões são ligadas por <code>OR</code>; seguem-se os termos e domínios excluídos e a janela temporal. É esta a consulta que a exportação recolhe.</p>
       </div>
     </div>
     <div class="modal-rodape">
@@ -993,26 +1034,51 @@ function abrirExportacao(id){
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
     <div class="modal-corpo">
-      <div class="bloco" style="text-align:center;padding:.7rem 0 .2rem">
-        <button class="btn primario" id="btnRecolher" style="font-size:.95rem;padding:.8rem 2rem">
-          <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M21 3v6h-6"/></svg>
-          Recolher notícias
-        </button>
-        <p id="expEstado" style="font-size:.88rem;color:var(--texto-suave);margin-top:.9rem">Sem notícias recolhidas.</p>
+      <div class="passo" id="passo1">
+        <div class="passo-n">1</div>
+        <div class="passo-corpo">
+          <h4>Recolher as notícias desta consulta</h4>
+          <p>Procura os artigos e prepara-os. Demora até cerca de um minuto.</p>
+          <button class="btn primario" id="btnRecolher">
+            <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M21 3v6h-6"/></svg>
+            Recolher notícias
+          </button>
+          <p id="expEstado" class="passo-estado">Ainda sem notícias recolhidas.</p>
+        </div>
       </div>
+
+      <div class="passo" id="passo2" hidden>
+        <div class="passo-n">2</div>
+        <div class="passo-corpo">
+          <h4>Ver ou guardar</h4>
+          <p>A leitura mostra as notícias por ordem cronológica; a síntese abre a leitura do conjunto; o Excel descarrega tudo com a folha de especificações.</p>
+          <div class="passo-accoes">
+            <button class="btn" id="btnLer">
+              <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h8"/></svg>
+              Ler notícias
+            </button>
+            <button class="btn" id="btnSintese">
+              <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg>
+              Ver síntese
+            </button>
+            <button class="btn primario" id="btnXLSX">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+              Descarregar Excel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="modal-rodape">
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
-      <button class="btn" data-detalhe="${a.id}">Voltar</button>
-      <button class="btn" id="btnSintese" disabled style="margin-left:auto">Síntese</button>
-      <button class="btn primario" id="btnXLSX" disabled>Descarregar Excel</button>
-      <button class="btn" id="btnCSV" disabled>CSV</button>
+      <button class="btn" data-detalhe="${a.id}" style="margin-left:auto">Voltar</button>
     </div>`;
   $("#veu").classList.add("aberto");
 
   $("#btnRecolher").addEventListener("click", recolherConsulta);
   $("#btnXLSX").addEventListener("click", descarregarXLSX);
-  $("#btnCSV").addEventListener("click", descarregarCSV);
   $("#btnSintese").addEventListener("click", abrirSintese);
+  $("#btnLer").addEventListener("click", abrirLeitura);
   if(recolha.length) mostrarEstadoRecolha("recolha anterior");
   carregarHistorico();
 }
@@ -1024,58 +1090,61 @@ function fecharModal(){ $("#veu").classList.remove("aberto"); }
    ========================================================================= */
 const MANUAL = [
   { n:"1", titulo:"O que é o radar", cor:"var(--azul)", icone:"bussola", corpo:`
-    <p>Painel de acesso rápido à comunicação social, organizado pelas 16 áreas governativas do XXV Governo Constitucional. Não substitui a leitura de imprensa: serve para saber, em segundos, o que está a ser noticiado numa área e para levar essa recolha para uma folha de cálculo.</p>
-    <p>O painel não guarda notícias. Constrói consultas ao Google Notícias a partir das palavras-chave de cada área. A exportação é gerada no momento, no seu computador.</p>` },
+    <p>Acesso rápido à comunicação social, organizado pelas 16 áreas governativas do XXV Governo Constitucional. Serve para saber, em segundos, o que está a ser noticiado numa área e levar essa recolha para uma folha de cálculo.</p>
+    <p>O painel não guarda notícias: constrói consultas ao Google Notícias a partir das palavras-chave de cada área. O ficheiro Excel é gerado no seu computador.</p>` },
 
   { n:"2", titulo:"Navegar", cor:"var(--verde)", icone:"grelha", corpo:`
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
-      <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas suas palavras-chave. É pesquisa dentro do painel, não nas notícias.</dd>
-      <dt>Período</dt><dd>Janela temporal das consultas, entre 24 horas e um ano. Predefinição: 24 horas. Como o teto de 100 notícias se aplica sempre, o período não altera quantas notícias vêm — altera quais: janelas curtas devolvem o que é recente, janelas longas devolvem o que o serviço considera mais relevante ao longo do tempo.</dd>
+      <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
+      <dt>Período</dt><dd>Predefinição: 24 horas. Como o teto de 100 notícias se aplica sempre, o período não altera <em>quantas</em> notícias vêm — altera <em>quais</em>.</dd>
       <dt>Só fontes nacionais</dt><dd>Ativo por predefinição. Exclui as publicações brasileiras, que a edição portuguesa não filtra por escreverem na mesma língua.</dd>
     </dl>` },
 
   { n:"3", titulo:"Detalhe de uma área", cor:"var(--dourado)", icone:"lupa", corpo:`
-    <p>Clicar num cartão abre as palavras-chave da área e um campo de pesquisa específica.</p>
     <dl>
-      <dt>Palavras-chave</dt><dd>Clicar numa delas pesquisa apenas esse termo, e a etiqueta fica marcada. Útil para isolar um assunto dentro de uma área extensa.</dd>
+      <dt>Palavras-chave</dt><dd>Clicar numa delas pesquisa apenas esse termo e a etiqueta fica marcada.</dd>
       <dt>Pesquisa específica</dt><dd>Para o que as palavras-chave não cobrem: uma entidade, um diploma, um nome próprio. Aceita aspas para expressão exata.</dd>
+      <dt>Consulta</dt><dd>Mostra o que é efetivamente enviado ao serviço, com as expressões ligadas por OR e as exclusões.</dd>
     </dl>
     <p class="man-aviso">A exportação segue sempre a consulta ativa: se clicou numa palavra-chave, exporta só essa; caso contrário, exporta a área completa.</p>` },
 
-  { n:"4", titulo:"Exportar para Excel", cor:"var(--verde)", icone:"descarregar", corpo:`
-    <p><strong>Recolher notícias</strong> procura os artigos da consulta ativa. O painel usa primeiro o ficheiro da recolha agendada, publicado ao seu lado, e recorre à recolha em direto quando esse ficheiro não existe.</p>
-    <p>O ficheiro tem duas folhas. <strong>Notícias</strong>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta. <strong>Especificações</strong>, com o período, os termos excluídos, a consulta enviada, o número de notícias e a versão do painel — é esta folha que dá rasto ao ficheiro.</p>
-    <p>O nome identifica a área e o momento, por exemplo <code>radar_saude_20260731_0915.xlsx</code>.</p>` },
+  { n:"4", titulo:"Recolher e exportar", cor:"var(--verde)", icone:"descarregar", corpo:`
+    <p>A janela de exportação tem dois passos. Primeiro <strong>Recolher notícias</strong>, que usa o ficheiro da recolha agendada publicado ao lado do painel e recorre à recolha em direto quando esse ficheiro não existe. Concluído, aparece o segundo passo, com <strong>Ler notícias</strong>, <strong>Ver síntese</strong> e <strong>Descarregar Excel</strong>.</p>
+    <p><strong>Ler notícias</strong> apresenta a lista por ordem cronológica, da mais recente para a mais antiga — a ordenação que o serviço não dá.</p>
+    <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, as exclusões, a consulta enviada e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
 
-  { n:"5", titulo:"Síntese da recolha", cor:"var(--teal)", icone:"grafico", corpo:`
-    <p>Depois de recolher, o botão <strong>Síntese</strong> apresenta uma leitura visual do conjunto, calculada no seu computador.</p>
+  { n:"5", titulo:"Síntese e evolução", cor:"var(--teal)", icone:"grafico", corpo:`
     <dl>
       <dt>Números de topo</dt><dd>Notícias recolhidas, publicações distintas, dias com notícias e média diária.</dd>
-      <dt>Distribuição por publicação</dt><dd>Anel de proporções com as seis maiores e as restantes agregadas, com percentagem ao lado.</dd>
-      <dt>Assuntos recorrentes</dt><dd>Expressões que ocorrem em mais do que uma notícia, com tamanho proporcional à frequência. O cursor mostra um título de exemplo.</dd>
-      <dt>Cobertura das palavras-chave</dt><dd>Quantas notícias contêm cada palavra-chave da área. As que estão a zero não estão a puxar cobertura no período.</dd>
-      <dt>Distribuição por dia</dt><dd>Colunas com o número de notícias por dia, para distinguir um pico de uma cobertura constante.</dd>
+      <dt>Publicações</dt><dd>Anel de proporções com as seis maiores e as restantes agregadas.</dd>
+      <dt>Assuntos recorrentes</dt><dd>Expressões que ocorrem em mais do que uma notícia, com tamanho proporcional à frequência.</dd>
+      <dt>Cobertura</dt><dd>Quantas notícias contêm cada palavra-chave da área. As que estão a zero não estão a puxar cobertura.</dd>
+      <dt>Evolução</dt><dd>A partir de três dias de recolhas agendadas, a série diária de notícias novas e a variação face à média. O Excel ganha então a folha <em>Evolução</em>.</dd>
     </dl>
-    <p>Tudo isto é contagem, não interpretação. Serve para orientar a leitura, não para a dispensar.</p>
-    <p class="man-aviso">O teto de 100 notícias por consulta aplica-se qualquer que seja o período escolhido. Uma área que o atinja está truncada, pelo que as contagens medem o que foi indexado e devolvido, não o total noticiado.</p>
-    <p><strong>Evolução da área.</strong> A partir de três dias de recolhas agendadas, aparece um bloco com a série diária: quantas notícias por dia, a média dos dias anteriores e a variação do último dia face a essa média. O ficheiro Excel ganha então uma terceira folha, <em>Evolução</em>, com uma linha por dia.</p>
-    <p>Como todas as recolhas usam a mesma janela e o mesmo método, a comparação da área consigo própria é legítima — ao contrário da comparação entre áreas, que o teto dos 100 distorce.</p>
-    <p>Toda a leitura acima é calculada no painel, a partir das notícias recolhidas. Nada é enviado para fora.</p>` },
+    <p>Tudo é contagem, calculada no painel. Nada é enviado para fora.</p>` },
 
-  { n:"6", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
+  { n:"6", titulo:"Como o radar pesquisa", cor:"var(--azul)", icone:"chave", corpo:`
+    <p>Todas as áreas são servidas por uma pesquisa no Google Notícias, edição portuguesa. A consulta combina por disjunção todas as palavras-chave da área e acrescenta a janela temporal.</p>
+    <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. A pesquisa por expressão exata é a única operação que o serviço honra de forma fiável. Onde o ruído persiste, a área declara termos a excluir.</p>
+    <p><strong>Fontes.</strong> A pesquisa abrange todas as publicações indexadas na edição portuguesa. Entre os títulos nacionais: ${FONTES_REFERENCIA.map(f => f.nome).join(", ")}.</p>
+    <p class="man-aviso">Não há filtro por título. O operador <code>site:</code> não se combina de forma fiável com o tema quando se indicam vários domínios — só funciona bem no uso negativo, que é o do filtro de fontes nacionais.</p>` },
+
+  { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <dl>
-      <dt>Cerca de 100 artigos</dt><dd>Por consulta, sem paginação. Alargar o período não traz mais artigos: distribui os mesmos 100 por mais tempo.</dd>
-      <dt>Contagens não comparáveis</dt><dd>Entre áreas. Uma área muito noticiada é truncada nos 100; uma discreta não é.</dd>
-      <dt>Ordenação por relevância</dt><dd>Não por data. O operador de tempo atua sobre a data de indexação.</dd>
-      <dt>Ligações</dt><dd>São reencaminhamentos. O painel converte-as no endereço do jornal quando a codificação o permite; a recolha agendada resolve mais casos.</dd>
+      <dt>Cerca de 100 artigos</dt><dd>Por consulta, sem paginação. Qualquer que seja o período. Alargar a janela distribui as mesmas 100 por mais tempo.</dd>
+      <dt>Contagens não comparáveis</dt><dd>Entre áreas. Uma área muito noticiada é truncada no teto; uma discreta não é.</dd>
+      <dt>Ordenação por relevância</dt><dd>Não por data, e o operador de tempo atua sobre a data de indexação. O botão <strong>Ler notícias</strong> resolve isto, ordenando pela data do artigo.</dd>
+      <dt>Sem resumos</dt><dd>O serviço devolve título e fonte, não texto do artigo.</dd>
+      <dt>Ligações</dt><dd>São reencaminhamentos, convertidos no endereço do jornal sempre que a codificação o permite. A recolha agendada resolve mais casos.</dd>
     </dl>` },
 
-  { n:"7", titulo:"Recolha agendada", cor:"var(--azul)", icone:"engrenagem", corpo:`
-    <p>Corre nos servidores do GitHub, de segunda a sexta às 7h00. Produz o Excel do dia, na página da execução, e o ficheiro <code>noticias.json</code> que o painel lê.</p>
+  { n:"8", titulo:"Recolha agendada", cor:"var(--teal)", icone:"engrenagem", corpo:`
+    <p>Corre nos servidores do GitHub, de segunda a sexta de manhã, com janela de 24 horas. Produz o Excel do dia, na página da execução, o ficheiro <code>noticias.json</code> que o painel lê e a série <code>historico.json</code> que alimenta a evolução.</p>
     <p>Para executar fora de horas: separador <strong>Actions</strong>, <em>Radar de Notícias por Área Governativa</em>, <strong>Run workflow</strong>.</p>
     <p>Para usar o ficheiro guardado no computador, abra-o num editor de texto e preencha <code>enderecoDados</code> com o endereço do painel publicado.</p>` }
 ];
+
 
 const ICONES_MANUAL = {
   bussola:'<circle cx="12" cy="12" r="9"/><path d="m15 9-2 6-4 2 2-6z"/>',
@@ -1239,6 +1308,72 @@ function blocoEvolucao(area){
     </div>`;
 }
 
+/* Leitura cronológica — a ordenação que o serviço não dá.
+   As notícias já recolhidas trazem a data de cada artigo, pelo que basta
+   ordená-las aqui, sem depender de nenhum leitor de feeds externo. */
+function abrirLeitura(){
+  if(!recolha.length) return;
+  const a = consultaAtiva.area;
+  const comData = recolha.filter(n => n.data);
+  const semData = recolha.filter(n => !n.data);
+  const porDia = new Map();
+  comData.forEach(n => {
+    const dia = n.data.slice(0, 10);
+    if(!porDia.has(dia)) porDia.set(dia, []);
+    porDia.get(dia).push(n);
+  });
+  const dias = [...porDia.keys()].sort().reverse();
+
+  const MESES = ["janeiro","fevereiro","março","abril","maio","junho","julho",
+                 "agosto","setembro","outubro","novembro","dezembro"];
+  const rotuloDia = d => {
+    const [ano, mes, dia] = d.split("-");
+    const hoje = new Date().toISOString().slice(0, 10);
+    if(d === hoje) return "Hoje";
+    return `${Number(dia)} de ${MESES[Number(mes) - 1]}`;
+  };
+  const hora = n => (n.data || "").slice(11, 16);
+
+  const artigo = n => `
+    <a class="ler-item" href="${n.ligacao}" target="_blank" rel="noopener">
+      <span class="ler-hora">${hora(n) || "—"}</span>
+      <span class="ler-txt">
+        <strong>${n.titulo}</strong>
+        <em>${n.fonte || "fonte não indicada"}</em>
+      </span>
+      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+    </a>`;
+
+  $("#modal").innerHTML = `
+    <div class="modal-cab nota-cab">
+      <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h8"/></svg></div>
+      <div>
+        <h3>Notícias por ordem de data</h3>
+        <p>${a.nome} · ${recolha.length} notícias · da mais recente para a mais antiga</p>
+      </div>
+      <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="modal-corpo ler-corpo">
+      ${dias.map(d => `
+        <div class="ler-dia">
+          <h4>${rotuloDia(d)} <span>${porDia.get(d).length}</span></h4>
+          ${porDia.get(d)
+            .sort((x, y) => (y.data || "").localeCompare(x.data || ""))
+            .map(artigo).join("")}
+        </div>`).join("")}
+      ${semData.length ? `
+        <div class="ler-dia">
+          <h4>Sem data reconhecida <span>${semData.length}</span></h4>
+          ${semData.map(artigo).join("")}
+        </div>` : ""}
+    </div>
+    <div class="modal-rodape">
+      <span style="font-size:.76rem;color:var(--texto-ligeiro);align-self:center">Ordenação pela data do artigo, não pela relevância</span>
+      <button class="btn" data-exportar="${a.id}" style="margin-left:auto">Voltar</button>
+    </div>`;
+  $("#veu").classList.add("aberto");
+}
+
 function abrirSintese(){
   if(!recolha.length) return;
   const a = consultaAtiva.area, corA = cor(a.grupo);
@@ -1363,75 +1498,6 @@ function abrirManual(n){
   $("#veu").classList.add("aberto");
 }
 
-function abrirNota(){
-  const bloco = (icone, titulo, corpo, cor) => `
-    <div class="nota-bloco" style="--cor:${cor || 'var(--azul)'}">
-      <div class="nota-ic"><svg viewBox="0 0 24 24">${icone}</svg></div>
-      <div>
-        <h4>${titulo}</h4>
-        ${corpo}
-      </div>
-    </div>`;
-
-  const ic = {
-    origem:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
-    limite:'<path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/>',
-    tempo:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-    nacional:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/>',
-    fontes:'<path d="M4 22V4a2 2 0 0 1 2-2h9l5 5v15a2 2 0 0 1-2 2z"/><path d="M15 2v5h5"/><path d="M8 12h8M8 16h5"/>',
-    chave:'<path d="M20.6 3.4a5.5 5.5 0 0 1-7.1 8.3L11 14.2 8.8 12 3 17.8V21h3.2l8.6-8.6"/><circle cx="17" cy="7" r="1.2"/>'
-  };
-
-  $("#modal").innerHTML = `
-    <div class="modal-cab nota-cab">
-      <div class="icone"><span>i</span></div>
-      <div>
-        <h3>Nota metodológica</h3>
-        <p>Como o radar recolhe, delimita e apresenta as notícias</p>
-      </div>
-      <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="modal-corpo nota-corpo">
-      <p class="nota-intro">Este painel não guarda notícias. Constrói consultas ao Google Notícias a partir das palavras-chave de cada área governativa e abre os resultados no serviço. O que se segue descreve as regras dessa construção e os seus limites.</p>
-
-      ${bloco(ic.origem, "Origem das notícias",
-        `<p>Todas as áreas são servidas por uma pesquisa no Google Notícias, na edição portuguesa. A consulta combina por disjunção todas as palavras-chave da área e acrescenta a janela temporal escolhida na barra superior.</p>`, "var(--azul)")}
-
-      ${bloco(ic.limite, "Limite de resultados",
-        `<p>Cada consulta devolve no máximo cerca de 100 artigos, sem paginação. O teto é do serviço e não do painel: alargar a janela temporal não traz mais artigos, distribui os mesmos 100 por mais tempo.</p>
-         <p class="nota-aviso">Consequência a reter: as contagens não são comparáveis entre áreas. Uma área muito noticiada é truncada e uma pouco noticiada não é.</p>`, "var(--dourado)")}
-
-      ${bloco(ic.tempo, "Período e ordenação",
-        `<p>O seletor aplica o operador <code>when:</code> e admite janelas entre 24 horas e um ano, com predefinição de 24 horas. Como o teto de cerca de 100 artigos se aplica a qualquer janela, o período não determina quantas notícias vêm, mas quais: uma janela de 24 horas devolve o que é recente; uma janela longa devolve o que o serviço considera mais relevante distribuído por esse intervalo, com idade média muito superior.</p>
-         <p>Dentro da janela, os resultados não vêm por ordem cronológica: o Google ordena por relevância e agrupa notícias em histórias. Acresce que o operador atua sobre a data de indexação, que pode não coincidir com a da publicação — artigos atualizados voltam a ser datados.</p>
-         <p class="nota-aviso">Para leitura por ordem de data, copie o endereço do feed RSS no detalhe da área e subscreva-o num leitor de feeds, que ordena sempre pela data do artigo.</p>`, "var(--teal)")}
-
-      ${bloco(ic.nacional, "Restrição a fontes nacionais",
-        `<p>A edição portuguesa não impede a entrada de publicações brasileiras, que escrevem na mesma língua. O interruptor “Só fontes nacionais”, ativo por predefinição, exclui da consulta o domínio de topo brasileiro e os principais grupos de comunicação social do Brasil que não o usam.</p>
-         <p class="nota-aviso">O filtro é subtrativo: só retira resultados, nunca acrescenta. Não é uma lista branca de fontes portuguesas, pelo que uma publicação estrangeira fora da lista pode ainda aparecer.</p>
-         <p class="nota-aviso">Com o filtro ativo, o Google apresenta o aviso de que o operador <code>site:</code> mostra artigos de todas as páginas indexadas do sítio indicado. É um texto genérico associado ao operador e não descreve o que aqui sucede: a utilização é negativa, não há nenhum sítio a ser expandido.</p>`, "var(--vermelho)")}
-
-      ${bloco(ic.fontes, "Fontes",
-        `<p>A pesquisa abrange todas as publicações indexadas pelo Google Notícias na edição portuguesa, entre as quais os seguintes títulos nacionais:</p>
-         <div class="lista-fontes">${FONTES_REFERENCIA.map(f => `<span>${f.nome}</span>`).join("")}</div>
-         <p class="nota-aviso">O painel não oferece filtro por título. O operador <code>site:</code> não se combina de forma fiável com o tema quando são indicados vários domínios, devolvendo notícias dessas publicações sem relação com a área.</p>`, "var(--azul)")}
-
-      ${bloco(ic.limite, "Exportação de notícias",
-        `<p>No detalhe de cada área é possível exportar os resultados da consulta em curso, em Excel ou em CSV, com área, agrupamento, data, fonte, domínio, título, resumo, ligação e a consulta que os originou. Exporta a consulta que estiver ativa: por predefinição todas as palavras-chave da área, ou apenas uma palavra-chave ou pesquisa específica, se tiver feito alguma.</p>
-         <p>A recolha passa por um serviço público de reencaminhamento, porque o navegador não pode ler diretamente respostas de outro domínio. Se a rede bloquear esses serviços, a alternativa é executar a recolha fora do navegador — por programa próprio ou por tarefa agendada — e é essa a via recomendada para utilização regular.</p>
-         <p class="nota-aviso">A coluna do resumo fica frequentemente vazia. O serviço não fornece resumos: o campo de descrição repete o título e o nome da publicação. Prefere-se a célula vazia a texto sem valor. As ligações são reencaminhamentos e servem para abrir, não para citar.</p>`, "var(--verde)")}
-
-      ${bloco(ic.chave, "Palavras-chave",
-        `<p>Cada área tem entre seis e nove palavras-chave, todas usadas na consulta e todas visíveis no detalhe da área. Cada uma pode também ser pesquisada isoladamente, bastando clicar nela.</p>
-         <p>O critério é o da expressão e não o da palavra solta. Termos como “clima” ou “energia” têm sentidos que nada têm que ver com a área governativa — clima de negócios, falta de energia, suplementos alimentares — pelo que são substituídos por expressões que só existem no domínio pretendido: “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. A pesquisa por expressão exata é a única operação que o Google honra de forma fiável.</p>
-         <p class="nota-aviso">Quando uma expressão ainda deixa passar ruído previsível, a área pode declarar termos a excluir, no campo <code>excluir</code> da sua definição. É o caso do Ambiente e Energia, que afasta “clima de negócios” e expressões afins.</p>`, "var(--verde)")}
-    </div>
-    <div class="modal-rodape nota-rodape">
-      <span>Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas · ${CONFIG.atualizacao}</span>
-      <button class="btn" onclick="fecharModal()">Fechar</button>
-    </div>`;
-  $("#veu").classList.add("aberto");
-}
 
 /* =========================================================================
    EXPORTAÇÃO DE NOTÍCIAS
@@ -1441,13 +1507,21 @@ function abrirNota(){
    ========================================================================= */
 /* Vias de recolha, tentadas por esta ordem até uma resultar. A primeira usa
    carregamento de script, que contorna as restrições de leitura entre domínios. */
+/* Na rede da Secretaria-Geral, o corsproxy é o único serviço que passa o filtro:
+   responde, ainda que por vezes com sobrecarga temporária (estado 503). É por isso
+   tentado várias vezes, com intervalo, em paralelo com as alternativas. */
 const METODOS = [
-  { nome:"corsproxy",           tipo:"fetch",  url:u => `https://corsproxy.io/?url=${encodeURIComponent(u)}` },
+  { nome:"corsproxy",           tipo:"fetch",  tentativas:4, espera:2500,
+    url:u => `https://corsproxy.io/?url=${encodeURIComponent(u)}` },
+  { nome:"corsproxy (variante)", tipo:"fetch", tentativas:3, espera:3500, atraso:1200,
+    url:u => `https://corsproxy.io/?${encodeURIComponent(u)}` },
   { nome:"allorigins",          tipo:"fetch",  url:u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}` },
   { nome:"allorigins (script)", tipo:"script", url:u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}` },
   { nome:"codetabs",            tipo:"fetch",  url:u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}` },
   { nome:"leitura direta",      tipo:"fetch",  url:u => u }
 ];
+
+const esperar = ms => new Promise(r => setTimeout(r, ms));
 
 /* fetch com tempo de espera curto, para a cadeia avançar depressa */
 function pedirComLimite(endereco, ms = 6000){
@@ -1545,7 +1619,25 @@ async function deDadosPublicados(){
 }
 
 /* Tenta uma via, com limite de tempo próprio */
+/* Uma via, repetida enquanto o erro for transitório (sobrecarga do serviço) */
 async function tentarVia(m, endereco){
+  if(m.atraso) await esperar(m.atraso);
+  const tentativas = m.tentativas || 1;
+  let ultimo;
+  for(let i = 0; i < tentativas; i++){
+    try{
+      return await umaTentativa(m, endereco);
+    }catch(erro){
+      ultimo = erro;
+      const transitorio = /50\d|429|Failed to fetch/i.test(erro.message);
+      if(i === tentativas - 1 || !transitorio) throw erro;
+      await esperar(m.espera || 2000);
+    }
+  }
+  throw ultimo;
+}
+
+async function umaTentativa(m, endereco){
   let texto;
   if(m.tipo === "script"){
     texto = await porScript(m.url(endereco), CONFIG.tempoLimiteRecolha);
@@ -1616,9 +1708,9 @@ async function recolherConsulta(){
     clearInterval(contador);
     const erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
     btn.disabled = false;
-    estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias.</span>
-      <br><span style="font-size:.84rem">Publique o painel no GitHub Pages ao lado do ficheiro da recolha agendada, ou preencha <code>CONFIG.enderecoDados</code> no código com esse endereço.</span>
-      <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico, para reportar à área de sistemas</summary>
+    estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias neste momento.</span>
+      <br><span style="font-size:.84rem">Os serviços de recolha em direto estão indisponíveis ou bloqueados. A recolha agendada, que corre todas as manhãs, não depende deles: com o painel publicado ao lado do respetivo ficheiro de dados, este botão responde sempre.</span>
+      <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico, para comunicar à Unidade de Pesquisa e Estatísticas</summary>
       <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
   }
 }
@@ -1764,13 +1856,6 @@ function descarregar(conteudo, tipo, nome){
   URL.revokeObjectURL(l.href);
 }
 
-function descarregarCSV(){
-  const asp = v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
-  const linhas = [COLUNAS.map(c => asp(c[1])).join(";")]
-    .concat(recolha.map(r => COLUNAS.map(c => asp(r[c[0]])).join(";")));
-  descarregar("\uFEFF" + linhas.join("\r\n"), "text/csv;charset=utf-8", nomeFicheiro("csv"));
-  mostrarAviso("CSV descarregado");
-}
 
 /* Excel em formato SpreadsheetML, que o Excel abre sem qualquer biblioteca externa */
 /* ---------- Gerador de .xlsx verdadeiro ----------
@@ -1976,10 +2061,10 @@ function mostrarEstadoRecolha(origem){
   estado.innerHTML = recolha.length
     ? `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar <span style="color:var(--texto-ligeiro);font-size:.8rem">· ${origem} · ficheiro .xlsx</span>`
     : `<span style="color:var(--vermelho)">Não foram encontradas notícias.</span>`;
-  const x = $("#btnXLSX"), c = $("#btnCSV"), sn = $("#btnSintese");
-  if(x) x.disabled = recolha.length === 0;
-  if(c) c.disabled = recolha.length === 0;
-  if(sn) sn.disabled = recolha.length === 0;
+  const passo2 = $("#passo2");
+  if(passo2) passo2.hidden = recolha.length === 0;
+  const passo1 = $("#passo1");
+  if(passo1) passo1.classList.toggle("feito", recolha.length > 0);
 }
 
 /* =========================================================================
@@ -2047,7 +2132,6 @@ document.addEventListener("keydown", e => {
 
 $("#campoPesquisa").addEventListener("input", e => { termoPesquisa = e.target.value; desenhar(); });
 
-$("#btnNota").addEventListener("click", abrirNota);
 $("#btnManual").addEventListener("click", () => abrirManual("1"));
 
 $("#btnNacionais").addEventListener("click", () => {
