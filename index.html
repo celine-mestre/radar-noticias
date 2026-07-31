@@ -1173,17 +1173,16 @@ function abrirExportacao(id){
 
       <div class="bloco" style="margin-bottom:1.2rem">
         <h4>Consulta enviada ao Google Notícias</h4>
-        <p class="marca-selecao" style="margin-bottom:.4rem">Esta é a query exata — byte a byte — que o painel envia ao serviço. O botão "Abrir no Google Notícias" usa a mesma.</p>
-        <div class="consulta-txt" id="queryVisivel">${escXML(queryExata)}</div>
+        <p class="marca-selecao" style="margin-bottom:.4rem">Query exata enviada ao Google Notícias. Pode copiá-la e colá-la manualmente no serviço para comparar resultados.</p>
+        <div class="consulta-txt" id="queryVisivel">${queryExata.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}</div>
         <div style="display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap">
           <button class="btn" id="btnCopiarQuery">
             <svg viewBox="0 0 24 24" style="width:16px;height:16px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             Copiar query
           </button>
-          <button class="btn" data-feed="${a.id}">
-            <svg viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
-            Abrir no Google Notícias
-          </button>
+          <span style="font-size:.78rem;color:var(--texto-ligeiro);align-self:center">
+            A query acima pode ser copiada e colada diretamente no Google Notícias.
+          </span>
         </div>
       </div>
 
@@ -1195,7 +1194,7 @@ function abrirExportacao(id){
         <div class="passo-n">1</div>
         <div class="passo-corpo">
           <h4>Recolher as notícias</h4>
-          <p>O painel consulta o Google Notícias com a query acima e aplica depois filtros locais (confirmação de termos, origem, período, deduplicação). O número de resultados brutos deve coincidir com o que o Google mostra.</p>
+          <p>O painel consulta o Google Notícias com a query acima e aplica depois filtros locais (confirmação de termos, origem, período, deduplicação). O número de resultados brutos é o que o feed RSS devolve — tipicamente até 100, mas pode ser menos para queries específicas ou janelas curtas.</p>
           <button class="btn primario" id="btnRecolher">
             <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M21 3v6h-6"/></svg>
             Recolher notícias
@@ -1855,7 +1854,8 @@ async function carregarArquivo(){
 async function doArquivo(){
   const a = await carregarArquivo();
   if(!a.noticias.length) throw new Error("sem arquivo publicado");
-  return { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias`, dias: a.dias };
+  const periodoLabel = ROTULO_PERIODO[periodo] || "sem limite";
+  return { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias (filtrado a ${periodoLabel})`, dias: a.dias };
 }
 
 /* Os ficheiros de dados são lidos uma vez por sessão e ficam em memória: a
@@ -1904,8 +1904,9 @@ function arquivoCobreTermos(lista){
 
 async function deDadosPublicados(){
   const dados = await lerFicheiroDados("noticias.json");
+  const periodoLabel = ROTULO_PERIODO[periodo] || "sem limite";
   return { itens: paraConsulta(dados.noticias),
-           origem: "recolha agendada de " + (dados.gerado || "data desconhecida") };
+           origem: "recolha agendada de " + (dados.gerado || "data desconhecida") + " (janela: " + periodoLabel + ")" };
 }
 
 /* Tenta uma via, com limite de tempo próprio */
@@ -2525,11 +2526,15 @@ function mostrarEstadoRecolha(origem, retiradas, totalBruto){
   if(retiradas.data) partes.push(`${retiradas.data} fora do período`);
   const fora = retiradas.termo + retiradas.redes + retiradas.origem + retiradas.data;
 
-  /* Atalhos para desfazer o filtro que mais cortou, sem sair da janela */
+  /* Atalhos para desfazer o filtro que mais cortou, sem sair da janela.
+     Só aparecem quando fazem sentido com o estado atual. */
   const atalhos = [];
-  if(retiradas.origem && filtroFontes === "nacionais") atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Aceitar todas as fontes</button>`);
-  if(retiradas.redes && filtroRedes === "sem") atalhos.push(`<button class="btn-atalho" data-afrouxar="redes">Incluir redes sociais</button>`);
-  if(retiradas.data) atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
+  if(retiradas.origem && filtroFontes === "nacionais") 
+    atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Aceitar fontes internacionais</button>`);
+  if(retiradas.redes && filtroRedes === "sem") 
+    atalhos.push(`<button class="btn-atalho" data-afrouxar="redes">Incluir redes sociais</button>`);
+  if(retiradas.data && ["24h","48h","72h"].includes(periodo)) 
+    atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
   const barra = atalhos.length ? `<div class="atalhos">${atalhos.join("")}</div>` : "";
 
   const brutoTxt = totalBruto != null 
