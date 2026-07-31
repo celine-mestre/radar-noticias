@@ -828,14 +828,6 @@ const CONFIG = {
     "bsky.app", "t.me", "telegram.me", "whatsapp.com", "pinterest.com", "tumblr.com",
     "flipboard.com", "medium.com", "substack.com", "blogspot.com", "wordpress.com"
   ],
-  exclusoesDominio: [
-    "site:.br", "site:.ao", "site:.mz", "site:.cv", "site:.st", "site:.gw",
-    "site:.tl", "site:.mo",
-    "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com",
-    "site:uol.com.br", "site:novojornal.co.ao", "site:jornaldeangola.ao",
-    "site:verangola.net", "site:opais.co.mz", "site:verdade.co.mz",
-    "site:expressodasilhas.cv", "site:asemana.publ.cv"
-  ],
   dominiosNacionais: [
     "noticiasaominuto.com", "theportugalnews.com", "portugalresident.com",
     "lusa.pt", "agencialusa.com", "cnnportugal.iol.pt", "iol.pt",
@@ -978,10 +970,6 @@ function consulta(a){
   return termos + excl + sufixo();
 }
 
-function exclusoesDominioQuery(){
-  return filtroFontes === "nacionais" ? " " + CONFIG.exclusoesDominio.map(d => `-${d}`).join(" ") : "";
-}
-
 /* Os filtros de origem e de redes sociais são aplicados às notícias recolhidas,
    porque o operador site: não exclui domínios de topo de forma fiável. Para a
    janela do Google, onde não há filtragem posterior possível, acrescentam-se as
@@ -990,18 +978,13 @@ function exclusoesDominioQuery(){
 function exclusoesGoogle(){
   const fora = [];
   if(filtroRedes === "sem") fora.push(...CONFIG.redesSociais.slice(0, 12));
-  if(filtroFontes === "nacionais") fora.push(...CONFIG.exclusoesDominio);
-  return fora.length ? " " + fora.map(d => `-${d}`).join(" ") : "";
+  if(filtroFontes === "nacionais") fora.push(...CONFIG.publicacoesEstrangeiras);
+  return fora.length ? " " + fora.map(d => `-site:${d}`).join(" ") : "";
 }
 
 /* Consulta para abrir no Google Notícias: a mesma, com as exclusões possíveis */
 function consultaGoogle(q){
-  /* Query completa para o Google Notícias web: base + exclusões de domínio + redes */
-  const dom = filtroFontes === "nacionais" ? " " + CONFIG.exclusoesDominio.map(d => `-${d}`).join(" ") : "";
-  const redes = [];
-  if(filtroRedes === "sem") redes.push(...CONFIG.redesSociais.slice(0, 12));
-  const redesStr = redes.length ? " " + redes.map(d => `-site:${d}`).join(" ") : "";
-  return q + dom + redesStr;
+  return q + exclusoesGoogle();
 }
 
 function parametros(){
@@ -1020,7 +1003,7 @@ function urlRSS(q){
 
 /* O mesmo critério em formato RSS, para quem quiser subscrever a consulta num leitor */
 function urlFonteRSS(a){
-  return urlRSS(consulta(a) + exclusoesDominioQuery());
+  return urlRSS(consulta(a));
 }
 
 function normalizar(t){
@@ -1062,9 +1045,12 @@ function areasVisiveis(){
 
 function cartao(a){
   return `<article class="cartao" style="--cor:${cor(a.grupo)}" data-detalhe="${a.id}">
+    <button class="atalho" data-feed="${a.id}" title="Abrir a fonte numa nova janela" aria-label="Abrir a fonte">
+      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+    </button>
     <div class="simbolo"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
     <h3>${a.nome}</h3>
-    <div class="sub"><span class="ponto"></span>${a.palavras.length} palavras-chave</div>
+    <div class="sub"><span class="ponto"></span>${a.palavras.length} palavras-chave · Google Notícias</div>
   </article>`;
 }
 
@@ -1176,14 +1162,14 @@ function abrirExportacao(id){
       </div>
 
       <p class="aviso-alcance" id="avisoAlcance" hidden>
-        O serviço de pesquisa não respondeu. Estes resultados vêm dos ficheiros da recolha agendada, que contêm apenas o que a consulta da área trouxe — numa pesquisa por termo, são um subconjunto do que existe. Para ver tudo, use "Abrir no Google Notícias".
+        O serviço de pesquisa não respondeu. Estes resultados vêm dos ficheiros da recolha agendada, que contêm apenas o que a consulta da área trouxe — numa pesquisa por termo, são um subconjunto do que existe. Para ver tudo, use “Abrir no Google Notícias”.
       </p>
 
       <div class="passo" id="passo1">
         <div class="passo-n">1</div>
         <div class="passo-corpo">
           <h4>Recolher as notícias</h4>
-          <p>O painel consulta o Google Notícias com a query acima e aplica depois filtros locais (confirmação de termos, origem, período, deduplicação). O número de resultados brutos é o que o feed RSS devolve — tipicamente até 100, mas pode ser menos para queries específicas ou janelas curtas.</p>
+          <p>Procura os artigos e prepara-os. Costuma demorar alguns segundos.</p>
           <button class="btn primario" id="btnRecolher">
             <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M21 3v6h-6"/></svg>
             Recolher notícias
@@ -1218,14 +1204,13 @@ function abrirExportacao(id){
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
       <button class="btn" data-detalhe="${a.id}" style="margin-left:auto">Voltar</button>
     </div>`;
-
   $("#veu").classList.add("aberto");
 
   $("#btnRecolher").addEventListener("click", recolherConsulta);
   $("#btnXLSX").addEventListener("click", descarregarXLSX);
   $("#btnSintese").addEventListener("click", abrirSintese);
   $("#btnLer").addEventListener("click", abrirLeitura);
-  if(recolha.length || recolhaBruta.length) mostrarEstadoRecolha("recolha anterior", null, recolhaBruta.length || null);
+  if(recolha.length) mostrarEstadoRecolha("recolha anterior");
   else { const p2 = $("#passo2"); if(p2) p2.hidden = true; }
 }
 
@@ -1519,7 +1504,7 @@ function abrirLeitura(){
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h8"/></svg></div>
       <div>
         <h3>Notícias por ordem de data</h3>
-        <p>${a.nome} · ${recolha.length} notícias após filtros · ${recolhaBruta.length ? recolhaBruta.length + ' resultados brutos do Google · ' : ''}da mais recente para a mais antiga</p>
+        <p>${a.nome} · ${recolha.length} notícias · da mais recente para a mais antiga</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -1565,7 +1550,7 @@ async function abrirSintese(){
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg></div>
       <div>
         <h3>Síntese da recolha</h3>
-        <p>${a.nome} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${recolhaBruta.length ? recolhaBruta.length + ' brutos / ' : ''}${recolha.length} após filtros</p>
+        <p>${a.nome} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -1745,8 +1730,7 @@ function porScript(endereco, tempoLimite = 6000){
   });
 }
 
-let recolha = [];          // linhas da última recolha (filtrada)
-let recolhaBruta = [];     // resultados do Google antes de filtros locais
+let recolha = [];          // linhas da última recolha
 let assinaturaRecolha = ""; // a que consulta pertence a recolha guardada
 let pedidoAtual = 0;       // identifica a recolha em curso; anula resultados atrasados
 let consultaAtiva = null;  // { area, q, rotulo } — consulta em curso no detalhe aberto
@@ -1761,11 +1745,8 @@ function assinaturaConsulta(){
 }
 
 function definirConsulta(area, q, rotulo, termos){
-  /* q é a query base (termos + sufixo/período). As exclusões são adicionadas
-     no momento de envio, para evitar duplicação entre RSS e web. */
   consultaAtiva = { area, q, rotulo, termos: termos && termos.length ? termos : null };
   recolha = [];
-  recolhaBruta = [];
   assinaturaRecolha = "";
 }
 
@@ -1844,8 +1825,7 @@ async function carregarArquivo(){
 async function doArquivo(){
   const a = await carregarArquivo();
   if(!a.noticias.length) throw new Error("sem arquivo publicado");
-  const periodoLabel = ROTULO_PERIODO[periodo] || "sem limite";
-  return { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias (filtrado a ${periodoLabel})`, dias: a.dias };
+  return { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias`, dias: a.dias };
 }
 
 /* Os ficheiros de dados são lidos uma vez por sessão e ficam em memória: a
@@ -1894,9 +1874,8 @@ function arquivoCobreTermos(lista){
 
 async function deDadosPublicados(){
   const dados = await lerFicheiroDados("noticias.json");
-  const periodoLabel = ROTULO_PERIODO[periodo] || "sem limite";
   return { itens: paraConsulta(dados.noticias),
-           origem: "recolha agendada de " + (dados.gerado || "data desconhecida") + " (janela: " + periodoLabel + ")" };
+           origem: "recolha agendada de " + (dados.gerado || "data desconhecida") };
 }
 
 /* Tenta uma via, com limite de tempo próprio */
@@ -1997,12 +1976,8 @@ function confirmaTermos(itens){
 }
 
 function assentarRecolha(itens, origem, ignorarPeriodo){
-  /* Guardar cópia bruta para comparação com o Google */
-  recolhaBruta = itens.map(it => Object.assign({}, it));
-
   const confirmados = confirmaTermos(itens);
   itens = confirmados.itens;
-  const totalBruto = recolhaBruta.length;
   const total = itens.length;
   /* As duas seleções são independentes e uma plataforma social não tem
      nacionalidade: o filtro de origem aplica-se apenas às publicações
@@ -2018,8 +1993,15 @@ function assentarRecolha(itens, origem, ignorarPeriodo){
   }
   const porOrigem = antesOrigem - itens.length;
   const antesDoTempo = itens.length;
-  if(!ignorarPeriodo) itens = itens.filter(dentroDoPeriodo);
-  const porData = antesDoTempo - itens.length;
+  let porData = 0;
+  if(!ignorarPeriodo){
+    const dentro = itens.filter(dentroDoPeriodo);
+    /* O serviço datou-as dentro da janela, mas a data de publicação é anterior.
+       Havendo notícias e nenhuma dentro do período, mostram-se assinaladas em
+       vez de se devolver uma lista vazia. */
+    if(dentro.length){ porData = itens.length - dentro.length; itens = dentro; }
+    else if(itens.length) porData = -itens.length;
+  }
   const retiradas = { origem: porOrigem, data: porData, redes: porRedes, termo: confirmados.fora };
   const vistos = new Set();
   recolha = itens.filter(it => {
@@ -2029,7 +2011,7 @@ function assentarRecolha(itens, origem, ignorarPeriodo){
   });
   recolha.sort((x, y) => (y.data || "").localeCompare(x.data || ""));
   assinaturaRecolha = assinaturaConsulta();
-  mostrarEstadoRecolha(origem, retiradas, totalBruto);
+  mostrarEstadoRecolha(origem, retiradas);
 }
 
 async function recolherConsulta(){
@@ -2039,7 +2021,7 @@ async function recolherConsulta(){
   const valido = () => meu === pedidoAtual;
   btn.disabled = true;
   recolha = [];
-  const endereco = urlRSS(consultaAtiva.q + exclusoesDominioQuery());
+  const endereco = urlRSS(consultaAtiva.q);
   const aviso = $("#avisoAlcance");
   if(aviso) aviso.hidden = true;
   const horas = HORAS_PERIODO[periodo];
@@ -2504,44 +2486,40 @@ ${serie.map((d, i) => linhaEvo(
 }
 
 
-function mostrarEstadoRecolha(origem, retiradas, totalBruto){
+function mostrarEstadoRecolha(origem, retiradas){
   retiradas = retiradas || { origem:0, data:0, redes:0, termo:0 };
   const estado = $("#expEstado");
   if(!estado) return;
 
+  /* Um valor negativo em data significa que nenhuma notícia caía dentro da
+     janela pedida e que foram apresentadas assim mesmo, com esta ressalva. */
+  const foraDaJanela = retiradas.data < 0;
   const partes = [];
   if(retiradas.termo) partes.push(`${retiradas.termo} sem o termo pesquisado`);
   if(retiradas.redes) partes.push(`${retiradas.redes} de redes sociais`);
   if(retiradas.origem) partes.push(`${retiradas.origem} por não serem fontes nacionais`);
-  if(retiradas.data) partes.push(`${retiradas.data} fora do período`);
-  const fora = retiradas.termo + retiradas.redes + retiradas.origem + retiradas.data;
+  if(retiradas.data > 0) partes.push(`${retiradas.data} fora do período`);
+  const fora = retiradas.termo + retiradas.redes + retiradas.origem + Math.max(0, retiradas.data);
 
-  /* Atalhos para desfazer o filtro que mais cortou, sem sair da janela.
-     Só aparecem quando fazem sentido com o estado atual. */
+  /* Atalhos para desfazer o filtro que mais cortou, sem sair da janela */
   const atalhos = [];
-  if(retiradas.origem && filtroFontes === "nacionais") 
-    atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Aceitar fontes internacionais</button>`);
-  if(retiradas.redes && filtroRedes === "sem") 
-    atalhos.push(`<button class="btn-atalho" data-afrouxar="redes">Incluir redes sociais</button>`);
-  if(retiradas.data && ["24h","48h","72h"].includes(periodo)) 
-    atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
+  if(retiradas.origem && filtroFontes === "nacionais") atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Aceitar todas as fontes</button>`);
+  if(retiradas.redes && filtroRedes === "sem") atalhos.push(`<button class="btn-atalho" data-afrouxar="redes">Incluir redes sociais</button>`);
+  if(retiradas.data) atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
   const barra = atalhos.length ? `<div class="atalhos">${atalhos.join("")}</div>` : "";
 
-  const brutoTxt = totalBruto != null 
-    ? `<span style="color:var(--azul);font-size:1.3rem;font-weight:600">${totalBruto}</span> <span style="color:var(--texto-ligeiro);font-size:.8rem">resultados do Google · </span>` 
-    : "";
-
   if(recolha.length){
+    const ressalva = foraDaJanela
+      ? `<br><span style="font-size:.8rem;color:var(--dourado)">Publicadas antes de ${ROTULO_PERIODO[periodo]} — o serviço datou-as pela indexação. Apresentadas mesmo assim.</span>`
+      : "";
     estado.innerHTML =
-      brutoTxt +
-      `<span class="exp-total">${recolha.length}</span> <span style="color:var(--texto-ligeiro);font-size:.8rem">notícias após filtros</span>` +
-      `<span style="color:var(--texto-ligeiro);font-size:.8rem"> · ${origem}</span>` +
+      `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar` +
+      `<span style="color:var(--texto-ligeiro);font-size:.8rem"> · ${origem}</span>` + ressalva +
       (fora ? `<br><span style="font-size:.8rem;color:var(--texto-ligeiro)">Foram retiradas ${fora}: ${partes.join(", ")}.</span>${barra}` : "");
   }else{
-    estado.innerHTML = (totalBruto != null && totalBruto > 0)
-      ? `<span style="color:var(--azul);font-size:1.3rem;font-weight:600">${totalBruto}</span> <span style="color:var(--texto-ligeiro);font-size:.8rem">resultados do Google</span><br>` +
-        `<span style="color:var(--vermelho)">As ${fora || totalBruto} notícias foram todas retiradas pelos filtros.</span>
-         <br><span style="font-size:.84rem">${partes.join(", ") || "Verifique os filtros de origem, redes sociais e período."}</span>${barra}`
+    estado.innerHTML = fora
+      ? `<span style="color:var(--vermelho)">As ${fora} notícias recolhidas foram todas retiradas pelos filtros.</span>
+         <br><span style="font-size:.84rem">${partes.join(", ")}.</span>${barra}`
       : `<span style="color:var(--vermelho)">Não foram encontradas notícias.</span>
          <br><span style="font-size:.84rem">A consulta não devolveu resultados para este período.</span>${barra}`;
   }
@@ -2549,7 +2527,7 @@ function mostrarEstadoRecolha(origem, retiradas, totalBruto){
   const p2 = $("#passo2");
   if(p2) p2.hidden = recolha.length === 0;
   const p1 = $("#passo1");
-  if(p1) p1.classList.toggle("feito", recolha.length > 0 || (totalBruto != null && totalBruto > 0));
+  if(p1) p1.classList.toggle("feito", recolha.length > 0);
 }
 
 /* =========================================================================
@@ -2572,11 +2550,8 @@ document.addEventListener("click", e => {
   const fd = e.target.closest("[data-feed]");
   if(fd){
     const a = AREAS.find(x => x.id === fd.dataset.feed);
-    /* Query completa para o Google: base + todas as exclusões (domínio + redes) */
-    const q = (consultaAtiva && consultaAtiva.area.id === a.id)
-      ? consultaGoogle(consultaAtiva.q)
-      : consultaGoogle(consulta(a));
-    window.open(`https://news.google.com/search?q=${encodeURIComponent(q)}&${parametros()}`,
+    const q = (consultaAtiva && consultaAtiva.area.id === a.id) ? consultaAtiva.q : consulta(a);
+    window.open(`https://news.google.com/search?q=${encodeURIComponent(consultaGoogle(q))}&${parametros()}`,
       "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
     return;
   }
