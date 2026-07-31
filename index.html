@@ -284,6 +284,7 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 }
 .alvo span{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--texto-ligeiro);font-weight:600}
 .alvo strong{font-size:.9rem;font-weight:500;color:var(--texto)}
+.alvo em{display:block;width:100%;font-style:normal;font-size:.78rem;color:var(--texto-ligeiro);margin-top:.15rem}
 .passo{display:grid;grid-template-columns:38px 1fr;gap:1rem;padding:1.3rem 0;border-bottom:1px solid var(--borda)}
 .passo:last-child{border-bottom:none}
 .passo-n{
@@ -790,7 +791,7 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
-  versao: "31 de julho, 16h",
+  versao: "31 de julho, 18h",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 40000,
@@ -1128,6 +1129,7 @@ function abrirExportacao(id){
       <div class="alvo">
         <span>A recolher</span>
         <strong>${consultaAtiva.termos ? `apenas ${consultaAtiva.rotulo}` : `todas as palavras-chave de ${a.nome}`}</strong>
+        <em>${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${semRedes ? "sem redes sociais" : "com redes sociais"}</em>
       </div>
 
       <p class="aviso-alcance" id="avisoAlcance" hidden>
@@ -1213,7 +1215,13 @@ const MANUAL = [
     <p class="man-aviso">A exportação segue sempre a consulta ativa: se clicou numa palavra-chave, exporta só essa; caso contrário, exporta a área completa.</p>` },
 
   { n:"4", titulo:"Recolher e exportar", cor:"var(--verde)", icone:"descarregar", corpo:`
-    <p>A janela de exportação tem dois passos. Primeiro <strong>Recolher notícias</strong>. Na consulta predefinida da área, com janela de 24 horas, usa o instantâneo produzido de manhã pela recolha agendada, que é imediato. Se selecionar palavras-chave ou alargar o período, pesquisa o serviço, porque o instantâneo é apenas o retrato diário da área e não contém o arquivo. Concluído, aparece o segundo passo, com <strong>Ler notícias</strong>, <strong>Ver síntese</strong> e <strong>Descarregar Excel</strong>.</p>
+    <p>A janela de exportação tem dois passos. Primeiro <strong>Recolher notícias</strong>, que procura por esta ordem:</p>
+    <dl>
+      <dt>Retrato do dia</dt><dd>Para a consulta predefinida da área com janela de 24 horas. Imediato.</dd>
+      <dt>Arquivo de sete dias</dt><dd>Acumulado pelas recolhas agendadas. Cobre pesquisas por palavra-chave e janelas até uma semana, também sem depender da rede.</dd>
+      <dt>Serviço de pesquisa</dt><dd>Só para o que o arquivo não cobre. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem em arquivo e avisa.</dd>
+    </dl>
+    <p>Concluído, aparece o segundo passo, com <strong>Ler notícias</strong>, <strong>Ver síntese</strong> e <strong>Descarregar Excel</strong>.</p>
     <p><strong>Ler notícias</strong> apresenta a lista por ordem cronológica, da mais recente para a mais antiga — a ordenação que o serviço não dá.</p>
     <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, as exclusões, a consulta enviada e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
 
@@ -1732,6 +1740,40 @@ function serieDaArea(nome){
                  fontes:d.areas[nome].fontes }));
 }
 
+let arquivo = null;   // notícias dos últimos dias, acumuladas pela recolha agendada
+
+async function carregarArquivo(){
+  if(arquivo !== null) return arquivo;
+  for(const base of enderecosDados()){
+    try{
+      const r = await fetch(base.replace("noticias.json", "arquivo.json"), { cache:"no-store" });
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(d && Array.isArray(d.noticias)){ arquivo = d; return arquivo; }
+    }catch(e){ /* segue */ }
+  }
+  arquivo = { noticias: [], dias: 0 };
+  return arquivo;
+}
+
+/* Notícias do arquivo que servem a consulta em curso */
+async function doArquivo(){
+  const a = await carregarArquivo();
+  if(!a.noticias.length) throw new Error("sem arquivo publicado");
+  let itens = a.noticias.filter(n => n.area === consultaAtiva.area.nome);
+  if(consultaAtiva.termos){
+    const alvos = consultaAtiva.termos.map(simplificar);
+    itens = itens.filter(n => {
+      const texto = simplificar(n.titulo + " " + (n.resumo || ""));
+      return alvos.some(t => texto.includes(t));
+    });
+  }
+  itens = itens.map(n => Object.assign({}, n, {
+    consulta: consultaAtiva.rotulo, ligacao: ligacaoDireta(n.ligacao)
+  }));
+  return { itens, origem: `arquivo de ${a.dias} dias`, dias: a.dias };
+}
+
 async function deDadosPublicados(){
   let dados = null, ultimo = "";
   for(const endereco of enderecosDados()){
@@ -1870,40 +1912,54 @@ function assentarRecolha(itens, origem, ignorarPeriodo){
 async function recolherConsulta(){
   if(!consultaAtiva) return;
   const btn = $("#btnRecolher"), estado = $("#expEstado");
-  const meu = ++pedidoAtual;                 // qualquer recolha anterior fica sem efeito
+  const meu = ++pedidoAtual;
   const valido = () => meu === pedidoAtual;
   btn.disabled = true;
   recolha = [];
   const endereco = urlRSS(consultaAtiva.q);
   const aviso = $("#avisoAlcance");
   if(aviso) aviso.hidden = true;
-  let faltaFicheiro = "", doFicheiro = null;
-
-  /* O ficheiro da recolha agendada é o retrato diário da área completa. Serve a
-     consulta predefinida enquanto for recente; não serve pesquisas por termo,
-     períodos mais largos, nem um retrato já vencido. */
   const horas = HORAS_PERIODO[periodo];
-  const podeServir = !consultaAtiva.termos && horas && horas <= 24;
+  let guardado = null, faltaFicheiro = "";
 
   estado.innerHTML = "A recolher…";
-  try{
-    doFicheiro = await deDadosPublicados();
+
+  /* 1 — Retrato do dia, quando a consulta é a predefinida e a janela é de 24 horas */
+  if(!consultaAtiva.termos && horas && horas <= 24){
+    try{
+      const r = await deDadosPublicados();
+      if(!valido()) return;
+      guardado = r;
+      if(r.itens.filter(dentroDoPeriodo).length){
+        btn.disabled = false;
+        assentarRecolha(r.itens, r.origem);
+        return;
+      }
+    }catch(e){ faltaFicheiro = e.message; }
     if(!valido()) return;
-    if(podeServir && doFicheiro.itens.filter(dentroDoPeriodo).length){
+  }
+
+  /* 2 — Arquivo dos últimos dias: cobre pesquisas por termo e janelas maiores */
+  try{
+    const r = await doArquivo();
+    if(!valido()) return;
+    const cobre = horas && r.dias && horas <= r.dias * 24;
+    const dentro = r.itens.filter(dentroDoPeriodo);
+    if(cobre && dentro.length){
       btn.disabled = false;
-      assentarRecolha(doFicheiro.itens, doFicheiro.origem);
+      assentarRecolha(r.itens, r.origem);
       return;
     }
-  }catch(e){ faltaFicheiro = e.message; }
+    if(!guardado && r.itens.length) guardado = r;
+  }catch(e){ if(!faltaFicheiro) faltaFicheiro = e.message; }
   if(!valido()) return;
 
-  /* Recolha em direto: as vias disponíveis correm em simultâneo e vale a primeira */
+  /* 3 — Serviço em direto, para o que o arquivo não cobre */
   const arranque = Date.now();
   const contador = setInterval(() => {
     const seg = Math.round((Date.now() - arranque) / 1000);
-    estado.innerHTML = `A recolher… <span style="color:var(--texto-ligeiro);font-size:.8rem">${seg}s</span>`;
+    estado.innerHTML = `A recolher no serviço… <span style="color:var(--texto-ligeiro);font-size:.8rem">${seg}s</span>`;
   }, 1000);
-  estado.innerHTML = "A recolher…";
   let erros = [];
 
   try{
@@ -1921,20 +1977,20 @@ async function recolherConsulta(){
     erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
   }
 
-  /* O serviço não respondeu: resta o retrato diário, com a devida ressalva */
-  if(doFicheiro && doFicheiro.itens.length){
+  /* 4 — O serviço não respondeu: vale o que estiver guardado, com ressalva */
+  if(guardado && guardado.itens.length){
     btn.disabled = false;
-    assentarRecolha(doFicheiro.itens, doFicheiro.origem + " · retrato diário da área", true);
+    assentarRecolha(guardado.itens, guardado.origem, true);
     if(aviso) aviso.hidden = false;
     return;
   }
 
   btn.disabled = false;
-  estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias neste momento.</span>
+  estado.innerHTML = `<span style="color:var(--vermelho)">Sem notícias para esta consulta.</span>
     <br><span style="font-size:.84rem">${faltaFicheiro
-      ? "Não foi encontrado o ficheiro <code>noticias.json</code> da recolha agendada junto ao painel, e os serviços de recolha em direto estão bloqueados ou indisponíveis."
-      : "Os serviços de recolha em direto estão indisponíveis ou bloqueados."}</span>
-    <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico, para comunicar à Unidade de Pesquisa e Estatísticas</summary>
+      ? "Não há ficheiros da recolha agendada junto ao painel e o serviço de pesquisa não respondeu."
+      : "Nem o arquivo local nem o serviço de pesquisa devolveram resultados. Pode não haver notícias que cumpram estes critérios — experimente alargar o período ou desligar um dos filtros."}</span>
+    <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico</summary>
     <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
 }
 

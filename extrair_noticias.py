@@ -23,7 +23,7 @@ import os
 import re
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from email.utils import parsedate_to_datetime
 from html.entities import name2codepoint
 from base64 import urlsafe_b64decode
@@ -541,6 +541,10 @@ def principal():
                     help="não converter os reencaminhamentos do Google no endereço do jornal")
     ap.add_argument("--historico", default=None,
                     help="ficheiro JSON de série diária, atualizado a cada recolha")
+    ap.add_argument("--arquivo", default=None,
+                    help="ficheiro JSON com as notícias dos últimos dias, acumulado a cada recolha")
+    ap.add_argument("--dias-arquivo", type=int, default=7,
+                    help="dias a manter no arquivo (predefinição: 7)")
     args = ap.parse_args()
 
     if args.area and args.area not in {a[0] for a in AREAS}:
@@ -577,6 +581,9 @@ def principal():
             json.dump(pacote, destino, ensure_ascii=False, indent=1)
         print(f"{len(noticias)} notícias gravadas em {args.json}")
 
+    if args.arquivo:
+        atualizar_arquivo(args.arquivo, linhas, args.dias_arquivo)
+
     if args.historico:
         atualizar_historico(args.historico, linhas, args.periodo, vistos_anteriores)
     if falhas:
@@ -602,6 +609,47 @@ def ligacoes_da_recolha_anterior(caminho_json):
     for n in anterior.get("noticias", []):
         vistos.setdefault(n.get("area", ""), set()).add(n.get("ligacao", ""))
     return vistos
+
+
+def atualizar_arquivo(caminho, linhas, dias=7):
+    """Acumula as notícias dos últimos dias num único ficheiro.
+
+    É o que permite ao painel responder a pesquisas por palavra-chave e a
+    janelas de vários dias sem depender de serviços externos: em vez de
+    interrogar o serviço, filtra este arquivo.
+    """
+    campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "ligacao"]
+    limite = (datetime.now() - timedelta(days=dias)).strftime("%Y-%m-%d")
+
+    anteriores = []
+    if os.path.exists(caminho):
+        try:
+            with open(caminho, encoding="utf-8") as origem:
+                anteriores = json.load(origem).get("noticias", [])
+        except (json.JSONDecodeError, OSError):
+            anteriores = []
+
+    def registo(l):
+        r = dict(zip(campos, l))
+        r["data"] = r["data"].strftime("%Y-%m-%d %H:%M") if r["data"] else ""
+        return r
+
+    juntas = anteriores + [registo(l) for l in linhas]
+    vistos, mantidas = set(), []
+    for n in juntas:
+        if n.get("data", "")[:10] < limite:
+            continue
+        chave = (n.get("area", ""), n.get("titulo", "").lower(), n.get("fonte", "").lower())
+        if chave in vistos:
+            continue
+        vistos.add(chave)
+        mantidas.append(n)
+
+    mantidas.sort(key=lambda n: n.get("data", ""), reverse=True)
+    with open(caminho, "w", encoding="utf-8") as destino:
+        json.dump({"dias": dias, "atualizado": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                   "noticias": mantidas}, destino, ensure_ascii=False)
+    print(f"arquivo de {dias} dias: {len(mantidas)} notícias em {caminho}")
 
 
 def atualizar_historico(caminho, linhas, periodo, vistos=None):
