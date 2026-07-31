@@ -34,7 +34,7 @@ Unidade de Pesquisa e Estatísticas
 | `extrair_noticias.py` | A recolha das 16 áreas. Produz o Excel do dia e os três ficheiros de dados. |
 | `.github/workflows/radar-noticias.yml` | Tarefa agendada que corre a recolha nos servidores do GitHub. |
 | `noticias.json` | **Retrato do dia.** As notícias das últimas 24 horas de cada área. É o que o painel lê na consulta predefinida — resposta imediata. |
-| `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas diárias, sem repetições. Permite pesquisar por palavra-chave e usar janelas até uma semana sem depender de serviços externos. |
+| `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas diárias, sem repetições. Cada recolha pesquisa também cada palavra-chave separadamente e marca as notícias com os termos que as trouxeram — é o que permite pesquisar por palavra-chave sem depender de serviços externos. |
 | `historico.json` | **Série diária.** Uma linha por dia e por área, com o número de notícias, de notícias novas e de publicações distintas. Alimenta o bloco *Evolução* e a folha homónima do Excel. |
 
 Os três ficheiros de dados são gerados e atualizados pela recolha agendada. Não
