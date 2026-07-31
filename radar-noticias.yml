@@ -1,0 +1,75 @@
+name: Radar de Notícias por Área Governativa
+
+# Recolhe as notícias, atualiza o ficheiro de dados que o painel lê
+# (noticias.json), acrescenta o dia à série histórica (historico.json) e
+# disponibiliza o Excel do dia. Corre nos servidores do GitHub, fora da rede
+# da Secretaria-Geral.
+#
+# A janela predefinida é de 24 horas: é o que faz de cada execução o retrato
+# de um dia e permite que a série tenha significado.
+#
+# Instalação, uma única vez:
+#   1. Repositório com estes ficheiros:
+#        index.html (o painel) e extrair_noticias.py na raiz;
+#        radar-noticias.yml em .github/workflows/
+#   2. Em Settings > Pages, escolher "Deploy from a branch", ramo principal, pasta raiz.
+#   3. O painel passa a estar em https://<utilizador>.github.io/<repositório>/radar_noticias_areas_governativas_v1.html
+#      e o botão "Recolher notícias" responde sempre, porque lê o noticias.json publicado ao lado.
+
+on:
+  workflow_dispatch:
+    inputs:
+      periodo:
+        description: "Janela temporal"
+        type: choice
+        default: "24h"
+        options: ["24h", "48h", "72h", "7d", "30d", "365d"]
+
+  schedule:
+    # O GitHub agenda em UTC. 06h00 UTC corresponde às 7h00 de Lisboa no horário
+    # de verão e às 6h00 no de inverno — em qualquer dos casos, o ficheiro está
+    # pronto antes do início do dia de trabalho.
+    - cron: "0 6 * * 1-5"
+
+permissions:
+  contents: write
+
+jobs:
+  recolher:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter o repositório
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install --quiet openpyxl
+
+      - name: Recolher as notícias
+        env:
+          PERIODO: ${{ github.event.inputs.periodo || '24h' }}
+        run: |
+          set -euo pipefail
+          NOME="radar_noticias_$(date +%Y%m%d_%H%M).xlsx"
+          echo "NOME=$NOME" >> "$GITHUB_ENV"
+          python extrair_noticias.py --periodo "$PERIODO" --saida "$NOME" \
+            --json noticias.json --historico historico.json
+
+      - name: Atualizar o ficheiro de dados do painel
+        run: |
+          git config user.name "radar-noticias"
+          git config user.email "radar-noticias@users.noreply.github.com"
+          git add noticias.json historico.json
+          git diff --cached --quiet || git commit -m "Atualização das notícias ($(date +%Y-%m-%d))"
+          git push
+
+      - name: Disponibilizar o Excel do dia
+        uses: actions/upload-artifact@v4
+        with:
+          name: radar-noticias
+          path: ${{ env.NOME }}
+          retention-days: 30

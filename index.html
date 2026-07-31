@@ -269,6 +269,13 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .ler-item svg{width:14px;height:14px;stroke:var(--texto-ligeiro);fill:none;stroke-width:1.9;
   stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:.14s;margin-top:.2rem}
 .ler-item:hover svg{opacity:1;stroke:var(--azul)}
+.alvo{
+  display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;margin:1.1rem 0 0;
+  padding:.7rem .95rem;border-radius:var(--raio-s);background:var(--superficie-alt);
+  border-left:3px solid var(--verde);
+}
+.alvo span{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--texto-ligeiro);font-weight:600}
+.alvo strong{font-size:.9rem;font-weight:500;color:var(--texto)}
 .passo{display:grid;grid-template-columns:38px 1fr;gap:1rem;padding:1.3rem 0;border-bottom:1px solid var(--borda)}
 .passo:last-child{border-bottom:none}
 .passo-n{
@@ -508,6 +515,22 @@ main{padding:2.2rem 0 4rem}
 .modal-corpo .bloco{margin-bottom:1.6rem}
 .modal-rodape{padding:1rem 1.5rem;border-top:1px solid var(--borda);display:flex;gap:.6rem;flex-wrap:wrap;background:var(--superficie-alt)}
 .campo-livre{font-family:var(--fonte);font-size:.86rem}
+.modal-rodape.vias{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;padding:1rem 1.6rem}
+@media(max-width:560px){.modal-rodape.vias{grid-template-columns:1fr}}
+.via-cartao{
+  display:flex;align-items:center;gap:.8rem;text-align:left;padding:.8rem .9rem;
+  border:1px solid var(--borda-forte);border-radius:var(--raio-s);background:var(--superficie);
+  cursor:pointer;font-family:var(--fonte);transition:.16s;
+}
+.via-cartao:hover{border-color:var(--cor,var(--azul));transform:translateY(-1px);box-shadow:var(--sombra)}
+.via-cartao.destaque{border-color:color-mix(in srgb, var(--verde) 45%, transparent);
+  background:color-mix(in srgb, var(--verde) 5%, transparent)}
+.via-ic{width:38px;height:38px;border-radius:11px;flex:none;display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb, var(--cor) 12%, transparent);
+  border:1px solid color-mix(in srgb, var(--cor) 26%, transparent)}
+.via-ic svg{width:19px;height:19px;stroke:var(--cor);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.via-txt strong{display:block;font-size:.88rem;font-weight:600;color:var(--texto);line-height:1.25}
+.via-txt em{font-style:normal;font-size:.76rem;color:var(--texto-ligeiro);line-height:1.35}
 .consulta-txt{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;line-height:1.6;
   background:var(--superficie-alt);border:1px solid var(--borda);border-radius:var(--raio-s);
@@ -752,7 +775,7 @@ const CONFIG = {
   versao: "2026-07-31 · manual + síntese",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
-  tempoLimiteRecolha: 60000,
+  tempoLimiteRecolha: 25000,
   /* Domínios excluídos quando o filtro de fontes nacionais está ativo.
      Acrescentar aqui outros domínios ou domínios de topo, sempre precedidos de "site:". */
   exclusoes: ["site:.br", "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com"],
@@ -837,7 +860,7 @@ const AREAS = [
   { id:"saude", nome:"Saúde", grupo:"social", icone:"saude",
     palavras:["Ministério da Saúde","Serviço Nacional de Saúde","urgências hospitalares","médicos de família","listas de espera","cuidados continuados","medicamentos","saúde mental"] },
   { id:"trabalho", nome:"Trabalho, Solidariedade e Segurança Social", grupo:"social", icone:"trabalho",
-    palavras:["Ministério do Trabalho","emprego","desemprego","salário mínimo","pensões","segurança social","negociação coletiva","apoios sociais"] },
+    palavras:["Ministério do Trabalho","emprego","desemprego","salário mínimo","pensões","segurança social","solidariedade social","negociação coletiva","apoios sociais"] },
   { id:"cultura", nome:"Cultura, Juventude e Desporto", grupo:"social", icone:"cultura",
     palavras:["Ministério da Cultura","património cultural","museus","criação artística","políticas de juventude","desporto","alta competição","língua portuguesa"] },
 
@@ -1004,16 +1027,19 @@ function abrirDetalhe(id){
         <p style="font-size:.8rem;color:var(--texto-ligeiro);margin-top:.5rem">As expressões são ligadas por <code>OR</code>; seguem-se os termos e domínios excluídos e a janela temporal. É esta a consulta que a exportação recolhe.</p>
       </div>
     </div>
-    <div class="modal-rodape">
-      <button class="btn primario" data-feed="${a.id}">
-        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
-        Abrir no Google Notícias
+    <div class="modal-rodape vias">
+      <button class="via-cartao" data-feed="${a.id}">
+        <span class="via-ic" style="--cor:var(--azul)">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+        </span>
+        <span class="via-txt"><strong>Abrir no Google Notícias</strong><em>Leitura no serviço, em janela nova</em></span>
       </button>
-      <button class="btn" data-exportar="${a.id}">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-        Exportar
+      <button class="via-cartao destaque" data-exportar="${a.id}">
+        <span class="via-ic" style="--cor:var(--verde)">
+          <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg>
+        </span>
+        <span class="via-txt"><strong>Trabalhar no painel</strong><em>Ler por data, ver síntese, exportar Excel</em></span>
       </button>
-      <button class="btn" data-copiar-rss="${a.id}" style="margin-left:auto">Feed RSS</button>
     </div>`;
   $("#veu").classList.add("aberto");
   definirConsulta(a, consulta(a), a.palavras.join("; "));
@@ -1034,11 +1060,16 @@ function abrirExportacao(id){
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
     <div class="modal-corpo">
+      <div class="alvo">
+        <span>A recolher</span>
+        <strong>${consultaAtiva.termo ? `apenas “${consultaAtiva.termo}”` : `todas as palavras-chave de ${a.nome}`}</strong>
+      </div>
+
       <div class="passo" id="passo1">
         <div class="passo-n">1</div>
         <div class="passo-corpo">
-          <h4>Recolher as notícias desta consulta</h4>
-          <p>Procura os artigos e prepara-os. Demora até cerca de um minuto.</p>
+          <h4>Recolher as notícias</h4>
+          <p>Procura os artigos e prepara-os. Costuma demorar alguns segundos.</p>
           <button class="btn primario" id="btnRecolher">
             <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M21 3v6h-6"/></svg>
             Recolher notícias
@@ -1140,9 +1171,15 @@ const MANUAL = [
     </dl>` },
 
   { n:"8", titulo:"Recolha agendada", cor:"var(--teal)", icone:"engrenagem", corpo:`
-    <p>Corre nos servidores do GitHub, de segunda a sexta de manhã, com janela de 24 horas. Produz o Excel do dia, na página da execução, o ficheiro <code>noticias.json</code> que o painel lê e a série <code>historico.json</code> que alimenta a evolução.</p>
-    <p>Para executar fora de horas: separador <strong>Actions</strong>, <em>Radar de Notícias por Área Governativa</em>, <strong>Run workflow</strong>.</p>
-    <p>Para usar o ficheiro guardado no computador, abra-o num editor de texto e preencha <code>enderecoDados</code> com o endereço do painel publicado.</p>` }
+    <p>A rede da Secretaria-Geral impede o painel de ir buscar notícias diretamente. A solução é fazer essa recolha noutro sítio: um programa que corre nos servidores do GitHub, todas as manhãs de dias úteis, e deixa o resultado ao lado do painel.</p>
+    <p>Cada execução produz três coisas:</p>
+    <dl>
+      <dt>Excel do dia</dt><dd>Descarregável na página da execução, em <em>Artifacts</em>.</dd>
+      <dt><code>noticias.json</code></dt><dd>As notícias do dia. É o ficheiro que o botão <strong>Recolher notícias</strong> lê. Sem ele, o painel fica dependente de serviços externos que a rede costuma bloquear.</dd>
+      <dt><code>historico.json</code></dt><dd>Uma linha por dia e por área. É o que permite ver a evolução.</dd>
+    </dl>
+    <p><strong>Executar fora de horas:</strong> no repositório, separador <strong>Actions</strong>, escolher <em>Radar de Notícias por Área Governativa</em> e clicar em <strong>Run workflow</strong>. Demora um a dois minutos.</p>
+    <p class="man-aviso">Se o painel disser que não encontrou o <code>noticias.json</code>, a recolha agendada ainda não correu com êxito. Confirme em <strong>Actions</strong> se a última execução está verde e, em <strong>Settings › Actions › General</strong>, se as permissões estão em <em>Read and write</em>.</p>` }
 ];
 
 
@@ -1511,9 +1548,9 @@ function abrirManual(n){
    responde, ainda que por vezes com sobrecarga temporária (estado 503). É por isso
    tentado várias vezes, com intervalo, em paralelo com as alternativas. */
 const METODOS = [
-  { nome:"corsproxy",           tipo:"fetch",  tentativas:4, espera:2500,
+  { nome:"corsproxy",           tipo:"fetch",  tentativas:4, espera:1500,
     url:u => `https://corsproxy.io/?url=${encodeURIComponent(u)}` },
-  { nome:"corsproxy (variante)", tipo:"fetch", tentativas:3, espera:3500, atraso:1200,
+  { nome:"corsproxy (variante)", tipo:"fetch", tentativas:3, espera:2000,
     url:u => `https://corsproxy.io/?${encodeURIComponent(u)}` },
   { nome:"allorigins",          tipo:"fetch",  url:u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}` },
   { nome:"allorigins (script)", tipo:"script", url:u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}` },
@@ -1545,6 +1582,7 @@ function porScript(endereco, tempoLimite = 6000){
 }
 
 let recolha = [];          // linhas da última recolha
+let pedidoAtual = 0;       // identifica a recolha em curso; anula resultados atrasados
 let consultaAtiva = null;  // { area, q, rotulo } — consulta em curso no detalhe aberto
 
 /* Define a consulta que o detalhe está a mostrar e que será exportada */
@@ -1676,6 +1714,8 @@ function assentarRecolha(itens, origem){
 async function recolherConsulta(){
   if(!consultaAtiva) return;
   const btn = $("#btnRecolher"), estado = $("#expEstado");
+  const meu = ++pedidoAtual;                 // qualquer recolha anterior fica sem efeito
+  const valido = () => meu === pedidoAtual;
   btn.disabled = true;
   recolha = [];
   const endereco = urlRSS(consultaAtiva.q);
@@ -1684,10 +1724,12 @@ async function recolherConsulta(){
   estado.innerHTML = "A recolher…";
   try{
     const { itens, origem } = await deDadosPublicados();
+    if(!valido()) return;
     btn.disabled = false;
     assentarRecolha(itens, origem);
     return;
-  }catch(e){ /* segue para a recolha em direto */ }
+  }catch(e){ faltaFicheiro = e.message; /* segue para a recolha em direto */ }
+  if(!valido()) return;
 
   /* Recolha em direto: as vias disponíveis correm em simultâneo e vale a primeira */
   const arranque = Date.now();
@@ -1702,14 +1744,18 @@ async function recolherConsulta(){
       METODOS.map(m => tentarVia(m, endereco).catch(e => { throw new Error(m.nome + ": " + e.message); }))
     );
     clearInterval(contador);
+    if(!valido()) return;
     btn.disabled = false;
     assentarRecolha(itens, origem);
   }catch(agregado){
     clearInterval(contador);
+    if(!valido()) return;
     const erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
     btn.disabled = false;
     estado.innerHTML = `<span style="color:var(--vermelho)">Sem acesso às notícias neste momento.</span>
-      <br><span style="font-size:.84rem">Os serviços de recolha em direto estão indisponíveis ou bloqueados. A recolha agendada, que corre todas as manhãs, não depende deles: com o painel publicado ao lado do respetivo ficheiro de dados, este botão responde sempre.</span>
+      <br><span style="font-size:.84rem">${faltaFicheiro
+        ? "Não foi encontrado o ficheiro <code>noticias.json</code> da recolha agendada junto ao painel, e os serviços de recolha em direto estão bloqueados ou indisponíveis. Enquanto a recolha agendada não correr pelo menos uma vez, o painel fica dependente desses serviços."
+        : "Os serviços de recolha em direto estão indisponíveis ou bloqueados."}</span>
       <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico, para comunicar à Unidade de Pesquisa e Estatísticas</summary>
       <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
   }
