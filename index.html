@@ -1154,6 +1154,7 @@ function abrirExportacao(id){
   /* A recolha guardada só vale se corresponder exatamente a este pedido */
   if(assinaturaRecolha !== assinaturaConsulta()) recolha = [];
 
+  const queryExata = consultaAtiva.q;
   $("#modal").innerHTML = `
     <div class="modal-cab nota-cab">
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></div>
@@ -1170,15 +1171,31 @@ function abrirExportacao(id){
         <em>${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${ROTULO_REDES[filtroRedes]}</em>
       </div>
 
+      <div class="bloco" style="margin-bottom:1.2rem">
+        <h4>Consulta enviada ao Google Notícias</h4>
+        <p class="marca-selecao" style="margin-bottom:.4rem">Esta é a query exata — byte a byte — que o painel envia ao serviço. O botão "Abrir no Google Notícias" usa a mesma.</p>
+        <div class="consulta-txt" id="queryVisivel">${escXML(queryExata)}</div>
+        <div style="display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap">
+          <button class="btn" id="btnCopiarQuery">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copiar query
+          </button>
+          <button class="btn" data-feed="${a.id}">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+            Abrir no Google Notícias
+          </button>
+        </div>
+      </div>
+
       <p class="aviso-alcance" id="avisoAlcance" hidden>
-        O serviço de pesquisa não respondeu. Estes resultados vêm dos ficheiros da recolha agendada, que contêm apenas o que a consulta da área trouxe — numa pesquisa por termo, são um subconjunto do que existe. Para ver tudo, use “Abrir no Google Notícias”.
+        O serviço de pesquisa não respondeu. Estes resultados vêm dos ficheiros da recolha agendada, que contêm apenas o que a consulta da área trouxe — numa pesquisa por termo, são um subconjunto do que existe. Para ver tudo, use "Abrir no Google Notícias".
       </p>
 
       <div class="passo" id="passo1">
         <div class="passo-n">1</div>
         <div class="passo-corpo">
           <h4>Recolher as notícias</h4>
-          <p>Procura os artigos e prepara-os. Costuma demorar alguns segundos.</p>
+          <p>O painel consulta o Google Notícias com a query acima e aplica depois filtros locais (confirmação de termos, origem, período, deduplicação). O número de resultados brutos deve coincidir com o que o Google mostra.</p>
           <button class="btn primario" id="btnRecolher">
             <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M21 3v6h-6"/></svg>
             Recolher notícias
@@ -1213,13 +1230,14 @@ function abrirExportacao(id){
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
       <button class="btn" data-detalhe="${a.id}" style="margin-left:auto">Voltar</button>
     </div>`;
+  $("#btnCopiarQuery").addEventListener("click", () => copiar(queryExata, "Query copiada"));
   $("#veu").classList.add("aberto");
 
   $("#btnRecolher").addEventListener("click", recolherConsulta);
   $("#btnXLSX").addEventListener("click", descarregarXLSX);
   $("#btnSintese").addEventListener("click", abrirSintese);
   $("#btnLer").addEventListener("click", abrirLeitura);
-  if(recolha.length) mostrarEstadoRecolha("recolha anterior");
+  if(recolha.length || recolhaBruta.length) mostrarEstadoRecolha("recolha anterior", null, recolhaBruta.length || null);
   else { const p2 = $("#passo2"); if(p2) p2.hidden = true; }
 }
 
@@ -1513,7 +1531,7 @@ function abrirLeitura(){
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h8"/></svg></div>
       <div>
         <h3>Notícias por ordem de data</h3>
-        <p>${a.nome} · ${recolha.length} notícias · da mais recente para a mais antiga</p>
+        <p>${a.nome} · ${recolha.length} notícias após filtros · ${recolhaBruta.length ? recolhaBruta.length + ' resultados brutos do Google · ' : ''}da mais recente para a mais antiga</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -1559,7 +1577,7 @@ async function abrirSintese(){
       <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg></div>
       <div>
         <h3>Síntese da recolha</h3>
-        <p>${a.nome} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
+        <p>${a.nome} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${recolhaBruta.length ? recolhaBruta.length + ' brutos / ' : ''}${recolha.length} após filtros</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -1739,7 +1757,8 @@ function porScript(endereco, tempoLimite = 6000){
   });
 }
 
-let recolha = [];          // linhas da última recolha
+let recolha = [];          // linhas da última recolha (filtrada)
+let recolhaBruta = [];     // resultados do Google antes de filtros locais
 let assinaturaRecolha = ""; // a que consulta pertence a recolha guardada
 let pedidoAtual = 0;       // identifica a recolha em curso; anula resultados atrasados
 let consultaAtiva = null;  // { area, q, rotulo } — consulta em curso no detalhe aberto
@@ -1757,6 +1776,7 @@ function definirConsulta(area, q, rotulo, termos){
   const dom = filtroFontes === "nacionais" ? " " + CONFIG.exclusoesDominio.map(d => `-${d}`).join(" ") : "";
   consultaAtiva = { area, q: q + dom, rotulo, termos: termos && termos.length ? termos : null };
   recolha = [];
+  recolhaBruta = [];
   assinaturaRecolha = "";
 }
 
@@ -1986,8 +2006,12 @@ function confirmaTermos(itens){
 }
 
 function assentarRecolha(itens, origem, ignorarPeriodo){
+  /* Guardar cópia bruta para comparação com o Google */
+  recolhaBruta = itens.map(it => Object.assign({}, it));
+
   const confirmados = confirmaTermos(itens);
   itens = confirmados.itens;
+  const totalBruto = recolhaBruta.length;
   const total = itens.length;
   /* As duas seleções são independentes e uma plataforma social não tem
      nacionalidade: o filtro de origem aplica-se apenas às publicações
@@ -2014,7 +2038,7 @@ function assentarRecolha(itens, origem, ignorarPeriodo){
   });
   recolha.sort((x, y) => (y.data || "").localeCompare(x.data || ""));
   assinaturaRecolha = assinaturaConsulta();
-  mostrarEstadoRecolha(origem, retiradas);
+  mostrarEstadoRecolha(origem, retiradas, totalBruto);
 }
 
 async function recolherConsulta(){
@@ -2489,7 +2513,7 @@ ${serie.map((d, i) => linhaEvo(
 }
 
 
-function mostrarEstadoRecolha(origem, retiradas){
+function mostrarEstadoRecolha(origem, retiradas, totalBruto){
   retiradas = retiradas || { origem:0, data:0, redes:0, termo:0 };
   const estado = $("#expEstado");
   if(!estado) return;
@@ -2508,15 +2532,21 @@ function mostrarEstadoRecolha(origem, retiradas){
   if(retiradas.data) atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
   const barra = atalhos.length ? `<div class="atalhos">${atalhos.join("")}</div>` : "";
 
+  const brutoTxt = totalBruto != null 
+    ? `<span style="color:var(--azul);font-size:1.3rem;font-weight:600">${totalBruto}</span> <span style="color:var(--texto-ligeiro);font-size:.8rem">resultados do Google · </span>` 
+    : "";
+
   if(recolha.length){
     estado.innerHTML =
-      `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar` +
+      brutoTxt +
+      `<span class="exp-total">${recolha.length}</span> <span style="color:var(--texto-ligeiro);font-size:.8rem">notícias após filtros</span>` +
       `<span style="color:var(--texto-ligeiro);font-size:.8rem"> · ${origem}</span>` +
       (fora ? `<br><span style="font-size:.8rem;color:var(--texto-ligeiro)">Foram retiradas ${fora}: ${partes.join(", ")}.</span>${barra}` : "");
   }else{
-    estado.innerHTML = fora
-      ? `<span style="color:var(--vermelho)">As ${fora} notícias recolhidas foram todas retiradas pelos filtros.</span>
-         <br><span style="font-size:.84rem">${partes.join(", ")}.</span>${barra}`
+    estado.innerHTML = (totalBruto != null && totalBruto > 0)
+      ? `<span style="color:var(--azul);font-size:1.3rem;font-weight:600">${totalBruto}</span> <span style="color:var(--texto-ligeiro);font-size:.8rem">resultados do Google</span><br>` +
+        `<span style="color:var(--vermelho)">As ${fora || totalBruto} notícias foram todas retiradas pelos filtros.</span>
+         <br><span style="font-size:.84rem">${partes.join(", ") || "Verifique os filtros de origem, redes sociais e período."}</span>${barra}`
       : `<span style="color:var(--vermelho)">Não foram encontradas notícias.</span>
          <br><span style="font-size:.84rem">A consulta não devolveu resultados para este período.</span>${barra}`;
   }
@@ -2524,7 +2554,7 @@ function mostrarEstadoRecolha(origem, retiradas){
   const p2 = $("#passo2");
   if(p2) p2.hidden = recolha.length === 0;
   const p1 = $("#passo1");
-  if(p1) p1.classList.toggle("feito", recolha.length > 0);
+  if(p1) p1.classList.toggle("feito", recolha.length > 0 || (totalBruto != null && totalBruto > 0));
 }
 
 /* =========================================================================
@@ -2547,10 +2577,11 @@ document.addEventListener("click", e => {
   const fd = e.target.closest("[data-feed]");
   if(fd){
     const a = AREAS.find(x => x.id === fd.dataset.feed);
-    const q = (consultaAtiva && consultaAtiva.area.id === a.id && consultaAtiva.termos)
-      ? "(" + consultaAtiva.termos.map(t => `"${t}"`).join(" OR ") + ")" + sufixo()
-      : consulta(a);
-    window.open(`https://news.google.com/search?q=${encodeURIComponent(consultaGoogle(q))}&${parametros()}`,
+    /* Query para a web: a mesma da recolha RSS, sem duplicar exclusões */
+    const q = (consultaAtiva && consultaAtiva.area.id === a.id)
+      ? consultaAtiva.q  /* já tem exclusões de domínio; consultaGoogle() duplicaria */
+      : consultaGoogle(consulta(a));
+    window.open(`https://news.google.com/search?q=${encodeURIComponent(q)}&${parametros()}`,
       "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
     return;
   }
