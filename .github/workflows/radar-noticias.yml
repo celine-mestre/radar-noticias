@@ -32,7 +32,8 @@ jobs:
           NOME="radar_noticias_$(date +%Y%m%d).xlsx"
           echo "NOME=$NOME" >> "$GITHUB_ENV"
           python extrair_noticias.py --periodo 24h --saida "$NOME" \
-            --json noticias.json --historico historico.json --arquivo arquivo.json
+            --json noticias.json --historico historico.json \
+            --arquivo arquivo.json --por-palavra
 
       - name: Gravar os ficheiros de dados
         run: |
@@ -48,4 +49,3 @@ jobs:
           name: radar-noticias
           path: ${{ env.NOME }}
           retention-days: 30
-
