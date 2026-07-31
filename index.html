@@ -828,6 +828,14 @@ const CONFIG = {
     "bsky.app", "t.me", "telegram.me", "whatsapp.com", "pinterest.com", "tumblr.com",
     "flipboard.com", "medium.com", "substack.com", "blogspot.com", "wordpress.com"
   ],
+  exclusoesDominio: [
+    "site:.br", "site:.ao", "site:.mz", "site:.cv", "site:.st", "site:.gw",
+    "site:.tl", "site:.mo",
+    "site:globo.com", "site:r7.com", "site:metropoles.com", "site:abril.com",
+    "site:uol.com.br", "site:novojornal.co.ao", "site:jornaldeangola.ao",
+    "site:verangola.net", "site:opais.co.mz", "site:verdade.co.mz",
+    "site:expressodasilhas.cv", "site:asemana.publ.cv"
+  ],
   dominiosNacionais: [
     "noticiasaominuto.com", "theportugalnews.com", "portugalresident.com",
     "lusa.pt", "agencialusa.com", "cnnportugal.iol.pt", "iol.pt",
@@ -970,6 +978,10 @@ function consulta(a){
   return termos + excl + sufixo();
 }
 
+function exclusoesDominioQuery(){
+  return filtroFontes === "nacionais" ? " " + CONFIG.exclusoesDominio.map(d => `-${d}`).join(" ") : "";
+}
+
 /* Os filtros de origem e de redes sociais são aplicados às notícias recolhidas,
    porque o operador site: não exclui domínios de topo de forma fiável. Para a
    janela do Google, onde não há filtragem posterior possível, acrescentam-se as
@@ -978,8 +990,8 @@ function consulta(a){
 function exclusoesGoogle(){
   const fora = [];
   if(filtroRedes === "sem") fora.push(...CONFIG.redesSociais.slice(0, 12));
-  if(filtroFontes === "nacionais") fora.push(...CONFIG.publicacoesEstrangeiras);
-  return fora.length ? " " + fora.map(d => `-site:${d}`).join(" ") : "";
+  if(filtroFontes === "nacionais") fora.push(...CONFIG.exclusoesDominio);
+  return fora.length ? " " + fora.map(d => `-${d}`).join(" ") : "";
 }
 
 /* Consulta para abrir no Google Notícias: a mesma, com as exclusões possíveis */
@@ -1003,7 +1015,7 @@ function urlRSS(q){
 
 /* O mesmo critério em formato RSS, para quem quiser subscrever a consulta num leitor */
 function urlFonteRSS(a){
-  return urlRSS(consulta(a));
+  return urlRSS(consulta(a) + exclusoesDominioQuery());
 }
 
 function normalizar(t){
@@ -1045,12 +1057,9 @@ function areasVisiveis(){
 
 function cartao(a){
   return `<article class="cartao" style="--cor:${cor(a.grupo)}" data-detalhe="${a.id}">
-    <button class="atalho" data-feed="${a.id}" title="Abrir a fonte numa nova janela" aria-label="Abrir a fonte">
-      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
-    </button>
     <div class="simbolo"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
     <h3>${a.nome}</h3>
-    <div class="sub"><span class="ponto"></span>${a.palavras.length} palavras-chave · Google Notícias</div>
+    <div class="sub"><span class="ponto"></span>${a.palavras.length} palavras-chave</div>
   </article>`;
 }
 
@@ -1745,7 +1754,8 @@ function assinaturaConsulta(){
 }
 
 function definirConsulta(area, q, rotulo, termos){
-  consultaAtiva = { area, q, rotulo, termos: termos && termos.length ? termos : null };
+  const dom = filtroFontes === "nacionais" ? " " + CONFIG.exclusoesDominio.map(d => `-${d}`).join(" ") : "";
+  consultaAtiva = { area, q: q + dom, rotulo, termos: termos && termos.length ? termos : null };
   recolha = [];
   assinaturaRecolha = "";
 }
@@ -2537,7 +2547,9 @@ document.addEventListener("click", e => {
   const fd = e.target.closest("[data-feed]");
   if(fd){
     const a = AREAS.find(x => x.id === fd.dataset.feed);
-    const q = (consultaAtiva && consultaAtiva.area.id === a.id) ? consultaAtiva.q : consulta(a);
+    const q = (consultaAtiva && consultaAtiva.area.id === a.id && consultaAtiva.termos)
+      ? "(" + consultaAtiva.termos.map(t => `"${t}"`).join(" OR ") + ")" + sufixo()
+      : consulta(a);
     window.open(`https://news.google.com/search?q=${encodeURIComponent(consultaGoogle(q))}&${parametros()}`,
       "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
     return;
