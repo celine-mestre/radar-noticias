@@ -76,6 +76,9 @@ Nada disto passa por serviços intermediários nem depende da rede de quem consu
 | `index.html` | O painel. Ficheiro autónomo, sem dependências além do tipo de letra. |
 | `extrair_noticias.py` | A recolha. Lê os feeds, marca por área e produz o Excel e os três ficheiros de dados. |
 | `.github/workflows/radar-noticias.yml` | Tarefa agendada que corre a recolha nos servidores do GitHub. |
+| `sintese_ia.py` | Escreve, com o Amália, uma síntese diária por área. Opcional. |
+| `.github/workflows/sintese-amalia.yml` | Corre o Amália e grava as sínteses. |
+| `sinteses.json` | As sínteses redigidas, quando existem. |
 | `relatorio_email.py` | Gera os relatórios diários em HTML a partir do arquivo. |
 | `gerir_subscritores.py` | Acrescenta e retira endereços, e prepara a confirmação. |
 | `.github/workflows/subscricao.yml` | Trata um pedido de subscrição de ponta a ponta. |
@@ -201,8 +204,14 @@ agrupadas por dia, com hora, título, resumo, publicação e ligação — e ter
 botão para abrir o painel, onde se pode refazer a pesquisa, alargar o período ou
 exportar para Excel.
 
-A recolha corre às 08h40 UTC, vinte minutos antes, para o relatório apanhar também
-as notícias da própria manhã.
+O dia corre assim, em hora UTC — mais uma hora em Lisboa no horário de verão:
+
+| Hora | O quê |
+|---|---|
+| 06h00 | Recolha, para o painel estar pronto de manhã cedo |
+| 08h00 | Recolha da manhã |
+| 08h10 | Síntese do Amália, sobre essa recolha |
+| 09h00 | Envio dos relatórios |
 
 ### Subscrever e cancelar
 
@@ -261,6 +270,50 @@ python relatorio_email.py --dados arquivo.json --area "Saúde" --periodo 24h
 python relatorio_email.py --dados arquivo.json --todas --um-por-area \
     --painel "https://celine-mestre.github.io/radar-noticias/"
 ```
+
+---
+
+## Síntese redigida pelo Amália
+
+Por cada área governativa, um parágrafo com o que foi notícia nas últimas 24 horas,
+no topo de cada relatório por email. Não aparece no painel: aí a leitura é feita sobre
+os dados, com filtros que a síntese não acompanharia.
+
+O **Amália** é o modelo de linguagem do Estado, desenvolvido por um consórcio de
+universidades portuguesas com coordenação da ARTE. Tem pesos abertos sob licença
+Apache 2.0, pelo que corre **no próprio fluxo de trabalho**, sem serviço, credencial
+ou contrato. Usa-se a conversão quantizada de 4 bits, com cerca de 5,5 GB, que dispensa
+placa gráfica.
+
+O fluxo `sintese-amalia.yml` corre às 08h10 UTC, entre a recolha da manhã e o envio do
+relatório, para que a síntese e a lista digam respeito ao mesmo momento. É
+deliberadamente separado da recolha: se falhar ou demorar, as notícias do dia já estão
+publicadas e o painel funciona na mesma. O modelo fica em cache entre execuções, e cada
+síntese traz a hora a que foi escrita.
+
+### Salvaguardas
+
+O modelo recebe apenas os títulos já recolhidos. Não acede à internet, não é fonte de
+factos, e a síntese é sempre apresentada junto das notícias que a originaram — a
+verificação continua do lado de quem lê. As instruções estão à vista no `sintese_ia.py`,
+na constante `INSTRUCAO`, e proíbem juízos, recomendações e qualquer facto que não
+esteja nos títulos.
+
+Áreas com menos de três notícias no período não geram síntese, e respostas com menos de
+sessenta caracteres são descartadas.
+
+### Alternativa: serviço já instalado
+
+Havendo um ponto de acesso ao Amália na infraestrutura do Estado, usa-se em vez do modo
+local, com os segredos `AMALIA_ENDERECO` e `AMALIA_CHAVE`. É mais rápido; o resultado é
+o mesmo.
+
+```bash
+python sintese_ia.py --local --dados arquivo.json --periodo 24h
+```
+
+Sem modo local nem ponto de acesso, o programa não faz nada e a aplicação funciona como
+antes, apenas sem o parágrafo.
 
 ---
 

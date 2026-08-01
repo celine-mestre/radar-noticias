@@ -1456,8 +1456,8 @@ function imprimirResultados(){
       .map(n => `
     <tr>
       <td class="d">${(n.data || "").slice(11, 16) || "—"}</td>
-      <td>${n.titulo}${n.resumo ? `<br><span class="r">${n.resumo}</span>` : ""}</td>
-      <td class="f">${n.fonte || ""}</td>
+      <td>${esc(n.titulo)}${n.resumo ? `<br><span class="r">${esc(n.resumo)}</span>` : ""}</td>
+      <td class="f">${esc(n.fonte) || ""}</td>
     </tr>`).join("")}`).join("");
 
   /* Na vista de síntese imprime-se a leitura agregada; na de notícias, a lista */
@@ -1686,7 +1686,7 @@ function anel(pares, tamanho = 168){
     acumulado += parte;
     return `<circle cx="84" cy="84" r="${r}" fill="none" stroke="${PALETA[i % PALETA.length]}"
       stroke-width="22" stroke-dasharray="${traco}" stroke-dashoffset="${desvio.toFixed(2)}"
-      transform="rotate(-90 84 84)"><title>${f[0]}: ${f[1]}</title></circle>`;
+      transform="rotate(-90 84 84)"><title>${esc(f[0])}: ${f[1]}</title></circle>`;
   }).join("");
 
   return `<div class="sin-anel">
@@ -1697,7 +1697,7 @@ function anel(pares, tamanho = 168){
     </svg>
     <div class="sin-legenda">${fatias.map((f, i) => `
       <div><span style="background:${PALETA[i % PALETA.length]}"></span>
-      <em>${f[0]}</em><b>${f[1]}</b><i>${Math.round(f[1] / total * 100)}%</i></div>`).join("")}
+      <em>${esc(f[0])}</em><b>${f[1]}</b><i>${Math.round(f[1] / total * 100)}%</i></div>`).join("")}
     </div>
   </div>`;
 }
@@ -1787,15 +1787,15 @@ function corpoLista(){
   /* A imagem, quando o feed a declara. Falhando o carregamento — endereço morto,
      acesso restrito — a moldura desaparece em vez de deixar um vazio. */
   const artigo = n => `
-    <a class="ler-item" href="${n.ligacao}" target="_blank" rel="noopener">
+    <a class="ler-item" href="${esc(enderecoSeguro(n.ligacao)) || "#"}" target="_blank" rel="noopener noreferrer">
       <span class="ler-hora">${hora(n) || "—"}</span>
-      ${n.imagem ? `<span class="ler-img"><img src="${n.imagem}" alt="" loading="lazy"
-         onerror="this.parentNode.remove()"></span>` : ""}
+      ${enderecoSeguro(n.imagem) ? `<span class="ler-img"><img src="${esc(enderecoSeguro(n.imagem))}" alt="" loading="lazy"
+         referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>` : ""}
       <span class="ler-txt">
-        <strong>${n.titulo}</strong>
-        ${n.resumo ? `<span class="ler-resumo">${n.resumo}</span>` : ""}
+        <strong>${esc(n.titulo)}</strong>
+        ${n.resumo ? `<span class="ler-resumo">${esc(n.resumo)}</span>` : ""}
         <span class="ler-fonte">
-          <em>${n.fonte || "fonte não indicada"}</em>
+          <em>${esc(n.fonte) || "fonte não indicada"}</em>
           <span class="etiqueta-origem" style="--cor:${ETIQUETA_ORIGEM[origemDaFonte(n)].cor}">${ETIQUETA_ORIGEM[origemDaFonte(n)].rotulo}</span>
         </span>
       </span>
@@ -1855,9 +1855,9 @@ function corpoSintese(){
         <h4>Assuntos recorrentes nos títulos</h4>
         ${assuntos.length
           ? `<div class="sin-nuvem">${assuntos.map((x, i) => `
-              <span class="sin-termo" title="${x.exemplo}"
+              <span class="sin-termo" title="${esc(x.exemplo)}"
                     style="--cor:${PALETA[i % 4]};font-size:${(0.78 + 0.5 * x.n / maxAssunto).toFixed(2)}rem">
-                ${x.termo}<b>${x.n}</b></span>`).join("")}</div>`
+                ${esc(x.termo)}<b>${x.n}</b></span>`).join("")}</div>`
           : `<p style="font-size:.86rem;color:var(--texto-suave)">Sem expressões repetidas — a cobertura está dispersa por assuntos distintos.</p>`}
         <p class="sin-nota">Tamanho proporcional ao número de notícias em que a expressão ocorre. É contagem sobre títulos, não interpretação de conteúdo. Passe o cursor para ver um título de exemplo.</p>
       </div>
@@ -1866,7 +1866,7 @@ function corpoSintese(){
         <h4>Cobertura das palavras-chave da área</h4>
         <div class="sin-cobertura">${cobre.map(c => `
           <div class="sin-linha">
-            <span class="sin-rot" title="${c.palavra}">${c.palavra}</span>
+            <span class="sin-rot" title="${esc(c.palavra)}">${esc(c.palavra)}</span>
             <span class="sin-barra"><i style="width:${Math.max(2, Math.round(c.n / recolha.length * 100))}%;background:${corA}"></i></span>
             <span class="sin-n">${c.n}</span>
           </div>`).join("")}</div>
@@ -2159,6 +2159,8 @@ function enderecosDados(){
 
 let historico = null;   // série diária publicada pela recolha agendada
 
+
+
 async function carregarHistorico(){
   if(historico !== null) return historico;
   for(const base of enderecosDados()){
@@ -2243,7 +2245,7 @@ function paraConsulta(lista){
        procura-se o termo no título. */
     itens = itens.filter(n =>
       (n.palavras && n.palavras.some(p => alvos.includes(simplificar(p))))
-      || consultaAtiva.termos.some(t => contemExpressao(n._b, t)));
+      || consultaAtiva.termos.some(t => contemExpressao(n._b, t, n.titulo)));
   }
   /* A coluna de palavras-chave diz o que trouxe cada notícia: numa pesquisa por
      termo, apenas os termos pedidos; caso contrário, as palavras da área que o
@@ -2257,10 +2259,10 @@ function paraConsulta(lista){
        caso apuram-se aqui, para a coluna nunca sair vazia. */
     let marcas = (n.palavras && n.palavras.length)
       ? n.palavras
-      : daArea.filter(t => contemExpressao(texto, t));
+      : daArea.filter(t => contemExpressao(texto, t, n.titulo));
     if(pedidos) marcas = pedidos.filter(t =>
-      marcas.some(p => simplificar(p) === simplificar(t)) || contemExpressao(texto, t));
-    if(!marcas.length) marcas = pedidos || daArea.filter(t => contemExpressao(texto, t));
+      marcas.some(p => simplificar(p) === simplificar(t)) || contemExpressao(texto, t, n.titulo));
+    if(!marcas.length) marcas = pedidos || daArea.filter(t => contemExpressao(texto, t, n.titulo));
     return Object.assign({}, n, { consulta: marcas.join("; ") });
   });
 }
@@ -2353,7 +2355,7 @@ function confirmaTermos(itens){
   const bons = itens.filter(it => {
     if(it.palavras && it.palavras.length && !consultaAtiva.termos) return true;
     const texto = it._b || simplificar((it.titulo || "") + " " + (it.resumo || ""));
-    return alvos.some(t => contemExpressao(texto, t));
+    return alvos.some(t => contemExpressao(texto, t, it.titulo));
   });
   /* Só se conta como "retirada" quando o utilizador pediu um termo. Sem termo
      pedido, o que sai é ruído do serviço externo e é descartado em silêncio —
@@ -2445,32 +2447,66 @@ function limparTexto(t){
   }
 }
 
-/* Correspondência tolerante a plurais e a variações de forma.
-   "medicamentos" tem de encontrar "medicamento"; "urgências hospitalares" tem de
-   encontrar "urgência hospitalar". Sem isto, uma pesquisa por um termo no plural
-   não devolve as notícias que o usam no singular — e são a maioria dos títulos. */
-function raiz(palavra){
-  /* O texto chega já sem acentos, pelo que se trabalha sobre as formas simples.
-     Corta-se a terminação e deixa-se o sufixo variar no padrão de procura. */
-  return palavra
-    .replace(/(coes|cao)$/, "ca")     // alterações / alteração → altera(ção|ções)
-    .replace(/(oes|ao)$/, "")
-    .replace(/(ais|al)$/, "a")
-    .replace(/(eis|el)$/, "e")
-    .replace(/(res)$/, "r")
-    .replace(/(ses)$/, "s")
-    .replace(/(es)$/, "")
-    .replace(/s$/, "");
+/* Correspondência tolerante a plurais, alinhada com a da recolha.
+   Em vez de cortar a palavra e aceitar qualquer terminação — que fazia "IRS"
+   casar com "irmão" —, geram-se explicitamente o singular e o plural, e só se
+   admite variação de sufixo em palavras longas. As siglas exigem maiúscula. */
+function ehSigla(p){ return p === p.toUpperCase() && p.length <= 8 && /[A-Z]/.test(p); }
+
+function escaparRegex(t){ return t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
+function formasDaPalavra(palavra, original){
+  if(ehSigla(original)) return [escaparRegex(palavra)];
+
+  const formas = new Set([palavra]);
+  if(palavra.endsWith("oes")) formas.add(palavra.slice(0, -3) + "ao");
+  else if(palavra.endsWith("ao")) formas.add(palavra.slice(0, -2) + "oes");
+  else if(palavra.endsWith("ais")) formas.add(palavra.slice(0, -3) + "al");
+  else if(palavra.endsWith("al")) formas.add(palavra.slice(0, -2) + "ais");
+  else if(palavra.endsWith("eis")) formas.add(palavra.slice(0, -3) + "el");
+  else if(palavra.endsWith("el")) formas.add(palavra.slice(0, -2) + "eis");
+  else if(palavra.endsWith("res")) formas.add(palavra.slice(0, -2));
+  else if(palavra.endsWith("r")) formas.add(palavra + "es");
+  else if(palavra.endsWith("s")) formas.add(palavra.slice(0, -1));
+  else formas.add(palavra + "s");
+
+  const sufixo = palavra.length >= 6 ? "\\w{0,3}" : "";
+  return [...formas].sort().map(f => escaparRegex(f) + sufixo);
 }
 
-/* Verifica se o texto contém a expressão, aceitando singular e plural em
-   qualquer das palavras que a compõem. */
-function contemExpressao(texto, expressao){
+/* Verifica se o texto contém a expressão, aceitando singular e plural.
+   `bruto` é o texto por normalizar, usado para confirmar as siglas. */
+function contemExpressao(texto, expressao, bruto){
+  const originais = expressao.split(/\s+/).filter(Boolean);
   const palavras = simplificar(expressao).split(/\s+/).filter(Boolean);
   if(!palavras.length) return false;
-  const padrao = palavras.map(p => raiz(p).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\w{0,4}").join("\\s+");
-  try{ return new RegExp("(^|\\W)" + padrao + "(\\W|$)").test(texto); }
+
+  if(bruto){
+    for(const sigla of originais.filter(ehSigla)){
+      if(!new RegExp("(^|\\W)" + escaparRegex(sigla) + "(\\W|$)").test(bruto)) return false;
+    }
+  }
+
+  const partes = palavras.map((p, i) =>
+    "(?:" + formasDaPalavra(p, originais[i] || p).join("|") + ")");
+  try{ return new RegExp("(^|\\W)" + partes.join("\\s+") + "(\\W|$)").test(texto); }
   catch(e){ return texto.includes(simplificar(expressao)); }
+}
+
+/* Texto vindo dos feeds vai para o ecrã: escapa-se sempre. Uma publicação pode
+   incluir etiquetas HTML no título, por descuido ou não, e sem isto seriam
+   interpretadas pelo navegador. */
+function esc(t){
+  return String(t == null ? "" : t)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+/* Endereços vindos dos feeds só são aceites se apontarem para a web. Um feed
+   que devolvesse "javascript:..." executaria código ao primeiro clique. */
+function enderecoSeguro(u){
+  const limpo = String(u || "").trim();
+  return /^https?:\/\//i.test(limpo) ? limpo : "";
 }
 
 function simplificar(t){

@@ -520,26 +520,76 @@ def _sem_acentos(t):
     return unicodedata.normalize("NFD", t.lower()).encode("ascii", "ignore").decode()
 
 
-def _raiz(palavra):
-    """Reduz a palavra à raiz, para o plural e o singular casarem entre si."""
-    for fim, troca in (("coes", "ca"), ("cao", "ca"), ("oes", ""), ("ao", ""),
-                       ("ais", "a"), ("al", "a"), ("eis", "e"), ("el", "e"),
-                       ("res", "r"), ("ses", "s"), ("es", "")):
-        if palavra.endswith(fim):
-            return palavra[: -len(fim)] + troca
-    return palavra[:-1] if palavra.endswith("s") else palavra
+def _formas(palavra, original):
+    """Formas de superfície que a palavra pode assumir num título.
+
+    Em vez de cortar a palavra e aceitar qualquer terminação — que fazia "IRS"
+    casar com "irmão" e "pensões" com "pensou" — geram-se explicitamente o
+    singular e o plural, e só se admite variação de sufixo em palavras longas.
+    """
+    # Siglas escrevem-se como estão: IRS, CPLP, AIMA, NATO, SIADAP
+    if _e_sigla(original):
+        return [re.escape(palavra)]
+
+    formas = {palavra}
+    if palavra.endswith("oes"):
+        formas.add(palavra[:-3] + "ao")
+    elif palavra.endswith("ao"):
+        formas.add(palavra[:-2] + "oes")
+    elif palavra.endswith("ais"):
+        formas.add(palavra[:-3] + "al")
+    elif palavra.endswith("al"):
+        formas.add(palavra[:-2] + "ais")
+    elif palavra.endswith("eis"):
+        formas.add(palavra[:-3] + "el")
+    elif palavra.endswith("el"):
+        formas.add(palavra[:-2] + "eis")
+    elif palavra.endswith("res"):
+        formas.add(palavra[:-2])
+    elif palavra.endswith("r"):
+        formas.add(palavra + "es")
+    elif palavra.endswith("s"):
+        formas.add(palavra[:-1])
+    else:
+        formas.add(palavra + "s")
+
+    # Palavras longas admitem variação de género e derivação curta:
+    # escola → escolar, escolares; ferrovia → ferroviário
+    sufixo = r"\w{0,3}" if len(palavra) >= 6 else ""
+    return [re.escape(f) + sufixo for f in sorted(formas)]
 
 
-def contem_expressao(texto, expressao):
+def _e_sigla(palavra):
+    return palavra.isupper() and len(palavra) <= 8
+
+
+def contem_expressao(texto, expressao, texto_original=None):
     """Procura a expressão no texto, aceitando singular e plural.
 
     Sem isto, "medicamentos" não encontraria "medicamento" — e a maioria dos
     títulos usa o singular.
+
+    Nas siglas exige-se maiúscula no texto original quando este é fornecido:
+    "NATO" não deve casar com "líder nato", nem "IRS" com "irs".
     """
+    palavras_orig = expressao.split()
+
+    if texto_original:
+        for sigla in (p for p in palavras_orig if _e_sigla(p)):
+            if not re.search(r"(^|\W)" + re.escape(sigla) + r"(\W|$)", texto_original):
+                return False
+
     palavras = [p for p in _sem_acentos(expressao).split() if p]
     if not palavras:
         return False
-    padrao = r"\s+".join(re.escape(_raiz(p)) + r"\w{0,4}" for p in palavras)
+
+    partes = []
+    for i, p in enumerate(palavras):
+        original = palavras_orig[i] if i < len(palavras_orig) else p
+        alternativas = _formas(p, original)
+        partes.append("(?:" + "|".join(alternativas) + ")")
+
+    padrao = r"\s+".join(partes)
     return re.search(r"(^|\W)" + padrao + r"(\W|$)", texto) is not None
 
 
@@ -550,12 +600,13 @@ def marcar_por_areas(it, alvo):
     procura da expressão no título e no resumo. Um artigo pode pertencer a mais
     do que uma área.
     """
-    texto = _sem_acentos(it["titulo"] + " " + (it["resumo"] or ""))
+    bruto = it["titulo"] + " " + (it["resumo"] or "")
+    texto = _sem_acentos(bruto)
     achados = []
     for ident, nome, grupo, palavras, excluir in alvo:
-        if any(contem_expressao(texto, e) for e in excluir):
+        if any(contem_expressao(texto, e, bruto) for e in excluir):
             continue
-        casadas = [p for p in palavras if contem_expressao(texto, p)]
+        casadas = [p for p in palavras if contem_expressao(texto, p, bruto)]
         if casadas:
             achados.append((nome, GRUPOS[grupo], casadas))
     return achados
@@ -635,8 +686,8 @@ def recolher_palavras(periodo, alvo, pausa=1.0, teto=60):
             novas = 0
             for it in itens:
                 # o serviço faz correspondência aproximada: confirma-se o termo
-                texto = _sem_acentos(it["titulo"] + " " + (it["resumo"] or ""))
-                if not contem_expressao(texto, palavra):
+                bruto = it["titulo"] + " " + (it["resumo"] or "")
+                if not contem_expressao(_sem_acentos(bruto), palavra, bruto):
                     continue
                 chave = (nome, it["titulo"].lower(), (it["fonte"] or "").lower())
                 if chave in encontradas:

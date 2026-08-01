@@ -108,6 +108,12 @@ def filtrar(noticias, area, periodo, origens):
     return saida
 
 
+def endereco_seguro(u):
+    """Só endereços web: um feed com "javascript:..." não deve chegar ao leitor."""
+    limpo = str(u or "").strip()
+    return limpo if re.match(r"^https?://", limpo, re.I) else ""
+
+
 def esc(t):
     return (str(t or "").replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;").replace('"', "&quot;"))
@@ -121,7 +127,34 @@ def contar(noticias, chave):
     return sorted(contagem.items(), key=lambda x: -x[1])
 
 
-def bloco_area(nome, noticias, cor):
+def bloco_sintese(texto, escrita_em=""):
+    """Síntese redigida pelo Amália, quando existe para esta área.
+
+    A síntese é escrita mais cedo do que o relatório é enviado, pelo que se
+    declara a hora: quem lê fica a saber que as notícias mais recentes da lista
+    podem não estar refletidas no parágrafo.
+    """
+    if not texto:
+        return ""
+    hora = f" · escrita às {escrita_em[11:16]}" if len(escrita_em) >= 16 else ""
+    return f"""
+    <tr><td style="padding:14px 24px 6px">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+             style="border-left:3px solid {DOURADO};background:#fdfbf6">
+        <tr><td style="padding:12px 16px">
+          <div style="font:600 10px Arial,sans-serif;color:{DOURADO};letter-spacing:1.2px;
+                      text-transform:uppercase;padding-bottom:6px">Síntese redigida · Amália{hora}</div>
+          <div style="font:400 14px Arial,sans-serif;color:{CINZA_TEXTO};line-height:1.6">{esc(texto)}</div>
+          <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:8px;line-height:1.5">
+            Texto gerado automaticamente a partir dos títulos abaixo, sem acesso a outras
+            fontes. Serve de primeira leitura e não dispensa a consulta das notícias.
+          </div>
+        </td></tr>
+      </table>
+    </td></tr>"""
+
+
+def bloco_area(nome, noticias, cor, sintese="", escrita_em=""):
     """Uma secção por área governativa, com as notícias agrupadas por dia."""
     if not noticias:
         return f"""
@@ -156,7 +189,7 @@ def bloco_area(nome, noticias, cor):
           {len(noticias)} {'notícia' if len(noticias) == 1 else 'notícias'} ·
           {len(contar(noticias, 'fonte'))} {'publicação' if len(contar(noticias, 'fonte')) == 1 else 'publicações'}</div>
       </div>
-    </td></tr>"""]
+    </td></tr>""", bloco_sintese(sintese, escrita_em)]
 
     for dia in sorted(por_dia, reverse=True):
         partes.append(f"""
@@ -174,15 +207,15 @@ def bloco_area(nome, noticias, cor):
             rotulo_origem, cor_origem = ETIQUETA_ORIGEM[origem_da_fonte(n)]
             miniatura = (f"""
         <td width="76" valign="top" style="padding-right:12px">
-          <img src="{esc(n.get('imagem'))}" width="72" height="54" alt=""
+          <img src="{esc(endereco_seguro(n.get('imagem')))}" width="72" height="54" alt="" referrerpolicy="no-referrer"
                style="display:block;width:72px;height:54px;object-fit:cover;border-radius:4px">
-        </td>""" if n.get("imagem") else "")
+        </td>""" if endereco_seguro(n.get("imagem")) else "")
             partes.append(f"""
     <tr><td style="padding:9px 24px;border-bottom:1px solid #f1f4f7">
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr>
         <td width="44" valign="top" style="font:400 12px Arial,sans-serif;color:{CINZA_SUAVE};padding-top:2px">{hora}</td>{miniatura}
         <td valign="top">
-          <a href="{esc(n.get('ligacao'))}" style="font:400 14px Arial,sans-serif;color:{CINZA_TEXTO};
+          <a href="{esc(endereco_seguro(n.get('ligacao')) or '#')}" style="font:400 14px Arial,sans-serif;color:{CINZA_TEXTO};
              text-decoration:none;line-height:1.4">{esc(n.get('titulo'))}</a>
           {f'<div style="font:400 12px Arial,sans-serif;color:{CINZA_SUAVE};padding-top:3px;line-height:1.45">{esc(resumo)}</div>' if resumo else ''}
           <div style="padding-top:5px">
@@ -216,7 +249,19 @@ def ligacao_painel(endereco, areas):
   </td></tr>"""
 
 
-def construir(dados, areas, periodo, origens, endereco_painel=""):
+def carregar_sinteses(caminho="sinteses.json"):
+    """Sínteses do Amália, se o ficheiro existir. Devolve (áreas, hora)."""
+    if not os.path.exists(caminho):
+        return {}, ""
+    try:
+        with open(caminho, encoding="utf-8") as origem:
+            d = json.load(origem)
+        return d.get("areas", {}), d.get("gerado", "")
+    except (json.JSONDecodeError, OSError):
+        return {}, ""
+
+
+def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None, escrita_em=""):
     agora = datetime.now()
     data_extenso = f"{agora.day} de {MESES[agora.month - 1]} de {agora.year}"
 
@@ -225,7 +270,8 @@ def construir(dados, areas, periodo, origens, endereco_painel=""):
         noticias = filtrar(dados, nome, periodo, origens)
         total += len(noticias)
         grupo = next((n.get("grupo") for n in dados if n.get("area") == nome), "")
-        seccoes.append(bloco_area(nome, noticias, COR_GRUPO.get(grupo, AZUL)))
+        texto = (sinteses or {}).get(nome, {}).get("texto", "")
+        seccoes.append(bloco_area(nome, noticias, COR_GRUPO.get(grupo, AZUL), texto, escrita_em))
 
     criterios = f"{ROTULO_PERIODO.get(periodo, periodo)} · " + (
         ROTULO_ORIGENS.get(frozenset(origens), "imprensa selecionada")
@@ -275,6 +321,7 @@ def construir(dados, areas, periodo, origens, endereco_painel=""):
 
 
 def um_por_area(dados, areas, args, origens):
+    sinteses, escrita_em = carregar_sinteses(args.sinteses)
     """Escreve um relatório por área e um manifesto com os destinatários.
 
     O manifesto é lido pelo fluxo de trabalho, que envia uma mensagem por área.
@@ -304,7 +351,8 @@ def um_por_area(dados, areas, args, origens):
             args.pasta,
             re.sub(r"[^a-z0-9]+", "_", sem_acentos(nome)).strip("_") + ".html")
         with open(ficheiro, "w", encoding="utf-8") as destino:
-            destino.write(construir(dados, [nome], args.periodo, origens, args.painel))
+            destino.write(construir(dados, [nome], args.periodo, origens, args.painel,
+                                    sinteses, escrita_em))
 
         manifesto.append({
             "area": nome,
@@ -336,6 +384,8 @@ def principal():
     ap.add_argument("--saida", default="relatorio.html")
     ap.add_argument("--assunto-para", default=None,
                     help="ficheiro onde escrever o assunto da mensagem")
+    ap.add_argument("--sinteses", default="sinteses.json",
+                    help="ficheiro com as sínteses redigidas pelo Amália")
     ap.add_argument("--painel", default="",
                     help="endereço do painel, para a ligação no fim da mensagem")
     ap.add_argument("--um-por-area", action="store_true",
@@ -368,7 +418,8 @@ def principal():
         um_por_area(dados, areas, args, origens)
         return
 
-    html = construir(dados, areas, args.periodo, origens, args.painel)
+    sinteses, escrita_em = carregar_sinteses(args.sinteses)
+    html = construir(dados, areas, args.periodo, origens, args.painel, sinteses, escrita_em)
 
     with open(args.saida, "w", encoding="utf-8") as destino:
         destino.write(html)
