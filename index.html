@@ -805,9 +805,6 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
         <option value="48h">Últimas 48 horas</option>
         <option value="72h">Últimas 72 horas</option>
         <option value="7d">Últimos 7 dias</option>
-        <option value="30d">Últimos 30 dias</option>
-        <option value="365d">Último ano</option>
-        <option value="">Sem limite de tempo</option>
       </select>
     </label>
     <div class="segmentado" id="filtroFontes" role="group" aria-label="Origem das fontes">
@@ -1042,7 +1039,7 @@ const ROTULO_FONTES = {
 
 const ROTULO_PERIODO = {
   "24h":"últimas 24 horas", "48h":"últimas 48 horas", "72h":"últimas 72 horas",
-  "7d":"últimos 7 dias", "30d":"últimos 30 dias", "365d":"último ano", "":"sem limite de tempo"
+  "7d":"últimos 7 dias"
 };
 let termoPesquisa = "";
 
@@ -1310,7 +1307,7 @@ function abrirExportacao(id){
 
     <div class="modal-corpo" id="corpoRes">
       <p class="aviso-alcance" id="avisoAlcance" hidden>
-        O serviço de pesquisa complementar não respondeu. Estes resultados vêm do arquivo da recolha agendada, que cobre os últimos 30 dias das publicações subscritas. Para procurar fora desse âmbito, use “Abrir no Google Notícias”.
+        O serviço de pesquisa complementar não respondeu. Estes resultados vêm do arquivo da recolha agendada, que cobre os últimos sete dias das publicações subscritas. Para procurar fora desse âmbito, use a pesquisa aberta.
       </p>
       <div id="expEstado" class="res-estado"></div>
       <div id="conteudoRes"></div>
@@ -1474,7 +1471,7 @@ const MANUAL = [
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
-      <dt>Período</dt><dd>Predefinição: 24 horas. O arquivo cobre 30 dias; o período escolhido determina que fatia dele é apresentada.</dd>
+      <dt>Período</dt><dd>Predefinição: 24 horas, até ao máximo de sete dias, que é o que o arquivo guarda. Para procurar mais atrás, use a pesquisa aberta.</dd>
       <dt>Origem das fontes</dt><dd>Quatro posições. <strong>Nacionais</strong>, por predefinição, mostra a imprensa portuguesa. <strong>Lusófonas</strong> mostra Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacionais</strong> mostra a restante imprensa estrangeira. <strong>Todas</strong> não filtra.</dd>
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida, e não por operadores de pesquisa — o que a torna exata e verificável.</dd>
     </dl>` },
@@ -1491,11 +1488,11 @@ const MANUAL = [
     <p>Clicar em <strong>Visualizar no painel</strong> recolhe e apresenta logo as notícias, por ordem cronológica e com resumo. Em cima, o separador alterna entre <strong>Notícias</strong> e <strong>Síntese</strong>, e há três ações: recolher de novo, <strong>Imprimir</strong> e <strong>Excel</strong>.</p>
     <p>A recolha procura por esta ordem:</p>
     <dl>
-      <dt>Arquivo de 30 dias</dt><dd>O corpus próprio, construído todas as manhãs a partir dos feeds das publicações. É onde quase todas as consultas são respondidas, em milissegundos e sem depender da rede.</dd>
+      <dt>Arquivo de sete dias</dt><dd>O corpus próprio, construído todas as manhãs a partir dos feeds das publicações. É onde quase todas as consultas são respondidas, em milissegundos e sem depender da rede.</dd>
       <dt>Retrato do dia</dt><dd>O que a última recolha trouxe, usado quando o arquivo não está disponível.</dd>
       <dt>Pesquisa complementar</dt><dd>Só para o que o corpus não cobre: publicações não subscritas ou períodos anteriores ao arquivo. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem e avisa.</dd>
     </dl>
-    <p class="man-aviso">A etiqueta ao lado da contagem diz <em>onde</em> as notícias foram procuradas — “arquivo de 30 dias”, “recolha agendada” ou o nome do serviço. O período indicado antes é o filtro que lhes foi <em>aplicado</em>. São coisas distintas: o arquivo cobre 30 dias, e dele extraem-se as das últimas 24 horas quando é essa a janela escolhida.</p>
+    <p class="man-aviso">A etiqueta ao lado da contagem diz <em>onde</em> as notícias foram procuradas — “arquivo de 7 dias”, “recolha agendada” ou o nome do serviço. O período indicado antes é o filtro que lhes foi <em>aplicado</em>. São coisas distintas: o arquivo cobre sete dias, e dele extraem-se as das últimas 24 horas quando é essa a janela escolhida.</p>
     <p><strong>Imprimir</strong> gera uma folha com cabeçalho institucional, os critérios da consulta e a lista em tabela — pronta para anexar a uma nota.</p>
     <p><strong>Ler notícias</strong> apresenta a lista por ordem cronológica, da mais recente para a mais antiga — a ordenação que o serviço não dá.</p>
     <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, as exclusões, a consulta enviada e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
@@ -1519,7 +1516,7 @@ const MANUAL = [
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>
     <dl>
-      <dt>Cobertura do corpus</dt><dd>Quarenta e oito publicações — 25 portuguesas, 11 lusófonas e 12 internacionais. O arquivo cresce mês a mês desde a primeira recolha: os últimos 30 dias num ficheiro corrente, e os meses anteriores em ficheiros próprios, carregados apenas quando o período pedido os alcança.</dd>
+      <dt>Cobertura do corpus</dt><dd>Quarenta e oito publicações — 25 portuguesas, 11 lusófonas e 12 internacionais — e sete dias de arquivo. Uma notícia de um título não subscrito, ou anterior a esse período, não está no corpus. Alargar a janela do arquivo é mudar um número na recolha, quando houver espaço para isso.</dd>
       <dt>Imprensa apenas</dt><dd>As plataformas sociais não publicam feeds e estão fora do âmbito da aplicação. Páginas dessas plataformas que apareçam por via da pesquisa aberta são descartadas.</dd>
       <dt>Marcação literal</dt><dd>Um artigo entra numa área por conter a expressão no título ou no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.</dd>
       <dt>Contagens</dt><dd>Medem o que as publicações subscritas noticiaram, não o total do que foi noticiado. Como nenhuma área é truncada e o método é o mesmo para todas, a comparação entre áreas é legítima dentro do corpus.</dd>
@@ -2134,55 +2131,8 @@ function serieDaArea(nome){
 
 let arquivo = null;   // notícias dos últimos dias, acumuladas pela recolha agendada
 
-/* Meses já carregados nesta sessão, para não repetir pedidos */
-const mesesCarregados = {};
-
-function mesesNecessarios(){
-  const horas = HORAS_PERIODO[periodo];
-  if(!horas) return 12;                      // sem limite: um ano de arquivo
-  return Math.ceil(horas / 24 / 30);
-}
 
 /* Ficheiros mensais, lidos apenas quando o período pedido os alcança */
-async function carregarMeses(){
-  const quantos = mesesNecessarios();
-  if(quantos <= 1) return [];
-  let indice = mesesCarregados.__indice;
-  if(!indice){
-    indice = { meses: [] };
-    for(const base of enderecosDados()){
-      try{
-        const r = await fetch(base.replace("noticias.json", "meses/indice.json"));
-        if(!r.ok) continue;
-        const d = await r.json();
-        if(d && Array.isArray(d.meses)){ indice = d; break; }
-      }catch(e){ /* segue */ }
-    }
-    mesesCarregados.__indice = indice;
-  }
-
-  const alvo = indice.meses.slice(-quantos);
-  const juntas = [];
-  for(const mes of alvo){
-    if(!mesesCarregados[mes]){
-      let carregado = null;
-      for(const base of enderecosDados()){
-        try{
-          const r = await fetch(base.replace("noticias.json", `meses/arquivo-${mes}.json`));
-          if(!r.ok) continue;
-          const d = await r.json();
-          if(d && Array.isArray(d.noticias)){
-            d.noticias.forEach(n => { if(!n._b) n._b = simplificar(n.titulo || ""); });
-            carregado = d.noticias; break;
-          }
-        }catch(e){ /* segue */ }
-      }
-      mesesCarregados[mes] = carregado || [];
-    }
-    juntas.push(...mesesCarregados[mes]);
-  }
-  return juntas;
-}
 
 async function carregarArquivo(){
   try{ return await lerFicheiroDados("arquivo.json"); }
@@ -2193,25 +2143,8 @@ async function carregarArquivo(){
 async function doArquivo(){
   const a = await carregarArquivo();
   diasArquivo = a.dias || 0;
-
-  /* Períodos maiores do que o arquivo corrente vão buscar os meses precisos */
-  let lista = a.noticias;
-  let origem = `arquivo de ${a.dias} dias`;
-  const horas = HORAS_PERIODO[periodo];
-  if(!horas || horas > (a.dias || 30) * 24){
-    const extra = await carregarMeses();
-    if(extra.length){
-      const vistos = new Set(lista.map(n => (n.area || "") + "|" + (n.titulo || "").toLowerCase()));
-      const novas = extra.filter(n => !vistos.has((n.area || "") + "|" + (n.titulo || "").toLowerCase()));
-      lista = lista.concat(novas);
-      const meses = mesesNecessarios();
-      origem = `arquivo de ${meses} ${meses === 1 ? "mês" : "meses"}`;
-      diasArquivo = meses * 30;
-    }
-  }
-
-  if(!lista.length) throw new Error("sem arquivo publicado");
-  return { itens: paraConsulta(lista), origem, dias: diasArquivo };
+  if(!a.noticias.length) throw new Error("sem arquivo publicado");
+  return { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias`, dias: a.dias };
 }
 
 /* Os ficheiros de dados são lidos uma vez por sessão e ficam em memória: a
@@ -2340,7 +2273,7 @@ function chaveNoticia(it){
   return simplificar((it.titulo || "") + "|" + (it.fonte || ""));
 }
 
-const HORAS_PERIODO = { "24h":24, "48h":48, "72h":72, "7d":168, "30d":720, "365d":8760 };
+const HORAS_PERIODO = { "24h":24, "48h":48, "72h":72, "7d":168 };
 
 /* O operador de tempo do serviço atua sobre a data de indexação e deixa passar
    artigos antigos. Esta verificação usa a data de publicação do próprio artigo. */

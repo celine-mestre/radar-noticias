@@ -1,0 +1,216 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Radar de Notícias — gestão de subscritores
+Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas
+
+Acrescenta ou retira endereços do ficheiro de subscritores e prepara a mensagem
+de confirmação. É chamado pelo fluxo de trabalho, que trata do envio e da gravação.
+
+Utilização:
+    python gerir_subscritores.py --acao subscrever \\
+        --email nome@sggoverno.gov.pt --areas "Saúde,Justiça"
+    python gerir_subscritores.py --acao subscrever --email nome@x.pt --todas
+    python gerir_subscritores.py --acao cancelar --email nome@x.pt --todas
+    python gerir_subscritores.py --acao listar
+"""
+
+import argparse
+import json
+import os
+import re
+import sys
+from datetime import datetime
+
+AZUL, VERDE, CINZA_TEXTO, CINZA_SUAVE, BORDA = "#2B5683", "#0E7433", "#171715", "#5b6068", "#e2e8f0"
+
+AREAS = [
+    "Presidência", "Assuntos Parlamentares", "Reforma do Estado", "Negócios Estrangeiros",
+    "Defesa Nacional", "Administração Interna", "Justiça", "Finanças",
+    "Economia e Coesão Territorial", "Infraestruturas e Habitação",
+    "Educação, Ciência e Inovação", "Saúde", "Trabalho, Solidariedade e Segurança Social",
+    "Cultura, Juventude e Desporto", "Ambiente e Energia", "Agricultura e Mar",
+]
+
+VALIDO = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
+def carregar(caminho):
+    if not os.path.exists(caminho):
+        return {"areas": {a: [] for a in AREAS}}
+    with open(caminho, encoding="utf-8") as origem:
+        d = json.load(origem)
+    d.setdefault("areas", {})
+    for a in AREAS:
+        d["areas"].setdefault(a, [])
+    return d
+
+
+def gravar(caminho, dados):
+    dados["atualizado"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+    with open(caminho, "w", encoding="utf-8") as destino:
+        json.dump(dados, destino, ensure_ascii=False, indent=2)
+
+
+def resolver_areas(pedidas, todas):
+    """Aceita nomes aproximados: sem acentos, sem maiúsculas, parciais."""
+    if todas:
+        return list(AREAS)
+
+    def simples(t):
+        import unicodedata
+        return unicodedata.normalize("NFD", t.lower()).encode("ascii", "ignore").decode().strip()
+
+    escolhidas, desconhecidas = [], []
+    for pedida in [p.strip() for p in pedidas.split(",") if p.strip()]:
+        alvo = simples(pedida)
+        achada = next((a for a in AREAS if simples(a) == alvo), None)
+        if not achada:
+            achada = next((a for a in AREAS if alvo in simples(a)), None)
+        if achada:
+            if achada not in escolhidas:
+                escolhidas.append(achada)
+        else:
+            desconhecidas.append(pedida)
+
+    if desconhecidas:
+        print("Áreas não reconhecidas: " + "; ".join(desconhecidas))
+    return escolhidas
+
+
+def mensagem_confirmacao(email, areas, acao, painel):
+    """Mensagem enviada a quem subscreve ou cancela."""
+    agora = datetime.now()
+    subscreveu = acao == "subscrever"
+
+    titulo = "Subscrição confirmada" if subscreveu else "Subscrição cancelada"
+    corpo = (
+        f"A partir de amanhã, e em todos os dias úteis, receberá às 10h00 um relatório "
+        f"por cada área abaixo, com as notícias das últimas 24 horas."
+        if subscreveu else
+        "Deixará de receber os relatórios das áreas abaixo. Pode voltar a subscrever "
+        "a qualquer momento, no painel."
+    )
+
+    lista = "".join(f"""
+        <tr><td style="padding:5px 0;font:400 14px Arial,sans-serif;color:{CINZA_TEXTO}">
+          &bull;&nbsp;&nbsp;{a}</td></tr>""" for a in areas)
+
+    botao = f"""
+  <tr><td style="padding:4px 24px 24px">
+    <a href="{painel}" style="display:inline-block;background:{VERDE};color:#ffffff;
+       font:600 14px Arial,sans-serif;text-decoration:none;padding:11px 22px;border-radius:6px">
+       Abrir o Radar de Notícias</a>
+    <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:10px">{painel}</div>
+  </td></tr>""" if painel else ""
+
+    return f"""<!DOCTYPE html>
+<html lang="pt-PT"><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f4f6f8">
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#f4f6f8">
+<tr><td align="center" style="padding:24px 12px">
+<table width="600" cellpadding="0" cellspacing="0" role="presentation"
+       style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden">
+
+  <tr><td style="background:{AZUL};padding:22px 24px">
+    <div style="font:600 10px Arial,sans-serif;color:#ffffff;opacity:.8;letter-spacing:1.4px;
+                text-transform:uppercase">Secretaria-Geral do Governo</div>
+    <div style="font:600 20px Arial,sans-serif;color:#ffffff;padding-top:6px">{titulo}</div>
+  </td></tr>
+
+  <tr><td style="padding:22px 24px 6px">
+    <div style="font:400 14px Arial,sans-serif;color:{CINZA_TEXTO};line-height:1.6">{corpo}</div>
+  </td></tr>
+
+  <tr><td style="padding:10px 24px 6px">
+    <div style="font:600 10px Arial,sans-serif;color:{CINZA_SUAVE};letter-spacing:1.2px;
+                text-transform:uppercase;border-bottom:1px solid {BORDA};padding-bottom:6px">
+      {len(areas)} {'área' if len(areas) == 1 else 'áreas'}</div>
+    <table cellpadding="0" cellspacing="0" role="presentation" style="padding-top:8px">{lista}</table>
+  </td></tr>
+
+  <tr><td style="padding:18px 24px 6px">
+    <div style="font:400 13px Arial,sans-serif;color:{CINZA_SUAVE};line-height:1.6">
+      Para alterar as áreas ou cancelar, responda a esta mensagem ou a qualquer relatório.
+      Áreas sem notícias no período não geram mensagem.
+    </div>
+  </td></tr>
+  {botao}
+
+  <tr><td style="padding:16px 24px;background:{CINZA_TEXTO}">
+    <div style="font:400 11px Arial,sans-serif;color:#ffffff;opacity:.85;line-height:1.6">
+      Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas<br>
+      Registo processado em {agora.strftime('%d/%m/%Y às %H:%M')}.
+    </div>
+  </td></tr>
+
+</table></td></tr></table>
+</body></html>"""
+
+
+def principal():
+    ap = argparse.ArgumentParser(description="Gestão de subscritores do Radar de Notícias.")
+    ap.add_argument("--acao", choices=["subscrever", "cancelar", "listar"], default="listar")
+    ap.add_argument("--email", default=None)
+    ap.add_argument("--areas", default="", help="nomes separados por vírgula")
+    ap.add_argument("--todas", action="store_true")
+    ap.add_argument("--ficheiro", default="subscritores.json")
+    ap.add_argument("--painel", default="")
+    ap.add_argument("--confirmacao-para", default=None,
+                    help="ficheiro HTML da mensagem de confirmação")
+    ap.add_argument("--assunto-para", default=None)
+    args = ap.parse_args()
+
+    dados = carregar(args.ficheiro)
+
+    if args.acao == "listar":
+        total = set()
+        for area in AREAS:
+            enderecos = dados["areas"].get(area, [])
+            total.update(enderecos)
+            print(f"{area:46} {len(enderecos)}")
+        print(f"\n{len(total)} endereços distintos")
+        return
+
+    email = (args.email or "").strip().lower()
+    if not VALIDO.match(email):
+        sys.exit(f"Endereço inválido: {args.email}")
+
+    areas = resolver_areas(args.areas, args.todas)
+    if not areas:
+        sys.exit("Indique --areas ou --todas.")
+
+    mexidas = []
+    for area in areas:
+        atuais = [e.lower() for e in dados["areas"][area]]
+        if args.acao == "subscrever" and email not in atuais:
+            dados["areas"][area].append(email)
+            mexidas.append(area)
+        elif args.acao == "cancelar" and email in atuais:
+            dados["areas"][area] = [e for e in dados["areas"][area] if e.lower() != email]
+            mexidas.append(area)
+
+    if not mexidas:
+        estado = "já estava subscrito" if args.acao == "subscrever" else "não estava subscrito"
+        print(f"Nada a alterar: {email} {estado} em todas as áreas indicadas.")
+    else:
+        gravar(args.ficheiro, dados)
+        verbo = "subscrito em" if args.acao == "subscrever" else "retirado de"
+        print(f"{email} {verbo} {len(mexidas)} área(s):")
+        for a in mexidas:
+            print(f"  - {a}")
+
+    if args.confirmacao_para:
+        with open(args.confirmacao_para, "w", encoding="utf-8") as destino:
+            destino.write(mensagem_confirmacao(email, areas, args.acao, args.painel))
+
+    if args.assunto_para:
+        titulo = ("Radar de Notícias · subscrição confirmada"
+                  if args.acao == "subscrever" else
+                  "Radar de Notícias · subscrição cancelada")
+        with open(args.assunto_para, "w", encoding="utf-8") as destino:
+            destino.write(titulo)
+
+
+if __name__ == "__main__":
+    principal()

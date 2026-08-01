@@ -77,6 +77,8 @@ Nada disto passa por serviços intermediários nem depende da rede de quem consu
 | `extrair_noticias.py` | A recolha. Lê os feeds, marca por área e produz o Excel e os três ficheiros de dados. |
 | `.github/workflows/radar-noticias.yml` | Tarefa agendada que corre a recolha nos servidores do GitHub. |
 | `relatorio_email.py` | Gera os relatórios diários em HTML a partir do arquivo. |
+| `gerir_subscritores.py` | Acrescenta e retira endereços, e prepara a confirmação. |
+| `.github/workflows/subscricao.yml` | Trata um pedido de subscrição de ponta a ponta. |
 | `subscritores.json` | Destinatários de cada área governativa. É aqui que se subscreve e cancela. |
 | `.github/workflows/relatorio-diario.yml` | Tarefa agendada que envia um relatório por área. |
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
@@ -166,8 +168,7 @@ Pela linha de comandos, com Python e `openpyxl`:
 ```bash
 # leitura dos feeds das publicações (método principal)
 python extrair_noticias.py --fontes --json noticias.json \
-    --arquivo arquivo.json --dias-arquivo 30 --mensal meses \
-    --historico historico.json
+    --arquivo arquivo.json --dias-arquivo 7 --historico historico.json
 
 # apenas uma área
 python extrair_noticias.py --fontes --area saude --saida saude.xlsx
@@ -180,9 +181,10 @@ python extrair_noticias.py --periodo 30d --area saude --saida saude_mes.xlsx
 
 ## Ressalvas metodológicas
 
-- **Cobertura.** O corpus são as 48 publicações subscritas. O arquivo cresce mês a
-  mês desde a primeira recolha: uma notícia de um título não subscrito, ou anterior
-  ao início da recolha, não está no corpus.
+- **Cobertura.** O corpus são as 48 publicações subscritas e os últimos sete dias.
+  Uma notícia de um título não subscrito, ou anterior a esse período, não está no
+  corpus. A janela do arquivo define-se com `--dias-arquivo` e pode ser alargada
+  quando houver espaço para isso.
 - **Marcação literal.** Um artigo entra numa área por conter a expressão no título ou
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
 - **Comparação entre áreas.** Legítima dentro do corpus: nenhuma área é truncada e o
@@ -219,8 +221,16 @@ enviar mensagens. Este desenho evita essa dependência e tem uma vantagem — o 
 fica registado na caixa de enviados de quem subscreve e na caixa de entrada da
 unidade, com rasto dos dois lados.
 
-**No repositório.** Recebido o pedido, acrescenta-se o endereço às áreas pedidas no
-`subscritores.json`, uma lista por área:
+**Processamento automático.** Recebido o pedido, corre-se em **Actions › Subscricao
+do relatorio › Run workflow** com o endereço e as áreas. O fluxo grava a alteração no
+`subscritores.json`, envia a confirmação a quem pediu e deixa o registo no histórico
+do repositório. Não é preciso editar ficheiros à mão.
+
+Os nomes das áreas são tolerantes: aceitam-se sem acentos, em minúsculas e parciais —
+`saude, agricultura` resolve para *Saúde* e *Agricultura e Mar*. Para todas, escrever
+`todas`.
+
+O ficheiro tem uma lista por área:
 
 ```json
 {
