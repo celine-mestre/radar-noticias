@@ -260,7 +260,11 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
   padding:.75rem 1.6rem;background:var(--superficie-alt);border-bottom:1px solid var(--borda);
 }
 .segmentado.compacto button{padding:.34rem .8rem;font-size:.8rem}
-.res-contagem{font-size:.8rem;color:var(--texto-ligeiro);white-space:nowrap}
+.res-contagem{font-size:.8rem;color:var(--texto-suave);white-space:nowrap;display:flex;align-items:center;gap:.5rem}
+.res-origem{
+  font-size:.7rem;color:var(--texto-ligeiro);background:var(--superficie);
+  border:1px solid var(--borda);border-radius:999px;padding:.1rem .5rem;
+}
 .res-accoes{display:flex;gap:.45rem;margin-left:auto}
 .res-accoes .btn{padding:.42rem .8rem;font-size:.82rem}
 .res-accoes .btn svg{width:15px;height:15px}
@@ -485,15 +489,28 @@ main{padding:2.2rem 0 4rem}
 .grupo-cab span{font-size:.78rem;color:var(--texto-ligeiro);margin-left:auto}
 
 .grelha{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:.85rem}
+.ilustra-cartao{
+  position:absolute;inset:0 0 auto 0;height:62px;overflow:hidden;pointer-events:none;
+  background:linear-gradient(160deg,
+    color-mix(in srgb, var(--cor) 13%, transparent),
+    color-mix(in srgb, var(--cor) 4%, transparent));
+  border-bottom:1px solid color-mix(in srgb, var(--cor) 14%, transparent);
+}
+.ilustra-cartao svg{
+  position:absolute;right:-4px;bottom:-16px;width:112px;height:auto;
+  stroke:var(--cor);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;
+  opacity:.28;transition:.28s cubic-bezier(.2,.8,.3,1);
+}
+.cartao:hover .ilustra-cartao svg{opacity:.46;transform:translateY(-3px) scale(1.03)}
 .cartao{
   position:relative;overflow:hidden;background:var(--superficie);
   border:1px solid var(--borda);border-radius:14px;
-  padding:1.2rem 1.2rem 1.1rem;box-shadow:var(--sombra);cursor:pointer;
+  padding:74px 1.15rem 1rem;box-shadow:var(--sombra);cursor:pointer;
   transition:transform .22s cubic-bezier(.2,.8,.3,1), box-shadow .22s, border-color .22s;
 }
 .cartao::before{
   content:"";position:absolute;right:-46px;top:-46px;width:132px;height:132px;border-radius:50%;
-  background:var(--cor);opacity:.07;transition:transform .3s cubic-bezier(.2,.8,.3,1), opacity .25s;
+  background:var(--cor);opacity:0;transition:transform .3s cubic-bezier(.2,.8,.3,1), opacity .25s;
 }
 .cartao::after{
   content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cor);
@@ -504,13 +521,15 @@ main{padding:2.2rem 0 4rem}
 .cartao:hover::after{opacity:1}
 .cartao > *{position:relative;z-index:1}
 .cartao .simbolo{
-  width:46px;height:46px;border-radius:14px;
+  position:absolute;top:38px;left:1.15rem;
+  width:42px;height:42px;border-radius:12px;
   background:linear-gradient(145deg, rgba(255,255,255,.24), rgba(0,0,0,.14)), var(--cor);
-  display:flex;align-items:center;justify-content:center;margin-bottom:1rem;
+  display:flex;align-items:center;justify-content:center;
+  border:3px solid var(--superficie);
   box-shadow:0 6px 16px -7px rgba(23,23,21,.6);transition:transform .22s cubic-bezier(.2,.8,.3,1);
 }
 .cartao:hover .simbolo{transform:translateY(-1px) scale(1.04)}
-.cartao .simbolo svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.cartao .simbolo svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .cartao h3{font-size:.95rem;font-weight:600;letter-spacing:-.012em;line-height:1.3}
 .cartao .sub{
   margin-top:.45rem;font-size:.72rem;color:var(--texto-ligeiro);
@@ -758,13 +777,9 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
     </label>
     <div class="segmentado" id="filtroFontes" role="group" aria-label="Origem das fontes">
       <button data-fonte="nacionais" class="ativo">Nacionais</button>
+      <button data-fonte="lusofonas">Lusófonas</button>
       <button data-fonte="internacionais">Internacionais</button>
       <button data-fonte="todas">Todas</button>
-    </div>
-    <div class="segmentado" id="filtroRedes" role="group" aria-label="Tipo de fonte">
-      <button data-redes="sem" class="ativo">Imprensa</button>
-      <button data-redes="so">Redes sociais</button>
-      <button data-redes="com">Todas</button>
     </div>
     <button class="btn-nota" id="btnManual">
       <span class="i">i</span>
@@ -957,13 +972,25 @@ const AREAS = [
 let filtroAtual = "todas";
 let periodo = "24h";      // operador when: do Google Notícias
 let filtroFontes = "nacionais";   // nacionais · internacionais · todas
-let filtroRedes = "sem";          // sem · so · com
-const ROTULO_REDES = {
-  sem: "só imprensa",
-  so: "só redes sociais",
-  com: "imprensa e redes sociais"
-};
+/* O corpus é composto por feeds de publicações noticiosas. As plataformas sociais
+   não publicam feeds e ficam por isso fora do âmbito da aplicação; a filtragem
+   mantém-se para excluir páginas dessas plataformas que apareçam pela pesquisa. */
+const filtroRedes = "sem";   // o corpus é de imprensa; plataformas sociais ficam fora
 let soNacionais = true;           // atalho para o caso mais frequente
+const DOMINIOS_LUSOFONOS = [".ao", ".mz", ".cv", ".st", ".gw", ".tl", ".br"];
+const PUBLICACOES_LUSOFONAS = [
+  "jornaldeangola", "novojornal", "angop", "opais", "cartamz", "verangola",
+  "expressodasilhas", "inforpress", "asemana", "tatoli", "timorpost", "stp-press",
+  "agenciabrasil", "folha.uol", "globo.com", "uol.com.br", "conjur", "migalhas", "jota.info"
+];
+
+function fonteLusofona(it){
+  const d = (it.dominio || "").toLowerCase().replace(/^www\./, "");
+  if(!d) return false;
+  if(DOMINIOS_LUSOFONOS.some(t => d.endsWith(t))) return true;
+  return PUBLICACOES_LUSOFONAS.some(x => d.includes(x));
+}
+
 const ROTULO_FONTES = {
   nacionais: "só fontes nacionais",
   internacionais: "só fontes internacionais",
@@ -993,14 +1020,14 @@ function consulta(a){
   return termos + excl + sufixo();
 }
 
-/* Os filtros de origem e de redes sociais são aplicados às notícias recolhidas,
+/* O filtro de origem é aplicado às notícias recolhidas,
    porque o operador site: não exclui domínios de topo de forma fiável. Para a
    janela do Google, onde não há filtragem posterior possível, acrescentam-se as
    exclusões que esse operador honra: domínios concretos, não domínios de topo.
    É melhoria de aproximação, não garantia. */
 function exclusoesGoogle(){
   const fora = [];
-  if(filtroRedes === "sem") fora.push(...CONFIG.redesSociais.slice(0, 12));
+  fora.push(...CONFIG.redesSociais.slice(0, 12));
   if(filtroFontes === "nacionais") fora.push(...CONFIG.publicacoesEstrangeiras);
   return fora.length ? " " + fora.map(d => `-site:${d}`).join(" ") : "";
 }
@@ -1066,11 +1093,33 @@ function areasVisiveis(){
   });
 }
 
+/* Ilustrações de cabeçalho, uma por área. São desenhos vetoriais na cor do
+   agrupamento — leves, sempre disponíveis e sem questões de licenciamento, ao
+   contrário de fotografias de bancos de imagens. */
+const ILUSTRA = {
+  presidencia:'<path d="M20 78h120M32 78V44l48-26 48 26v34"/><path d="M52 78V56M80 78V52M108 78V56"/><path d="M28 44 80 18l52 26"/>',
+  parlamento:'<path d="M24 78h112M40 78V40M64 78V34M88 78V34M112 78V40"/><path d="M30 40h92l-46-24z"/><path d="M36 84h88"/>',
+  reforma:'<circle cx="70" cy="48" r="20"/><path d="M70 28v-8M70 76v-8M50 48h-8M98 48h8M56 34l-6-6M84 62l6 6M84 34l6-6M56 62l-6 6"/><path d="M104 76h32M104 84h24"/>',
+  estrangeiros:'<circle cx="66" cy="48" r="28"/><path d="M38 48h56M66 20c10 12 10 44 0 56M66 20c-10 12-10 44 0 56"/><path d="M104 70l14 14M118 84h18"/>',
+  defesa:'<path d="M80 18l38 14v24c0 22-16 36-38 44-22-8-38-22-38-44V32z"/><path d="M80 40v28M66 54h28"/>',
+  interna:'<path d="M80 20l34 12v26c0 20-14 32-34 40-20-8-34-20-34-40V32z"/><circle cx="80" cy="50" r="10"/><path d="M64 74c4-8 10-12 16-12s12 4 16 12"/>',
+  justica:'<path d="M80 20v58M56 78h48"/><path d="M40 34h80"/><path d="M40 34 28 58h24zM120 34l12 24h-24z"/><path d="M28 58a12 12 0 0 0 24 0M108 58a12 12 0 0 0 24 0"/>',
+  financas:'<path d="M24 78h112"/><rect x="34" y="52" width="18" height="26"/><rect x="62" y="38" width="18" height="40"/><rect x="90" y="26" width="18" height="52"/><path d="M118 46l14-12M132 34v12M132 34h-12"/>',
+  economia:'<path d="M20 78h120"/><path d="M28 62l24-18 22 14 24-24 24 16"/><circle cx="52" cy="44" r="4"/><circle cx="74" cy="58" r="4"/><circle cx="98" cy="34" r="4"/><circle cx="122" cy="50" r="4"/>',
+  infraestruturas:'<path d="M20 78h120"/><path d="M34 78V44l22-16 22 16v34"/><path d="M46 78V62h20v16"/><rect x="92" y="34" width="34" height="44"/><path d="M100 44h6M114 44h6M100 56h6M114 56h6"/>',
+  educacao:'<path d="M80 26 20 48l60 22 60-22z"/><path d="M44 58v20c0 8 16 14 36 14s36-6 36-14V58"/><path d="M128 52v22"/>',
+  saude:'<path d="M80 82C56 68 32 54 32 40a20 20 0 0 1 48-8 20 20 0 0 1 48 8c0 14-24 28-48 42z"/><path d="M56 46h14l6-10 8 20 6-10h14"/>',
+  trabalho:'<rect x="30" y="38" width="100" height="42" rx="4"/><path d="M62 38V28a6 6 0 0 1 6-6h24a6 6 0 0 1 6 6v10"/><path d="M30 54h100"/><rect x="70" y="48" width="20" height="12" rx="2"/>',
+  cultura:'<path d="M42 78V32l30-12v46"/><circle cx="34" cy="78" r="9"/><circle cx="64" cy="66" r="9"/><path d="M92 78V30l30-10v48"/><circle cx="84" cy="78" r="9"/><circle cx="114" cy="68" r="9"/>',
+  ambiente:'<path d="M80 84c0-24 12-42 34-50-4 26-16 42-34 50z"/><path d="M80 84c0-24-12-42-34-50 4 26 16 42 34 50z"/><path d="M80 84V52"/><circle cx="118" cy="24" r="10"/><path d="M118 8v-6M134 24h6M129 13l4-4"/>',
+  agricultura:'<path d="M20 78h120"/><path d="M40 78c0-18 10-30 24-30M64 48c0-10-8-18-18-18-2 10 6 18 18 18zM64 48c10 0 18-8 18-18-10-2-18 6-18 18z"/><path d="M104 78V38"/><path d="M104 52c8-6 18-4 22 2-8 6-18 4-22-2zM104 40c-8-6-18-4-22 2 8 6 18 4 22-2z"/>'
+};
+
 function cartao(a){
   return `<article class="cartao" style="--cor:${cor(a.grupo)}" data-detalhe="${a.id}">
-    <button class="atalho" data-feed="${a.id}" title="Abrir a fonte numa nova janela" aria-label="Abrir a fonte">
-      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
-    </button>
+    <div class="ilustra-cartao" aria-hidden="true">
+      <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid meet">${ILUSTRA[a.icone] || ILUSTRA.presidencia}</svg>
+    </div>
     <div class="simbolo"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
     <h3>${a.nome}</h3>
     <div class="sub"><span class="ponto"></span>${a.palavras.length} palavras-chave</div>
@@ -1135,17 +1184,17 @@ function abrirDetalhe(id){
 
     </div>
     <div class="modal-rodape vias">
-      <button class="via-cartao" data-feed="${a.id}">
-        <span class="via-ic" style="--cor:var(--azul)">
-          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
-        </span>
-        <span class="via-txt"><strong>Abrir no Google Notícias</strong><em>Leitura no serviço, em janela nova</em></span>
-      </button>
       <button class="via-cartao destaque" data-exportar="${a.id}">
         <span class="via-ic" style="--cor:var(--verde)">
           <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg>
         </span>
         <span class="via-txt"><strong>Visualizar no painel</strong><em>Lista por data, síntese, impressão e Excel</em></span>
+      </button>
+      <button class="via-cartao" data-feed="${a.id}">
+        <span class="via-ic" style="--cor:var(--azul)">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+        </span>
+        <span class="via-txt"><strong>Pesquisa aberta</strong><em>Fora do corpus, em janela nova</em></span>
       </button>
     </div>`;
   $("#veu").classList.add("aberto");
@@ -1172,7 +1221,7 @@ function abrirExportacao(id){
       <div class="icone"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
       <div>
         <h3>${a.nome}</h3>
-        <p>${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave"} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${ROTULO_REDES[filtroRedes]}</p>
+        <p>${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave"} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
@@ -1240,8 +1289,9 @@ function apresentarResultados(origem){
   const barra = $("#barraRes");
   if(barra) barra.hidden = recolha.length === 0;
   const cont = $("#resContagem");
-  if(cont) cont.textContent = recolha.length
-    ? `${recolha.length} notícias · ${origem}`
+  if(cont) cont.innerHTML = recolha.length
+    ? `${recolha.length} notícias · ${ROTULO_PERIODO[periodo]}` +
+      `<span class="res-origem" title="Onde as notícias foram procuradas">${origem}</span>`
     : "";
   mostrarVista(vistaAtual);
   carregarHistorico().then(() => { if(vistaAtual === "sintese") mostrarVista("sintese"); });
@@ -1281,7 +1331,7 @@ function imprimirResultados(){
       <div class="org">Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas</div>
       <h1>${a.nome}</h1>
       <div class="crit">${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave da área"} ·
-        ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${ROTULO_REDES[filtroRedes]} ·
+        ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} ·
         ${recolha.length} notícias</div>
     </header>
     <table><thead><tr><th>Data</th><th>Notícia</th><th>Fonte</th></tr></thead>
@@ -1306,11 +1356,9 @@ const MANUAL = [
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
-      <dt>Período</dt><dd>Predefinição: 24 horas. Como o teto de 100 notícias se aplica sempre, o período não altera <em>quantas</em> notícias vêm — altera <em>quais</em>.</dd>
-      <dt>Origem das fontes</dt><dd>Três posições. <strong>Nacionais</strong>, por predefinição, mantém apenas domínios <code>.pt</code> e os títulos portugueses conhecidos que usam outro domínio. <strong>Internacionais</strong> mostra exatamente o contrário, o que é útil para ver como uma matéria portuguesa está a ser tratada lá fora. <strong>Todas</strong> não filtra.</dd>
-      <dt>Tipo de fonte</dt><dd>Três posições. <strong>Imprensa</strong>, por predefinição, mostra apenas publicações noticiosas — jornais, rádios, televisões e agências. <strong>Redes sociais</strong> mostra o oposto: páginas do Instagram, Facebook, YouTube, X e plataformas de blogues, que o serviço indexa misturadas com a imprensa; é onde se vê o que circula fora dos meios noticiosos. <strong>Todas</strong> não filtra.</dd>
-      <dt>Onde se aplicam</dt><dd>A janela temporal aplica-se sempre, nas duas vias. Os filtros de origem e de redes sociais são aplicados com exatidão às notícias recolhidas no painel; na janela do Google seguem como exclusões de domínio, que o serviço honra para publicações concretas mas não para domínios de topo — pode por isso escapar alguma.</dd>
-      <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida — e não apenas pela consulta enviada ao serviço. É por isso que funciona mesmo sobre as notícias da recolha agendada.</dd>
+      <dt>Período</dt><dd>Predefinição: 24 horas. O arquivo cobre sete dias; o período escolhido determina que fatia dele é apresentada.</dd>
+      <dt>Origem das fontes</dt><dd>Quatro posições. <strong>Nacionais</strong>, por predefinição, mostra a imprensa portuguesa. <strong>Lusófonas</strong> mostra Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacionais</strong> mostra a restante imprensa estrangeira. <strong>Todas</strong> não filtra.</dd>
+      <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida, e não por operadores de pesquisa — o que a torna exata e verificável.</dd>
     </dl>` },
 
   { n:"3", titulo:"Detalhe de uma área", cor:"var(--dourado)", icone:"lupa", corpo:`
@@ -1325,10 +1373,11 @@ const MANUAL = [
     <p>Clicar em <strong>Visualizar no painel</strong> recolhe e apresenta logo as notícias, por ordem cronológica e com resumo. Em cima, o separador alterna entre <strong>Notícias</strong> e <strong>Síntese</strong>, e há três ações: recolher de novo, <strong>Imprimir</strong> e <strong>Excel</strong>.</p>
     <p>A recolha procura por esta ordem:</p>
     <dl>
-      <dt>Retrato do dia</dt><dd>Para a consulta predefinida da área com janela de 24 horas. Imediato.</dd>
-      <dt>Arquivo de sete dias</dt><dd>Acumulado pelas recolhas agendadas, que leem os feeds das publicações portuguesas e marcam cada artigo com as áreas e palavras-chave que satisfaz. É por isso que uma pesquisa responde de imediato e sem depender da rede.</dd>
-      <dt>Serviço de pesquisa</dt><dd>Só para o que o arquivo não cobre. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem em arquivo e avisa.</dd>
+      <dt>Arquivo de sete dias</dt><dd>O corpus próprio, construído todas as manhãs a partir dos feeds das publicações. É onde quase todas as consultas são respondidas, em milissegundos e sem depender da rede.</dd>
+      <dt>Retrato do dia</dt><dd>O que a última recolha trouxe, usado quando o arquivo não está disponível.</dd>
+      <dt>Pesquisa complementar</dt><dd>Só para o que o corpus não cobre: publicações não subscritas ou períodos anteriores a sete dias. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem e avisa.</dd>
     </dl>
+    <p class="man-aviso">A etiqueta ao lado da contagem diz <em>onde</em> as notícias foram procuradas — “arquivo de 7 dias”, “recolha agendada” ou o nome do serviço. O período indicado antes é o filtro que lhes foi <em>aplicado</em>. São coisas distintas: o arquivo cobre sete dias, e dele extraem-se as das últimas 24 horas quando é essa a janela escolhida.</p>
     <p><strong>Imprimir</strong> gera uma folha com cabeçalho institucional, os critérios da consulta e a lista em tabela — pronta para anexar a uma nota.</p>
     <p><strong>Ler notícias</strong> apresenta a lista por ordem cronológica, da mais recente para a mais antiga — a ordenação que o serviço não dá.</p>
     <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, as exclusões, a consulta enviada e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
@@ -1339,28 +1388,25 @@ const MANUAL = [
       <dt>Publicações</dt><dd>Anel de proporções com as seis maiores e as restantes agregadas.</dd>
       <dt>Assuntos recorrentes</dt><dd>Expressões que ocorrem em mais do que uma notícia, com tamanho proporcional à frequência.</dd>
       <dt>Cobertura</dt><dd>Quantas notícias contêm cada palavra-chave da área. As que estão a zero não estão a puxar cobertura.</dd>
-      <dt>Evolução</dt><dd>A partir de três dias de recolhas agendadas, a série diária de notícias novas e a variação face à média. O Excel ganha então a folha <em>Evolução</em>.</dd>
+      <dt>Evolução</dt><dd>A partir de três dias de recolhas agendadas, a série diária de notícias novas e a variação face à média. Vem do ficheiro de histórico, que guarda apenas contagens por dia e por área e nunca é apagado — é a memória do produto. O Excel ganha então a folha <em>Evolução</em>.</dd>
     </dl>
     <p>Tudo é contagem, calculada no painel. Nada é enviado para fora.</p>` },
 
   { n:"6", titulo:"Como o radar pesquisa", cor:"var(--azul)", icone:"chave", corpo:`
-    <p>Há duas origens. A <strong>recolha agendada</strong> lê os feeds de cerca de duas dezenas de publicações portuguesas — jornais, rádios, televisões e imprensa económica — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado do nosso lado: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
-    <p>O <strong>Google Notícias</strong> é usado como complemento, para o que os feeds não cobrem — publicações fora da lista e períodos anteriores ao arquivo. Aí valem os limites descritos no capítulo seguinte.</p>
-    <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. A pesquisa por expressão exata é a única operação que o serviço honra de forma fiável. Onde o ruído persiste, a área declara termos a excluir.</p>
-    <p><strong>Fontes.</strong> Com o filtro ativo, ficam de fora os domínios de topo do Brasil, Angola, Moçambique, Cabo Verde, São Tomé e Príncipe, Guiné-Bissau, Timor-Leste e Macau, e os grupos de comunicação social desses países que usam domínios genéricos. A pesquisa abrange as restantes publicações indexadas na edição portuguesa. Entre os títulos nacionais: ${FONTES_REFERENCIA.map(f => f.nome).join(", ")}.</p>
-    <p class="man-aviso">Não há filtro por título. O operador <code>site:</code> não se combina de forma fiável com o tema quando se indicam vários domínios — só funciona bem no uso negativo, que é o do filtro de fontes nacionais.</p>` },
+    <p>A recolha agendada lê todas as manhãs os feeds de <strong>48 publicações</strong> — 25 portuguesas, 11 dos restantes países de língua portuguesa e 12 internacionais — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado no próprio repositório: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
+    <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. Onde o ruído persiste, a área declara termos a excluir.</p>
+    <p><strong>Âmbito.</strong> Imprensa: jornais, rádios, televisões, agências e imprensa especializada. As plataformas sociais não publicam feeds e ficam de fora.</p>
+    <p class="man-aviso">Para o que os feeds não cobrem — uma publicação não subscrita, ou um período anterior a sete dias — há o botão de pesquisa aberta, que abre uma consulta externa em janela nova. É consulta pontual, fora do corpus e sem as suas garantias.</p>`  },
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
-    <p>Os limites abaixo aplicam-se ao <strong>Google Notícias</strong>, usado como complemento. O corpus próprio — os feeds das publicações — não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações.</p>
+    <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>
     <dl>
-      <dt>Cobertura do corpus</dt><dd>Cerca de duas dezenas de publicações e sete dias de arquivo. Uma notícia de um título fora dessa lista, ou anterior a esse período, só aparece pelo complemento.</dd>
-      <dt>Correspondência aproximada</dt><dd>O serviço devolve artigos que não contêm o termo pesquisado — uma pesquisa por “CPLP” traz notícias de automóveis. O painel confirma cada resultado contra o termo e descarta os que não o contêm, indicando quantos foram.</dd>
-      <dt>Instantâneo e arquivo</dt><dd>A recolha agendada guarda o retrato diário de cada área, com o teto de 100. Filtrar esse retrato por uma palavra-chave devolve só o que lá está — muito menos do que existe no serviço. Para pesquisar o arquivo, o painel consulta o serviço em direto; não conseguindo, avisa que os resultados vêm do instantâneo.</dd>
-      <dt>Cerca de 100 artigos</dt><dd>Por consulta, sem paginação. Qualquer que seja o período. Alargar a janela distribui as mesmas 100 por mais tempo.</dd>
-      <dt>Contagens não comparáveis</dt><dd>Entre áreas. Uma área muito noticiada é truncada no teto; uma discreta não é.</dd>
-      <dt>Ordenação por relevância</dt><dd>Não por data, e o operador de tempo atua sobre a data de indexação. O botão <strong>Ler notícias</strong> resolve isto, ordenando pela data do artigo.</dd>
-      <dt>Sem resumos</dt><dd>O serviço devolve título e fonte, não texto do artigo.</dd>
-      <dt>Ligações</dt><dd>São reencaminhamentos, convertidos no endereço do jornal sempre que a codificação o permite. A recolha agendada resolve mais casos.</dd>
+      <dt>Cobertura do corpus</dt><dd>Trinta e sete publicações — vinte e cinco portuguesas e doze internacionais — e sete dias de arquivo. Uma notícia de um título fora dessa lista, ou anterior a esse período, só aparece pelo complemento.</dd>
+      <dt>Imprensa apenas</dt><dd>As plataformas sociais não publicam feeds e estão fora do âmbito da aplicação. Páginas dessas plataformas que apareçam por via da pesquisa aberta são descartadas.</dd>
+      <dt>Marcação literal</dt><dd>Um artigo entra numa área por conter a expressão no título ou no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.</dd>
+      <dt>Contagens</dt><dd>Medem o que as publicações subscritas noticiaram, não o total do que foi noticiado. Como nenhuma área é truncada e o método é o mesmo para todas, a comparação entre áreas é legítima dentro do corpus.</dd>
+      <dt>Pesquisa aberta</dt><dd>O que vem do botão de pesquisa aberta segue as regras do serviço externo: cerca de 100 artigos por consulta, ordenação por relevância e datas de indexação. Não se aplica ao corpus.</dd>
+      <dt>Ligações</dt><dd>As do corpus são o endereço direto do artigo. Só as que venham da pesquisa aberta são reencaminhamentos.</dd>
     </dl>` },
 
   { n:"8", titulo:"Recolha agendada", cor:"var(--teal)", icone:"engrenagem", corpo:`
@@ -1471,30 +1517,12 @@ function anel(pares, tamanho = 168){
   </div>`;
 }
 
-/* Colunas por dia */
-function colunas(pares, corBarra){
-  if(!pares.length) return "";
-  const maximo = Math.max(...pares.map(p => p[1]));
-  const anoAtual = String(new Date().getFullYear());
-  const dia = d => {
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) return "s/ data";
-    const [a, m, x] = d.split("-");
-    return a === anoAtual ? `${x}/${m}` : `${x}/${m}/${a.slice(2)}`;
-  };
-  return `<div class="sin-colunas">${pares.map(([d, n]) => `
-    <div class="sin-col" title="${d}: ${n} notícias">
-      <span class="sin-valor">${n}</span>
-      <span class="sin-haste" style="height:${Math.max(6, Math.round(n / maximo * 96))}px;background:${corBarra}"></span>
-      <span class="sin-dia">${dia(d)}</span>
-    </div>`).join("")}</div>`;
-}
 
 /* Palavras-chave da área efetivamente presentes nos títulos */
 function cobertura(itens, area){
   const textos = itens.map(it => simplificar(it.titulo + " " + (it.resumo || "")));
   return area.palavras.map(p => {
-    const alvo = simplificar(p);
-    const n = textos.filter(t => t.includes(alvo)).length;
+    const n = textos.filter(t => contemExpressao(t, p)).length;
     return { palavra: p, n };
   }).sort((x, y) => y.n - x.n);
 }
@@ -1539,7 +1567,7 @@ function blocoEvolucao(area){
       <p class="sin-nota">${temNovas
         ? "A série conta <strong>notícias novas</strong>: as que não constavam já da recolha da véspera. As janelas de 24 horas não são perfeitamente disjuntas — o operador de tempo do Google atua sobre a data de indexação e um artigo reindexado reaparece —, pelo que contar apenas o que é novo evita somar repetições."
         : "A série conta as notícias devolvidas em cada recolha. Pode incluir repetições entre dias consecutivos, porque o operador de tempo do Google atua sobre a data de indexação."}
-        Todas as recolhas usam a mesma janela e o mesmo método, pelo que a comparação da área consigo própria é legítima — ao contrário da comparação entre áreas, que o teto dos 100 distorce. ${serie.length} dias registados.</p>
+        Todas as recolhas usam a mesma janela e o mesmo método, pelo que a comparação é legítima. ${serie.length} dias registados.</p>
     </div>`;
 }
 
@@ -1614,8 +1642,8 @@ function corpoSintese(){
   return `
 
       <div class="sin-teto">
-        <svg viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
-        <p><strong>Teto de 100 notícias por consulta.</strong> É limite do serviço e não do painel: qualquer que seja o período escolhido, uma consulta nunca devolve mais de cerca de 100 artigos, e não há paginação para lá disso. O período não altera quantas notícias vêm — altera quais: janelas curtas trazem o que é recente, janelas longas trazem as mesmas 100 espalhadas por mais tempo. Uma área que atinja o teto está truncada, pelo que os números abaixo medem o que foi indexado e devolvido, não o total noticiado.</p>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <p><strong>O que estes números medem.</strong> As notícias vêm dos feeds das publicações subscritas, marcadas pelas palavras-chave da área. Medem o que essas publicações noticiaram no período, não o total do que foi noticiado. Como nenhuma área é truncada e o método é igual para todas, a comparação entre áreas é legítima — ao contrário do que sucede com resultados vindos de pesquisa aberta.</p>
       </div>
 
       <div class="sin-kpis">
@@ -1655,24 +1683,6 @@ function corpoSintese(){
 
       ${blocoEvolucao(a)}
 
-      <div class="bloco">
-        <h4>Distribuição por dia</h4>
-        ${colunas(dias, corA)}
-        <p class="sin-nota">${comData} das ${recolha.length} notícias têm data reconhecida. O serviço ordena por relevância e a data é a de indexação, pelo que a distribuição é indicativa.</p>
-      </div>`;
-}
-
-/* Envia os títulos ao modelo configurado (interface compatível com a norma
-   de mercado). Nada é enviado sem o utilizador carregar no botão. */
-
-function abrirManual(n){
-  $("#modal").innerHTML = `
-    <div class="modal-cab nota-cab">
-      <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
-      <div>
-        <h3>Manual de utilização</h3>
-        <p>Radar de Notícias por Área Governativa · ${CONFIG.versao}</p>
-      </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
 
@@ -1789,7 +1799,7 @@ let consultaAtiva = null;  // { area, q, rotulo } — consulta em curso no detal
 function assinaturaConsulta(){
   if(!consultaAtiva) return "";
   return [consultaAtiva.area.id, (consultaAtiva.termos || []).join("|"),
-          periodo, filtroFontes, filtroRedes].join("::");
+          periodo, filtroFontes].join("::");
 }
 
 function definirConsulta(area, q, rotulo, termos){
@@ -1908,7 +1918,7 @@ function paraConsulta(lista){
        procura-se o termo no título. */
     itens = itens.filter(n =>
       (n.palavras && n.palavras.some(p => alvos.includes(simplificar(p))))
-      || alvos.some(t => n._b.includes(t)));
+      || consultaAtiva.termos.some(t => contemExpressao(n._b, t)));
   }
   return itens.map(n => Object.assign({}, n, { consulta: consultaAtiva.rotulo }));
 }
@@ -2018,7 +2028,7 @@ function confirmaTermos(itens){
   const alvos = consultaAtiva.termos.map(simplificar);
   const bons = itens.filter(it => {
     const texto = simplificar((it.titulo || "") + " " + (it.resumo || ""));
-    return alvos.some(t => texto.includes(t));
+    return consultaAtiva.termos.some(t => contemExpressao(texto, t));
   });
   return { itens: bons, fora: itens.length - bons.length };
 }
@@ -2029,15 +2039,15 @@ function assentarRecolha(itens, origem, ignorarPeriodo){
   const total = itens.length;
   /* As duas seleções são independentes e uma plataforma social não tem
      nacionalidade: o filtro de origem aplica-se apenas às publicações
-     noticiosas, para que "só redes sociais" não devolva sempre vazio. */
-  if(filtroRedes === "sem") itens = itens.filter(it => !ehRedeSocial(it));
-  else if(filtroRedes === "so") itens = itens.filter(ehRedeSocial);
+     noticiosas. */
+  itens = itens.filter(it => !ehRedeSocial(it));
   const porRedes = total - itens.length;
 
   const antesOrigem = itens.length;
-  if(filtroRedes !== "so"){
-    if(filtroFontes === "nacionais") itens = itens.filter(it => ehRedeSocial(it) || fonteNacional(it));
-    else if(filtroFontes === "internacionais") itens = itens.filter(it => !ehRedeSocial(it) && !fonteNacional(it));
+  {
+    if(filtroFontes === "nacionais") itens = itens.filter(fonteNacional);
+    else if(filtroFontes === "lusofonas") itens = itens.filter(fonteLusofona);
+    else if(filtroFontes === "internacionais") itens = itens.filter(it => !fonteNacional(it) && !fonteLusofona(it));
   }
   const porOrigem = antesOrigem - itens.length;
   const antesDoTempo = itens.length;
@@ -2074,6 +2084,7 @@ async function recolherConsulta(){
   if(aviso) aviso.hidden = true;
   const horas = HORAS_PERIODO[periodo];
   const porTermo = !!consultaAtiva.termos;
+  const foraDoCorpus = false;
   let guardado = null;
 
   estado.innerHTML = "A recolher…";
@@ -2085,6 +2096,7 @@ async function recolherConsulta(){
      ser diferente num caso e no outro. */
 
   const dosFicheiros = async () => {
+    if(foraDoCorpus) return null;   // o corpus não tem o que está a ser pedido
     /* O arquivo é a união das consultas por palavra-chave e traz muito mais do
        que a consulta única da área, pelo que é consultado primeiro. */
     try{
@@ -2179,10 +2191,13 @@ async function recolherConsulta(){
   }
 
   if(btn) btn.disabled = false;
-  estado.innerHTML = `<span style="color:var(--vermelho)">Sem notícias para esta consulta.</span>
-    <br><span style="font-size:.84rem">O arquivo da recolha agendada não tem notícias que cumpram estes critérios e o serviço complementar não respondeu. Experimente alargar o período ou desligar um filtro.</span>
-    <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico</summary>
-    <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
+  estado.innerHTML = `<div class="res-vazio">
+    <strong>Sem notícias para esta consulta</strong>
+    <p>O arquivo da recolha agendada não tem notícias que cumpram estes critérios. Experimente alargar o período, mudar a origem das fontes, ou usar a pesquisa aberta.</p>
+    <details style="margin-top:.8rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico</summary>
+    <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>
+    </div>`;
+  apresentarResultados("");
 }
 
 /* Lê notícias a partir de texto — ficheiro guardado do feed ou colagem */
@@ -2197,6 +2212,34 @@ function limparTexto(t){
   }catch(e){
     return t.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
   }
+}
+
+/* Correspondência tolerante a plurais e a variações de forma.
+   "medicamentos" tem de encontrar "medicamento"; "urgências hospitalares" tem de
+   encontrar "urgência hospitalar". Sem isto, uma pesquisa por um termo no plural
+   não devolve as notícias que o usam no singular — e são a maioria dos títulos. */
+function raiz(palavra){
+  /* O texto chega já sem acentos, pelo que se trabalha sobre as formas simples.
+     Corta-se a terminação e deixa-se o sufixo variar no padrão de procura. */
+  return palavra
+    .replace(/(coes|cao)$/, "ca")     // alterações / alteração → altera(ção|ções)
+    .replace(/(oes|ao)$/, "")
+    .replace(/(ais|al)$/, "a")
+    .replace(/(eis|el)$/, "e")
+    .replace(/(res)$/, "r")
+    .replace(/(ses)$/, "s")
+    .replace(/(es)$/, "")
+    .replace(/s$/, "");
+}
+
+/* Verifica se o texto contém a expressão, aceitando singular e plural em
+   qualquer das palavras que a compõem. */
+function contemExpressao(texto, expressao){
+  const palavras = simplificar(expressao).split(/\s+/).filter(Boolean);
+  if(!palavras.length) return false;
+  const padrao = palavras.map(p => raiz(p).replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\w{0,4}").join("\\s+");
+  try{ return new RegExp("(^|\\W)" + padrao + "(\\W|$)").test(texto); }
+  catch(e){ return texto.includes(simplificar(expressao)); }
 }
 
 function simplificar(t){
@@ -2284,11 +2327,17 @@ function analisarFeed(bruto, area){
 /* ---------- Escrita dos ficheiros ---------- */
 
 /* Campo auxiliar do índice de pesquisa, que não deve sair nos ficheiros */
-const COLUNAS = [
-  ["area","Área governativa"], ["grupo","Agrupamento temático"], ["data","Data de publicação"],
-  ["fonte","Fonte"], ["dominio","Domínio"], ["titulo","Título"], ["resumo","Resumo"],
-  ["ligacao","Ligação"], ["consulta","Palavras-chave da consulta"]
-];
+/* A coluna do resumo só entra quando há resumos: os feeds das publicações
+   trazem-nos, a pesquisa complementar não. */
+function colunasExcel(){
+  const comResumo = recolha.some(n => n.resumo);
+  return [
+    ["area","Área governativa"], ["grupo","Agrupamento temático"], ["data","Data de publicação"],
+    ["fonte","Fonte"], ["dominio","Domínio"], ["titulo","Título"],
+    ...(comResumo ? [["resumo","Resumo"]] : []),
+    ["ligacao","Ligação"], ["consulta","Palavras-chave da consulta"]
+  ];
+}
 
 /* As ligações do Google Notícias são reencaminhamentos: o endereço do artigo vai
    codificado no próprio identificador. Quando é possível descodificá-lo, devolve-se
@@ -2390,7 +2439,11 @@ function escXML(v){
 }
 
 function descarregarXLSX(){
-  const larguras = [24, 22, 17, 18, 18, 52, 52, 40, 46];
+  const COL = colunasExcel();
+  const comResumo = COL.some(c => c[0] === "resumo");
+  const larguras = comResumo
+    ? [24, 22, 17, 18, 18, 52, 52, 40, 46]
+    : [24, 22, 17, 18, 18, 60, 46, 50];
   const serie = serieDaArea(consultaAtiva.area.nome);
   const temSerie = serie.length >= 2;
   const letra = i => String.fromCharCode(65 + i);
@@ -2400,15 +2453,15 @@ function descarregarXLSX(){
       `<c r="${letra(i)}${num}" t="inlineStr"${estilo ? ` s="${estilo}"` : ` s="1"`}><is><t xml:space="preserve">${escXML(v)}</t></is></c>`
     ).join("") + `</row>`;
 
-  const linhas = [linhaXML(COLUNAS.map(c => c[1]), 1, 2)]
-    .concat(recolha.map((r, i) => linhaXML(COLUNAS.map(c => r[c[0]]), i + 2)));
+  const linhas = [linhaXML(COL.map(c => c[1]), 1, 2)]
+    .concat(recolha.map((r, i) => linhaXML(COL.map(c => r[c[0]]), i + 2)));
 
   const folha = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
 <sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
 <cols>${larguras.map((w, i) => `<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols>
 <sheetData>${linhas.join("")}</sheetData>
-<autoFilter ref="A1:${letra(COLUNAS.length-1)}${recolha.length + 1}"/>
+<autoFilter ref="A1:${letra(COL.length-1)}${recolha.length + 1}"/>
 </worksheet>`;
 
   const estilos = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -2432,11 +2485,7 @@ function descarregarXLSX(){
       internacionais: "só internacionais — tudo o que não seja fonte portuguesa",
       todas: "todas as fontes, sem restrição"
     }[filtroFontes]],
-    ["Tipo de fonte", {
-      sem: "só imprensa — jornais, rádios, televisões e agências",
-      so: "só redes sociais e plataformas de blogues",
-      com: "imprensa e redes sociais, sem distinção"
-    }[filtroRedes]],
+    ["Tipo de fonte", "imprensa — jornais, rádios, televisões e agências"],
     ["Origem", "Feeds das publicações portuguesas de referência, recolhidos diariamente; Google Notícias como complemento"],
     ["Consulta enviada", consultaAtiva.q],
     ["Notícias exportadas", String(recolha.length)],
@@ -2444,14 +2493,12 @@ function descarregarXLSX(){
     ["Versão do painel", CONFIG.versao],
     ["Série diária disponível", serie.length ? `${serie.length} dias (folha Evolução)` : "ainda sem histórico"],
     ["", ""],
-    ["Limite de resultados",
-     "O serviço devolve no máximo cerca de 100 artigos por consulta, sem paginação. " +
-     "Alargar a janela temporal não traz mais artigos: distribui os mesmos 100 por mais tempo. " +
-     "As contagens medem exposição mediática indexada e não são comparáveis entre áreas, " +
-     "porque uma área muito noticiada é truncada e uma pouco noticiada não é."],
+    ["Âmbito",
+     "Feeds de publicações de imprensa subscritas, marcadas pelas palavras-chave da área. " +
+     "As contagens medem o que essas publicações noticiaram no período, não o total noticiado. " +
+     "Nenhuma área é truncada, pelo que a comparação entre áreas é legítima."],
     ["Ordenação",
-     "Os resultados são ordenados por relevância e não por data. O operador de tempo atua " +
-     "sobre a data de indexação, que pode não coincidir com a da publicação."],
+     "Por data de publicação, decrescente."],
     ["Ligações",
      "Quando foi possível descodificar o reencaminhamento do Google, a coluna Ligação contém " +
      "o endereço do jornal; nos restantes casos mantém o endereço do Google, que abre o artigo."]
@@ -2542,15 +2589,22 @@ function mostrarEstadoRecolha(origem, retiradas){
   const foraDaJanela = retiradas.data < 0;
   const partes = [];
   if(retiradas.termo) partes.push(`${retiradas.termo} sem o termo pesquisado`);
-  if(retiradas.redes) partes.push(`${retiradas.redes} de redes sociais`);
+  if(retiradas.redes) partes.push(`${retiradas.redes} de plataformas sociais`);
   if(retiradas.origem) partes.push(`${retiradas.origem} por não serem fontes nacionais`);
   if(retiradas.data > 0) partes.push(`${retiradas.data} fora do período`);
   const fora = retiradas.termo + retiradas.redes + retiradas.origem + Math.max(0, retiradas.data);
 
+  /* Atalhos para afrouxar o filtro que mais cortou. Só aparecem quando há de
+     facto margem para afrouxar: já em "todas" ou já em sete dias, não há. */
   const atalhos = [];
-  if(retiradas.origem && filtroFontes === "nacionais") atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Aceitar todas as fontes</button>`);
-  if(retiradas.redes && filtroRedes === "sem") atalhos.push(`<button class="btn-atalho" data-afrouxar="redes">Incluir redes sociais</button>`);
-  if(retiradas.data) atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
+  if(retiradas.origem && filtroFontes === "nacionais"){
+    atalhos.push(`<button class="btn-atalho" data-afrouxar="lusofonas">Incluir imprensa lusófona</button>`);
+    atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Incluir toda a imprensa estrangeira</button>`);
+  }else if(retiradas.origem && filtroFontes !== "todas"){
+    atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Aceitar imprensa de qualquer origem</button>`);
+  }
+  if(retiradas.data && (HORAS_PERIODO[periodo] || 0) < 168)
+    atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
   const barra = atalhos.length ? `<div class="atalhos">${atalhos.join("")}</div>` : "";
 
   const notas = [];
@@ -2599,12 +2653,10 @@ document.addEventListener("click", e => {
 
   const af = e.target.closest("[data-afrouxar]");
   if(af){
-    if(af.dataset.afrouxar === "fontes"){
-      filtroFontes = "todas";
-      document.querySelectorAll("#filtroFontes button").forEach(x => x.classList.toggle("ativo", x.dataset.fonte === "todas"));
-    }else if(af.dataset.afrouxar === "redes"){
-      filtroRedes = "com";
-      document.querySelectorAll("#filtroRedes button").forEach(x => x.classList.toggle("ativo", x.dataset.redes === "com"));
+    if(af.dataset.afrouxar === "fontes" || af.dataset.afrouxar === "lusofonas"){
+      filtroFontes = af.dataset.afrouxar === "lusofonas" ? "lusofonas" : "todas";
+      document.querySelectorAll("#filtroFontes button").forEach(x => x.classList.toggle("ativo", x.dataset.fonte === filtroFontes));
+    }else if(false){
     }else{
       periodo = "7d";
       const sel = $("#campoPeriodo") || document.querySelector("select");
@@ -2659,14 +2711,6 @@ document.addEventListener("keydown", e => {
 $("#campoPesquisa").addEventListener("input", e => { termoPesquisa = e.target.value; desenhar(); });
 
 $("#btnManual").addEventListener("click", () => abrirManual("1"));
-$("#filtroRedes").addEventListener("click", e => {
-  const b = e.target.closest("[data-redes]");
-  if(!b) return;
-  filtroRedes = b.dataset.redes;
-  document.querySelectorAll("#filtroRedes button").forEach(x => x.classList.toggle("ativo", x === b));
-  recolha = []; assinaturaRecolha = "";
-  mostrarAviso(ROTULO_REDES[filtroRedes]);
-});
 
 $("#filtroFontes").addEventListener("click", e => {
   const b = e.target.closest("[data-fonte]");

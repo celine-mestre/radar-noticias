@@ -19,6 +19,7 @@ Requisitos: Python 3.9 ou superior e a biblioteca openpyxl (pip install openpyxl
 import argparse
 import html
 import json
+import unicodedata
 import os
 import re
 import sys
@@ -257,6 +258,39 @@ FONTES = [
     ("Agroportal", "agroportal.pt", "https://www.agroportal.pt/feed/"),
 ]
 
+# Imprensa dos restantes países de língua portuguesa. Matéria da CPLP, cooperação,
+# diáspora e política externa é frequentemente tratada primeiro nestes títulos.
+FONTES_LUSOFONAS = [
+    ("Jornal de Angola", "jornaldeangola.ao", "https://www.jornaldeangola.ao/ao/rss/"),
+    ("Novo Jornal (Angola)", "novojornal.co.ao", "https://www.novojornal.co.ao/rss"),
+    ("Angop", "angop.ao", "https://www.angop.ao/rss/ultimas.xml"),
+    ("O País (Moçambique)", "opais.co.mz", "https://opais.co.mz/feed/"),
+    ("Carta de Moçambique", "cartamz.com", "https://cartamz.com/index.php/component/obrss/rss-noticias"),
+    ("Expresso das Ilhas (Cabo Verde)", "expressodasilhas.cv", "https://expressodasilhas.cv/rss"),
+    ("Inforpress (Cabo Verde)", "inforpress.cv", "https://inforpress.cv/feed/"),
+    ("Tatoli (Timor-Leste)", "tatoli.tl", "https://tatoli.tl/pt/feed/"),
+    ("STP-Press (São Tomé)", "stp-press.st", "https://www.stp-press.st/feed/"),
+    ("Agência Brasil", "agenciabrasil.ebc.com.br", "https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml"),
+    ("Folha de S.Paulo · Mundo", "folha.uol.com.br", "https://feeds.folha.uol.com.br/mundo/rss091.xml"),
+]
+
+# Imprensa internacional não lusófona, para ver como uma matéria portuguesa ou
+# europeia é tratada fora.
+FONTES_INTERNACIONAIS = [
+    ("Euronews (português)", "pt.euronews.com", "https://pt.euronews.com/rss"),
+    ("Politico Europe", "politico.eu", "https://www.politico.eu/feed/"),
+    ("EURACTIV", "euractiv.com", "https://www.euractiv.com/feed/"),
+    ("El País", "elpais.com", "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada"),
+    ("El País · Internacional", "elpais.com", "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/internacional/portada"),
+    ("Le Monde", "lemonde.fr", "https://www.lemonde.fr/rss/une.xml"),
+    ("BBC Mundo", "bbc.com", "https://feeds.bbci.co.uk/mundo/rss.xml"),
+    ("Deutsche Welle (português)", "dw.com", "https://rss.dw.com/rdf/rss-br-all"),
+    ("France 24 (português)", "france24.com", "https://www.france24.com/pt/rss"),
+    ("RFI (português)", "rfi.fr", "https://www.rfi.fr/pt/rss"),
+    ("The Guardian · Europe", "theguardian.com", "https://www.theguardian.com/world/europe-news/rss"),
+    ("Agência Lusa · Internacional", "lusa.pt", "https://www.lusa.pt/rss/internacional"),
+]
+
 
 # ---------------------------------------------------------------------------
 # Construção das consultas
@@ -447,24 +481,52 @@ def extrair_itens(xml_bruto):
     return itens
 
 
+def _sem_acentos(t):
+    return unicodedata.normalize("NFD", t.lower()).encode("ascii", "ignore").decode()
+
+
+def _raiz(palavra):
+    """Reduz a palavra à raiz, para o plural e o singular casarem entre si."""
+    for fim, troca in (("coes", "ca"), ("cao", "ca"), ("oes", ""), ("ao", ""),
+                       ("ais", "a"), ("al", "a"), ("eis", "e"), ("el", "e"),
+                       ("res", "r"), ("ses", "s"), ("es", "")):
+        if palavra.endswith(fim):
+            return palavra[: -len(fim)] + troca
+    return palavra[:-1] if palavra.endswith("s") else palavra
+
+
+def contem_expressao(texto, expressao):
+    """Procura a expressão no texto, aceitando singular e plural.
+
+    Sem isto, "medicamentos" não encontraria "medicamento" — e a maioria dos
+    títulos usa o singular.
+    """
+    palavras = [p for p in _sem_acentos(expressao).split() if p]
+    if not palavras:
+        return False
+    padrao = r"\s+".join(re.escape(_raiz(p)) + r"\w{0,4}" for p in palavras)
+    return re.search(r"(^|\W)" + padrao + r"(\W|$)", texto) is not None
+
+
 def marcar_por_areas(it, alvo):
     """Devolve as áreas e as palavras-chave que este artigo satisfaz.
 
-    A marcação é literal, sobre título e resumo: é a mesma regra que se aplicaria
-    numa condição do Inoreader. Um artigo pode pertencer a mais de uma área.
+    É a mesma regra que se aplicaria numa condição de um agregador de feeds:
+    procura da expressão no título e no resumo. Um artigo pode pertencer a mais
+    do que uma área.
     """
-    texto = (it["titulo"] + " " + (it["resumo"] or "")).lower()
+    texto = _sem_acentos(it["titulo"] + " " + (it["resumo"] or ""))
     achados = []
     for ident, nome, grupo, palavras, excluir in alvo:
-        if any(e.lower() in texto for e in excluir):
+        if any(contem_expressao(texto, e) for e in excluir):
             continue
-        casadas = [p for p in palavras if p.lower() in texto]
+        casadas = [p for p in palavras if contem_expressao(texto, p)]
         if casadas:
             achados.append((nome, GRUPOS[grupo], casadas))
     return achados
 
 
-def recolher_fontes(alvo, dias=7, pausa=0.4):
+def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True):
     """Lê os feeds das publicações e marca os artigos pelas áreas governativas.
 
     É o método do Inoreader, executado do nosso lado: um artigo é recolhido por
@@ -472,9 +534,14 @@ def recolher_fontes(alvo, dias=7, pausa=0.4):
     """
     limite = datetime.now() - timedelta(days=dias)
     encontrados, lidos, falhas = {}, 0, []
+    lista = list(FONTES)
+    if lusofonas:
+        lista += FONTES_LUSOFONAS
+    if internacionais:
+        lista += FONTES_INTERNACIONAIS
 
-    for i, (nome_fonte, dominio, url) in enumerate(FONTES, 1):
-        print(f"[{i}/{len(FONTES)}] {nome_fonte}…", end=" ", flush=True)
+    for i, (nome_fonte, dominio, url) in enumerate(lista, 1):
+        print(f"[{i}/{len(lista)}] {nome_fonte}…", end=" ", flush=True)
         try:
             itens = extrair_itens(ler_feed(url))
         except Exception as erro:                              # noqa: BLE001
@@ -500,7 +567,7 @@ def recolher_fontes(alvo, dias=7, pausa=0.4):
                 }
                 marcados += 1
         print(f"{len(itens)} artigos, {marcados} marcados")
-        if i < len(FONTES):
+        if i < len(lista):
             time.sleep(pausa)
 
     print(f"\n{lidos} artigos lidos · {len(encontrados)} marcados por área")
@@ -532,8 +599,8 @@ def recolher_palavras(periodo, alvo, pausa=1.0, teto=60):
             novas = 0
             for it in itens:
                 # o serviço faz correspondência aproximada: confirma-se o termo
-                texto = (it["titulo"] + " " + (it["resumo"] or "")).lower()
-                if palavra.lower() not in texto:
+                texto = _sem_acentos(it["titulo"] + " " + (it["resumo"] or ""))
+                if not contem_expressao(texto, palavra):
                     continue
                 chave = (nome, it["titulo"].lower(), (it["fonte"] or "").lower())
                 if chave in encontradas:
@@ -697,7 +764,9 @@ def principal():
     ap.add_argument("--por-palavra", action="store_true",
                     help="recolher também uma consulta por cada palavra-chave")
     ap.add_argument("--fontes", action="store_true",
-                    help="ler os feeds das publicações portuguesas e marcar por área (método Inoreader)")
+                    help="ler os feeds das publicações e marcar por área (método de agregador)")
+    ap.add_argument("--sem-internacionais", action="store_true",
+                    help="ler apenas as publicações portuguesas, sem imprensa estrangeira")
     args = ap.parse_args()
 
     if args.area and args.area not in {a[0] for a in AREAS}:
@@ -712,7 +781,10 @@ def principal():
     if args.fontes:
         # Origem principal: os feeds das próprias publicações
         print("Leitura dos feeds das publicações:")
-        das_fontes, falhas = recolher_fontes(alvo, args.dias_arquivo)
+        das_fontes, falhas = recolher_fontes(
+            alvo, args.dias_arquivo,
+            internacionais=not args.sem_internacionais,
+            lusofonas=not args.sem_internacionais)
         campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "resumo", "ligacao"]
         linhas = [[n["area"], n["grupo"], n["data"], n["fonte"], n["dominio"],
                    n["titulo"], n["resumo"], n["ligacao"]] for n in das_fontes]
