@@ -900,6 +900,21 @@ const CONFIG = {
   /* Plataformas que não são publicações noticiosas. Não têm feeds subscritos e
      estão fora do âmbito da aplicação; se algo delas entrar no arquivo, é
      descartado em silêncio. */
+  /* Edição portuguesa do serviço de pesquisa aberta */
+  edicao: { hl:"pt-PT", gl:"PT", ceid:"PT:pt-150" },
+
+  /* Publicações estrangeiras de língua portuguesa com maior presença nos
+     resultados. Usadas nas exclusões da pesquisa aberta, que é o único sítio
+     onde o filtro de origem do painel não se aplica. */
+  publicacoesEstrangeiras: [
+    "globo.com", "g1.globo.com", "uol.com.br", "r7.com", "metropoles.com", "abril.com",
+    "conjur.com.br", "migalhas.com.br", "jota.info", "exame.com", "terra.com.br",
+    "jornaldeangola.ao", "novojornal.co.ao", "verangola.net", "angop.ao",
+    "opais.co.mz", "idolo.co.mz", "verdade.co.mz", "carta.co.mz",
+    "expressodasilhas.cv", "asemana.publ.cv", "inforpress.cv", "vozdoarquipelago.com",
+    "tatoli.tl", "timorpost.com", "stp-press.st", "odemocratagb.com"
+  ],
+
   redesSociais: [
     "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
     "youtube.com", "youtu.be", "linkedin.com", "reddit.com", "threads.net", "threads.com",
@@ -1060,6 +1075,31 @@ function sufixo(){
   return excl + (periodo ? ` when:${periodo}` : "");
 }
 
+/* PESQUISA ABERTA — a única ligação a um serviço externo que resta.
+   Não traz dados para o painel: abre uma consulta em janela nova, para confrontar
+   o corpus com o que existe lá fora. Serve sobretudo para descobrir que falta um
+   feed à lista. */
+function parametros(){
+  const e = CONFIG.edicao;
+  return `hl=${e.hl}&gl=${e.gl}&ceid=${encodeURIComponent(e.ceid)}`;
+}
+
+/* O operador de exclusão do serviço não funciona sobre domínios de topo, apenas
+   sobre publicações nomeadas: excluem-se as que mais aparecem, o que reduz o
+   ruído sem o eliminar. */
+function exclusoesPesquisaAberta(){
+  const fora = [...CONFIG.redesSociais.slice(0, 12)];
+  if(filtroFontes === "nacionais") fora.push(...CONFIG.publicacoesEstrangeiras);
+  return fora.length ? " " + fora.map(d => `-site:${d}`).join(" ") : "";
+}
+
+function abrirPesquisaAberta(q){
+  const consultaFinal = q + exclusoesPesquisaAberta();
+  window.open(
+    `https://news.google.com/search?q=${encodeURIComponent(consultaFinal)}&${parametros()}`,
+    "PesquisaAberta", "width=1000,height=780,scrollbars=yes,resizable=yes");
+}
+
 function consulta(a){
   const termos = "(" + a.palavras.map(p => `"${p}"`).join(" OR ") + ")";
   const excl = (a.excluir || []).map(t => ` -"${t}"`).join("");
@@ -1210,6 +1250,12 @@ function abrirDetalhe(id){
           <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg>
         </span>
         <span class="via-txt"><strong>Visualizar no painel</strong><em>Lista por data, síntese, impressão e Excel</em></span>
+      </button>
+      <button class="via-cartao" data-aberta="${a.id}">
+        <span class="via-ic" style="--cor:var(--azul)">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+        </span>
+        <span class="via-txt"><strong>Pesquisa aberta</strong><em>Confrontar o corpus com o que existe fora</em></span>
       </button>
     </div>`;
   $("#veu").classList.add("aberto");
@@ -1514,7 +1560,7 @@ const MANUAL = [
     <p>A recolha agendada lê todas as manhãs os feeds de <strong>48 publicações</strong> — 25 portuguesas, 11 dos restantes países de língua portuguesa e 12 internacionais — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado no próprio repositório: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
     <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. Onde o ruído persiste, a área declara termos a excluir.</p>
     <p><strong>Âmbito.</strong> Imprensa: jornais, rádios, televisões, agências e imprensa especializada. As plataformas sociais não publicam feeds e ficam de fora.</p>
-    <p class="man-aviso">Tudo o que o painel mostra vem deste corpus. Não há consultas a serviços externos: o que não estiver nas publicações subscritas, ou for anterior ao arquivo, não aparece.</p>`  },
+    <p class="man-aviso">Tudo o que o painel <em>mostra</em> vem deste corpus: nenhuma listagem, síntese ou exportação depende de serviços externos. À parte disso há a <strong>pesquisa aberta</strong>, que abre uma consulta ao Google Notícias em janela nova — não traz dados para cá, serve para confrontar o corpus com o que existe lá fora e descobrir se falta alguma publicação à lista.</p>`  },
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>
@@ -1525,6 +1571,7 @@ const MANUAL = [
       <dt>Contagens</dt><dd>Medem o que as publicações subscritas noticiaram, não o total do que foi noticiado. Como nenhuma área é truncada e o método é o mesmo para todas, a comparação entre áreas é legítima dentro do corpus.</dd>
 
       <dt>Ligações</dt><dd>Endereço direto do artigo, dado pelo próprio feed.</dd>
+      <dt>Pesquisa aberta</dt><dd>Abre um serviço externo em janela nova e segue as regras dele: cerca de 100 artigos, ordenação por relevância e datas de indexação. <strong>O filtro de origem não se aplica lá</strong> — a edição portuguesa desse serviço indexa tudo o que está escrito em português, e o operador de exclusão só funciona sobre publicações nomeadas, não sobre domínios de topo. Excluem-se as mais frequentes, mas escapam sempre algumas. No painel isso não sucede: a origem é apurada pelo domínio de cada notícia, com exatidão.</dd>
     </dl>` },
 
   { n:"8", titulo:"Receber por email", cor:"var(--dourado)", icone:"descarregar", corpo:`
@@ -2757,6 +2804,14 @@ function mostrarEstadoRecolha(origem, retiradas){
    EVENTOS
    ========================================================================= */
 document.addEventListener("click", e => {
+  const ab = e.target.closest("[data-aberta]");
+  if(ab){
+    const a = AREAS.find(x => x.id === ab.dataset.aberta);
+    abrirPesquisaAberta(consultaAtiva && consultaAtiva.area.id === a.id
+      ? consultaAtiva.q : consulta(a));
+    return;
+  }
+
   const chip = e.target.closest(".chip[data-termo]");
   if(chip){
     chip.classList.toggle("sel");                 // seleção múltipla
@@ -2807,6 +2862,8 @@ function pesquisaLivre(){
   const q = termo + sufixo();
   if(consultaAtiva) definirConsulta(consultaAtiva.area, q, `“${termo}”`, [termo]);
   document.querySelectorAll(".chip[data-termo]").forEach(c => c.classList.remove("sel"));
+  const marca = $("#marcaSelecao");
+  if(marca) marca.textContent = `pesquisa por “${termo}”`;
 }
 
 document.addEventListener("keydown", e => {

@@ -29,9 +29,11 @@ As propriedades que daí resultam, e que uma pesquisa não dá:
 | Resumo | Lead escrito pela redação |
 | Fontes | Lista conhecida e estável |
 
-Não há consultas a serviços externos. Tudo o que o painel mostra vem deste corpus: o
-que não estiver nas publicações subscritas, ou for anterior ao arquivo, não aparece.
-Alargar o âmbito é acrescentar feeds à lista.
+Nenhuma listagem, síntese ou exportação depende de serviços externos: tudo o que o
+painel mostra vem deste corpus. À parte disso há a **pesquisa aberta**, um botão que
+abre uma consulta ao Google Notícias em janela nova — não traz dados para o painel e
+serve para confrontar o corpus com o que existe fora, sobretudo para descobrir que
+falta uma publicação à lista de feeds.
 
 ### O percurso de uma notícia, passo a passo
 
@@ -137,7 +139,8 @@ comparáveis entre áreas. Fica de fora:
   âmbito da aplicação, que é a imprensa.
 - **Períodos anteriores ao arquivo** — que guarda 30 dias, valor definido na recolha.
 
-Alargar o âmbito é acrescentar feeds à lista — e passa a valer na recolha seguinte.
+Alargar o âmbito é acrescentar feeds à lista — e passa a valer na recolha seguinte. A
+**pesquisa aberta** ajuda a saber quando é preciso fazê-lo.
 
 ---
 
