@@ -116,6 +116,8 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
   border-bottom:1px solid var(--borda);box-shadow:var(--sombra);
 }
 .ferramentas .wrap{display:flex;align-items:center;gap:.7rem;padding-top:.75rem;padding-bottom:.75rem;flex-wrap:wrap}
+.ferramentas .btn-nota{margin-left:auto}
+.ferramentas .filtros{flex-basis:100%;margin-top:.15rem}
 .pesquisa{position:relative;flex:1;min-width:230px}
 .pesquisa svg{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);width:17px;height:17px;stroke:var(--texto-ligeiro);fill:none;stroke-width:1.9}
 .pesquisa input{
@@ -255,6 +257,17 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .evo-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
 .evo-haste{width:100%;max-width:16px;border-radius:3px 3px 1px 1px;display:block;transition:.2s}
 .evo-dia{font-size:.6rem;color:var(--texto-ligeiro);margin-top:.3rem;white-space:nowrap;height:.9rem}
+.barra-criterios{
+  display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;flex:none;
+  padding:.7rem 1.6rem;border-bottom:1px solid var(--borda);
+}
+.crit-campo{display:inline-flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--texto-ligeiro)}
+.crit-campo select{
+  padding:.34rem .6rem;border:1px solid var(--borda-forte);border-radius:999px;
+  font-family:var(--fonte);font-size:.8rem;background:var(--superficie);color:var(--texto);cursor:pointer;
+}
+.crit-campo select:focus{outline:none;border-color:var(--azul)}
+#critRepor{margin-left:auto}
 .barra-res{
   display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;flex:none;
   padding:.75rem 1.6rem;background:var(--superficie-alt);border-bottom:1px solid var(--borda);
@@ -823,7 +836,8 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <small>Suporte à Decisão · Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas</small>
     </div>
     <div class="fontes">
-      Fontes: feeds das publicações portuguesas de referência, com o Google Notícias como complemento. Versão de <span id="rodapeVersao">—</span>.
+      Fontes: feeds de 48 publicações de imprensa — portuguesas, lusófonas e internacionais.
+      Recolha diária em dias úteis. Versão de <span id="rodapeVersao">—</span>.
     </div>
   </div>
 </footer>
@@ -839,7 +853,8 @@ const CONFIG = {
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
      Exemplo: "https://ooseuutilizador.github.io/radar-noticias/" */
   enderecoDados: "",
-  versao: "julho de 2026",
+  /* Data da última alteração ao painel. Atualizar ao publicar uma versão nova. */
+  versao: "agosto de 2026",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 12000,   // limite de cada tentativa
@@ -1221,9 +1236,27 @@ function abrirExportacao(id){
       <div class="icone"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
       <div>
         <h3>${a.nome}</h3>
-        <p>${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave"} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
+        <p>${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave da área"}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
+    </div>
+
+    <div class="barra-criterios">
+      <label class="crit-campo">
+        <span>Período</span>
+        <select id="critPeriodo">
+          ${Object.entries(ROTULO_PERIODO).map(([v, r]) =>
+            `<option value="${v}"${v === periodo ? " selected" : ""}>${r}</option>`).join("")}
+        </select>
+      </label>
+      <label class="crit-campo">
+        <span>Fontes</span>
+        <select id="critFontes">
+          ${Object.entries(ROTULO_FONTES).map(([v, r]) =>
+            `<option value="${v}"${v === filtroFontes ? " selected" : ""}>${r}</option>`).join("")}
+        </select>
+      </label>
+      <button class="btn-atalho" id="critRepor">Repor predefinições</button>
     </div>
 
     <div class="barra-res" id="barraRes" hidden>
@@ -1263,6 +1296,19 @@ function abrirExportacao(id){
 
   $("#btnXLSX").addEventListener("click", descarregarXLSX);
   $("#btnImprimir").addEventListener("click", imprimirResultados);
+
+  /* Alterar os critérios sem sair da janela: aplica e recolhe de novo */
+  const aplicar = () => {
+    recolha = []; assinaturaRecolha = "";
+    const sel = $("#campoPeriodo") || document.querySelector("select");
+    if(sel) sel.value = periodo;
+    document.querySelectorAll("#filtroFontes button")
+      .forEach(x => x.classList.toggle("ativo", x.dataset.fonte === filtroFontes));
+    abrirExportacao(a.id);
+  };
+  $("#critPeriodo").addEventListener("change", e => { periodo = e.target.value; aplicar(); });
+  $("#critFontes").addEventListener("change", e => { filtroFontes = e.target.value; aplicar(); });
+  $("#critRepor").addEventListener("click", () => { periodo = "24h"; filtroFontes = "nacionais"; aplicar(); });
   $("#btnAtualizar").addEventListener("click", () => { recolha = []; recolherConsulta(); });
   $("#vistaRes").addEventListener("click", e => {
     const b = e.target.closest("[data-vista]");
@@ -1681,8 +1727,17 @@ function corpoSintese(){
         <p class="sin-nota">Quantas das notícias recolhidas contêm cada palavra-chave no título. Palavras a zero indicam termos que não estão a puxar cobertura no período escolhido.</p>
       </div>
 
-      ${blocoEvolucao(a)}
+      ${blocoEvolucao(a)}`;
+}
 
+function abrirManual(n){
+  $("#modal").innerHTML = `
+    <div class="modal-cab nota-cab">
+      <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+      <div>
+        <h3>Manual de utilização</h3>
+        <p>Radar de Notícias por Área Governativa · ${CONFIG.versao}</p>
+      </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
 
@@ -1920,15 +1975,19 @@ function paraConsulta(lista){
       (n.palavras && n.palavras.some(p => alvos.includes(simplificar(p))))
       || consultaAtiva.termos.some(t => contemExpressao(n._b, t)));
   }
-  return itens.map(n => Object.assign({}, n, { consulta: consultaAtiva.rotulo }));
+  /* A coluna de palavras-chave diz o que trouxe cada notícia: numa pesquisa por
+     termo, apenas os termos pedidos; caso contrário, as palavras da área que o
+     artigo satisfaz. */
+  const pedidos = consultaAtiva.termos;
+  return itens.map(n => {
+    let marcas = n.palavras || [];
+    if(pedidos) marcas = pedidos.filter(t =>
+      marcas.some(p => simplificar(p) === simplificar(t)) ||
+      contemExpressao(n._b || simplificar(n.titulo || ""), t));
+    return Object.assign({}, n, { consulta: marcas.join("; ") || (pedidos ? pedidos.join("; ") : "") });
+  });
 }
 
-/* O arquivo cobre uma pesquisa por termo quando foi recolhido por palavra-chave */
-function arquivoCobreTermos(lista){
-  if(!consultaAtiva || !consultaAtiva.termos) return false;
-  const alvos = consultaAtiva.termos.map(simplificar);
-  return lista.some(n => n.palavras && n.palavras.some(p => alvos.includes(simplificar(p))));
-}
 
 async function deDadosPublicados(){
   const dados = await lerFicheiroDados("noticias.json");
@@ -2137,14 +2196,18 @@ async function recolherConsulta(){
     try{
       const a = await carregarArquivo();
       if(!valido()) return;
-      if(arquivoCobreTermos(a.noticias)){
-        const r = { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias` };
-        if(r.itens.filter(dentroDoPeriodo).length){
+      /* O arquivo responde a qualquer termo — por palavra-chave marcada na
+         recolha ou por correspondência no texto. Só se não tiver nada é que se
+         recorre ao serviço externo. */
+      const itens = paraConsulta(a.noticias);
+      if(itens.length){
+        const origem = `arquivo de ${a.dias} dias`;
+        if(itens.filter(dentroDoPeriodo).length){
           if(btn) btn.disabled = false;
-          assentarRecolha(r.itens, r.origem);
+          assentarRecolha(itens, origem);
           return;
         }
-        if(r.itens.length) guardado = r;
+        guardado = { itens, origem };
       }
     }catch(e){ /* sem arquivo por palavra-chave */ }
     if(!valido()) return;
@@ -2286,7 +2349,7 @@ function analisarPorPadrao(texto, area){
     if(!resumo || simplificar(resumo).startsWith(simplificar(titulo).slice(0, 45))) resumo = "";
     return { area:area.nome, grupo:nomeGrupo(area.grupo), data:dataLegivel(campo(b, "pubDate")),
              fonte, dominio:"", titulo, resumo, ligacao:ligacaoDireta(campo(b, "link")),
-             consulta:consultaAtiva.rotulo };
+             consulta: marcasDe(titulo + " " + resumo) };
   });
 }
 
@@ -2301,6 +2364,13 @@ function normalizarFeed(bruto){
     if(/<item[\s>]/i.test(texto)) return texto;
   }catch(e){}
   return t;
+}
+
+/* Palavras-chave que este texto satisfaz, dentro do que a consulta pediu */
+function marcasDe(texto){
+  const t = simplificar(texto);
+  const candidatas = (consultaAtiva && consultaAtiva.termos) || (consultaAtiva ? consultaAtiva.area.palavras : []);
+  return candidatas.filter(p => contemExpressao(t, p)).join("; ");
 }
 
 function analisarFeed(bruto, area){
@@ -2320,7 +2390,7 @@ function analisarFeed(bruto, area){
     if(!resumo || simplificar(resumo).startsWith(simplificar(titulo).slice(0, 45))) resumo = "";
     return { area:area.nome, grupo:nomeGrupo(area.grupo), data:dataLegivel(ler("pubDate")),
              fonte, dominio, titulo, resumo, ligacao:ligacaoDireta(ler("link").trim()),
-             consulta:consultaAtiva.rotulo };
+             consulta: marcasDe(titulo + " " + resumo) };
   });
 }
 

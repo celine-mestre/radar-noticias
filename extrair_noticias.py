@@ -225,8 +225,8 @@ AZUL, CINZA = "2B5683", "F2F5F8"
 # ---------------------------------------------------------------------------
 # FONTES — os feeds das próprias publicações
 #
-# É o método do Inoreader: em vez de interrogar um motor de pesquisa, subscreve-se
-# o feed de cada publicação e faz-se a marcação por palavras-chave do nosso lado.
+# Em vez de interrogar um motor de pesquisa, subscreve-se o feed de cada publicação
+# e faz-se a marcação por palavras-chave do nosso lado.
 # Não há teto de resultados, a ordenação é cronológica, as datas são as de
 # publicação, as ligações são diretas e as descrições trazem o lead da redação.
 # ---------------------------------------------------------------------------
@@ -529,8 +529,8 @@ def marcar_por_areas(it, alvo):
 def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True):
     """Lê os feeds das publicações e marca os artigos pelas áreas governativas.
 
-    É o método do Inoreader, executado do nosso lado: um artigo é recolhido por
-    ser de uma fonte conhecida, e não por corresponder a uma pesquisa.
+    Um artigo é recolhido por ser de uma fonte conhecida, e não por corresponder
+    a uma pesquisa.
     """
     limite = datetime.now() - timedelta(days=dias)
     encontrados, lidos, falhas = {}, 0, []

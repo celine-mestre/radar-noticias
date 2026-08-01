@@ -190,9 +190,12 @@ python extrair_noticias.py --periodo 30d --area saude --saida saude_mes.xlsx
 
 ---
 
-## Segunda fase
+## Alargar o corpus
 
-A versão assente no corpus curado do Inoreader, que substitui os 48 feeds atuais por
-toda a pasta 03_MED, com curadoria da equipa. O método é o mesmo — muda a
-qualidade e a amplitude do corpus. A especificação está no ficheiro
-`inoreader_feeds_areas_governativas.xlsx`, fora deste repositório.
+Acrescentar uma publicação é escrever uma linha nas listas `FONTES`,
+`FONTES_LUSOFONAS` ou `FONTES_INTERNACIONAIS`, no início do `extrair_noticias.py`,
+com o nome, o domínio e o endereço do feed. A recolha seguinte já a inclui.
+
+Ajustar as áreas e as palavras-chave é editar a lista `AREAS`, no mesmo ficheiro.
+O critério é o da expressão e não o da palavra solta — "alterações climáticas" e não
+"clima" — e a correspondência aceita singular e plural.
