@@ -7,7 +7,8 @@ on:
       - "extrair_noticias.py"
       - ".github/workflows/radar-noticias.yml"
   schedule:
-    - cron: "0 6 * * 1-5"
+    - cron: "0 6 * * 1-5"     # cedo, para o painel estar pronto
+    - cron: "40 8 * * 1-5"    # antes do relatório das 09h00 UTC
 
 permissions:
   contents: write
@@ -33,7 +34,7 @@ jobs:
           echo "NOME=$NOME" >> "$GITHUB_ENV"
           python extrair_noticias.py --periodo 24h --saida "$NOME" \
             --json noticias.json --historico historico.json \
-            --arquivo arquivo.json --por-palavra
+            --arquivo arquivo.json --dias-arquivo 7 --fontes
 
       - name: Gravar os ficheiros de dados
         run: |
