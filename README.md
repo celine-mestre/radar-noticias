@@ -29,9 +29,9 @@ As propriedades que daí resultam, e que uma pesquisa não dá:
 | Resumo | Lead escrito pela redação |
 | Fontes | Lista conhecida e estável |
 
-O botão de **pesquisa aberta** existe para o que os feeds não cobrem — uma publicação
-não subscrita ou um período anterior ao arquivo — e abre uma consulta externa em
-janela nova. É consulta pontual, sem as garantias acima.
+Não há consultas a serviços externos. Tudo o que o painel mostra vem deste corpus: o
+que não estiver nas publicações subscritas, ou for anterior ao arquivo, não aparece.
+Alargar o âmbito é acrescentar feeds à lista.
 
 ### O percurso de uma notícia, passo a passo
 
@@ -137,9 +137,7 @@ comparáveis entre áreas. Fica de fora:
   âmbito da aplicação, que é a imprensa.
 - **Períodos anteriores ao arquivo** — que guarda 30 dias, valor definido na recolha.
 
-Para o que fica de fora há o botão de **pesquisa aberta**, que abre o Google Notícias
-em janela nova. É consulta pontual, sem as garantias do corpus. Alargar o âmbito de
-forma permanente é acrescentar feeds à lista.
+Alargar o âmbito é acrescentar feeds à lista — e passa a valer na recolha seguinte.
 
 ---
 
@@ -173,9 +171,6 @@ python extrair_noticias.py --fontes --json noticias.json \
 
 # apenas uma área
 python extrair_noticias.py --fontes --area saude --saida saude.xlsx
-
-# pesquisa no Google Notícias, para períodos anteriores ao arquivo
-python extrair_noticias.py --periodo 30d --area saude --saida saude_mes.xlsx
 ```
 
 ---

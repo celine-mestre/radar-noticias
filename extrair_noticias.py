@@ -480,8 +480,39 @@ def extrair_itens(xml_bruto):
             resumo = ""
 
         itens.append({"data": data, "fonte": fonte, "dominio": dominio,
-                      "titulo": titulo, "resumo": resumo, "ligacao": ligacao})
+                      "titulo": titulo, "resumo": resumo, "ligacao": ligacao,
+                      "imagem": imagem_do_item(item)})
     return itens
+
+
+def imagem_do_item(item):
+    """Endereço da imagem que o feed associa ao artigo, se houver.
+
+    As publicações declaram-na de várias formas — media:content, media:thumbnail,
+    enclosure ou uma etiqueta img dentro da descrição. Percorrem-se todas, pela
+    ordem em que costumam dar melhor resultado.
+    """
+    for etiqueta in ("content", "thumbnail"):
+        for no in item.iter():
+            if no.tag.endswith("}" + etiqueta) or no.tag == "media:" + etiqueta:
+                url = no.get("url") or ""
+                if url.startswith("http"):
+                    return url
+
+    fecho = item.find("enclosure")
+    if fecho is not None:
+        tipo = (fecho.get("type") or "")
+        url = fecho.get("url") or ""
+        if url.startswith("http") and (tipo.startswith("image") or not tipo):
+            return url
+
+    for campo in ("description", "{http://purl.org/rss/1.0/modules/content/}encoded"):
+        bruto = item.findtext(campo) or ""
+        achado = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', bruto)
+        if achado and achado.group(1).startswith("http"):
+            return achado.group(1)
+
+    return ""
 
 
 def _sem_acentos(t):
@@ -566,7 +597,8 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
                     "area": nome_area, "grupo": grupo_nome, "data": it["data"],
                     "fonte": it["fonte"] or nome_fonte, "dominio": it["dominio"] or dominio,
                     "titulo": it["titulo"], "resumo": it["resumo"],
-                    "ligacao": it["ligacao"], "palavras": set(palavras),
+                    "ligacao": it["ligacao"], "imagem": it.get("imagem", ""),
+                    "palavras": set(palavras),
                 }
                 marcados += 1
         print(f"{len(itens)} artigos, {marcados} marcados")
@@ -904,6 +936,8 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
         }
         if n.get("resumo"):
             registo_novo["resumo"] = n["resumo"]
+        if n.get("imagem"):
+            registo_novo["imagem"] = n["imagem"]
         novas.append(registo_novo)
 
     juntas = anteriores + novas

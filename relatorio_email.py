@@ -51,11 +51,32 @@ def sem_acentos(t):
     return unicodedata.normalize("NFD", (t or "").lower()).encode("ascii", "ignore").decode()
 
 
-def fonte_nacional(n):
+DOMINIOS_LUSOFONOS = (".ao", ".mz", ".cv", ".st", ".gw", ".tl", ".br")
+
+ETIQUETA_ORIGEM = {
+    "nacionais": ("Portugal", "#0E7433"),
+    "lusofonas": ("Lusofonia", "#BE9C54"),
+    "internacionais": ("Internacional", "#266B73"),
+}
+
+ROTULO_ORIGENS = {
+    frozenset({"nacionais"}): "imprensa de Portugal",
+    frozenset({"lusofonas"}): "imprensa da lusofonia",
+    frozenset({"internacionais"}): "imprensa internacional",
+    frozenset({"nacionais", "lusofonas"}): "imprensa de Portugal e da lusofonia",
+}
+
+
+def origem_da_fonte(n):
+    """Portugal, lusofonia ou internacional — as três origens do painel."""
     d = (n.get("dominio") or "").lower().replace("www.", "")
     if not d:
-        return True
-    return d.endswith(".pt") or any(d == x or d.endswith("." + x) for x in DOMINIOS_NACIONAIS)
+        return "nacionais"
+    if d.endswith(".pt") or any(d == x or d.endswith("." + x) for x in DOMINIOS_NACIONAIS):
+        return "nacionais"
+    if any(d.endswith(t) for t in DOMINIOS_LUSOFONOS):
+        return "lusofonas"
+    return "internacionais"
 
 
 def carregar(caminho):
@@ -63,7 +84,8 @@ def carregar(caminho):
         return json.load(origem).get("noticias", [])
 
 
-def filtrar(noticias, area, periodo, so_nacionais):
+def filtrar(noticias, area, periodo, origens):
+    """`origens` é o conjunto de origens a manter, ou None para todas."""
     limite = None
     if periodo in HORAS:
         limite = datetime.now() - timedelta(hours=HORAS[periodo])
@@ -72,7 +94,7 @@ def filtrar(noticias, area, periodo, so_nacionais):
     for n in noticias:
         if area and n.get("area") != area:
             continue
-        if so_nacionais and not fonte_nacional(n):
+        if origens and origem_da_fonte(n) not in origens:
             continue
         if limite and n.get("data"):
             try:
@@ -149,15 +171,26 @@ def bloco_area(nome, noticias, cor):
             resumo = n.get("resumo") or ""
             if len(resumo) > 190:
                 resumo = resumo[:190].rsplit(" ", 1)[0] + "…"
+            rotulo_origem, cor_origem = ETIQUETA_ORIGEM[origem_da_fonte(n)]
+            miniatura = (f"""
+        <td width="76" valign="top" style="padding-right:12px">
+          <img src="{esc(n.get('imagem'))}" width="72" height="54" alt=""
+               style="display:block;width:72px;height:54px;object-fit:cover;border-radius:4px">
+        </td>""" if n.get("imagem") else "")
             partes.append(f"""
     <tr><td style="padding:9px 24px;border-bottom:1px solid #f1f4f7">
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr>
-        <td width="44" valign="top" style="font:400 12px Arial,sans-serif;color:{CINZA_SUAVE};padding-top:2px">{hora}</td>
+        <td width="44" valign="top" style="font:400 12px Arial,sans-serif;color:{CINZA_SUAVE};padding-top:2px">{hora}</td>{miniatura}
         <td valign="top">
           <a href="{esc(n.get('ligacao'))}" style="font:400 14px Arial,sans-serif;color:{CINZA_TEXTO};
              text-decoration:none;line-height:1.4">{esc(n.get('titulo'))}</a>
           {f'<div style="font:400 12px Arial,sans-serif;color:{CINZA_SUAVE};padding-top:3px;line-height:1.45">{esc(resumo)}</div>' if resumo else ''}
-          <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:4px">{esc(n.get('fonte'))}</div>
+          <div style="padding-top:5px">
+            <span style="font:400 11px Arial,sans-serif;color:#8a9098">{esc(n.get('fonte'))}</span>
+            <span style="font:600 9px Arial,sans-serif;color:{cor_origem};letter-spacing:.6px;
+                         text-transform:uppercase;border:1px solid {cor_origem};border-radius:3px;
+                         padding:1px 5px;margin-left:7px">{rotulo_origem}</span>
+          </div>
         </td>
       </tr></table>
     </td></tr>""")
@@ -183,20 +216,20 @@ def ligacao_painel(endereco, areas):
   </td></tr>"""
 
 
-def construir(dados, areas, periodo, so_nacionais, endereco_painel=""):
+def construir(dados, areas, periodo, origens, endereco_painel=""):
     agora = datetime.now()
     data_extenso = f"{agora.day} de {MESES[agora.month - 1]} de {agora.year}"
 
     seccoes, total = [], 0
     for nome in areas:
-        noticias = filtrar(dados, nome, periodo, so_nacionais)
+        noticias = filtrar(dados, nome, periodo, origens)
         total += len(noticias)
         grupo = next((n.get("grupo") for n in dados if n.get("area") == nome), "")
         seccoes.append(bloco_area(nome, noticias, COR_GRUPO.get(grupo, AZUL)))
 
-    criterios = f"{ROTULO_PERIODO.get(periodo, periodo)}"
-    if so_nacionais:
-        criterios += " · imprensa nacional"
+    criterios = f"{ROTULO_PERIODO.get(periodo, periodo)} · " + (
+        ROTULO_ORIGENS.get(frozenset(origens), "imprensa selecionada")
+        if origens else "imprensa de todas as origens")
 
     return f"""<!DOCTYPE html>
 <html lang="pt-PT"><head><meta charset="UTF-8">
@@ -241,7 +274,7 @@ def construir(dados, areas, periodo, so_nacionais, endereco_painel=""):
 </body></html>"""
 
 
-def um_por_area(dados, areas, args, so_nacionais):
+def um_por_area(dados, areas, args, origens):
     """Escreve um relatório por área e um manifesto com os destinatários.
 
     O manifesto é lido pelo fluxo de trabalho, que envia uma mensagem por área.
@@ -262,7 +295,7 @@ def um_por_area(dados, areas, args, so_nacionais):
             print(f"  {nome}: sem destinatários, ignorada")
             continue
 
-        noticias = filtrar(dados, nome, args.periodo, so_nacionais)
+        noticias = filtrar(dados, nome, args.periodo, origens)
         if not noticias:
             print(f"  {nome}: sem notícias no período, não é enviada")
             continue
@@ -271,7 +304,7 @@ def um_por_area(dados, areas, args, so_nacionais):
             args.pasta,
             re.sub(r"[^a-z0-9]+", "_", sem_acentos(nome)).strip("_") + ".html")
         with open(ficheiro, "w", encoding="utf-8") as destino:
-            destino.write(construir(dados, [nome], args.periodo, so_nacionais, args.painel))
+            destino.write(construir(dados, [nome], args.periodo, origens, args.painel))
 
         manifesto.append({
             "area": nome,
@@ -297,8 +330,9 @@ def principal():
     ap.add_argument("--areas", default=None, help="várias áreas, separadas por vírgula")
     ap.add_argument("--todas", action="store_true", help="todas as áreas com notícias")
     ap.add_argument("--periodo", default="24h", choices=list(HORAS))
-    ap.add_argument("--todas-as-fontes", action="store_true",
-                    help="não restringir à imprensa nacional")
+    ap.add_argument("--origens", default="",
+                    help="origens a incluir: nacionais, lusofonas, internacionais — "
+                         "separadas por vírgula. Vazio inclui todas.")
     ap.add_argument("--saida", default="relatorio.html")
     ap.add_argument("--assunto-para", default=None,
                     help="ficheiro onde escrever o assunto da mensagem")
@@ -328,18 +362,18 @@ def principal():
     else:
         sys.exit("Indique --area, --areas ou --todas.")
 
-    so_nacionais = not args.todas_as_fontes
+    origens = {o.strip() for o in args.origens.split(",") if o.strip()} or None
 
     if args.um_por_area:
-        um_por_area(dados, areas, args, so_nacionais)
+        um_por_area(dados, areas, args, origens)
         return
 
-    html = construir(dados, areas, args.periodo, so_nacionais, args.painel)
+    html = construir(dados, areas, args.periodo, origens, args.painel)
 
     with open(args.saida, "w", encoding="utf-8") as destino:
         destino.write(html)
 
-    total = sum(len(filtrar(dados, a, args.periodo, so_nacionais)) for a in areas)
+    total = sum(len(filtrar(dados, a, args.periodo, origens)) for a in areas)
     agora = datetime.now()
     rotulo_areas = areas[0] if len(areas) == 1 else f"{len(areas)} áreas"
     assunto = (f"Radar de Notícias · {rotulo_areas} · "

@@ -311,6 +311,12 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .ler-hora{font-size:.74rem;color:var(--texto-ligeiro);font-variant-numeric:tabular-nums;padding-top:.1rem}
 .ler-txt strong{display:block;font-size:.88rem;font-weight:400;color:var(--texto);line-height:1.4}
 .ler-txt em{font-style:normal;font-size:.75rem;color:var(--texto-ligeiro)}
+.ler-img{
+  flex:none;width:76px;height:56px;border-radius:var(--raio-s);overflow:hidden;
+  background:var(--superficie-alt);border:1px solid var(--borda);
+}
+.ler-img img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:560px){.ler-img{width:56px;height:44px}}
 .ler-resumo{display:block;font-size:.79rem;color:var(--texto-suave);line-height:1.45;margin:.15rem 0 .1rem;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ler-item svg{width:14px;height:14px;stroke:var(--texto-ligeiro);fill:none;stroke-width:1.9;
@@ -870,7 +876,6 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
    CONFIGURAÇÃO — editar aqui para adaptar o radar
    ========================================================================= */
 const CONFIG = {
-  edicao: { hl:"pt-PT", gl:"PT", ceid:"PT:pt-150" },   // edição portuguesa do Google Notícias
   maxPalavrasConsulta: 6,
   /* Endereço do painel publicado no GitHub Pages. Preenchido, permite que este
      ficheiro, aberto do disco, vá buscar as notícias da recolha agendada.
@@ -888,18 +893,13 @@ const CONFIG = {
      serviço, pelo que a restrição é aplicada às notícias já recolhidas. São
      nacionais os domínios .pt e os títulos portugueses que usam outro domínio. */
   /* Títulos portugueses que não usam domínio .pt — o resto é reconhecido pelo domínio */
-  /* Plataformas que não são publicações noticiosas. O Google Notícias indexa
-     páginas destas plataformas, que aparecem misturadas com os jornais. */
+  /* Plataformas que não são publicações noticiosas: não têm feeds subscritos e
+     estão fora do âmbito da aplicação. */
   /* Publicações estrangeiras de língua portuguesa com maior presença nos
-     resultados. Usadas nas exclusões da janela do Google. */
-  publicacoesEstrangeiras: [
-    "globo.com", "g1.globo.com", "uol.com.br", "r7.com", "metropoles.com", "abril.com",
-    "conjur.com.br", "migalhas.com.br", "jota.info", "exame.com", "terra.com.br",
-    "jornaldeangola.ao", "novojornal.co.ao", "verangola.net", "angop.ao",
-    "opais.co.mz", "idolo.co.mz", "verdade.co.mz", "carta.co.mz",
-    "expressodasilhas.cv", "asemana.publ.cv", "inforpress.cv", "vozdoarquipelago.com",
-    "tatoli.tl", "timorpost.com", "stp-press.st", "odemocratagb.com"
-  ],
+     Se algo delas entrar no arquivo, é descartado em silêncio. */
+  /* Plataformas que não são publicações noticiosas. Não têm feeds subscritos e
+     estão fora do âmbito da aplicação; se algo delas entrar no arquivo, é
+     descartado em silêncio. */
   redesSociais: [
     "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
     "youtube.com", "youtu.be", "linkedin.com", "reddit.com", "threads.net", "threads.com",
@@ -965,7 +965,7 @@ const ICONES = {
 
 /* =========================================================================
    ÁREAS GOVERNATIVAS — 16 ministérios do XXV Governo Constitucional
-   Cada área tem um conjunto de palavras-chave que constrói a consulta ao Google Notícias
+   Cada área tem um conjunto de palavras-chave que marca as notícias do corpus
    ========================================================================= */
 const AREAS = [
   { id:"presidencia", nome:"Presidência", grupo:"soberania", icone:"presidencia",
@@ -1010,7 +1010,7 @@ const AREAS = [
    ESTADO DA APLICAÇÃO
    ========================================================================= */
 let filtroAtual = "todas";
-let periodo = "24h";      // operador when: do Google Notícias
+let periodo = "24h";      // janela temporal da consulta
 let filtroFontes = "nacionais";   // nacionais · internacionais · todas
 /* O corpus é composto por feeds de publicações noticiosas. As plataformas sociais
    não publicam feeds e ficam por isso fora do âmbito da aplicação; a filtragem
@@ -1060,43 +1060,17 @@ function sufixo(){
   return excl + (periodo ? ` when:${periodo}` : "");
 }
 
-/* Consulta enviada ao Google Notícias: palavras-chave da área, exclusões e janela temporal */
 function consulta(a){
   const termos = "(" + a.palavras.map(p => `"${p}"`).join(" OR ") + ")";
   const excl = (a.excluir || []).map(t => ` -"${t}"`).join("");
   return termos + excl + sufixo();
 }
 
-/* O filtro de origem é aplicado às notícias recolhidas,
-   porque o operador site: não exclui domínios de topo de forma fiável. Para a
-   janela do Google, onde não há filtragem posterior possível, acrescentam-se as
-   exclusões que esse operador honra: domínios concretos, não domínios de topo.
-   É melhoria de aproximação, não garantia. */
-function exclusoesGoogle(){
-  const fora = [];
-  fora.push(...CONFIG.redesSociais.slice(0, 12));
-  if(filtroFontes === "nacionais") fora.push(...CONFIG.publicacoesEstrangeiras);
-  return fora.length ? " " + fora.map(d => `-site:${d}`).join(" ") : "";
-}
 
-/* Consulta para abrir no Google Notícias: a mesma, com as exclusões possíveis */
-function consultaGoogle(q){
-  return q + exclusoesGoogle();
-}
 
-function parametros(){
-  const e = CONFIG.edicao;
-  return `hl=${e.hl}&gl=${e.gl}&ceid=${e.ceid}`;
-}
 
-function urlFonte(a){
-  return `https://news.google.com/search?q=${encodeURIComponent(consultaGoogle(consulta(a)))}&${parametros()}`;
-}
 
 /* Endereço RSS de qualquer consulta */
-function urlRSS(q){
-  return `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&${parametros()}`;
-}
 
 /* O mesmo critério em formato RSS, para quem quiser subscrever a consulta num leitor */
 function urlFonteRSS(a){
@@ -1237,12 +1211,6 @@ function abrirDetalhe(id){
         </span>
         <span class="via-txt"><strong>Visualizar no painel</strong><em>Lista por data, síntese, impressão e Excel</em></span>
       </button>
-      <button class="via-cartao" data-feed="${a.id}">
-        <span class="via-ic" style="--cor:var(--azul)">
-          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
-        </span>
-        <span class="via-txt"><strong>Pesquisa aberta</strong><em>Fora do corpus, em janela nova</em></span>
-      </button>
     </div>`;
   $("#veu").classList.add("aberto");
   definirConsulta(a, consulta(a), a.palavras.join("; "));
@@ -1314,7 +1282,7 @@ function abrirExportacao(id){
 
     <div class="modal-corpo" id="corpoRes">
       <p class="aviso-alcance" id="avisoAlcance" hidden>
-        O serviço de pesquisa complementar não respondeu. Estes resultados vêm do arquivo da recolha agendada, que cobre os últimos sete dias das publicações subscritas. Para procurar fora desse âmbito, use a pesquisa aberta.
+        Estes resultados vêm do arquivo da recolha agendada, que cobre os últimos sete dias das publicações subscritas.
       </p>
       <div id="expEstado" class="res-estado"></div>
       <div id="conteudoRes"></div>
@@ -1506,7 +1474,7 @@ const MANUAL = [
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
-      <dt>Período</dt><dd>Predefinição: 24 horas, até ao máximo de sete dias, que é o que o arquivo guarda. Para procurar mais atrás, use a pesquisa aberta.</dd>
+      <dt>Período</dt><dd>Predefinição: 24 horas, até ao máximo de sete dias, que é o que o arquivo guarda.</dd>
       <dt>Imprensa</dt><dd>Três origens que não se sobrepõem e que, somadas, dão o corpus completo. <strong>Portugal</strong>, por predefinição. <strong>Lusofonia</strong>: Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacional</strong>: a restante imprensa estrangeira, já <em>sem</em> a lusofonia, que tem posição própria. <strong>Todas</strong> não filtra.</dd>
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida, e não por operadores de pesquisa — o que a torna exata e verificável.</dd>
     </dl>` },
@@ -1525,7 +1493,7 @@ const MANUAL = [
     <dl>
       <dt>Arquivo de sete dias</dt><dd>O corpus próprio, construído todas as manhãs a partir dos feeds das publicações. É onde quase todas as consultas são respondidas, em milissegundos e sem depender da rede.</dd>
       <dt>Retrato do dia</dt><dd>O que a última recolha trouxe, usado quando o arquivo não está disponível.</dd>
-      <dt>Pesquisa complementar</dt><dd>Só para o que o corpus não cobre: publicações não subscritas ou períodos anteriores ao arquivo. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem e avisa.</dd>
+
     </dl>
     <p class="man-aviso">A etiqueta ao lado da contagem diz <em>onde</em> as notícias foram procuradas — “arquivo de 7 dias”, “recolha agendada” ou o nome do serviço. O período indicado antes é o filtro que lhes foi <em>aplicado</em>. São coisas distintas: o arquivo cobre sete dias, e dele extraem-se as das últimas 24 horas quando é essa a janela escolhida.</p>
     <p><strong>Imprimir</strong> gera uma folha com cabeçalho institucional, os critérios da consulta e a lista em tabela — pronta para anexar a uma nota.</p>
@@ -1546,7 +1514,7 @@ const MANUAL = [
     <p>A recolha agendada lê todas as manhãs os feeds de <strong>48 publicações</strong> — 25 portuguesas, 11 dos restantes países de língua portuguesa e 12 internacionais — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado no próprio repositório: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
     <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. Onde o ruído persiste, a área declara termos a excluir.</p>
     <p><strong>Âmbito.</strong> Imprensa: jornais, rádios, televisões, agências e imprensa especializada. As plataformas sociais não publicam feeds e ficam de fora.</p>
-    <p class="man-aviso">Para o que os feeds não cobrem — uma publicação não subscrita, ou um período anterior ao arquivo — há o botão de pesquisa aberta, que abre uma consulta externa em janela nova. É consulta pontual, fora do corpus e sem as suas garantias.</p>`  },
+    <p class="man-aviso">Tudo o que o painel mostra vem deste corpus. Não há consultas a serviços externos: o que não estiver nas publicações subscritas, ou for anterior ao arquivo, não aparece.</p>`  },
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>
@@ -1555,8 +1523,8 @@ const MANUAL = [
       <dt>Imprensa apenas</dt><dd>As plataformas sociais não publicam feeds e estão fora do âmbito da aplicação. Páginas dessas plataformas que apareçam por via da pesquisa aberta são descartadas.</dd>
       <dt>Marcação literal</dt><dd>Um artigo entra numa área por conter a expressão no título ou no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.</dd>
       <dt>Contagens</dt><dd>Medem o que as publicações subscritas noticiaram, não o total do que foi noticiado. Como nenhuma área é truncada e o método é o mesmo para todas, a comparação entre áreas é legítima dentro do corpus.</dd>
-      <dt>Pesquisa aberta</dt><dd>O que vem do botão de pesquisa aberta segue as regras do serviço externo: cerca de 100 artigos por consulta, ordenação por relevância e datas de indexação. Não se aplica ao corpus.</dd>
-      <dt>Ligações</dt><dd>As do corpus são o endereço direto do artigo. Só as que venham da pesquisa aberta são reencaminhamentos.</dd>
+
+      <dt>Ligações</dt><dd>Endereço direto do artigo, dado pelo próprio feed.</dd>
     </dl>` },
 
   { n:"8", titulo:"Receber por email", cor:"var(--dourado)", icone:"descarregar", corpo:`
@@ -1755,9 +1723,13 @@ function corpoLista(){
   };
   const hora = n => (n.data || "").slice(11, 16);
 
+  /* A imagem, quando o feed a declara. Falhando o carregamento — endereço morto,
+     acesso restrito — a moldura desaparece em vez de deixar um vazio. */
   const artigo = n => `
     <a class="ler-item" href="${n.ligacao}" target="_blank" rel="noopener">
       <span class="ler-hora">${hora(n) || "—"}</span>
+      ${n.imagem ? `<span class="ler-img"><img src="${n.imagem}" alt="" loading="lazy"
+         onerror="this.parentNode.remove()"></span>` : ""}
       <span class="ler-txt">
         <strong>${n.titulo}</strong>
         ${n.resumo ? `<span class="ler-resumo">${n.resumo}</span>` : ""}
@@ -2039,23 +2011,6 @@ function irParaCapitulo(n){
    ========================================================================= */
 /* Vias de recolha, tentadas por esta ordem até uma resultar. A primeira usa
    carregamento de script, que contorna as restrições de leitura entre domínios. */
-/* Na rede da Secretaria-Geral, o corsproxy é o único serviço que passa o filtro:
-   responde, ainda que por vezes com sobrecarga temporária (estado 503). É por isso
-   tentado várias vezes, com intervalo, em paralelo com as alternativas. */
-const METODOS = [
-  { nome:"corsproxy",           tipo:"fetch",  tentativas:4, espera:900,
-    url:u => `https://corsproxy.io/?url=${encodeURIComponent(u)}` },
-  { nome:"corsproxy (variante)", tipo:"fetch", tentativas:3, espera:1200,
-    url:u => `https://corsproxy.io/?${encodeURIComponent(u)}` },
-  { nome:"cors.lol",            tipo:"fetch",  tentativas:3, espera:1500,
-    url:u => `https://api.cors.lol/?url=${encodeURIComponent(u)}` },
-  { nome:"thingproxy",          tipo:"fetch",  tentativas:2, espera:2000,
-    url:u => `https://thingproxy.freeboard.io/fetch/${u}` },
-  { nome:"allorigins",          tipo:"fetch",  url:u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}` },
-  { nome:"allorigins (script)", tipo:"script", url:u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}` },
-  { nome:"codetabs",            tipo:"fetch",  url:u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}` },
-  { nome:"leitura direta",      tipo:"fetch",  url:u => u }
-];
 
 const esperar = ms => new Promise(r => setTimeout(r, ms));
 
@@ -2255,22 +2210,6 @@ async function deDadosPublicados(){
 
 /* Tenta uma via, com limite de tempo próprio */
 /* Uma via, repetida enquanto o erro for transitório (sobrecarga do serviço) */
-async function tentarVia(m, endereco){
-  if(m.atraso) await esperar(m.atraso);
-  const tentativas = m.tentativas || 1;
-  let ultimo;
-  for(let i = 0; i < tentativas; i++){
-    try{
-      return await umaTentativa(m, endereco);
-    }catch(erro){
-      ultimo = erro;
-      const transitorio = /50\d|429|Failed to fetch/i.test(erro.message);
-      if(i === tentativas - 1 || !transitorio) throw erro;
-      await esperar(m.espera || 2000);
-    }
-  }
-  throw ultimo;
-}
 
 async function umaTentativa(m, endereco){
   let texto;
@@ -2291,15 +2230,6 @@ async function umaTentativa(m, endereco){
 }
 
 /* Primeira promessa a cumprir-se; se todas falharem, devolve a lista de erros */
-function primeiraQueResulte(promessas){
-  if(Promise.any) return Promise.any(promessas);
-  return new Promise((resolve, reject) => {
-    let falhas = 0; const erros = [];
-    promessas.forEach((p, i) => p.then(resolve).catch(e => {
-      erros[i] = e; if(++falhas === promessas.length) reject({ errors:erros });
-    }));
-  });
-}
 
 /* Identidade de uma notícia: título e fonte. Não se usa a ligação, porque um
    reencaminhamento mal resolvido pode ser igual para artigos diferentes. */
@@ -2402,122 +2332,37 @@ function assentarRecolha(itens, origem){
 
 async function recolherConsulta(){
   if(!consultaAtiva) return;
-  const btn = $("#btnRecolher"), estado = $("#expEstado");
+  const btn = $("#btnAtualizar"), estado = $("#expEstado");
   const meu = ++pedidoAtual;
   const valido = () => meu === pedidoAtual;
   if(btn) btn.disabled = true;
   recolha = [];
-  const endereco = urlRSS(consultaAtiva.q);
-  const aviso = $("#avisoAlcance");
-  if(aviso) aviso.hidden = true;
-  const horas = HORAS_PERIODO[periodo];
-  const porTermo = !!consultaAtiva.termos;
-  const foraDoCorpus = false;
-  let guardado = null;
-
   estado.innerHTML = "A recolher…";
 
-  /* Os ficheiros da recolha agendada contêm o que a consulta da área trouxe.
-     Para a consulta predefinida são a resposta completa e imediata; para uma
-     pesquisa por termo são apenas um subconjunto, porque o termo pode ter no
-     serviço muitas notícias que a consulta da área não apanhou. Daí a ordem
-     ser diferente num caso e no outro. */
+  /* Tudo vem do corpus: o arquivo dos últimos dias, e o retrato do dia se aquele
+     não estiver disponível. Não há consultas a serviços externos. */
+  let r = null;
+  try{ r = await doArquivo(); }catch(e){ /* sem arquivo */ }
+  if(!valido()) return;
 
-  const dosFicheiros = async () => {
-    if(foraDoCorpus) return null;   // o corpus não tem o que está a ser pedido
-    /* O arquivo é a união das consultas por palavra-chave e traz muito mais do
-       que a consulta única da área, pelo que é consultado primeiro. */
-    try{
-      const r = await doArquivo();
-      if(r.itens.length) guardado = r;
-      if(horas && r.dias && horas <= r.dias * 24 && r.itens.filter(dentroDoPeriodo).length) return r;
-    }catch(e){ /* sem arquivo */ }
-    try{
-      const r = await deDadosPublicados();
-      if(r.itens.length && (!guardado || r.itens.length > guardado.itens.length)) guardado = r;
-      if(horas && horas <= 24 && r.itens.filter(dentroDoPeriodo).length) return r;
-    }catch(e){ /* sem retrato do dia */ }
-    return null;
-  };
-
-  const doServico = async () => {
-    const arranque = Date.now();
-    const contador = setInterval(() => {
-      const seg = Math.round((Date.now() - arranque) / 1000);
-      estado.innerHTML = `A pesquisar no serviço… <span style="color:var(--texto-ligeiro);font-size:.8rem">${seg}s</span>`;
-    }, 1000);
-    try{
-      const corrida = primeiraQueResulte(
-        METODOS.map(m => tentarVia(m, endereco).catch(e => { throw new Error(m.nome + ": " + e.message); }))
-      );
-      const desistir = new Promise((_, rej) => setTimeout(
-        () => rej({ errors:[new Error("o serviço não respondeu em " + Math.round(CONFIG.tempoTotalRecolha/1000) + " segundos")] }),
-        CONFIG.tempoTotalRecolha));
-      return await Promise.race([corrida, desistir]);
-    }finally{ clearInterval(contador); }
-  };
-
-  let erros = [];
-
-  if(porTermo){
-    /* O arquivo responde a qualquer termo — por palavra-chave marcada na recolha
-       ou por correspondência no texto. Só se não tiver nada se vai ao serviço. */
-    const doArq = await dosFicheiros();
+  if(!r || !r.itens.length){
+    try{ r = await deDadosPublicados(); }catch(e){ /* sem retrato do dia */ }
     if(!valido()) return;
-    if(doArq){
-      if(btn) btn.disabled = false;
-      assentarRecolha(doArq.itens, doArq.origem);
-      return;
-    }
-
-    try{
-      const r = await doServico();
-      if(!valido()) return;
-      if(btn) btn.disabled = false;
-      assentarRecolha(r.itens, r.origem);
-      return;
-    }catch(agregado){
-      erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
-    }
-    if(!valido()) return;
-    await dosFicheiros();
-    if(!valido()) return;
-  }else{
-    const r = await dosFicheiros();
-    if(!valido()) return;
-    if(r){
-      if(btn) btn.disabled = false;
-      assentarRecolha(r.itens, r.origem);
-      return;
-    }
-    try{
-      const v = await doServico();
-      if(!valido()) return;
-      if(btn) btn.disabled = false;
-      assentarRecolha(v.itens, v.origem);
-      return;
-    }catch(agregado){
-      if(!valido()) return;
-      erros = (agregado && agregado.errors || []).map(e => e && e.message).filter(Boolean);
-    }
-  }
-
-  /* Recurso: o que estiver nos ficheiros. A janela temporal continua a aplicar-se
-     — mostrar notícias de há meses sob a etiqueta "últimas 24 horas" seria pior do
-     que não mostrar nada. */
-  if(guardado && guardado.itens.length){
-    if(btn) btn.disabled = false;
-    assentarRecolha(guardado.itens, guardado.origem);
-    if(aviso) aviso.hidden = false;
-    return;
   }
 
   if(btn) btn.disabled = false;
+
+  if(r && r.itens.length){
+    assentarRecolha(r.itens, r.origem);
+    return;
+  }
+
   estado.innerHTML = `<div class="res-vazio">
     <strong>Sem notícias para esta consulta</strong>
-    <p>O arquivo da recolha agendada não tem notícias que cumpram estes critérios. Experimente alargar o período, mudar a origem das fontes, ou usar a pesquisa aberta.</p>
-    <details style="margin-top:.8rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico</summary>
-    <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>
+    <p>Os ficheiros da recolha agendada não têm notícias desta área que cumpram estes
+       critérios. Experimente alargar o período ou mudar a origem das fontes.</p>
+    <p class="sub-nota">Se nenhuma área devolver notícias, é sinal de que a recolha
+       agendada não correu ou os ficheiros não foram publicados.</p>
     </div>`;
   apresentarResultados("");
 }
@@ -2626,32 +2471,7 @@ function normalizarFeed(bruto){
 }
 
 /* Palavras-chave que este texto satisfaz, dentro do que a consulta pediu */
-function marcasDe(texto){
-  const t = simplificar(texto);
-  const candidatas = (consultaAtiva && consultaAtiva.termos) || (consultaAtiva ? consultaAtiva.area.palavras : []);
-  return candidatas.filter(p => contemExpressao(t, p)).join("; ");
-}
 
-function analisarFeed(bruto, area){
-  const texto = normalizarFeed(bruto);
-  if(!texto || !/<item[\s>]/i.test(texto)) throw new Error("o conteúdo não contém notícias");
-  const doc = new DOMParser().parseFromString(prepararXML(texto), "application/xml");
-  if(doc.querySelector("parsererror") || !doc.querySelector("item")) return analisarPorPadrao(texto, area);
-  return [...doc.querySelectorAll("item")].map(it => {
-    const ler = n => (it.querySelector(n) ? it.querySelector(n).textContent : "") || "";
-    const noFonte = it.querySelector("source");
-    let dominio = "";
-    if(noFonte && noFonte.getAttribute("url")){
-      try { dominio = new URL(noFonte.getAttribute("url")).hostname; } catch(e){}
-    }
-    let [titulo, fonte] = arrumarTitulo(limparTexto(ler("title")), noFonte ? limparTexto(noFonte.textContent) : "");
-    let resumo = limparTexto(ler("description"));
-    if(!resumo || simplificar(resumo).startsWith(simplificar(titulo).slice(0, 45))) resumo = "";
-    return { area:area.nome, grupo:nomeGrupo(area.grupo), data:dataLegivel(ler("pubDate")),
-             fonte, dominio, titulo, resumo, ligacao:ligacaoDireta(ler("link").trim()),
-             consulta: marcasDe(titulo + " " + resumo) };
-  });
-}
 
 /* ---------- Escrita dos ficheiros ---------- */
 
@@ -2668,26 +2488,6 @@ function colunasExcel(){
   ];
 }
 
-/* As ligações do Google Notícias são reencaminhamentos: o endereço do artigo vai
-   codificado no próprio identificador. Quando é possível descodificá-lo, devolve-se
-   o endereço do jornal; caso contrário mantém-se o do Google, que abre na mesma. */
-function ligacaoDireta(url){
-  if(!url || url.indexOf("news.google.com") === -1) return url;
-  try{
-    const id = url.split("/articles/")[1];
-    if(!id) return url;
-    let b = id.split("?")[0].replace(/-/g, "+").replace(/_/g, "/");
-    while(b.length % 4) b += "=";
-    let bruto = "";
-    try{ bruto = atob(b); }catch(e){ return url; }
-    /* Formato antigo: o endereço do jornal está em claro nos bytes descodificados */
-    const achado = bruto.match(/https?:\/\/[A-Za-z0-9\-._~:\/?#\[\]@!$&'()*+,;=%]{12,}/);
-    /* Formato recente: vem cifrado e só o Google o resolve — fica o reencaminhamento,
-       que abre o artigo à mesma. A recolha agendada resolve-o pelo lado do servidor. */
-    if(!achado) return url;
-    return achado[0];
-  }catch(e){ return url; }
-}
 
 function nomeFicheiro(ext){
   const d = new Date(), c = n => String(n).padStart(2, "0");
@@ -2814,8 +2614,7 @@ function descarregarXLSX(){
       todas: "imprensa de todas as origens"
     }[filtroFontes]],
     ["Tipo de fonte", "imprensa — jornais, rádios, televisões e agências"],
-    ["Origem", "Feeds das publicações portuguesas de referência, recolhidos diariamente; Google Notícias como complemento"],
-    ["Consulta enviada", consultaAtiva.q],
+    ["Origem", "Feeds de 48 publicações de imprensa — Portugal, lusofonia e internacional — recolhidos diariamente"],
     ["Notícias exportadas", String(recolha.length)],
     ["Data da exportação", new Date().toLocaleString("pt-PT")],
     ["Versão do painel", CONFIG.versao],
@@ -2826,9 +2625,6 @@ function descarregarXLSX(){
      "Nenhuma área é truncada, pelo que a comparação entre áreas é legítima."],
     ["Ordenação",
      "Por data de publicação, decrescente."],
-    ["Ligações",
-     "Quando foi possível descodificar o reencaminhamento do Google, a coluna Ligação contém " +
-     "o endereço do jornal; nos restantes casos mantém o endereço do Google, que abre o artigo."]
   ];
 
   const folha2 = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -2974,14 +2770,7 @@ document.addEventListener("click", e => {
     }
     return;
   }
-  const fd = e.target.closest("[data-feed]");
-  if(fd){
-    const a = AREAS.find(x => x.id === fd.dataset.feed);
-    const q = (consultaAtiva && consultaAtiva.area.id === a.id) ? consultaAtiva.q : consulta(a);
-    window.open(`https://news.google.com/search?q=${encodeURIComponent(consultaGoogle(q))}&${parametros()}`,
-      "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
-    return;
-  }
+
   const ex = e.target.closest("[data-exportar]");
   if(ex){ abrirExportacao(ex.dataset.exportar); return; }
 
@@ -3018,8 +2807,6 @@ function pesquisaLivre(){
   const q = termo + sufixo();
   if(consultaAtiva) definirConsulta(consultaAtiva.area, q, `“${termo}”`, [termo]);
   document.querySelectorAll(".chip[data-termo]").forEach(c => c.classList.remove("sel"));
-  window.open(`https://news.google.com/search?q=${encodeURIComponent(consultaGoogle(q))}&${parametros()}`,
-    "RadarNoticias", "width=1000,height=780,scrollbars=yes,resizable=yes");
 }
 
 document.addEventListener("keydown", e => {
