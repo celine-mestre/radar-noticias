@@ -810,7 +810,7 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
     <div class="segmentado" id="filtroFontes" role="group" aria-label="Origem das fontes">
       <button data-fonte="nacionais" class="ativo">Portugal</button>
       <button data-fonte="lusofonas">Lusofonia</button>
-      <button data-fonte="internacionais">Resto do mundo</button>
+      <button data-fonte="internacionais">Internacional</button>
       <button data-fonte="todas">Todas</button>
     </div>
     <button class="btn" id="btnSubscrever">
@@ -1034,11 +1034,14 @@ function fonteLusofona(it){
 /* Três origens mutuamente exclusivas que, somadas, dão o corpus completo:
    Portugal · restantes países de língua portuguesa · restante imprensa estrangeira.
    É esta lista que alimenta o seletor da barra e o da janela de resultados. */
+/* Três origens mutuamente exclusivas que, somadas, dão o corpus completo.
+   A palavra "imprensa" não entra nos rótulos: é sempre imprensa, e está dita no
+   cabeçalho do seletor e no manual. */
 const ROTULO_FONTES = {
-  nacionais: "imprensa de Portugal",
-  lusofonas: "imprensa da lusofonia",
-  internacionais: "imprensa do resto do mundo",
-  todas: "imprensa de todas as origens"
+  nacionais: "Portugal",
+  lusofonas: "Lusofonia",
+  internacionais: "Internacional",
+  todas: "Todas"
 };
 
 const ROTULO_PERIODO = {
@@ -1279,7 +1282,7 @@ function abrirExportacao(id){
         </select>
       </label>
       <label class="crit-campo">
-        <span>Fontes</span>
+        <span>Imprensa</span>
         <select id="critFontes">
           ${Object.entries(ROTULO_FONTES).map(([v, r]) =>
             `<option value="${v}"${v === filtroFontes ? " selected" : ""}>${r}</option>`).join("")}
@@ -1368,7 +1371,7 @@ function apresentarResultados(origem){
   if(barra) barra.hidden = recolha.length === 0;
   const cont = $("#resContagem");
   if(cont) cont.innerHTML = recolha.length
-    ? `${recolha.length} notícias · ${ROTULO_PERIODO[periodo]}` +
+    ? `<strong>${recolha.length}</strong> ${recolha.length === 1 ? "notícia" : "notícias"} · ${ROTULO_PERIODO[periodo]}` +
       `<span class="res-origem" title="Onde as notícias foram procuradas">${origem}</span>`
     : "";
   mostrarVista(vistaAtual);
@@ -1398,12 +1401,36 @@ function tabelaImpressa(titulo, pares, rotulo){
 
 function imprimirResultados(){
   const a = consultaAtiva.area;
-  const linhas = recolha.map(n => `
+
+  /* A lista impressa segue a mesma organização do ecrã: por dia, com a hora à
+     esquerda. Uma data completa por linha seria ruído numa folha. */
+  const MESES_IMP = ["janeiro","fevereiro","março","abril","maio","junho","julho",
+                     "agosto","setembro","outubro","novembro","dezembro"];
+  const porDiaImp = new Map();
+  recolha.forEach(n => {
+    const dia = (n.data || "").slice(0, 10) || "sem data";
+    if(!porDiaImp.has(dia)) porDiaImp.set(dia, []);
+    porDiaImp.get(dia).push(n);
+  });
+  const hojeImp = new Date().toISOString().slice(0, 10);
+  const rotuloImp = d => {
+    if(d === "sem data") return "Sem data reconhecida";
+    if(d === hojeImp) return "Hoje";
+    const [ano, mes, dia] = d.split("-");
+    const sufixo = ano === String(new Date().getFullYear()) ? "" : ` de ${ano}`;
+    return `${Number(dia)} de ${MESES_IMP[Number(mes) - 1]}${sufixo}`;
+  };
+
+  const linhas = [...porDiaImp.keys()].sort().reverse().map(dia => `
+    <tr class="dia"><td colspan="3">${rotuloImp(dia)} · ${porDiaImp.get(dia).length}</td></tr>
+    ${porDiaImp.get(dia)
+      .sort((x, y) => (y.data || "").localeCompare(x.data || ""))
+      .map(n => `
     <tr>
-      <td class="d">${n.data || "—"}</td>
+      <td class="d">${(n.data || "").slice(11, 16) || "—"}</td>
       <td>${n.titulo}${n.resumo ? `<br><span class="r">${n.resumo}</span>` : ""}</td>
       <td class="f">${n.fonte || ""}</td>
-    </tr>`).join("");
+    </tr>`).join("")}`).join("");
 
   /* Na vista de síntese imprime-se a leitura agregada; na de notícias, a lista */
   const ag = agregados();
@@ -1433,7 +1460,9 @@ function imprimirResultados(){
          border-bottom:1px solid #cfd8e3;padding:.3rem .5rem}
       td{padding:.42rem .5rem;border-bottom:1px solid #e2e8f0;vertical-align:top}
       tr{break-inside:avoid}
-      .d{white-space:nowrap;color:#5b6068;font-size:8.5pt;width:16%}
+      .d{white-space:nowrap;color:#5b6068;font-size:8.5pt;width:8%}
+      tr.dia td{font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.08em;
+                color:#2B5683;padding-top:.9rem;border-bottom:1px solid #cfd8e3}
       .f{white-space:nowrap;color:#5b6068;font-size:8.5pt;width:18%}
       .r{color:#5b6068;font-size:8.5pt}
       footer{margin-top:1.2rem;padding-top:.5rem;border-top:1px solid #e2e8f0;
@@ -1449,13 +1478,14 @@ function imprimirResultados(){
       <div class="org">Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas</div>
       <h1>${a.nome}</h1>
       <div class="crit">${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave da área"} ·
-        ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} ·
-        ${recolha.length} notícias</div>
+        ${ROTULO_PERIODO[periodo]} · imprensa: ${ROTULO_FONTES[filtroFontes].toLowerCase()} ·
+        ${recolha.length} ${recolha.length === 1 ? "notícia" : "notícias"}</div>
     </header>
     ${vistaAtual === "sintese"
       ? corpoSinteseImpresso
       : `<table><thead><tr><th>Data</th><th>Notícia</th><th>Fonte</th></tr></thead><tbody>${linhas}</tbody></table>`}
-    <footer>Radar de Notícias por Área Governativa · ${new Date().toLocaleString("pt-PT")}</footer>
+    <footer>Radar de Notícias por Área Governativa · Secretaria-Geral do Governo ·
+      impresso em ${new Date().toLocaleString("pt-PT")}</footer>
     </body></html>`);
   janela.document.close();
   setTimeout(() => janela.print(), 300);
@@ -1476,7 +1506,7 @@ const MANUAL = [
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: 24 horas, até ao máximo de sete dias, que é o que o arquivo guarda. Para procurar mais atrás, use a pesquisa aberta.</dd>
-      <dt>Origem das fontes</dt><dd>Três origens que não se sobrepõem e que, somadas, dão o corpus completo. <strong>Portugal</strong>, por predefinição. <strong>Lusofonia</strong>: Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Resto do mundo</strong>: a restante imprensa estrangeira. <strong>Todas</strong> não filtra.</dd>
+      <dt>Imprensa</dt><dd>Três origens que não se sobrepõem e que, somadas, dão o corpus completo. <strong>Portugal</strong>, por predefinição. <strong>Lusofonia</strong>: Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacional</strong>: a restante imprensa estrangeira, já <em>sem</em> a lusofonia, que tem posição própria. <strong>Todas</strong> não filtra.</dd>
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida, e não por operadores de pesquisa — o que a torna exata e verificável.</dd>
     </dl>` },
 
@@ -2319,8 +2349,9 @@ function assentarRecolha(itens, origem){
   /* As duas seleções são independentes e uma plataforma social não tem
      nacionalidade: o filtro de origem aplica-se apenas às publicações
      noticiosas. */
+  /* As plataformas sociais estão fora do âmbito da aplicação: são descartadas em
+     silêncio, sem entrar nas contas do que foi retirado por critério do utilizador. */
   itens = itens.filter(it => !ehRedeSocial(it));
-  const porRedes = total - itens.length;
 
   const antesOrigem = itens.length;
   {
@@ -2332,7 +2363,7 @@ function assentarRecolha(itens, origem){
   const antesDoTempo = itens.length;
   itens = itens.filter(dentroDoPeriodo);
   const porData = antesDoTempo - itens.length;
-  const retiradas = { origem: porOrigem, data: porData, redes: porRedes, termo: confirmados.fora };
+  const retiradas = { origem: porOrigem, data: porData, termo: confirmados.fora };
   const vistos = new Set();
   recolha = itens.filter(it => {
     const k = chaveNoticia(it);
@@ -2752,10 +2783,10 @@ function descarregarXLSX(){
     ["Termos excluídos", (consultaAtiva.area.excluir || []).join("; ") || "—"],
     ["Janela temporal", ROTULO_PERIODO[periodo]],
     ["Origem das fontes", {
-      nacionais: "Portugal — domínios .pt e títulos portugueses reconhecidos",
-      lusofonas: "lusofonia — Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil",
-      internacionais: "resto do mundo — imprensa estrangeira não lusófona",
-      todas: "todas as origens"
+      nacionais: "imprensa de Portugal — domínios .pt e títulos portugueses reconhecidos",
+      lusofonas: "imprensa da lusofonia — Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil",
+      internacionais: "imprensa internacional, excluindo a lusofonia",
+      todas: "imprensa de todas as origens"
     }[filtroFontes]],
     ["Tipo de fonte", "imprensa — jornais, rádios, televisões e agências"],
     ["Origem", "Feeds das publicações portuguesas de referência, recolhidos diariamente; Google Notícias como complemento"],
@@ -2867,17 +2898,16 @@ function descarregarXLSX(){
 
 
 function mostrarEstadoRecolha(origem, retiradas){
-  retiradas = retiradas || { origem:0, data:0, redes:0, termo:0 };
+  retiradas = retiradas || { origem:0, data:0, termo:0 };
   const estado = $("#expEstado");
   if(!estado) return;
 
   const foraDaJanela = retiradas.data < 0;
   const partes = [];
   if(retiradas.termo) partes.push(`${retiradas.termo} sem o termo pesquisado`);
-  if(retiradas.redes) partes.push(`${retiradas.redes} de plataformas sociais`);
   if(retiradas.origem) partes.push(`${retiradas.origem} por não serem fontes nacionais`);
   if(retiradas.data > 0) partes.push(`${retiradas.data} fora do período`);
-  const fora = retiradas.termo + retiradas.redes + retiradas.origem + Math.max(0, retiradas.data);
+  const fora = retiradas.termo + retiradas.origem + retiradas.data;
 
   const barra = "";
 
