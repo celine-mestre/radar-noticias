@@ -54,19 +54,29 @@ jobs:
         run: |
           set -euo pipefail
           AREAS="${{ inputs.areas }}"
+
+          # As áreas têm espaços no nome — "Agricultura e Mar" — pelo que o valor
+          # tem de seguir entre aspas. Sem isso, cada palavra era lida como um
+          # argumento separado e o comando falhava.
           if [ "${AREAS,,}" = "todas" ]; then
-            OPCAO="--todas"
+            python gerir_subscritores.py \
+              --acao "${{ inputs.acao }}" \
+              --email "${{ inputs.email }}" \
+              --todas \
+              --ficheiro subscritores.json \
+              --painel "$PAINEL" \
+              --confirmacao-para confirmacao.html \
+              --assunto-para assunto.txt
           else
-            OPCAO="--areas $AREAS"
+            python gerir_subscritores.py \
+              --acao "${{ inputs.acao }}" \
+              --email "${{ inputs.email }}" \
+              --areas "$AREAS" \
+              --ficheiro subscritores.json \
+              --painel "$PAINEL" \
+              --confirmacao-para confirmacao.html \
+              --assunto-para assunto.txt
           fi
-          python gerir_subscritores.py \
-            --acao "${{ inputs.acao }}" \
-            --email "${{ inputs.email }}" \
-            $OPCAO \
-            --ficheiro subscritores.json \
-            --painel "$PAINEL" \
-            --confirmacao-para confirmacao.html \
-            --assunto-para assunto.txt
           echo "ASSUNTO=$(cat assunto.txt)" >> "$GITHUB_ENV"
 
       - name: Gravar no repositorio
