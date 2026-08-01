@@ -1076,9 +1076,7 @@ function sufixo(){
 }
 
 /* PESQUISA ABERTA — a única ligação a um serviço externo que resta.
-   Não traz dados para o painel: abre uma consulta em janela nova, para confrontar
-   o corpus com o que existe lá fora. Serve sobretudo para descobrir que falta um
-   feed à lista. */
+   Não traz dados para o painel: abre uma consulta em janela nova. */
 function parametros(){
   const e = CONFIG.edicao;
   return `hl=${e.hl}&gl=${e.gl}&ceid=${encodeURIComponent(e.ceid)}`;
@@ -1255,7 +1253,7 @@ function abrirDetalhe(id){
         <span class="via-ic" style="--cor:var(--azul)">
           <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
         </span>
-        <span class="via-txt"><strong>Pesquisa aberta</strong><em>Confrontar o corpus com o que existe fora</em></span>
+        <span class="via-txt"><strong>Pesquisa aberta</strong><em>Google Notícias, em janela nova</em></span>
       </button>
     </div>`;
   $("#veu").classList.add("aberto");
@@ -1560,7 +1558,7 @@ const MANUAL = [
     <p>A recolha agendada lê todas as manhãs os feeds de <strong>48 publicações</strong> — 25 portuguesas, 11 dos restantes países de língua portuguesa e 12 internacionais — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado no próprio repositório: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
     <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. Onde o ruído persiste, a área declara termos a excluir.</p>
     <p><strong>Âmbito.</strong> Imprensa: jornais, rádios, televisões, agências e imprensa especializada. As plataformas sociais não publicam feeds e ficam de fora.</p>
-    <p class="man-aviso">Tudo o que o painel <em>mostra</em> vem deste corpus: nenhuma listagem, síntese ou exportação depende de serviços externos. À parte disso há a <strong>pesquisa aberta</strong>, que abre uma consulta ao Google Notícias em janela nova — não traz dados para cá, serve para confrontar o corpus com o que existe lá fora e descobrir se falta alguma publicação à lista.</p>`  },
+    <p class="man-aviso">Tudo o que o painel mostra vem deste corpus: nenhuma listagem, síntese ou exportação depende de serviços externos. A <strong>pesquisa aberta</strong> abre uma consulta ao Google Notícias em janela nova, sem trazer dados para cá.</p>`  },
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>

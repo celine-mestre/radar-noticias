@@ -30,10 +30,8 @@ As propriedades que daí resultam, e que uma pesquisa não dá:
 | Fontes | Lista conhecida e estável |
 
 Nenhuma listagem, síntese ou exportação depende de serviços externos: tudo o que o
-painel mostra vem deste corpus. À parte disso há a **pesquisa aberta**, um botão que
-abre uma consulta ao Google Notícias em janela nova — não traz dados para o painel e
-serve para confrontar o corpus com o que existe fora, sobretudo para descobrir que
-falta uma publicação à lista de feeds.
+painel mostra vem deste corpus. A **pesquisa aberta** é um botão que abre uma consulta
+ao Google Notícias em janela nova, sem trazer dados para o painel.
 
 ### O percurso de uma notícia, passo a passo
 
@@ -139,8 +137,7 @@ comparáveis entre áreas. Fica de fora:
   âmbito da aplicação, que é a imprensa.
 - **Períodos anteriores ao arquivo** — que guarda 30 dias, valor definido na recolha.
 
-Alargar o âmbito é acrescentar feeds à lista — e passa a valer na recolha seguinte. A
-**pesquisa aberta** ajuda a saber quando é preciso fazê-lo.
+Alargar o âmbito é acrescentar feeds à lista — e passa a valer na recolha seguinte.
 
 ---
 
