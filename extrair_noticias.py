@@ -909,7 +909,8 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
     juntas = anteriores + novas
     vistos, mantidas = {}, []
     for n in juntas:
-        if n.get("data", "")[:10] < limite:
+        # Sem data reconhecida não entra: seria impossível saber se está na janela
+        if not n.get("data") or n["data"][:10] < limite:
             continue
         chave = (n.get("area", ""), n.get("titulo", "").lower(), n.get("fonte", "").lower())
         if chave in vistos:

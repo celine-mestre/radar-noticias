@@ -108,7 +108,7 @@ Jornal de Negócios, Jornal Económico, ECO, RTP Notícias, SIC Notícias, CNN P
 TSF, Renascença, Notícias ao Minuto, Diário de Notícias da Madeira, Sábado, Visão,
 Dinheiro Vivo, Executive Digest, Ambiente Magazine e Agroportal.
 
-**Lusófonas (11 feeds).** Jornal de Angola, Novo Jornal, Angop, O País, Carta de
+**Lusofonia (11 feeds).** Jornal de Angola, Novo Jornal, Angop, O País, Carta de
 Moçambique, Expresso das Ilhas, Inforpress, Tatoli, STP-Press, Agência Brasil e Folha
 de S.Paulo. Matéria de CPLP, cooperação e diáspora é frequentemente tratada primeiro
 nestes títulos.
@@ -117,8 +117,9 @@ nestes títulos.
 El País, Le Monde, BBC Mundo, Deutsche Welle, France 24, RFI, The Guardian (Europa) e
 Lusa Internacional.
 
-São 48 feeds ao todo, e o seletor do painel tem quatro posições: Nacionais, Lusófonas,
-Internacionais e Todas.
+São 48 feeds ao todo. O seletor do painel tem três origens que não se sobrepõem —
+**Portugal**, **Lusofonia** e **Resto do mundo** — mais a posição **Todas**, que é a
+soma das três.
 
 As listas estão no início do `extrair_noticias.py`, nas constantes `FONTES`,
 `FONTES_LUSOFONAS` e `FONTES_INTERNACIONAIS`. Acrescenta-se uma publicação escrevendo uma linha com o nome,

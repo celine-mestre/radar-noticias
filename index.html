@@ -808,9 +808,9 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       </select>
     </label>
     <div class="segmentado" id="filtroFontes" role="group" aria-label="Origem das fontes">
-      <button data-fonte="nacionais" class="ativo">Nacionais</button>
-      <button data-fonte="lusofonas">Lusófonas</button>
-      <button data-fonte="internacionais">Internacionais</button>
+      <button data-fonte="nacionais" class="ativo">Portugal</button>
+      <button data-fonte="lusofonas">Lusofonia</button>
+      <button data-fonte="internacionais">Resto do mundo</button>
       <button data-fonte="todas">Todas</button>
     </div>
     <button class="btn" id="btnSubscrever">
@@ -1031,10 +1031,14 @@ function fonteLusofona(it){
   return PUBLICACOES_LUSOFONAS.some(x => d.includes(x));
 }
 
+/* Três origens mutuamente exclusivas que, somadas, dão o corpus completo:
+   Portugal · restantes países de língua portuguesa · restante imprensa estrangeira.
+   É esta lista que alimenta o seletor da barra e o da janela de resultados. */
 const ROTULO_FONTES = {
-  nacionais: "só fontes nacionais",
-  internacionais: "só fontes internacionais",
-  todas: "todas as fontes"
+  nacionais: "imprensa de Portugal",
+  lusofonas: "imprensa da lusofonia",
+  internacionais: "imprensa do resto do mundo",
+  todas: "imprensa de todas as origens"
 };
 
 const ROTULO_PERIODO = {
@@ -1472,7 +1476,7 @@ const MANUAL = [
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: 24 horas, até ao máximo de sete dias, que é o que o arquivo guarda. Para procurar mais atrás, use a pesquisa aberta.</dd>
-      <dt>Origem das fontes</dt><dd>Quatro posições. <strong>Nacionais</strong>, por predefinição, mostra a imprensa portuguesa. <strong>Lusófonas</strong> mostra Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacionais</strong> mostra a restante imprensa estrangeira. <strong>Todas</strong> não filtra.</dd>
+      <dt>Origem das fontes</dt><dd>Três origens que não se sobrepõem e que, somadas, dão o corpus completo. <strong>Portugal</strong>, por predefinição. <strong>Lusofonia</strong>: Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Resto do mundo</strong>: a restante imprensa estrangeira. <strong>Todas</strong> não filtra.</dd>
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida, e não por operadores de pesquisa — o que a torna exata e verificável.</dd>
     </dl>` },
 
@@ -2163,6 +2167,16 @@ async function lerFicheiroDados(nome){
     }catch(e){ ultimo = e.message; }
   }
   if(!dados || !Array.isArray(dados.noticias)) throw new Error("sem " + nome + " (" + ultimo + ")");
+
+  /* Um ficheiro gerado por uma versão anterior pode trazer notícias mais antigas
+     do que a janela que declara. Poda-se à chegada, para que nada apareça fora
+     do âmbito anunciado. */
+  const dias = dados.dias || 7;
+  const corte = new Date(Date.now() - dias * 24 * 3600 * 1000).toISOString().slice(0, 10);
+  const antes = dados.noticias.length;
+  dados.noticias = dados.noticias.filter(n => !n.data || n.data.slice(0, 10) >= corte);
+  if(antes !== dados.noticias.length)
+    console.info(`${nome}: ${antes - dados.noticias.length} notícias fora da janela de ${dias} dias, ignoradas`);
   /* Índice de pesquisa pré-calculado, para não repetir o trabalho a cada consulta */
   dados.noticias.forEach(n => { if(!n._b) n._b = simplificar(n.titulo || ""); });
   cache[nome] = dados;
@@ -2298,7 +2312,7 @@ function confirmaTermos(itens){
   return { itens: bons, fora: itens.length - bons.length };
 }
 
-function assentarRecolha(itens, origem, ignorarPeriodo){
+function assentarRecolha(itens, origem){
   const confirmados = confirmaTermos(itens);
   itens = confirmados.itens;
   const total = itens.length;
@@ -2316,15 +2330,8 @@ function assentarRecolha(itens, origem, ignorarPeriodo){
   }
   const porOrigem = antesOrigem - itens.length;
   const antesDoTempo = itens.length;
-  let porData = 0;
-  if(!ignorarPeriodo){
-    const dentro = itens.filter(dentroDoPeriodo);
-    /* O serviço datou-as dentro da janela, mas a data de publicação é anterior.
-       Havendo notícias e nenhuma dentro do período, mostram-se assinaladas em
-       vez de se devolver uma lista vazia. */
-    if(dentro.length){ porData = itens.length - dentro.length; itens = dentro; }
-    else if(itens.length) porData = -itens.length;
-  }
+  itens = itens.filter(dentroDoPeriodo);
+  const porData = antesDoTempo - itens.length;
   const retiradas = { origem: porOrigem, data: porData, redes: porRedes, termo: confirmados.fora };
   const vistos = new Set();
   recolha = itens.filter(it => {
@@ -2439,10 +2446,12 @@ async function recolherConsulta(){
     }
   }
 
-  /* Recurso: o que estiver nos ficheiros, assinalado como tal */
+  /* Recurso: o que estiver nos ficheiros. A janela temporal continua a aplicar-se
+     — mostrar notícias de há meses sob a etiqueta "últimas 24 horas" seria pior do
+     que não mostrar nada. */
   if(guardado && guardado.itens.length){
     if(btn) btn.disabled = false;
-    assentarRecolha(guardado.itens, guardado.origem, true);
+    assentarRecolha(guardado.itens, guardado.origem);
     if(aviso) aviso.hidden = false;
     return;
   }
@@ -2743,9 +2752,10 @@ function descarregarXLSX(){
     ["Termos excluídos", (consultaAtiva.area.excluir || []).join("; ") || "—"],
     ["Janela temporal", ROTULO_PERIODO[periodo]],
     ["Origem das fontes", {
-      nacionais: "só nacionais — domínios .pt e títulos portugueses reconhecidos",
-      internacionais: "só internacionais — tudo o que não seja fonte portuguesa",
-      todas: "todas as fontes, sem restrição"
+      nacionais: "Portugal — domínios .pt e títulos portugueses reconhecidos",
+      lusofonas: "lusofonia — Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil",
+      internacionais: "resto do mundo — imprensa estrangeira não lusófona",
+      todas: "todas as origens"
     }[filtroFontes]],
     ["Tipo de fonte", "imprensa — jornais, rádios, televisões e agências"],
     ["Origem", "Feeds das publicações portuguesas de referência, recolhidos diariamente; Google Notícias como complemento"],
