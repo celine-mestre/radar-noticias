@@ -2332,6 +2332,19 @@ const HORAS_PERIODO = { "24h":24, "48h":48, "72h":72, "7d":168 };
 function dentroDoPeriodo(it){
   const horas = HORAS_PERIODO[periodo];
   if(!horas || !it.data) return true;                 // sem limite, ou sem data conhecida
+
+  /* Janelas de dias inteiros contam-se por data, não à hora certa. A recolha
+     guarda o arquivo por dia; contar 168 horas exatas deixava de fora notícias
+     do dia mais antigo que o arquivo ainda tem — e ninguém entende "1 fora do
+     período" quando pediu precisamente os sete dias que o arquivo cobre. */
+  if(horas >= 168){
+    const dias = Math.round(horas / 24);
+    const limite = new Date();
+    limite.setHours(0, 0, 0, 0);
+    limite.setDate(limite.getDate() - (dias - 1));
+    return it.data.slice(0, 10) >= limite.toISOString().slice(0, 10);
+  }
+
   const d = new Date(it.data.replace(" ", "T"));
   if(isNaN(d)) return true;
   return d.getTime() >= Date.now() - horas * 3600 * 1000;
@@ -2342,16 +2355,16 @@ function dentroDoPeriodo(it){
    resultados vindos do serviço são por isso confirmados contra o termo. */
 function confirmaTermos(itens){
   if(!consultaAtiva) return { itens, fora:0 };
-  /* Sem termos escolhidos, confere-se contra as palavras-chave da área: um
-     artigo que não contenha nenhuma delas é ruído da correspondência aproximada
-     do serviço, e sairia no Excel com a coluna de palavras-chave vazia. */
   const alvos = consultaAtiva.termos || consultaAtiva.area.palavras;
   const bons = itens.filter(it => {
     if(it.palavras && it.palavras.length && !consultaAtiva.termos) return true;
     const texto = it._b || simplificar((it.titulo || "") + " " + (it.resumo || ""));
     return alvos.some(t => contemExpressao(texto, t));
   });
-  return { itens: bons, fora: itens.length - bons.length };
+  /* Só se conta como "retirada" quando o utilizador pediu um termo. Sem termo
+     pedido, o que sai é ruído do serviço externo e é descartado em silêncio —
+     como as plataformas sociais. */
+  return { itens: bons, fora: consultaAtiva.termos ? itens.length - bons.length : 0 };
 }
 
 function assentarRecolha(itens, origem){
@@ -2916,7 +2929,7 @@ function mostrarEstadoRecolha(origem, retiradas){
 
   const foraDaJanela = retiradas.data < 0;
   const partes = [];
-  if(retiradas.termo) partes.push(`${retiradas.termo} sem ${consultaAtiva && consultaAtiva.termos ? "o termo pesquisado" : "palavras-chave da área"}`);
+  if(retiradas.termo) partes.push(`${retiradas.termo} sem o termo pesquisado`);
   if(retiradas.origem) partes.push(`${retiradas.origem} por não serem fontes nacionais`);
   if(retiradas.data > 0) partes.push(`${retiradas.data} fora do período`);
   const fora = retiradas.termo + retiradas.origem + retiradas.data;
