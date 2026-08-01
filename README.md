@@ -76,6 +76,9 @@ Nada disto passa por serviços intermediários nem depende da rede de quem consu
 | `index.html` | O painel. Ficheiro autónomo, sem dependências além do tipo de letra. |
 | `extrair_noticias.py` | A recolha. Lê os feeds, marca por área e produz o Excel e os três ficheiros de dados. |
 | `.github/workflows/radar-noticias.yml` | Tarefa agendada que corre a recolha nos servidores do GitHub. |
+| `relatorio_email.py` | Gera os relatórios diários em HTML a partir do arquivo. |
+| `subscritores.json` | Destinatários de cada área governativa. É aqui que se subscreve e cancela. |
+| `.github/workflows/relatorio-diario.yml` | Tarefa agendada que envia um relatório por área. |
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
 | `arquivo.json` | **Arquivo de 30 dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
 | `historico.json` | **Série diária.** Notícias, notícias novas e publicações distintas, por dia e por área. Não contém notícias, apenas contagens. |
@@ -189,6 +192,57 @@ python extrair_noticias.py --periodo 30d --area saude --saida saude_mes.xlsx
   âmbito da aplicação.
 - **Responsabilidade editorial.** O painel é um instrumento de acesso e triagem: a
   leitura e a verificação são de quem o usa.
+
+---
+
+## Relatório diário por email
+
+Todas as manhãs, às 10h00 de Lisboa, é enviado **um relatório por área governativa**
+para os destinatários dessa área. Cada mensagem traz as notícias das últimas 24 horas
+agrupadas por dia, com hora, título, resumo, publicação e ligação — e termina com um
+botão para abrir o painel, onde se pode refazer a pesquisa, alargar o período ou
+exportar para Excel.
+
+A recolha corre às 08h40 UTC, vinte minutos antes, para o relatório apanhar também
+as notícias da própria manhã.
+
+### Subscrever e cancelar
+
+Os destinatários estão no `subscritores.json`, uma lista por área:
+
+```json
+{
+  "areas": {
+    "Saúde": ["nome@sggoverno.gov.pt", "gabinete@min-saude.gov.pt"],
+    "Justiça": ["nome@sggoverno.gov.pt"]
+  }
+}
+```
+
+Subscrever é acrescentar um endereço à área; cancelar é retirá-lo. A alteração
+entra em vigor no envio seguinte. Uma área sem endereços não gera mensagem, e uma
+área sem notícias no período também não — não se enviam relatórios vazios.
+
+Este desenho é deliberado: os destinatários ficam num ficheiro versionado, visível
+e auditável, em vez de numa configuração escondida. Quem gere o produto altera a
+lista sem depender de ninguém, e o histórico de alterações fica registado.
+
+### Credenciais
+
+Em **Settings › Secrets and variables › Actions**: `SMTP_SERVIDOR`, `SMTP_PORTA`,
+`SMTP_UTILIZADOR` e `SMTP_SENHA`. Numa conta institucional, a senha de aplicação
+costuma ter de ser pedida à área de sistemas.
+
+Sem credenciais o fluxo corre na mesma e deixa os relatórios em *Artifacts*, na
+página da execução.
+
+### Gerar à mão
+
+```bash
+python relatorio_email.py --dados arquivo.json --area "Saúde" --periodo 24h
+python relatorio_email.py --dados arquivo.json --todas --um-por-area \
+    --painel "https://celine-mestre.github.io/radar-noticias/"
+```
 
 ---
 

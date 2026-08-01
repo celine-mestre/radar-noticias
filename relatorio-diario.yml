@@ -1,0 +1,101 @@
+name: Relatorio diario por email
+
+# Envia, todas as manhãs, um relatório por área governativa, para os destinatários
+# indicados no ficheiro subscritores.json. Corre depois de uma recolha, para que
+# as notícias incluam a manhã do próprio dia.
+#
+# HORA. O GitHub agenda em UTC. 09h00 UTC corresponde às 10h00 de Lisboa no
+# horário de verão e às 9h00 no de inverno. A recolha corre às 08h40 UTC, no
+# fluxo radar-noticias.yml, para o relatório apanhar as notícias da manhã.
+#
+# CREDENCIAIS, uma única vez, em Settings > Secrets and variables > Actions:
+#   SMTP_SERVIDOR    servidor de correio (ex.: smtp.office365.com)
+#   SMTP_PORTA       normalmente 587
+#   SMTP_UTILIZADOR  endereço que envia
+#   SMTP_SENHA       senha de aplicação, não a senha pessoal
+#
+# Os destinatários NÃO ficam em segredos: estão no subscritores.json, para que
+# possam ser alterados por quem gere o produto sem mexer em configurações.
+
+on:
+  workflow_dispatch:
+    inputs:
+      periodo:
+        description: "Janela do relatório"
+        type: choice
+        default: "24h"
+        options: ["24h", "48h", "72h", "7d"]
+  schedule:
+    - cron: "0 9 * * 1-5"
+
+permissions:
+  contents: read
+
+env:
+  PAINEL: "https://celine-mestre.github.io/radar-noticias/"
+
+jobs:
+  preparar:
+    runs-on: ubuntu-latest
+    outputs:
+      envios: ${{ steps.gerar.outputs.envios }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Gerar os relatorios
+        id: gerar
+        run: |
+          set -euo pipefail
+          PERIODO="${{ github.event.inputs.periodo }}"
+          if [ -z "$PERIODO" ]; then PERIODO="24h"; fi
+          python relatorio_email.py \
+            --dados arquivo.json \
+            --todas \
+            --periodo "$PERIODO" \
+            --um-por-area \
+            --subscritores subscritores.json \
+            --pasta relatorios \
+            --painel "$PAINEL"
+          echo "envios=$(cat relatorios/manifesto.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Guardar os relatorios
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-diarios
+          path: relatorios/
+          retention-days: 14
+
+  enviar:
+    needs: preparar
+    if: needs.preparar.outputs.envios != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        envio: ${{ fromJSON(needs.preparar.outputs.envios) }}
+    steps:
+      - name: Obter os relatorios
+        uses: actions/download-artifact@v4
+        with:
+          name: relatorios-diarios
+          path: relatorios
+
+      - name: Enviar
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVIDOR }}
+          server_port: ${{ secrets.SMTP_PORTA }}
+          username: ${{ secrets.SMTP_UTILIZADOR }}
+          password: ${{ secrets.SMTP_SENHA }}
+          subject: ${{ matrix.envio.assunto }}
+          to: ${{ matrix.envio.destinatarios }}
+          from: Radar de Noticias <${{ secrets.SMTP_UTILIZADOR }}>
+          html_body: file://${{ matrix.envio.ficheiro }}
+          convert_markdown: false
