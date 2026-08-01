@@ -1475,7 +1475,8 @@ function imprimirResultados(){
       .kpis span{font-size:8pt;color:#5b6068}
     </style></head><body>
     <header>
-      <div class="org">Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas</div>
+      <div class="org">Secretaria-Geral do Governo · Direção de Serviços de Suporte à Decisão ·
+        Unidade de Pesquisa e Estatísticas</div>
       <h1>${a.nome}</h1>
       <div class="crit">${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave da área"} ·
         ${ROTULO_PERIODO[periodo]} · imprensa: ${ROTULO_FONTES[filtroFontes].toLowerCase()} ·
@@ -2229,12 +2230,19 @@ function paraConsulta(lista){
      termo, apenas os termos pedidos; caso contrário, as palavras da área que o
      artigo satisfaz. */
   const pedidos = consultaAtiva.termos;
+  const daArea = consultaAtiva.area.palavras;
   return itens.map(n => {
-    let marcas = n.palavras || [];
+    const texto = n._b || simplificar((n.titulo || "") + " " + (n.resumo || ""));
+    /* Nem todas as notícias trazem as palavras-chave gravadas: as vindas da
+       pesquisa aberta, e as de recolhas anteriores à marcação, não trazem. Nesse
+       caso apuram-se aqui, para a coluna nunca sair vazia. */
+    let marcas = (n.palavras && n.palavras.length)
+      ? n.palavras
+      : daArea.filter(t => contemExpressao(texto, t));
     if(pedidos) marcas = pedidos.filter(t =>
-      marcas.some(p => simplificar(p) === simplificar(t)) ||
-      contemExpressao(n._b || simplificar(n.titulo || ""), t));
-    return Object.assign({}, n, { consulta: marcas.join("; ") || (pedidos ? pedidos.join("; ") : "") });
+      marcas.some(p => simplificar(p) === simplificar(t)) || contemExpressao(texto, t));
+    if(!marcas.length) marcas = pedidos || daArea.filter(t => contemExpressao(texto, t));
+    return Object.assign({}, n, { consulta: marcas.join("; ") });
   });
 }
 
@@ -2333,11 +2341,15 @@ function dentroDoPeriodo(it){
    termo pesquisado — uma pesquisa por "CPLP" traz notícias de automóveis. Os
    resultados vindos do serviço são por isso confirmados contra o termo. */
 function confirmaTermos(itens){
-  if(!consultaAtiva || !consultaAtiva.termos) return { itens, fora:0 };
-  const alvos = consultaAtiva.termos.map(simplificar);
+  if(!consultaAtiva) return { itens, fora:0 };
+  /* Sem termos escolhidos, confere-se contra as palavras-chave da área: um
+     artigo que não contenha nenhuma delas é ruído da correspondência aproximada
+     do serviço, e sairia no Excel com a coluna de palavras-chave vazia. */
+  const alvos = consultaAtiva.termos || consultaAtiva.area.palavras;
   const bons = itens.filter(it => {
-    const texto = simplificar((it.titulo || "") + " " + (it.resumo || ""));
-    return consultaAtiva.termos.some(t => contemExpressao(texto, t));
+    if(it.palavras && it.palavras.length && !consultaAtiva.termos) return true;
+    const texto = it._b || simplificar((it.titulo || "") + " " + (it.resumo || ""));
+    return alvos.some(t => contemExpressao(texto, t));
   });
   return { itens: bons, fora: itens.length - bons.length };
 }
@@ -2904,7 +2916,7 @@ function mostrarEstadoRecolha(origem, retiradas){
 
   const foraDaJanela = retiradas.data < 0;
   const partes = [];
-  if(retiradas.termo) partes.push(`${retiradas.termo} sem o termo pesquisado`);
+  if(retiradas.termo) partes.push(`${retiradas.termo} sem ${consultaAtiva && consultaAtiva.termos ? "o termo pesquisado" : "palavras-chave da área"}`);
   if(retiradas.origem) partes.push(`${retiradas.origem} por não serem fontes nacionais`);
   if(retiradas.data > 0) partes.push(`${retiradas.data} fora do período`);
   const fora = retiradas.termo + retiradas.origem + retiradas.data;
