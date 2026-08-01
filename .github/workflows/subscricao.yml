@@ -90,6 +90,9 @@ jobs:
           git config user.email "actions@github.com"
           git add subscritores.json
           git commit -m "${{ inputs.acao }}: ${{ inputs.email }}"
+          # Três fluxos gravam no mesmo repositório e podem cruzar-se: puxa-se
+          # primeiro o que houver, para o envio não ser recusado.
+          git pull --rebase --autostash
           git push
 
       # O envio só é tentado se as credenciais estiverem configuradas. Sem elas,

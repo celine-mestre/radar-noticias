@@ -1,0 +1,94 @@
+name: Sintese pelo Amalia
+
+# Escreve, por cada área governativa, um parágrafo com o que foi notícia nas
+# últimas 24 horas. Corre o Amália no próprio servidor do fluxo de trabalho:
+# o modelo tem pesos abertos sob licença Apache 2.0 e não depende de qualquer
+# serviço, credencial ou contrato.
+#
+# CUSTO. Usa-se a conversão quantizada de 4 bits, com cerca de 5,5 GB. Sem placa
+# gráfica, a geração faz-se no processador e demora cerca de um minuto por área —
+# uns vinte minutos ao todo, mais o descarregamento do modelo na primeira vez.
+# Em repositórios públicos o tempo de execução não tem custo.
+#
+# O modelo fica em cache entre execuções, pelo que só é descarregado de novo
+# quando a cache expira, ao fim de sete dias sem uso.
+#
+# É deliberadamente um fluxo separado da recolha: se falhar ou demorar, as
+# notícias do dia já estão publicadas e o painel funciona na mesma.
+#
+# CALENDÁRIO. Corre às 08h10 UTC, depois da recolha das 08h00 e antes do relatório
+# das 09h00, para que a síntese e a lista de notícias digam respeito ao mesmo
+# momento. Demorando mais do que os cinquenta minutos disponíveis, o relatório
+# sai com a síntese da véspera — que traz a hora a que foi escrita.
+
+on:
+  workflow_dispatch:
+    inputs:
+      periodo:
+        description: "Janela a sintetizar"
+        type: choice
+        default: "24h"
+        options: ["24h", "48h", "72h"]
+  schedule:
+    - cron: "10 8 * * 1-5"     # depois da recolha das 08h00, antes do relatório das 09h00
+
+permissions:
+  contents: write
+
+jobs:
+  sintetizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache do modelo
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: amalia-9b-q4km-v1
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          # Pacote já compilado para processador: compilar no servidor demoraria
+          # dez a quinze minutos e pode falhar por falta de dependências.
+          pip install llama-cpp-python \
+            --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+          pip install huggingface-hub
+
+      - name: Gerar as sinteses
+        run: |
+          PERIODO="${{ github.event.inputs.periodo }}"
+          if [ -z "$PERIODO" ]; then PERIODO="24h"; fi
+          python sintese_ia.py \
+            --local \
+            --dados arquivo.json \
+            --periodo "$PERIODO" \
+            --saida sinteses.json
+
+      - name: Gravar no repositorio
+        run: |
+          set -euo pipefail
+          if [ ! -f sinteses.json ]; then
+            echo "Sem sínteses a gravar."
+            exit 0
+          fi
+          if git diff --quiet sinteses.json 2>/dev/null; then
+            echo "Sem alterações."
+            exit 0
+          fi
+          git config user.name "Radar de Noticias"
+          git config user.email "actions@github.com"
+          git add sinteses.json
+          git commit -m "sínteses do Amália"
+          # Três fluxos gravam no mesmo repositório e podem cruzar-se: puxa-se
+          # primeiro o que houver, para o envio não ser recusado.
+          git pull --rebase --autostash
+          git push

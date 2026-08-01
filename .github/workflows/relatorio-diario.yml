@@ -64,6 +64,7 @@ jobs:
             --um-por-area \
             --subscritores subscritores.json \
             --origens "$ORIGENS" \
+            --sinteses sinteses.json \
             --pasta relatorios \
             --painel "$PAINEL"
           echo "envios=$(cat relatorios/manifesto.json)" >> "$GITHUB_OUTPUT"
@@ -77,7 +78,7 @@ jobs:
 
   enviar:
     needs: preparar
-    if: needs.preparar.outputs.envios != '[]'
+    if: needs.preparar.outputs.envios != '[]' && needs.preparar.outputs.envios != ''
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
