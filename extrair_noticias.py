@@ -221,6 +221,42 @@ AREAS = [
 
 AZUL, CINZA = "2B5683", "F2F5F8"
 
+# ---------------------------------------------------------------------------
+# FONTES — os feeds das próprias publicações
+#
+# É o método do Inoreader: em vez de interrogar um motor de pesquisa, subscreve-se
+# o feed de cada publicação e faz-se a marcação por palavras-chave do nosso lado.
+# Não há teto de resultados, a ordenação é cronológica, as datas são as de
+# publicação, as ligações são diretas e as descrições trazem o lead da redação.
+# ---------------------------------------------------------------------------
+FONTES = [
+    ("Público", "publico.pt", "https://feeds.feedburner.com/PublicoRSS"),
+    ("Público · Política", "publico.pt", "https://feeds.feedburner.com/publico-politica"),
+    ("Público · Economia", "publico.pt", "https://feeds.feedburner.com/publico-economia"),
+    ("Público · Sociedade", "publico.pt", "https://feeds.feedburner.com/publico-sociedade"),
+    ("Expresso", "expresso.pt", "https://expresso.pt/rss"),
+    ("Observador", "observador.pt", "https://observador.pt/feed/"),
+    ("Jornal de Notícias", "jn.pt", "https://www.jn.pt/rss/"),
+    ("Diário de Notícias", "dn.pt", "https://www.dn.pt/rss/"),
+    ("Correio da Manhã", "cmjornal.pt", "https://www.cmjornal.pt/rss"),
+    ("Jornal de Negócios", "jornaldenegocios.pt", "https://www.jornaldenegocios.pt/rss"),
+    ("Jornal Económico", "jornaleconomico.pt", "https://jornaleconomico.sapo.pt/feed"),
+    ("ECO", "eco.sapo.pt", "https://eco.sapo.pt/feed/"),
+    ("RTP Notícias", "rtp.pt", "https://www.rtp.pt/noticias/rss"),
+    ("SIC Notícias", "sicnoticias.pt", "https://sicnoticias.pt/rss"),
+    ("CNN Portugal", "cnnportugal.iol.pt", "https://cnnportugal.iol.pt/rss"),
+    ("TSF", "tsf.pt", "https://www.tsf.pt/rss/"),
+    ("Renascença", "rr.sapo.pt", "https://rr.sapo.pt/rss"),
+    ("Notícias ao Minuto", "noticiasaominuto.com", "https://www.noticiasaominuto.com/rss/ultima-hora"),
+    ("Diário de Notícias da Madeira", "dnoticias.pt", "https://www.dnoticias.pt/rss"),
+    ("Sábado", "sabado.pt", "https://www.sabado.pt/rss"),
+    ("Visão", "visao.pt", "https://visao.pt/feed/"),
+    ("Dinheiro Vivo", "dinheirovivo.pt", "https://www.dinheirovivo.pt/rss/"),
+    ("Executive Digest", "executivedigest.sapo.pt", "https://executivedigest.sapo.pt/feed/"),
+    ("Ambiente Magazine", "ambientemagazine.com", "https://www.ambientemagazine.com/feed/"),
+    ("Agroportal", "agroportal.pt", "https://www.agroportal.pt/feed/"),
+]
+
 
 # ---------------------------------------------------------------------------
 # Construção das consultas
@@ -409,6 +445,66 @@ def extrair_itens(xml_bruto):
         itens.append({"data": data, "fonte": fonte, "dominio": dominio,
                       "titulo": titulo, "resumo": resumo, "ligacao": ligacao})
     return itens
+
+
+def marcar_por_areas(it, alvo):
+    """Devolve as áreas e as palavras-chave que este artigo satisfaz.
+
+    A marcação é literal, sobre título e resumo: é a mesma regra que se aplicaria
+    numa condição do Inoreader. Um artigo pode pertencer a mais de uma área.
+    """
+    texto = (it["titulo"] + " " + (it["resumo"] or "")).lower()
+    achados = []
+    for ident, nome, grupo, palavras, excluir in alvo:
+        if any(e.lower() in texto for e in excluir):
+            continue
+        casadas = [p for p in palavras if p.lower() in texto]
+        if casadas:
+            achados.append((nome, GRUPOS[grupo], casadas))
+    return achados
+
+
+def recolher_fontes(alvo, dias=7, pausa=0.4):
+    """Lê os feeds das publicações e marca os artigos pelas áreas governativas.
+
+    É o método do Inoreader, executado do nosso lado: um artigo é recolhido por
+    ser de uma fonte conhecida, e não por corresponder a uma pesquisa.
+    """
+    limite = datetime.now() - timedelta(days=dias)
+    encontrados, lidos, falhas = {}, 0, []
+
+    for i, (nome_fonte, dominio, url) in enumerate(FONTES, 1):
+        print(f"[{i}/{len(FONTES)}] {nome_fonte}…", end=" ", flush=True)
+        try:
+            itens = extrair_itens(ler_feed(url))
+        except Exception as erro:                              # noqa: BLE001
+            print(f"falhou ({erro})")
+            falhas.append((nome_fonte, str(erro)))
+            continue
+
+        lidos += len(itens)
+        marcados = 0
+        for it in itens:
+            if it["data"] and it["data"] < limite:
+                continue
+            for nome_area, grupo_nome, palavras in marcar_por_areas(it, alvo):
+                chave = (nome_area, it["titulo"].lower())
+                if chave in encontrados:
+                    encontrados[chave]["palavras"].update(palavras)
+                    continue
+                encontrados[chave] = {
+                    "area": nome_area, "grupo": grupo_nome, "data": it["data"],
+                    "fonte": it["fonte"] or nome_fonte, "dominio": it["dominio"] or dominio,
+                    "titulo": it["titulo"], "resumo": it["resumo"],
+                    "ligacao": it["ligacao"], "palavras": set(palavras),
+                }
+                marcados += 1
+        print(f"{len(itens)} artigos, {marcados} marcados")
+        if i < len(FONTES):
+            time.sleep(pausa)
+
+    print(f"\n{lidos} artigos lidos · {len(encontrados)} marcados por área")
+    return list(encontrados.values()), falhas
 
 
 def recolher_palavras(periodo, alvo, pausa=1.0, teto=60):
@@ -600,6 +696,8 @@ def principal():
                     help="dias a manter no arquivo (predefinição: 7)")
     ap.add_argument("--por-palavra", action="store_true",
                     help="recolher também uma consulta por cada palavra-chave")
+    ap.add_argument("--fontes", action="store_true",
+                    help="ler os feeds das publicações portuguesas e marcar por área (método Inoreader)")
     args = ap.parse_args()
 
     if args.area and args.area not in {a[0] for a in AREAS}:
@@ -637,6 +735,14 @@ def principal():
         print(f"{len(noticias)} notícias gravadas em {args.json}")
 
     por_palavra = []
+
+    if args.fontes:
+        alvo = [a for a in AREAS if args.area is None or a[0] == args.area]
+        print("\nLeitura dos feeds das publicações:")
+        das_fontes, falhas_fontes = recolher_fontes(alvo, args.dias_arquivo)
+        por_palavra.extend(das_fontes)
+        falhas.extend(falhas_fontes)
+
     if args.por_palavra:
         alvo = [a for a in AREAS if args.area is None or a[0] == args.area]
         print("\nRecolha por palavra-chave:")
@@ -706,12 +812,15 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
 
     novas = [registo(l) for l in linhas]
     for n in (por_palavra or []):
-        novas.append({
+        registo_novo = {
             "area": n["area"], "grupo": n["grupo"],
             "data": n["data"].strftime("%Y-%m-%d %H:%M") if n["data"] else "",
             "fonte": n["fonte"], "dominio": n["dominio"], "titulo": n["titulo"],
             "ligacao": n["ligacao"], "palavras": sorted(n["palavras"]),
-        })
+        }
+        if n.get("resumo"):
+            registo_novo["resumo"] = n["resumo"]
+        novas.append(registo_novo)
 
     juntas = anteriores + novas
     vistos, mantidas = {}, []
@@ -724,6 +833,8 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
             anterior = vistos[chave]
             if n.get("palavras"):
                 anterior["palavras"] = sorted(set(anterior.get("palavras", [])) | set(n["palavras"]))
+            if n.get("resumo") and not anterior.get("resumo"):
+                anterior["resumo"] = n["resumo"]
             continue
         vistos[chave] = n
         mantidas.append(n)

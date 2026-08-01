@@ -274,6 +274,8 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .ler-hora{font-size:.74rem;color:var(--texto-ligeiro);font-variant-numeric:tabular-nums;padding-top:.1rem}
 .ler-txt strong{display:block;font-size:.88rem;font-weight:400;color:var(--texto);line-height:1.4}
 .ler-txt em{font-style:normal;font-size:.75rem;color:var(--texto-ligeiro)}
+.ler-resumo{display:block;font-size:.79rem;color:var(--texto-suave);line-height:1.45;margin:.15rem 0 .1rem;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ler-item svg{width:14px;height:14px;stroke:var(--texto-ligeiro);fill:none;stroke-width:1.9;
   stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:.14s;margin-top:.2rem}
 .ler-item:hover svg{opacity:1;stroke:var(--azul)}
@@ -1247,7 +1249,7 @@ const MANUAL = [
     <p>A janela de exportação tem dois passos. Primeiro <strong>Recolher notícias</strong>, que procura por esta ordem:</p>
     <dl>
       <dt>Retrato do dia</dt><dd>Para a consulta predefinida da área com janela de 24 horas. Imediato.</dd>
-      <dt>Arquivo de sete dias</dt><dd>Acumulado pelas recolhas agendadas, que pesquisam cada palavra-chave separadamente e marcam cada notícia com os termos que a trouxeram. É por isso que uma pesquisa por palavra-chave responde de imediato e sem depender da rede.</dd>
+      <dt>Arquivo de sete dias</dt><dd>Acumulado pelas recolhas agendadas, que leem os feeds das publicações portuguesas e marcam cada artigo com as áreas e palavras-chave que satisfaz. É por isso que uma pesquisa responde de imediato e sem depender da rede.</dd>
       <dt>Serviço de pesquisa</dt><dd>Só para o que o arquivo não cobre. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem em arquivo e avisa.</dd>
     </dl>
     <p>Concluído, aparece o segundo passo, com <strong>Ler notícias</strong>, <strong>Ver síntese</strong> e <strong>Descarregar Excel</strong>.</p>
@@ -1265,7 +1267,8 @@ const MANUAL = [
     <p>Tudo é contagem, calculada no painel. Nada é enviado para fora.</p>` },
 
   { n:"6", titulo:"Como o radar pesquisa", cor:"var(--azul)", icone:"chave", corpo:`
-    <p>Todas as áreas são servidas por uma pesquisa no Google Notícias, edição portuguesa. A consulta combina por disjunção todas as palavras-chave da área e acrescenta a janela temporal.</p>
+    <p>Há duas origens. A <strong>recolha agendada</strong> lê os feeds de cerca de duas dezenas de publicações portuguesas — jornais, rádios, televisões e imprensa económica — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado do nosso lado: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
+    <p>O <strong>Google Notícias</strong> é usado como complemento, para o que os feeds não cobrem — publicações fora da lista e períodos anteriores ao arquivo. Aí valem os limites descritos no capítulo seguinte.</p>
     <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. A pesquisa por expressão exata é a única operação que o serviço honra de forma fiável. Onde o ruído persiste, a área declara termos a excluir.</p>
     <p><strong>Fontes.</strong> Com o filtro ativo, ficam de fora os domínios de topo do Brasil, Angola, Moçambique, Cabo Verde, São Tomé e Príncipe, Guiné-Bissau, Timor-Leste e Macau, e os grupos de comunicação social desses países que usam domínios genéricos. A pesquisa abrange as restantes publicações indexadas na edição portuguesa. Entre os títulos nacionais: ${FONTES_REFERENCIA.map(f => f.nome).join(", ")}.</p>
     <p class="man-aviso">Não há filtro por título. O operador <code>site:</code> não se combina de forma fiável com o tema quando se indicam vários domínios — só funciona bem no uso negativo, que é o do filtro de fontes nacionais.</p>` },
@@ -1494,6 +1497,7 @@ function abrirLeitura(){
       <span class="ler-hora">${hora(n) || "—"}</span>
       <span class="ler-txt">
         <strong>${n.titulo}</strong>
+        ${n.resumo ? `<span class="ler-resumo">${n.resumo}</span>` : ""}
         <em>${n.fonte || "fonte não indicada"}</em>
       </span>
       <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
@@ -2238,7 +2242,7 @@ function analisarFeed(bruto, area){
 /* Campo auxiliar do índice de pesquisa, que não deve sair nos ficheiros */
 const COLUNAS = [
   ["area","Área governativa"], ["grupo","Agrupamento temático"], ["data","Data de publicação"],
-  ["fonte","Fonte"], ["dominio","Domínio"], ["titulo","Título"],
+  ["fonte","Fonte"], ["dominio","Domínio"], ["titulo","Título"], ["resumo","Resumo"],
   ["ligacao","Ligação"], ["consulta","Palavras-chave da consulta"]
 ];
 
@@ -2342,7 +2346,7 @@ function escXML(v){
 }
 
 function descarregarXLSX(){
-  const larguras = [24, 22, 17, 18, 18, 60, 46, 60];
+  const larguras = [24, 22, 17, 18, 18, 52, 52, 40, 46];
   const serie = serieDaArea(consultaAtiva.area.nome);
   const temSerie = serie.length >= 2;
   const letra = i => String.fromCharCode(65 + i);
