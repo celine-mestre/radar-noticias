@@ -759,6 +759,8 @@ def principal():
                     help="ficheiro JSON de série diária, atualizado a cada recolha")
     ap.add_argument("--arquivo", default=None,
                     help="ficheiro JSON com as notícias dos últimos dias, acumulado a cada recolha")
+    ap.add_argument("--mensal", default=None,
+                    help="pasta onde guardar os arquivos mensais (ex.: meses)")
     ap.add_argument("--dias-arquivo", type=int, default=30,
                     help="dias a manter no arquivo (predefinição: 30)")
     ap.add_argument("--por-palavra", action="store_true",
@@ -840,6 +842,9 @@ def principal():
 
     if args.arquivo:
         atualizar_arquivo(args.arquivo, linhas, args.dias_arquivo, por_palavra)
+
+    if args.mensal:
+        atualizar_arquivos_mensais(args.mensal, linhas, por_palavra)
 
     if args.historico:
         atualizar_historico(args.historico, linhas, args.periodo, vistos_anteriores)
@@ -925,6 +930,74 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
         json.dump({"dias": dias, "atualizado": datetime.now().strftime("%Y-%m-%d %H:%M"),
                    "noticias": mantidas}, destino, ensure_ascii=False)
     print(f"arquivo de {dias} dias: {len(mantidas)} notícias em {caminho}")
+
+
+def atualizar_arquivos_mensais(pasta, linhas, por_palavra=None, meses=12):
+    """Guarda as notícias em ficheiros mensais, um por mês.
+
+    O arquivo corrente cobre os últimos dias e é lido sempre; estes ficheiros
+    guardam o resto e são lidos apenas quando o período pedido os alcança. É o
+    que permite consultar meses ou um semestre sem carregar tudo de uma vez.
+    """
+    os.makedirs(pasta, exist_ok=True)
+    campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "resumo", "ligacao"]
+
+    novas = []
+    for l in linhas:
+        r = dict(zip(campos, l))
+        r["data"] = r["data"].strftime("%Y-%m-%d %H:%M") if r["data"] else ""
+        novas.append(r)
+    for n in (por_palavra or []):
+        novas.append({
+            "area": n["area"], "grupo": n["grupo"],
+            "data": n["data"].strftime("%Y-%m-%d %H:%M") if n["data"] else "",
+            "fonte": n["fonte"], "dominio": n["dominio"], "titulo": n["titulo"],
+            "resumo": n.get("resumo", ""), "ligacao": n["ligacao"],
+            "palavras": sorted(n["palavras"]),
+        })
+
+    por_mes = {}
+    for n in novas:
+        if len(n.get("data", "")) >= 7:
+            por_mes.setdefault(n["data"][:7], []).append(n)
+
+    indice = []
+    for mes, itens in sorted(por_mes.items()):
+        caminho = os.path.join(pasta, f"arquivo-{mes}.json")
+        anteriores = []
+        if os.path.exists(caminho):
+            try:
+                with open(caminho, encoding="utf-8") as origem:
+                    anteriores = json.load(origem).get("noticias", [])
+            except (json.JSONDecodeError, OSError):
+                anteriores = []
+
+        vistos, mantidas = {}, []
+        for n in anteriores + itens:
+            chave = (n.get("area", ""), n.get("titulo", "").lower(), n.get("fonte", "").lower())
+            if chave in vistos:
+                anterior = vistos[chave]
+                if n.get("palavras"):
+                    anterior["palavras"] = sorted(set(anterior.get("palavras", [])) | set(n["palavras"]))
+                continue
+            vistos[chave] = n
+            mantidas.append(n)
+        mantidas.sort(key=lambda n: n.get("data", ""), reverse=True)
+
+        with open(caminho, "w", encoding="utf-8") as destino:
+            json.dump({"mes": mes, "noticias": mantidas}, destino, ensure_ascii=False)
+        print(f"arquivo mensal {mes}: {len(mantidas)} notícias")
+
+    # Índice dos meses disponíveis, para o painel saber o que pode pedir
+    existentes = sorted(
+        f[len("arquivo-"):-len(".json")]
+        for f in os.listdir(pasta)
+        if f.startswith("arquivo-") and f.endswith(".json")
+    )[-meses:]
+    with open(os.path.join(pasta, "indice.json"), "w", encoding="utf-8") as destino:
+        json.dump({"meses": existentes,
+                   "atualizado": datetime.now().strftime("%Y-%m-%d %H:%M")}, destino, ensure_ascii=False)
+    print(f"índice mensal: {len(existentes)} meses")
 
 
 def atualizar_historico(caminho, linhas, periodo, vistos=None):

@@ -1478,7 +1478,7 @@ const MANUAL = [
       <dt>Publicações</dt><dd>Anel de proporções com as seis maiores e as restantes agregadas.</dd>
       <dt>Assuntos recorrentes</dt><dd>Expressões que ocorrem em mais do que uma notícia, com tamanho proporcional à frequência.</dd>
       <dt>Cobertura</dt><dd>Quantas notícias contêm cada palavra-chave da área. As que estão a zero não estão a puxar cobertura.</dd>
-      <dt>Evolução</dt><dd>A partir de três dias de recolhas agendadas, a série diária de notícias novas e a variação face à média. Vem do ficheiro de histórico, que guarda apenas contagens por dia e por área e nunca é apagado — é a memória do produto. O Excel ganha então a folha <em>Evolução</em>.</dd>
+      <dt>Evolução</dt><dd>A partir de três dias de recolhas agendadas, a série diária de notícias novas e a variação face à média. Vem do ficheiro de histórico, que guarda apenas contagens por dia e por área e nunca é apagado. </dd>
     </dl>
     <p>Tudo é contagem, calculada no painel. Nada é enviado para fora.</p>` },
 
@@ -1491,7 +1491,7 @@ const MANUAL = [
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>
     <dl>
-      <dt>Cobertura do corpus</dt><dd>Quarenta e oito publicações — 25 portuguesas, 11 lusófonas e 12 internacionais — e 30 dias de arquivo. Uma notícia de um título fora dessa lista, ou anterior a esse período, só aparece pelo complemento.</dd>
+      <dt>Cobertura do corpus</dt><dd>Quarenta e oito publicações — 25 portuguesas, 11 lusófonas e 12 internacionais. O arquivo cresce mês a mês desde a primeira recolha: os últimos 30 dias num ficheiro corrente, e os meses anteriores em ficheiros próprios, carregados apenas quando o período pedido os alcança.</dd>
       <dt>Imprensa apenas</dt><dd>As plataformas sociais não publicam feeds e estão fora do âmbito da aplicação. Páginas dessas plataformas que apareçam por via da pesquisa aberta são descartadas.</dd>
       <dt>Marcação literal</dt><dd>Um artigo entra numa área por conter a expressão no título ou no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.</dd>
       <dt>Contagens</dt><dd>Medem o que as publicações subscritas noticiaram, não o total do que foi noticiado. Como nenhuma área é truncada e o método é o mesmo para todas, a comparação entre áreas é legítima dentro do corpus.</dd>
@@ -1974,6 +1974,56 @@ function serieDaArea(nome){
 
 let arquivo = null;   // notícias dos últimos dias, acumuladas pela recolha agendada
 
+/* Meses já carregados nesta sessão, para não repetir pedidos */
+const mesesCarregados = {};
+
+function mesesNecessarios(){
+  const horas = HORAS_PERIODO[periodo];
+  if(!horas) return 12;                      // sem limite: um ano de arquivo
+  return Math.ceil(horas / 24 / 30);
+}
+
+/* Ficheiros mensais, lidos apenas quando o período pedido os alcança */
+async function carregarMeses(){
+  const quantos = mesesNecessarios();
+  if(quantos <= 1) return [];
+  let indice = mesesCarregados.__indice;
+  if(!indice){
+    indice = { meses: [] };
+    for(const base of enderecosDados()){
+      try{
+        const r = await fetch(base.replace("noticias.json", "meses/indice.json"));
+        if(!r.ok) continue;
+        const d = await r.json();
+        if(d && Array.isArray(d.meses)){ indice = d; break; }
+      }catch(e){ /* segue */ }
+    }
+    mesesCarregados.__indice = indice;
+  }
+
+  const alvo = indice.meses.slice(-quantos);
+  const juntas = [];
+  for(const mes of alvo){
+    if(!mesesCarregados[mes]){
+      let carregado = null;
+      for(const base of enderecosDados()){
+        try{
+          const r = await fetch(base.replace("noticias.json", `meses/arquivo-${mes}.json`));
+          if(!r.ok) continue;
+          const d = await r.json();
+          if(d && Array.isArray(d.noticias)){
+            d.noticias.forEach(n => { if(!n._b) n._b = simplificar(n.titulo || ""); });
+            carregado = d.noticias; break;
+          }
+        }catch(e){ /* segue */ }
+      }
+      mesesCarregados[mes] = carregado || [];
+    }
+    juntas.push(...mesesCarregados[mes]);
+  }
+  return juntas;
+}
+
 async function carregarArquivo(){
   try{ return await lerFicheiroDados("arquivo.json"); }
   catch(e){ return { noticias: [], dias: 0 }; }
@@ -1983,8 +2033,25 @@ async function carregarArquivo(){
 async function doArquivo(){
   const a = await carregarArquivo();
   diasArquivo = a.dias || 0;
-  if(!a.noticias.length) throw new Error("sem arquivo publicado");
-  return { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias`, dias: a.dias };
+
+  /* Períodos maiores do que o arquivo corrente vão buscar os meses precisos */
+  let lista = a.noticias;
+  let origem = `arquivo de ${a.dias} dias`;
+  const horas = HORAS_PERIODO[periodo];
+  if(!horas || horas > (a.dias || 30) * 24){
+    const extra = await carregarMeses();
+    if(extra.length){
+      const vistos = new Set(lista.map(n => (n.area || "") + "|" + (n.titulo || "").toLowerCase()));
+      const novas = extra.filter(n => !vistos.has((n.area || "") + "|" + (n.titulo || "").toLowerCase()));
+      lista = lista.concat(novas);
+      const meses = mesesNecessarios();
+      origem = `arquivo de ${meses} ${meses === 1 ? "mês" : "meses"}`;
+      diasArquivo = meses * 30;
+    }
+  }
+
+  if(!lista.length) throw new Error("sem arquivo publicado");
+  return { itens: paraConsulta(lista), origem, dias: diasArquivo };
 }
 
 /* Os ficheiros de dados são lidos uma vez por sessão e ficam em memória: a
@@ -2548,8 +2615,6 @@ function descarregarXLSX(){
   const larguras = comResumo
     ? [24, 22, 17, 18, 18, 52, 52, 40, 46]
     : [24, 22, 17, 18, 18, 60, 46, 50];
-  const serie = serieDaArea(consultaAtiva.area.nome);
-  const temSerie = serie.length >= 2;
   const letra = i => String.fromCharCode(65 + i);
 
   const linhaXML = (valores, num, estilo) =>
@@ -2595,7 +2660,6 @@ function descarregarXLSX(){
     ["Notícias exportadas", String(recolha.length)],
     ["Data da exportação", new Date().toLocaleString("pt-PT")],
     ["Versão do painel", CONFIG.versao],
-    ["Série diária disponível", serie.length ? `${serie.length} dias (folha Evolução)` : "ainda sem histórico"],
     ["", ""],
     ["Âmbito",
      "Feeds de publicações de imprensa subscritas, marcadas pelas palavras-chave da área. " +
@@ -2616,27 +2680,6 @@ function descarregarXLSX(){
   `<c r="A${i+1}" t="inlineStr" s="${i === 0 ? 2 : 3}"><is><t xml:space="preserve">${escXML(l[0])}</t></is></c>` +
   `<c r="B${i+1}" t="inlineStr" s="${i === 0 ? 2 : 1}"><is><t xml:space="preserve">${escXML(l[1])}</t></is></c>` +
   `</row>`).join("")}</sheetData>
-</worksheet>`;
-
-  /* Terceira folha: série diária da área, quando existe histórico publicado */
-  const linhaEvo = (vals, num, estilo) =>
-    `<row r="${num}">` + vals.map((v, i) =>
-      `<c r="${letra(i)}${num}" t="inlineStr" s="${estilo}"><is><t xml:space="preserve">${escXML(v)}</t></is></c>`
-    ).join("") + `</row>`;
-
-  const folha3 = !temSerie ? "" : `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
-<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
-<cols><col min="1" max="1" width="16" customWidth="1"/><col min="2" max="2" width="30" customWidth="1"/>
-<col min="3" max="3" width="20" customWidth="1"/><col min="4" max="4" width="24" customWidth="1"/>
-<col min="5" max="5" width="26" customWidth="1"/></cols>
-<sheetData>
-${linhaEvo(["Data", "Área governativa", "Notícias recolhidas", "Notícias novas", "Publicações distintas"], 1, 2)}
-${serie.map((d, i) => linhaEvo(
-  [d.data, consultaAtiva.area.nome, String(d.noticias),
-   d.novas != null ? String(d.novas) : "—", String(d.fontes)], i + 2, 1)).join("")}
-</sheetData>
-<autoFilter ref="A1:E${serie.length + 1}"/>
 </worksheet>`;
 
   /* Folha de síntese: as contagens em tabela, prontas a gerar gráfico no Excel */
@@ -2673,11 +2716,10 @@ ${serie.map((d, i) => linhaEvo(
 <sheetData>${linhasSin.join("")}</sheetData>
 </worksheet>`;
 
-  const nSin = temSerie ? 4 : 3;
+  const nSin = 3;
   const livro = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
-<sheets><sheet name="Notícias" sheetId="1" r:id="rId1"/><sheet name="Especificações" sheetId="2" r:id="rId2"/>${
-  temSerie ? `<sheet name="Evolução" sheetId="3" r:id="rId3"/>` : ""}<sheet name="Síntese" sheetId="${nSin}" r:id="rId${nSin}"/></sheets></workbook>`;
+<sheets><sheet name="Notícias" sheetId="1" r:id="rId1"/><sheet name="Especificações" sheetId="2" r:id="rId2"/><sheet name="Síntese" sheetId="${nSin}" r:id="rId${nSin}"/></sheets></workbook>`;
 
   const tipos = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
@@ -2685,8 +2727,7 @@ ${serie.map((d, i) => linhaEvo(
 <Default Extension="xml" ContentType="application/xml"/>
 <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
 <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
-<Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>${
-  temSerie ? `<Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>` : ""}
+<Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
 <Override PartName="/xl/worksheets/sheet${nSin}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
 <Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
 </Types>`;
@@ -2699,8 +2740,7 @@ ${serie.map((d, i) => linhaEvo(
   const relLivro = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
-<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>${
-  temSerie ? `<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/>` : ""}
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>
 <Relationship Id="rId${nSin}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${nSin}.xml"/>
 <Relationship Id="rId${nSin + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
 </Relationships>`;
@@ -2712,9 +2752,9 @@ ${serie.map((d, i) => linhaEvo(
     ["xl/_rels/workbook.xml.rels", relLivro],
     ["xl/styles.xml", estilos],
     ["xl/worksheets/sheet1.xml", folha],
-    ["xl/worksheets/sheet2.xml", folha2]
-  ].concat(temSerie ? [["xl/worksheets/sheet3.xml", folha3]] : [])
-   .concat([[`xl/worksheets/sheet${nSin}.xml`, folhaSin]]));
+    ["xl/worksheets/sheet2.xml", folha2],
+    [`xl/worksheets/sheet${nSin}.xml`, folhaSin]
+  ]);
 
   const l = document.createElement("a");
   l.href = URL.createObjectURL(zip); l.download = nomeFicheiro("xlsx"); l.click();
@@ -2740,8 +2780,10 @@ function mostrarEstadoRecolha(origem, retiradas){
 
   const notas = [];
   const horasPedidas = HORAS_PERIODO[periodo];
-  if(diasArquivo && (!horasPedidas || horasPedidas > diasArquivo * 24))
-    notas.push(`O arquivo guarda ${diasArquivo} dias — um período maior não traz mais notícias. Para procurar mais atrás, use a pesquisa aberta.`);
+  if(diasArquivo && horasPedidas && horasPedidas > diasArquivo * 24){
+    const meses = Math.round(diasArquivo / 30);
+    notas.push(`O arquivo cobre ${meses >= 2 ? meses + " meses" : diasArquivo + " dias"} — um período maior não traz mais notícias. Para procurar mais atrás, use a pesquisa aberta.`);
+  }
   if(foraDaJanela) notas.push(`<span style="color:var(--dourado)">Publicadas antes de ${ROTULO_PERIODO[periodo]} — datadas pela indexação do serviço. Apresentadas mesmo assim.</span>`);
   if(fora) notas.push(`Foram retiradas ${fora}: ${partes.join(", ")}.`);
 

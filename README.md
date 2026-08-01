@@ -163,7 +163,8 @@ Pela linha de comandos, com Python e `openpyxl`:
 ```bash
 # leitura dos feeds das publicações (método principal)
 python extrair_noticias.py --fontes --json noticias.json \
-    --arquivo arquivo.json --historico historico.json
+    --arquivo arquivo.json --dias-arquivo 30 --mensal meses \
+    --historico historico.json
 
 # apenas uma área
 python extrair_noticias.py --fontes --area saude --saida saude.xlsx
@@ -176,9 +177,9 @@ python extrair_noticias.py --periodo 30d --area saude --saida saude_mes.xlsx
 
 ## Ressalvas metodológicas
 
-- **Cobertura.** O corpus são as 48 publicações subscritas e os últimos 30 dias.
-  Uma notícia de um título não subscrito, ou anterior a esse período, não está no
-  corpus — acrescentar uma publicação é escrever uma linha na lista de feeds.
+- **Cobertura.** O corpus são as 48 publicações subscritas. O arquivo cresce mês a
+  mês desde a primeira recolha: uma notícia de um título não subscrito, ou anterior
+  ao início da recolha, não está no corpus.
 - **Marcação literal.** Um artigo entra numa área por conter a expressão no título ou
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
 - **Comparação entre áreas.** Legítima dentro do corpus: nenhuma área é truncada e o
