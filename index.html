@@ -1271,7 +1271,7 @@ function abrirExportacao(id){
         </button>
         <button class="btn" id="btnImprimir">
           <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
-          Imprimir
+          Imprimir / PDF
         </button>
         <button class="btn primario" id="btnXLSX">
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
@@ -1282,7 +1282,7 @@ function abrirExportacao(id){
 
     <div class="modal-corpo" id="corpoRes">
       <p class="aviso-alcance" id="avisoAlcance" hidden>
-        O serviço de pesquisa complementar não respondeu. Estes resultados vêm do arquivo da recolha agendada, que cobre os últimos sete dias das publicações subscritas. Para procurar fora desse âmbito, use “Abrir no Google Notícias”.
+        O serviço de pesquisa complementar não respondeu. Estes resultados vêm do arquivo da recolha agendada, que cobre os últimos 30 dias das publicações subscritas. Para procurar fora desse âmbito, use “Abrir no Google Notícias”.
       </p>
       <div id="expEstado" class="res-estado"></div>
       <div id="conteudoRes"></div>
@@ -1331,6 +1331,9 @@ function mostrarVista(qual){
 }
 
 /* Chamado no fim de cada recolha: mostra a barra e desenha a vista em curso */
+/* Dias que o arquivo guarda, para avisar quando se pede um período maior */
+let diasArquivo = 0;
+
 function apresentarResultados(origem){
   const barra = $("#barraRes");
   if(barra) barra.hidden = recolha.length === 0;
@@ -1343,6 +1346,27 @@ function apresentarResultados(origem){
   carregarHistorico().then(() => { if(vistaAtual === "sintese") mostrarVista("sintese"); });
 }
 
+/* Extrai os dados agregados da recolha, para a impressão e para o Excel */
+function agregados(){
+  const a = consultaAtiva.area;
+  return {
+    fontes: contarPor(recolha, "fonte"),
+    assuntos: assuntosRecorrentes(recolha, 14),
+    cobertura: cobertura(recolha, a),
+    dias: contarPor(recolha.map(it => ({ dia: (it.data || "").slice(0, 10) || "sem data" })), "dia")
+            .sort((x, y) => x[0].localeCompare(y[0]))
+  };
+}
+
+function tabelaImpressa(titulo, pares, rotulo){
+  if(!pares.length) return "";
+  const total = pares.reduce((s, p) => s + p[1], 0) || 1;
+  return `<h2>${titulo}</h2>
+    <table class="sin"><thead><tr><th>${rotulo}</th><th>Notícias</th><th>%</th></tr></thead><tbody>
+    ${pares.map(([r, n]) => `<tr><td>${r}</td><td class="n">${n}</td><td class="n">${Math.round(n / total * 100)}%</td></tr>`).join("")}
+    </tbody></table>`;
+}
+
 function imprimirResultados(){
   const a = consultaAtiva.area;
   const linhas = recolha.map(n => `
@@ -1351,6 +1375,19 @@ function imprimirResultados(){
       <td>${n.titulo}${n.resumo ? `<br><span class="r">${n.resumo}</span>` : ""}</td>
       <td class="f">${n.fonte || ""}</td>
     </tr>`).join("");
+
+  /* Na vista de síntese imprime-se a leitura agregada; na de notícias, a lista */
+  const ag = agregados();
+  const corpoSinteseImpresso = `
+    <div class="kpis">
+      <div><strong>${recolha.length}</strong><span>notícias</span></div>
+      <div><strong>${ag.fontes.length}</strong><span>publicações</span></div>
+      <div><strong>${ag.dias.filter(d => d[0] !== "sem data").length}</strong><span>dias com notícias</span></div>
+    </div>
+    ${tabelaImpressa("Distribuição por publicação", ag.fontes, "Publicação")}
+    ${tabelaImpressa("Assuntos recorrentes nos títulos", ag.assuntos.map(x => [x.termo, x.n]), "Expressão")}
+    ${tabelaImpressa("Cobertura das palavras-chave", ag.cobertura.map(c => [c.palavra, c.n]), "Palavra-chave")}
+    ${tabelaImpressa("Distribuição por dia", ag.dias, "Dia")}`;
 
   const janela = window.open("", "ImprimirRadar", "width=900,height=700");
   janela.document.write(`<!DOCTYPE html><html lang="pt-PT"><head><meta charset="UTF-8">
@@ -1372,6 +1409,12 @@ function imprimirResultados(){
       .r{color:#5b6068;font-size:8.5pt}
       footer{margin-top:1.2rem;padding-top:.5rem;border-top:1px solid #e2e8f0;
              font-size:7.5pt;color:#8a9098}
+      h2{font-size:10pt;font-weight:600;color:#2B5683;margin:1.1rem 0 .3rem}
+      table.sin{width:100%;margin-bottom:.4rem}
+      table.sin td.n,table.sin th:nth-child(n+2){text-align:right;width:14%}
+      .kpis{display:flex;gap:2rem;margin:.6rem 0 .2rem}
+      .kpis strong{display:block;font-size:16pt;font-weight:600;color:#0E7433;line-height:1.1}
+      .kpis span{font-size:8pt;color:#5b6068}
     </style></head><body>
     <header>
       <div class="org">Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas</div>
@@ -1380,8 +1423,9 @@ function imprimirResultados(){
         ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} ·
         ${recolha.length} notícias</div>
     </header>
-    <table><thead><tr><th>Data</th><th>Notícia</th><th>Fonte</th></tr></thead>
-    <tbody>${linhas}</tbody></table>
+    ${vistaAtual === "sintese"
+      ? corpoSinteseImpresso
+      : `<table><thead><tr><th>Data</th><th>Notícia</th><th>Fonte</th></tr></thead><tbody>${linhas}</tbody></table>`}
     <footer>Radar de Notícias por Área Governativa · ${new Date().toLocaleString("pt-PT")}</footer>
     </body></html>`);
   janela.document.close();
@@ -1402,7 +1446,7 @@ const MANUAL = [
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
-      <dt>Período</dt><dd>Predefinição: 24 horas. O arquivo cobre sete dias; o período escolhido determina que fatia dele é apresentada.</dd>
+      <dt>Período</dt><dd>Predefinição: 24 horas. O arquivo cobre 30 dias; o período escolhido determina que fatia dele é apresentada.</dd>
       <dt>Origem das fontes</dt><dd>Quatro posições. <strong>Nacionais</strong>, por predefinição, mostra a imprensa portuguesa. <strong>Lusófonas</strong> mostra Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacionais</strong> mostra a restante imprensa estrangeira. <strong>Todas</strong> não filtra.</dd>
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida, e não por operadores de pesquisa — o que a torna exata e verificável.</dd>
     </dl>` },
@@ -1419,11 +1463,11 @@ const MANUAL = [
     <p>Clicar em <strong>Visualizar no painel</strong> recolhe e apresenta logo as notícias, por ordem cronológica e com resumo. Em cima, o separador alterna entre <strong>Notícias</strong> e <strong>Síntese</strong>, e há três ações: recolher de novo, <strong>Imprimir</strong> e <strong>Excel</strong>.</p>
     <p>A recolha procura por esta ordem:</p>
     <dl>
-      <dt>Arquivo de sete dias</dt><dd>O corpus próprio, construído todas as manhãs a partir dos feeds das publicações. É onde quase todas as consultas são respondidas, em milissegundos e sem depender da rede.</dd>
+      <dt>Arquivo de 30 dias</dt><dd>O corpus próprio, construído todas as manhãs a partir dos feeds das publicações. É onde quase todas as consultas são respondidas, em milissegundos e sem depender da rede.</dd>
       <dt>Retrato do dia</dt><dd>O que a última recolha trouxe, usado quando o arquivo não está disponível.</dd>
-      <dt>Pesquisa complementar</dt><dd>Só para o que o corpus não cobre: publicações não subscritas ou períodos anteriores a sete dias. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem e avisa.</dd>
+      <dt>Pesquisa complementar</dt><dd>Só para o que o corpus não cobre: publicações não subscritas ou períodos anteriores ao arquivo. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem e avisa.</dd>
     </dl>
-    <p class="man-aviso">A etiqueta ao lado da contagem diz <em>onde</em> as notícias foram procuradas — “arquivo de 7 dias”, “recolha agendada” ou o nome do serviço. O período indicado antes é o filtro que lhes foi <em>aplicado</em>. São coisas distintas: o arquivo cobre sete dias, e dele extraem-se as das últimas 24 horas quando é essa a janela escolhida.</p>
+    <p class="man-aviso">A etiqueta ao lado da contagem diz <em>onde</em> as notícias foram procuradas — “arquivo de 30 dias”, “recolha agendada” ou o nome do serviço. O período indicado antes é o filtro que lhes foi <em>aplicado</em>. São coisas distintas: o arquivo cobre 30 dias, e dele extraem-se as das últimas 24 horas quando é essa a janela escolhida.</p>
     <p><strong>Imprimir</strong> gera uma folha com cabeçalho institucional, os critérios da consulta e a lista em tabela — pronta para anexar a uma nota.</p>
     <p><strong>Ler notícias</strong> apresenta a lista por ordem cronológica, da mais recente para a mais antiga — a ordenação que o serviço não dá.</p>
     <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, as exclusões, a consulta enviada e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
@@ -1442,12 +1486,12 @@ const MANUAL = [
     <p>A recolha agendada lê todas as manhãs os feeds de <strong>48 publicações</strong> — 25 portuguesas, 11 dos restantes países de língua portuguesa e 12 internacionais — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado no próprio repositório: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
     <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. Onde o ruído persiste, a área declara termos a excluir.</p>
     <p><strong>Âmbito.</strong> Imprensa: jornais, rádios, televisões, agências e imprensa especializada. As plataformas sociais não publicam feeds e ficam de fora.</p>
-    <p class="man-aviso">Para o que os feeds não cobrem — uma publicação não subscrita, ou um período anterior a sete dias — há o botão de pesquisa aberta, que abre uma consulta externa em janela nova. É consulta pontual, fora do corpus e sem as suas garantias.</p>`  },
+    <p class="man-aviso">Para o que os feeds não cobrem — uma publicação não subscrita, ou um período anterior ao arquivo — há o botão de pesquisa aberta, que abre uma consulta externa em janela nova. É consulta pontual, fora do corpus e sem as suas garantias.</p>`  },
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>
     <dl>
-      <dt>Cobertura do corpus</dt><dd>Trinta e sete publicações — vinte e cinco portuguesas e doze internacionais — e sete dias de arquivo. Uma notícia de um título fora dessa lista, ou anterior a esse período, só aparece pelo complemento.</dd>
+      <dt>Cobertura do corpus</dt><dd>Quarenta e oito publicações — 25 portuguesas, 11 lusófonas e 12 internacionais — e 30 dias de arquivo. Uma notícia de um título fora dessa lista, ou anterior a esse período, só aparece pelo complemento.</dd>
       <dt>Imprensa apenas</dt><dd>As plataformas sociais não publicam feeds e estão fora do âmbito da aplicação. Páginas dessas plataformas que apareçam por via da pesquisa aberta são descartadas.</dd>
       <dt>Marcação literal</dt><dd>Um artigo entra numa área por conter a expressão no título ou no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.</dd>
       <dt>Contagens</dt><dd>Medem o que as publicações subscritas noticiaram, não o total do que foi noticiado. Como nenhuma área é truncada e o método é o mesmo para todas, a comparação entre áreas é legítima dentro do corpus.</dd>
@@ -1484,7 +1528,8 @@ const ICONES_MANUAL = {
    Tudo o que se segue é contagem sobre os títulos recolhidos, feita no
    computador do utilizador. Não há interpretação: há frequência.
    ========================================================================= */
-const VAZIAS = new Set(("a o as os um uma uns umas de do da dos das em no na nos nas por para com sem sob sobre " +
+const VAZIAS = new Set(("noticia noticias reportagem entrevista video fotogaleria opiniao editorial destaque " +
+  "a o as os um uma uns umas de do da dos das em no na nos nas por para com sem sob sobre " +
   "e ou mas que se ao aos à às pelo pela pelos pelas este esta estes estas esse essa isso aquele aquela " +
   "seu sua seus suas meu minha nosso nossa mais menos muito muitos pouco poucos já não sim como quando " +
   "onde qual quais quem depois antes entre até desde após ser estar ter haver vai vão foi foram é são " +
@@ -1937,6 +1982,7 @@ async function carregarArquivo(){
 /* Notícias do arquivo que servem a consulta em curso */
 async function doArquivo(){
   const a = await carregarArquivo();
+  diasArquivo = a.dias || 0;
   if(!a.noticias.length) throw new Error("sem arquivo publicado");
   return { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias`, dias: a.dias };
 }
@@ -2191,28 +2237,16 @@ async function recolherConsulta(){
   let erros = [];
 
   if(porTermo){
-    /* Se a recolha agendada já pesquisou esta palavra-chave, o arquivo tem a
-       resposta completa e não é preciso ir ao serviço. */
-    try{
-      const a = await carregarArquivo();
-      if(!valido()) return;
-      /* O arquivo responde a qualquer termo — por palavra-chave marcada na
-         recolha ou por correspondência no texto. Só se não tiver nada é que se
-         recorre ao serviço externo. */
-      const itens = paraConsulta(a.noticias);
-      if(itens.length){
-        const origem = `arquivo de ${a.dias} dias`;
-        if(itens.filter(dentroDoPeriodo).length){
-          if(btn) btn.disabled = false;
-          assentarRecolha(itens, origem);
-          return;
-        }
-        guardado = { itens, origem };
-      }
-    }catch(e){ /* sem arquivo por palavra-chave */ }
+    /* O arquivo responde a qualquer termo — por palavra-chave marcada na recolha
+       ou por correspondência no texto. Só se não tiver nada se vai ao serviço. */
+    const doArq = await dosFicheiros();
     if(!valido()) return;
+    if(doArq){
+      if(btn) btn.disabled = false;
+      assentarRecolha(doArq.itens, doArq.origem);
+      return;
+    }
 
-    /* Caso contrário, o serviço é quem tem o arquivo todo */
     try{
       const r = await doServico();
       if(!valido()) return;
@@ -2605,10 +2639,45 @@ ${serie.map((d, i) => linhaEvo(
 <autoFilter ref="A1:E${serie.length + 1}"/>
 </worksheet>`;
 
+  /* Folha de síntese: as contagens em tabela, prontas a gerar gráfico no Excel */
+  const ag = agregados();
+  const secoes = [
+    ["Distribuição por publicação", "Publicação", ag.fontes],
+    ["Assuntos recorrentes nos títulos", "Expressão", ag.assuntos.map(x => [x.termo, x.n])],
+    ["Cobertura das palavras-chave", "Palavra-chave", ag.cobertura.map(c => [c.palavra, c.n])],
+    ["Distribuição por dia", "Dia", ag.dias]
+  ];
+  const linhasSin = [];
+  let ln = 1;
+  /* Os valores numéricos vão como número, para o Excel os poder representar */
+  const linhaSin = (vals, estilo) => {
+    const r = `<row r="${ln}">` + vals.map((v, i) => {
+      const num = typeof v === "number";
+      return num
+        ? `<c r="${letra(i)}${ln}" s="${estilo}"><v>${v}</v></c>`
+        : `<c r="${letra(i)}${ln}" t="inlineStr" s="${estilo}"><is><t xml:space="preserve">${escXML(v)}</t></is></c>`;
+    }).join("") + `</row>`;
+    ln++; return r;
+  };
+  linhasSin.push(linhaSin([consultaAtiva.area.nome, ROTULO_PERIODO[periodo], `${recolha.length} notícias`], 2));
+  secoes.forEach(([titulo, rotulo, pares]) => {
+    linhasSin.push(linhaSin(["", "", ""], 1));
+    linhasSin.push(linhaSin([titulo], 3));
+    linhasSin.push(linhaSin([rotulo, "Notícias"], 2));
+    pares.forEach(([r, n]) => linhasSin.push(linhaSin([String(r), n], 1)));
+  });
+
+  const folhaSin = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<cols><col min="1" max="1" width="46" customWidth="1"/><col min="2" max="3" width="18" customWidth="1"/></cols>
+<sheetData>${linhasSin.join("")}</sheetData>
+</worksheet>`;
+
+  const nSin = temSerie ? 4 : 3;
   const livro = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
 <sheets><sheet name="Notícias" sheetId="1" r:id="rId1"/><sheet name="Especificações" sheetId="2" r:id="rId2"/>${
-  temSerie ? `<sheet name="Evolução" sheetId="3" r:id="rId3"/>` : ""}</sheets></workbook>`;
+  temSerie ? `<sheet name="Evolução" sheetId="3" r:id="rId3"/>` : ""}<sheet name="Síntese" sheetId="${nSin}" r:id="rId${nSin}"/></sheets></workbook>`;
 
   const tipos = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
@@ -2618,6 +2687,7 @@ ${serie.map((d, i) => linhaEvo(
 <Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
 <Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>${
   temSerie ? `<Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>` : ""}
+<Override PartName="/xl/worksheets/sheet${nSin}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
 <Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
 </Types>`;
 
@@ -2631,7 +2701,8 @@ ${serie.map((d, i) => linhaEvo(
 <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
 <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/>${
   temSerie ? `<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet3.xml"/>` : ""}
-<Relationship Id="rId${temSerie ? 4 : 3}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+<Relationship Id="rId${nSin}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${nSin}.xml"/>
+<Relationship Id="rId${nSin + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
 </Relationships>`;
 
   const zip = zipSemCompressao([
@@ -2642,7 +2713,8 @@ ${serie.map((d, i) => linhaEvo(
     ["xl/styles.xml", estilos],
     ["xl/worksheets/sheet1.xml", folha],
     ["xl/worksheets/sheet2.xml", folha2]
-  ].concat(temSerie ? [["xl/worksheets/sheet3.xml", folha3]] : []));
+  ].concat(temSerie ? [["xl/worksheets/sheet3.xml", folha3]] : [])
+   .concat([[`xl/worksheets/sheet${nSin}.xml`, folhaSin]]));
 
   const l = document.createElement("a");
   l.href = URL.createObjectURL(zip); l.download = nomeFicheiro("xlsx"); l.click();
@@ -2664,20 +2736,12 @@ function mostrarEstadoRecolha(origem, retiradas){
   if(retiradas.data > 0) partes.push(`${retiradas.data} fora do período`);
   const fora = retiradas.termo + retiradas.redes + retiradas.origem + Math.max(0, retiradas.data);
 
-  /* Atalhos para afrouxar o filtro que mais cortou. Só aparecem quando há de
-     facto margem para afrouxar: já em "todas" ou já em sete dias, não há. */
-  const atalhos = [];
-  if(retiradas.origem && filtroFontes === "nacionais"){
-    atalhos.push(`<button class="btn-atalho" data-afrouxar="lusofonas">Incluir imprensa lusófona</button>`);
-    atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Incluir toda a imprensa estrangeira</button>`);
-  }else if(retiradas.origem && filtroFontes !== "todas"){
-    atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Aceitar imprensa de qualquer origem</button>`);
-  }
-  if(retiradas.data && (HORAS_PERIODO[periodo] || 0) < 168)
-    atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
-  const barra = atalhos.length ? `<div class="atalhos">${atalhos.join("")}</div>` : "";
+  const barra = "";
 
   const notas = [];
+  const horasPedidas = HORAS_PERIODO[periodo];
+  if(diasArquivo && (!horasPedidas || horasPedidas > diasArquivo * 24))
+    notas.push(`O arquivo guarda ${diasArquivo} dias — um período maior não traz mais notícias. Para procurar mais atrás, use a pesquisa aberta.`);
   if(foraDaJanela) notas.push(`<span style="color:var(--dourado)">Publicadas antes de ${ROTULO_PERIODO[periodo]} — datadas pela indexação do serviço. Apresentadas mesmo assim.</span>`);
   if(fora) notas.push(`Foram retiradas ${fora}: ${partes.join(", ")}.`);
 
@@ -2721,22 +2785,7 @@ document.addEventListener("click", e => {
   const ex = e.target.closest("[data-exportar]");
   if(ex){ abrirExportacao(ex.dataset.exportar); return; }
 
-  const af = e.target.closest("[data-afrouxar]");
-  if(af){
-    if(af.dataset.afrouxar === "fontes" || af.dataset.afrouxar === "lusofonas"){
-      filtroFontes = af.dataset.afrouxar === "lusofonas" ? "lusofonas" : "todas";
-      document.querySelectorAll("#filtroFontes button").forEach(x => x.classList.toggle("ativo", x.dataset.fonte === filtroFontes));
-    }else if(false){
-    }else{
-      periodo = "7d";
-      const sel = $("#campoPeriodo") || document.querySelector("select");
-      if(sel) sel.value = "7d";
-    }
-    recolha = []; assinaturaRecolha = "";
-    if(consultaAtiva) abrirExportacao(consultaAtiva.area.id);
-    setTimeout(recolherConsulta, 30);
-    return;
-  }
+
 
   const mn = e.target.closest("[data-manual]");
   if(mn){ marcarCapitulo(mn.dataset.manual); irParaCapitulo(mn.dataset.manual); return; }

@@ -12,25 +12,26 @@ Unidade de Pesquisa e Estatísticas
 
 ## Como funciona
 
-A recolha lê todas as manhãs os **feeds das publicações portuguesas de referência** —
-jornais, rádios, televisões, agências e imprensa económica — e marca cada artigo com
-as áreas governativas cujas palavras-chave ele satisfaz. Um artigo é recolhido por ser
-de uma fonte conhecida, não por corresponder a uma pesquisa.
+A recolha lê todas as manhãs os **feeds de 48 publicações de imprensa** — portuguesas,
+lusófonas e internacionais — e marca cada artigo com as áreas governativas cujas
+palavras-chave ele satisfaz. Um artigo é recolhido por ser de uma fonte conhecida, não
+por corresponder a uma pesquisa.
 
-É o método de um agregador de feeds, executado no próprio repositório. Daí resultam
-quatro propriedades que uma pesquisa não dá:
+É o método de um agregador de feeds, executado no próprio repositório.
 
-| | Corpus próprio | Pesquisa (complemento) |
-|---|---|---|
-| Resultados | Todos os artigos publicados | Teto de ~100 por consulta |
-| Ordenação | Data de publicação | Relevância |
-| Ligações | Endereço direto do artigo | Reencaminhamento |
-| Resumo | Lead escrito pela redação | Inexistente |
-| Fontes | Lista conhecida e estável | Variável, com entradas estrangeiras |
+As propriedades que daí resultam, e que uma pesquisa não dá:
 
-O **Google Notícias** mantém-se como complemento, para o que os feeds não cobrem:
-publicações fora da lista e períodos anteriores ao arquivo. É também o destino do
-botão *Abrir no Google Notícias*, para pesquisa aberta.
+| | |
+|---|---|
+| Resultados | Todos os artigos publicados pelas fontes subscritas |
+| Ordenação | Data de publicação |
+| Ligações | Endereço direto do artigo |
+| Resumo | Lead escrito pela redação |
+| Fontes | Lista conhecida e estável |
+
+O botão de **pesquisa aberta** existe para o que os feeds não cobrem — uma publicação
+não subscrita ou um período anterior ao arquivo — e abre uma consulta externa em
+janela nova. É consulta pontual, sem as garantias acima.
 
 ### O percurso de uma notícia, passo a passo
 
@@ -44,7 +45,7 @@ botão *Abrir no Google Notícias*, para pesquisa aberta.
    cada área no título e no resumo. Encontrando, marca o artigo com essa área e com
    as expressões que a acionaram. Um artigo pode ficar em mais de uma área.
 4. **Gravação.** Os artigos marcados são acumulados no `arquivo.json`, sem
-   repetições, mantendo sete dias. Gravam-se também o retrato do dia e a série.
+   repetições, mantendo 30 dias. Gravam-se também o retrato do dia e a série.
 5. **No painel.** Ao abrir uma área, o painel lê o `arquivo.json` e filtra-o pela
    área, pelas palavras-chave selecionadas, pelo período, pela origem das fontes e
    pelo tipo de fonte. Tudo local, em milissegundos.
@@ -76,7 +77,7 @@ Nada disto passa por serviços intermediários nem depende da rede de quem consu
 | `extrair_noticias.py` | A recolha. Lê os feeds, marca por área e produz o Excel e os três ficheiros de dados. |
 | `.github/workflows/radar-noticias.yml` | Tarefa agendada que corre a recolha nos servidores do GitHub. |
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
-| `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
+| `arquivo.json` | **Arquivo de 30 dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
 | `historico.json` | **Série diária.** Notícias, notícias novas e publicações distintas, por dia e por área. Não contém notícias, apenas contagens. |
 
 Os três ficheiros de dados são gerados pela recolha. Não devem ser editados à mão.
@@ -128,7 +129,7 @@ comparáveis entre áreas. Fica de fora:
   fora da lista.
 - **Redes sociais** — as plataformas sociais não publicam feeds e estão fora do
   âmbito da aplicação, que é a imprensa.
-- **Períodos anteriores a sete dias** — o arquivo não guarda mais do que isso.
+- **Períodos anteriores ao arquivo** — que guarda 30 dias, valor definido na recolha.
 
 Para o que fica de fora há o botão de **pesquisa aberta**, que abre o Google Notícias
 em janela nova. É consulta pontual, sem as garantias do corpus. Alargar o âmbito de
@@ -175,7 +176,7 @@ python extrair_noticias.py --periodo 30d --area saude --saida saude_mes.xlsx
 
 ## Ressalvas metodológicas
 
-- **Cobertura.** O corpus são as 48 publicações subscritas e os últimos sete dias.
+- **Cobertura.** O corpus são as 48 publicações subscritas e os últimos 30 dias.
   Uma notícia de um título não subscrito, ou anterior a esse período, não está no
   corpus — acrescentar uma publicação é escrever uma linha na lista de feeds.
 - **Marcação literal.** Um artigo entra numa área por conter a expressão no título ou

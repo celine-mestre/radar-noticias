@@ -759,8 +759,8 @@ def principal():
                     help="ficheiro JSON de série diária, atualizado a cada recolha")
     ap.add_argument("--arquivo", default=None,
                     help="ficheiro JSON com as notícias dos últimos dias, acumulado a cada recolha")
-    ap.add_argument("--dias-arquivo", type=int, default=7,
-                    help="dias a manter no arquivo (predefinição: 7)")
+    ap.add_argument("--dias-arquivo", type=int, default=30,
+                    help="dias a manter no arquivo (predefinição: 30)")
     ap.add_argument("--por-palavra", action="store_true",
                     help="recolher também uma consulta por cada palavra-chave")
     ap.add_argument("--fontes", action="store_true",
