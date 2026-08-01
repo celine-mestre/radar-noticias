@@ -33,6 +33,9 @@ permissions:
 
 env:
   PAINEL: "https://celine-mestre.github.io/radar-noticias/"
+  # Origens a incluir no relatório: nacionais, lusofonas, internacionais.
+  # Vazio inclui as três.
+  ORIGENS: ""
 
 jobs:
   preparar:
@@ -60,6 +63,7 @@ jobs:
             --periodo "$PERIODO" \
             --um-por-area \
             --subscritores subscritores.json \
+            --origens "$ORIGENS" \
             --pasta relatorios \
             --painel "$PAINEL"
           echo "envios=$(cat relatorios/manifesto.json)" >> "$GITHUB_OUTPUT"
