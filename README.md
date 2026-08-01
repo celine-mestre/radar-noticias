@@ -10,19 +10,42 @@ Unidade de Pesquisa e Estatísticas
 
 ---
 
-## O que faz
+## Como funciona
 
-- Uma consulta por área governativa, construída a partir de expressões inequívocas
-  — *alterações climáticas* e não *clima*, *preço da energia* e não *energia*.
+A recolha lê todas as manhãs os **feeds das publicações portuguesas de referência** —
+jornais, rádios, televisões, agências e imprensa económica — e marca cada artigo com
+as áreas governativas cujas palavras-chave ele satisfaz. Um artigo é recolhido por ser
+de uma fonte conhecida, não por corresponder a uma pesquisa.
+
+É o método de um agregador de feeds, executado no próprio repositório. Daí resultam
+quatro propriedades que uma pesquisa não dá:
+
+| | Corpus próprio | Pesquisa (complemento) |
+|---|---|---|
+| Resultados | Todos os artigos publicados | Teto de ~100 por consulta |
+| Ordenação | Data de publicação | Relevância |
+| Ligações | Endereço direto do artigo | Reencaminhamento |
+| Resumo | Lead escrito pela redação | Inexistente |
+| Fontes | Lista conhecida e estável | Variável, com entradas estrangeiras |
+
+O **Google Notícias** mantém-se como complemento, para o que os feeds não cobrem:
+publicações fora da lista e períodos anteriores ao arquivo. É também o destino do
+botão *Abrir no Google Notícias*, para pesquisa aberta.
+
+---
+
+## O que o painel faz
+
+- Cartões por área governativa, com filtros por agrupamento temático.
 - Seleção de várias palavras-chave em simultâneo, e pesquisa por termo livre.
-- Filtros por agrupamento temático, janela temporal, origem das fontes (nacionais,
-  internacionais ou todas) e exclusão de redes sociais.
-- Leitura das notícias por ordem cronológica, agrupadas por dia.
-- Síntese visual: distribuição por publicação, assuntos recorrentes, cobertura de
-  cada palavra-chave, distribuição por dia e evolução da área ao longo do tempo.
-- Exportação para Excel, com folha de notícias, folha de especificações da consulta
-  e folha de evolução.
-- Manual de utilização embutido no próprio painel.
+- Filtros por janela temporal, origem das fontes (nacionais, internacionais, todas) e
+  tipo de fonte (imprensa, redes sociais, todas).
+- Leitura das notícias por ordem cronológica, com resumo, agrupadas por dia.
+- Síntese visual: distribuição por publicação, assuntos recorrentes, cobertura de cada
+  palavra-chave, distribuição por dia e evolução da área ao longo do tempo.
+- Exportação para Excel, com folha de notícias, folha de especificações e folha de
+  evolução.
+- Manual de utilização embutido no painel.
 
 ---
 
@@ -30,74 +53,44 @@ Unidade de Pesquisa e Estatísticas
 
 | Ficheiro | Função |
 |---|---|
-| `index.html` | O painel. Ficheiro autónomo, sem dependências externas além do tipo de letra. |
-| `extrair_noticias.py` | A recolha das 16 áreas. Produz o Excel do dia e os três ficheiros de dados. |
+| `index.html` | O painel. Ficheiro autónomo, sem dependências além do tipo de letra. |
+| `extrair_noticias.py` | A recolha. Lê os feeds, marca por área e produz o Excel e os três ficheiros de dados. |
 | `.github/workflows/radar-noticias.yml` | Tarefa agendada que corre a recolha nos servidores do GitHub. |
-| `noticias.json` | **Retrato do dia.** As notícias das últimas 24 horas de cada área. É o que o painel lê na consulta predefinida — resposta imediata. |
-| `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas diárias, sem repetições. Permite pesquisar por palavra-chave e usar janelas até uma semana sem depender de serviços externos. |
-| `historico.json` | **Série diária.** Uma linha por dia e por área, com o número de notícias, de notícias novas e de publicações distintas. Alimenta o bloco *Evolução* e a folha homónima do Excel. |
+| `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
+| `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
+| `historico.json` | **Série diária.** Notícias, notícias novas e publicações distintas, por dia e por área. Alimenta o bloco *Evolução*. |
 
-Os três ficheiros de dados são gerados e atualizados pela recolha agendada. Não
-devem ser editados à mão.
+Os três ficheiros de dados são gerados pela recolha. Não devem ser editados à mão.
 
 ---
 
-## Como funciona
+## Fontes subscritas
 
-O painel não guarda notícias. O navegador impede-o de ler diretamente respostas de
-outro domínio, pelo que não pode interrogar o Google Notícias por si próprio. Daí a
-arquitetura em duas peças:
+Público (geral, política, economia e sociedade), Expresso, Observador, Jornal de
+Notícias, Diário de Notícias, Correio da Manhã, Jornal de Negócios, Jornal Económico,
+ECO, RTP Notícias, SIC Notícias, CNN Portugal, TSF, Renascença, Notícias ao Minuto,
+Diário de Notícias da Madeira, Sábado, Visão, Dinheiro Vivo, Executive Digest, Ambiente
+Magazine e Agroportal.
 
-1. **Recolha agendada.** Corre nos servidores do GitHub, de segunda a sexta de
-   manhã, com janela de 24 horas. Grava o retrato do dia, atualiza o arquivo de
-   sete dias e acrescenta o dia à série histórica.
-2. **Painel publicado.** Alojado no GitHub Pages, ao lado desses ficheiros. Como os
-   lê do mesmo endereço, nenhuma rede o bloqueia.
-
-Ao carregar em *Recolher notícias*, o painel procura por esta ordem:
-
-| Onde procura | Quando | Velocidade |
-|---|---|---|
-| `noticias.json` | Consulta predefinida da área, janela de 24 horas | Imediato |
-| `arquivo.json` | Pesquisas por palavra-chave e janelas até sete dias | Imediato |
-| Serviço de pesquisa | Só o que o arquivo não cobre | Lento, e pode falhar |
-
-O serviço é consultado através de intermediários públicos, porque o acesso direto é
-bloqueado pelo navegador. São gratuitos e partilhados, logo instáveis: falhando, o
-painel apresenta o que tem em arquivo e assinala-o.
-
-O ficheiro Excel é gerado no computador de quem usa o painel, sem passar por
-servidor nenhum.
+A lista está no início do `extrair_noticias.py`, na constante `FONTES`, e acrescenta-se
+uma publicação escrevendo uma linha com o nome, o domínio e o endereço do feed. A
+recolha assinala as fontes que não respondem.
 
 ---
 
 ## Instalação
 
-1. Colocar `index.html`, `extrair_noticias.py` e `README.md` na raiz do repositório.
-2. Criar a pasta `.github/workflows/` e colocar lá o ficheiro `radar-noticias.yml`.
-3. No GitHub, em **Settings › Pages**, escolher *Deploy from a branch*, ramo `main`, pasta `/ (root)`.
-4. Em **Settings › Actions › General › Workflow permissions**, escolher
-   **Read and write permissions** — isto é fundamental para permitir que o script grave os ficheiros de dados (`noticias.json`, etc.).
-5. No separador **Actions**, escolher "Radar de Noticias" e clicar em **Run workflow** para gerar os primeiros dados.
+1. Colocar `index.html`, `extrair_noticias.py` e `README.md` na raiz do repositório, e
+   `radar-noticias.yml` em `.github/workflows/`.
+2. Em **Settings › Pages**, escolher *Deploy from a branch*, ramo `main`, pasta `/ (root)`.
+3. Em **Settings › Actions › General › Workflow permissions**, escolher
+   *Read and write permissions*.
+4. Em **Actions**, correr *Radar de Noticias* uma primeira vez.
 
-O painel ficará disponível em `https://<utilizador>.github.io/<repositório>/`.
+O painel fica em `https://<utilizador>.github.io/<repositório>/`.
 
-### Notas sobre Performance e Dados
-- **Lentidão:** O painel é instantâneo quando lê os ficheiros `noticias.json` e `arquivo.json`. Se estiver lento, é porque não encontrou estes ficheiros e está a tentar contactar o Google através de "proxies" públicos (que são lentos e instáveis). Certifique-se de que a recolha agendada correu com sucesso e os ficheiros existem no repositório.
-- **Diferença para o Google:** Os resultados podem não ser idênticos aos da pesquisa web do Google porque:
-  1. O script usa o feed RSS (que o Google limita a 100 resultados por consulta).
-  2. O script aplica filtros automáticos para excluir fontes não-portuguesas (como sites brasileiros, angolanos, etc.) para manter o foco em notícias nacionais.
-  3. A ordenação no painel é estritamente cronológica, enquanto no Google Web é muitas vezes por "relevância".
-
-### Usar o ficheiro guardado no computador
-
-Abrir o `index.html` num editor de texto e preencher, no início do código:
-
-```js
-enderecoDados: "https://<utilizador>.github.io/<repositório>/",
-```
-
-Passa a ir buscar os ficheiros de dados ao repositório publicado.
+Para usar o ficheiro guardado no computador, abrir o `index.html` num editor de texto e
+preencher `enderecoDados` com o endereço do painel publicado.
 
 ---
 
@@ -109,48 +102,36 @@ página da execução, durante 30 dias.
 Pela linha de comandos, com Python e `openpyxl`:
 
 ```bash
-python extrair_noticias.py --periodo 24h
-python extrair_noticias.py --periodo 30d --area saude --saida saude_julho.xlsx
-python extrair_noticias.py --periodo 24h --json noticias.json \
+# leitura dos feeds das publicações (método principal)
+python extrair_noticias.py --fontes --json noticias.json \
     --arquivo arquivo.json --historico historico.json
+
+# apenas uma área
+python extrair_noticias.py --fontes --area saude --saida saude.xlsx
+
+# pesquisa no Google Notícias, para períodos anteriores ao arquivo
+python extrair_noticias.py --periodo 30d --area saude --saida saude_mes.xlsx
 ```
 
 ---
 
-## Limites conhecidos
+## Ressalvas metodológicas
 
-Todos do serviço de origem, e todos documentados no manual do painel.
-
-- **Teto de 100 artigos por consulta**, sem paginação. O período não altera quantas
-  notícias vêm — altera quais: janelas curtas trazem o que é recente, janelas longas
-  trazem as mesmas 100 espalhadas por mais tempo.
-- **Contagens não comparáveis entre áreas.** Uma área muito noticiada é truncada no
-  teto; uma área discreta não é. A comparação de uma área consigo própria ao longo
-  do tempo é legítima, porque o método é constante.
-- **Ordenação por relevância**, e o operador de tempo atua sobre a data de
-  indexação. O painel corrige isto: ordena pela data de publicação e descarta o que
-  cai fora da janela pedida.
-- **Origem e redes sociais.** No painel, a classificação é feita pelo domínio de
-  cada notícia, com exatidão. Na janela do Google seguem como exclusões de domínio,
-  que o serviço honra para publicações concretas mas não para domínios de topo.
-- **Sem resumos.** O serviço devolve título e fonte, não texto do artigo.
-- **Ligações.** São reencaminhamentos do Google, convertidos no endereço do jornal
-  sempre que a codificação o permite; a recolha agendada resolve mais casos, por
-  trabalhar do lado do servidor.
+- **Cobertura.** O corpus são as publicações subscritas e os últimos sete dias. Uma
+  notícia fora dessa lista ou desse período só aparece pelo complemento.
+- **Marcação literal.** Um artigo entra numa área por conter a expressão no título ou
+  no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
+- **Comparação entre áreas.** Passa a ser legítima dentro do corpus próprio, porque
+  nenhuma área é truncada. Nos resultados vindos da pesquisa, mantém-se o teto e a
+  ressalva de não comparabilidade.
+- **Responsabilidade editorial.** O painel é um instrumento de acesso e triagem: a
+  leitura e a verificação são de quem o usa.
 
 ---
 
 ## Segunda fase
 
-A versão assente no corpus curado do Inoreader, com lista de fontes conhecida,
-ordenação cronológica e sem truncatura — condição para que as contagens passem a ser
-comparáveis entre áreas. A especificação dos feeds está no ficheiro
+A versão assente no corpus curado do Inoreader, que substitui as duas dezenas de feeds
+por toda a pasta 03_MED, com curadoria da equipa. O método é o mesmo — muda a
+qualidade e a amplitude do corpus. A especificação está no ficheiro
 `inoreader_feeds_areas_governativas.xlsx`, fora deste repositório.
-
----
-
-## Fonte e responsabilidade
-
-Notícias do Google Notícias, edição portuguesa (`hl=pt-PT`, `gl=PT`, `ceid=PT:pt-150`).
-O painel é um instrumento de acesso e triagem: a leitura, a verificação e a
-responsabilidade editorial são de quem o usa.

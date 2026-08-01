@@ -255,6 +255,26 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .evo-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
 .evo-haste{width:100%;max-width:16px;border-radius:3px 3px 1px 1px;display:block;transition:.2s}
 .evo-dia{font-size:.6rem;color:var(--texto-ligeiro);margin-top:.3rem;white-space:nowrap;height:.9rem}
+.barra-res{
+  display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;flex:none;
+  padding:.75rem 1.6rem;background:var(--superficie-alt);border-bottom:1px solid var(--borda);
+}
+.segmentado.compacto button{padding:.34rem .8rem;font-size:.8rem}
+.res-contagem{font-size:.8rem;color:var(--texto-ligeiro);white-space:nowrap}
+.res-accoes{display:flex;gap:.45rem;margin-left:auto}
+.res-accoes .btn{padding:.42rem .8rem;font-size:.82rem}
+.res-accoes .btn svg{width:15px;height:15px}
+.res-estado:empty{display:none}
+.res-nota{
+  font-size:.82rem;color:var(--texto-suave);line-height:1.5;margin:.9rem 0 0;
+  padding:.6rem .85rem;border-radius:var(--raio-s);background:var(--superficie-alt);
+}
+.res-vazio{
+  text-align:center;padding:2.4rem 1rem;color:var(--texto-suave);
+}
+.res-vazio strong{display:block;font-size:1rem;color:var(--texto);margin-bottom:.4rem}
+.res-vazio p{font-size:.86rem;max-width:46ch;margin:0 auto;line-height:1.55}
+.ler-lista{padding-bottom:.6rem}
 .ler-corpo{padding:.4rem 1.6rem 1rem}
 .ler-dia{margin-top:1.1rem}
 .ler-dia:first-child{margin-top:.6rem}
@@ -530,6 +550,7 @@ main{padding:2.2rem 0 4rem}
 .modal-cab h3{font-size:1.15rem;font-weight:600}
 .modal-cab p{font-size:.8rem;color:var(--texto-ligeiro);margin-top:.2rem}
 .modal-cab button{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--texto-ligeiro);font-size:1.5rem;line-height:1}
+#corpoRes{padding:0 1.6rem 1.2rem}
 .modal-corpo{padding:1.4rem 1.5rem;overflow-y:auto}
 .modal-corpo h4{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--texto-ligeiro);margin-bottom:.7rem}
 .modal-corpo .bloco{margin-bottom:1.6rem}
@@ -787,7 +808,7 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <small>Suporte à Decisão · Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas</small>
     </div>
     <div class="fontes">
-      Fonte: Google Notícias, edição portuguesa. Versão de <span id="rodapeVersao">—</span>.
+      Fontes: feeds das publicações portuguesas de referência, com o Google Notícias como complemento. Versão de <span id="rodapeVersao">—</span>.
     </div>
   </div>
 </footer>
@@ -1052,7 +1073,7 @@ function cartao(a){
     </button>
     <div class="simbolo"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
     <h3>${a.nome}</h3>
-    <div class="sub"><span class="ponto"></span>${a.palavras.length} palavras-chave · Google Notícias</div>
+    <div class="sub"><span class="ponto"></span>${a.palavras.length} palavras-chave</div>
   </article>`;
 }
 
@@ -1124,96 +1145,151 @@ function abrirDetalhe(id){
         <span class="via-ic" style="--cor:var(--verde)">
           <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg>
         </span>
-        <span class="via-txt"><strong>Visualizar no painel</strong><em>Ler por data, ver síntese, exportar Excel</em></span>
+        <span class="via-txt"><strong>Visualizar no painel</strong><em>Lista por data, síntese, impressão e Excel</em></span>
       </button>
     </div>`;
   $("#veu").classList.add("aberto");
   definirConsulta(a, consulta(a), a.palavras.join("; "));
 }
 
+/* Janela única: abre, recolhe e mostra as notícias. A síntese e a exportação
+   são separadores da mesma janela, não passos seguintes. */
 function abrirExportacao(id){
   const a = AREAS.find(x => x.id === id);
   if(!consultaAtiva || consultaAtiva.area.id !== a.id){
     definirConsulta(a, consulta(a), a.palavras.join("; "));
   }else{
-    /* Mesma área: refaz-se a consulta com o período e os filtros em vigor,
-       que podem ter mudado desde que foi definida. */
     const termos = consultaAtiva.termos;
     const q = termos
       ? "(" + termos.map(t => `"${t}"`).join(" OR ") + ")" + sufixo()
       : consulta(a);
     consultaAtiva = { area:a, q, rotulo:consultaAtiva.rotulo, termos };
   }
-  /* A recolha guardada só vale se corresponder exatamente a este pedido */
   if(assinaturaRecolha !== assinaturaConsulta()) recolha = [];
 
   $("#modal").innerHTML = `
-    <div class="modal-cab nota-cab">
-      <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></div>
+    <div class="modal-cab" style="--cor:${cor(a.grupo)}">
+      <div class="icone"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
       <div>
-        <h3>Exportar notícias</h3>
-        <p>${a.nome}</p>
+        <h3>${a.nome}</h3>
+        <p>${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave"} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${ROTULO_REDES[filtroRedes]}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
     </div>
-    <div class="modal-corpo">
-      <div class="alvo">
-        <span>A recolher</span>
-        <strong>${consultaAtiva.termos ? `apenas ${consultaAtiva.rotulo}` : `todas as palavras-chave de ${a.nome}`}</strong>
-        <em>${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${ROTULO_REDES[filtroRedes]}</em>
+
+    <div class="barra-res" id="barraRes" hidden>
+      <div class="segmentado compacto" id="vistaRes">
+        <button data-vista="lista" class="ativo">Notícias</button>
+        <button data-vista="sintese">Síntese</button>
       </div>
-
-      <p class="aviso-alcance" id="avisoAlcance" hidden>
-        O serviço de pesquisa não respondeu. Estes resultados vêm dos ficheiros da recolha agendada, que contêm apenas o que a consulta da área trouxe — numa pesquisa por termo, são um subconjunto do que existe. Para ver tudo, use “Abrir no Google Notícias”.
-      </p>
-
-      <div class="passo" id="passo1">
-        <div class="passo-n">1</div>
-        <div class="passo-corpo">
-          <h4>Recolher as notícias</h4>
-          <p>Procura os artigos e prepara-os. Costuma demorar alguns segundos.</p>
-          <button class="btn primario" id="btnRecolher">
-            <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M21 3v6h-6"/></svg>
-            Recolher notícias
-          </button>
-          <p id="expEstado" class="passo-estado">Ainda sem notícias recolhidas.</p>
-        </div>
-      </div>
-
-      <div class="passo" id="passo2" hidden>
-        <div class="passo-n">2</div>
-        <div class="passo-corpo">
-          <h4>Ver ou guardar</h4>
-          <p>A leitura mostra as notícias por ordem cronológica; a síntese abre a leitura do conjunto; o Excel descarrega tudo com a folha de especificações.</p>
-          <div class="passo-accoes">
-            <button class="btn" id="btnLer">
-              <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h8"/></svg>
-              Ler notícias
-            </button>
-            <button class="btn" id="btnSintese">
-              <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg>
-              Ver síntese
-            </button>
-            <button class="btn primario" id="btnXLSX">
-              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-              Descarregar Excel
-            </button>
-          </div>
-        </div>
+      <span class="res-contagem" id="resContagem"></span>
+      <div class="res-accoes">
+        <button class="btn" id="btnAtualizar" title="Recolher de novo">
+          <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.2-8.6"/><path d="M21 3v6h-6"/></svg>
+        </button>
+        <button class="btn" id="btnImprimir">
+          <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+          Imprimir
+        </button>
+        <button class="btn primario" id="btnXLSX">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          Excel
+        </button>
       </div>
     </div>
+
+    <div class="modal-corpo" id="corpoRes">
+      <p class="aviso-alcance" id="avisoAlcance" hidden>
+        O serviço de pesquisa complementar não respondeu. Estes resultados vêm do arquivo da recolha agendada, que cobre os últimos sete dias das publicações subscritas. Para procurar fora desse âmbito, use “Abrir no Google Notícias”.
+      </p>
+      <div id="expEstado" class="res-estado"></div>
+      <div id="conteudoRes"></div>
+    </div>
+
     <div class="modal-rodape">
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
-      <button class="btn" data-detalhe="${a.id}" style="margin-left:auto">Voltar</button>
+      <button class="btn" data-detalhe="${a.id}" style="margin-left:auto">Voltar às palavras-chave</button>
     </div>`;
   $("#veu").classList.add("aberto");
 
-  $("#btnRecolher").addEventListener("click", recolherConsulta);
   $("#btnXLSX").addEventListener("click", descarregarXLSX);
-  $("#btnSintese").addEventListener("click", abrirSintese);
-  $("#btnLer").addEventListener("click", abrirLeitura);
-  if(recolha.length) mostrarEstadoRecolha("recolha anterior");
-  else { const p2 = $("#passo2"); if(p2) p2.hidden = true; }
+  $("#btnImprimir").addEventListener("click", imprimirResultados);
+  $("#btnAtualizar").addEventListener("click", () => { recolha = []; recolherConsulta(); });
+  $("#vistaRes").addEventListener("click", e => {
+    const b = e.target.closest("[data-vista]");
+    if(!b) return;
+    document.querySelectorAll("#vistaRes button").forEach(x => x.classList.toggle("ativo", x === b));
+    mostrarVista(b.dataset.vista);
+  });
+
+  if(recolha.length) apresentarResultados("recolha anterior");
+  else recolherConsulta();
+}
+
+let vistaAtual = "lista";
+
+function mostrarVista(qual){
+  vistaAtual = qual;
+  const alvo = $("#conteudoRes");
+  if(!alvo) return;
+  alvo.innerHTML = qual === "sintese" ? corpoSintese() : corpoLista();
+}
+
+/* Chamado no fim de cada recolha: mostra a barra e desenha a vista em curso */
+function apresentarResultados(origem){
+  const barra = $("#barraRes");
+  if(barra) barra.hidden = recolha.length === 0;
+  const cont = $("#resContagem");
+  if(cont) cont.textContent = recolha.length
+    ? `${recolha.length} notícias · ${origem}`
+    : "";
+  mostrarVista(vistaAtual);
+  carregarHistorico().then(() => { if(vistaAtual === "sintese") mostrarVista("sintese"); });
+}
+
+function imprimirResultados(){
+  const a = consultaAtiva.area;
+  const linhas = recolha.map(n => `
+    <tr>
+      <td class="d">${n.data || "—"}</td>
+      <td>${n.titulo}${n.resumo ? `<br><span class="r">${n.resumo}</span>` : ""}</td>
+      <td class="f">${n.fonte || ""}</td>
+    </tr>`).join("");
+
+  const janela = window.open("", "ImprimirRadar", "width=900,height=700");
+  janela.document.write(`<!DOCTYPE html><html lang="pt-PT"><head><meta charset="UTF-8">
+    <title>${a.nome} · Radar de Notícias</title>
+    <style>
+      @page{margin:1.6cm}
+      body{font-family:'Lexend',Arial,sans-serif;font-weight:300;color:#171715;font-size:10pt;line-height:1.45}
+      header{border-bottom:2px solid #2B5683;padding-bottom:.7rem;margin-bottom:1rem}
+      .org{font-size:7.5pt;letter-spacing:.1em;text-transform:uppercase;color:#5b6068}
+      h1{font-size:15pt;font-weight:600;color:#2B5683;margin:.25rem 0}
+      .crit{font-size:8.5pt;color:#5b6068}
+      table{width:100%;border-collapse:collapse}
+      th{text-align:left;font-size:8pt;text-transform:uppercase;letter-spacing:.06em;color:#5b6068;
+         border-bottom:1px solid #cfd8e3;padding:.3rem .5rem}
+      td{padding:.42rem .5rem;border-bottom:1px solid #e2e8f0;vertical-align:top}
+      tr{break-inside:avoid}
+      .d{white-space:nowrap;color:#5b6068;font-size:8.5pt;width:16%}
+      .f{white-space:nowrap;color:#5b6068;font-size:8.5pt;width:18%}
+      .r{color:#5b6068;font-size:8.5pt}
+      footer{margin-top:1.2rem;padding-top:.5rem;border-top:1px solid #e2e8f0;
+             font-size:7.5pt;color:#8a9098}
+    </style></head><body>
+    <header>
+      <div class="org">Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas</div>
+      <h1>${a.nome}</h1>
+      <div class="crit">${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave da área"} ·
+        ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]} · ${ROTULO_REDES[filtroRedes]} ·
+        ${recolha.length} notícias</div>
+    </header>
+    <table><thead><tr><th>Data</th><th>Notícia</th><th>Fonte</th></tr></thead>
+    <tbody>${linhas}</tbody></table>
+    <footer>Radar de Notícias por Área Governativa · ${new Date().toLocaleString("pt-PT")}</footer>
+    </body></html>`);
+  janela.document.close();
+  setTimeout(() => janela.print(), 300);
 }
 
 function fecharModal(){ $("#veu").classList.remove("aberto"); }
@@ -1224,7 +1300,7 @@ function fecharModal(){ $("#veu").classList.remove("aberto"); }
 const MANUAL = [
   { n:"1", titulo:"O que é o radar", cor:"var(--azul)", icone:"bussola", corpo:`
     <p>Acesso rápido à comunicação social, organizado pelas 16 áreas governativas do XXV Governo Constitucional. Serve para saber, em segundos, o que está a ser noticiado numa área e levar essa recolha para uma folha de cálculo.</p>
-    <p>O painel não guarda notícias: constrói consultas ao Google Notícias a partir das palavras-chave de cada área. O ficheiro Excel é gerado no seu computador.</p>` },
+    <p>As notícias são recolhidas todas as manhãs a partir dos feeds das publicações portuguesas e marcadas pelas palavras-chave de cada área. O ficheiro Excel é gerado no seu computador.</p>` },
 
   { n:"2", titulo:"Navegar", cor:"var(--verde)", icone:"grelha", corpo:`
     <dl>
@@ -1246,13 +1322,14 @@ const MANUAL = [
     <p class="man-aviso">A exportação segue sempre a consulta ativa: se clicou numa palavra-chave, exporta só essa; caso contrário, exporta a área completa.</p>` },
 
   { n:"4", titulo:"Recolher e exportar", cor:"var(--verde)", icone:"descarregar", corpo:`
-    <p>A janela de exportação tem dois passos. Primeiro <strong>Recolher notícias</strong>, que procura por esta ordem:</p>
+    <p>Clicar em <strong>Visualizar no painel</strong> recolhe e apresenta logo as notícias, por ordem cronológica e com resumo. Em cima, o separador alterna entre <strong>Notícias</strong> e <strong>Síntese</strong>, e há três ações: recolher de novo, <strong>Imprimir</strong> e <strong>Excel</strong>.</p>
+    <p>A recolha procura por esta ordem:</p>
     <dl>
       <dt>Retrato do dia</dt><dd>Para a consulta predefinida da área com janela de 24 horas. Imediato.</dd>
       <dt>Arquivo de sete dias</dt><dd>Acumulado pelas recolhas agendadas, que leem os feeds das publicações portuguesas e marcam cada artigo com as áreas e palavras-chave que satisfaz. É por isso que uma pesquisa responde de imediato e sem depender da rede.</dd>
       <dt>Serviço de pesquisa</dt><dd>Só para o que o arquivo não cobre. É a via lenta e a única que pode falhar; falhando, o painel mostra o que tem em arquivo e avisa.</dd>
     </dl>
-    <p>Concluído, aparece o segundo passo, com <strong>Ler notícias</strong>, <strong>Ver síntese</strong> e <strong>Descarregar Excel</strong>.</p>
+    <p><strong>Imprimir</strong> gera uma folha com cabeçalho institucional, os critérios da consulta e a lista em tabela — pronta para anexar a uma nota.</p>
     <p><strong>Ler notícias</strong> apresenta a lista por ordem cronológica, da mais recente para a mais antiga — a ordenação que o serviço não dá.</p>
     <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, as exclusões, a consulta enviada e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
 
@@ -1274,7 +1351,9 @@ const MANUAL = [
     <p class="man-aviso">Não há filtro por título. O operador <code>site:</code> não se combina de forma fiável com o tema quando se indicam vários domínios — só funciona bem no uso negativo, que é o do filtro de fontes nacionais.</p>` },
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
+    <p>Os limites abaixo aplicam-se ao <strong>Google Notícias</strong>, usado como complemento. O corpus próprio — os feeds das publicações — não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações.</p>
     <dl>
+      <dt>Cobertura do corpus</dt><dd>Cerca de duas dezenas de publicações e sete dias de arquivo. Uma notícia de um título fora dessa lista, ou anterior a esse período, só aparece pelo complemento.</dd>
       <dt>Correspondência aproximada</dt><dd>O serviço devolve artigos que não contêm o termo pesquisado — uma pesquisa por “CPLP” traz notícias de automóveis. O painel confirma cada resultado contra o termo e descarta os que não o contêm, indicando quantos foram.</dd>
       <dt>Instantâneo e arquivo</dt><dd>A recolha agendada guarda o retrato diário de cada área, com o teto de 100. Filtrar esse retrato por uma palavra-chave devolve só o que lá está — muito menos do que existe no serviço. Para pesquisar o arquivo, o painel consulta o serviço em direto; não conseguindo, avisa que os resultados vêm do instantâneo.</dd>
       <dt>Cerca de 100 artigos</dt><dd>Por consulta, sem paginação. Qualquer que seja o período. Alargar a janela distribui as mesmas 100 por mais tempo.</dd>
@@ -1467,9 +1546,9 @@ function blocoEvolucao(area){
 /* Leitura cronológica — a ordenação que o serviço não dá.
    As notícias já recolhidas trazem a data de cada artigo, pelo que basta
    ordená-las aqui, sem depender de nenhum leitor de feeds externo. */
-function abrirLeitura(){
-  if(!recolha.length) return;
-  const a = consultaAtiva.area;
+/* Lista cronológica, agrupada por dia — a vista principal dos resultados */
+function corpoLista(){
+  if(!recolha.length) return "";
   const comData = recolha.filter(n => n.data);
   const semData = recolha.filter(n => !n.data);
   const porDia = new Map();
@@ -1503,39 +1582,22 @@ function abrirLeitura(){
       <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
     </a>`;
 
-  $("#modal").innerHTML = `
-    <div class="modal-cab nota-cab">
-      <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h8"/></svg></div>
-      <div>
-        <h3>Notícias por ordem de data</h3>
-        <p>${a.nome} · ${recolha.length} notícias · da mais recente para a mais antiga</p>
-      </div>
-      <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="modal-corpo ler-corpo">
-      ${dias.map(d => `
-        <div class="ler-dia">
-          <h4>${rotuloDia(d)} <span>${porDia.get(d).length}</span></h4>
-          ${porDia.get(d)
-            .sort((x, y) => (y.data || "").localeCompare(x.data || ""))
-            .map(artigo).join("")}
-        </div>`).join("")}
-      ${semData.length ? `
-        <div class="ler-dia">
-          <h4>Sem data reconhecida <span>${semData.length}</span></h4>
-          ${semData.map(artigo).join("")}
-        </div>` : ""}
-    </div>
-    <div class="modal-rodape">
-      <span style="font-size:.76rem;color:var(--texto-ligeiro);align-self:center">Ordenação pela data do artigo, não pela relevância</span>
-      <button class="btn" data-exportar="${a.id}" style="margin-left:auto">Voltar</button>
-    </div>`;
-  $("#veu").classList.add("aberto");
+  return `<div class="ler-lista">
+    ${dias.map(d => `
+      <div class="ler-dia">
+        <h4>${rotuloDia(d)} <span>${porDia.get(d).length}</span></h4>
+        ${porDia.get(d).sort((x, y) => (y.data || "").localeCompare(x.data || "")).map(artigo).join("")}
+      </div>`).join("")}
+    ${semData.length ? `
+      <div class="ler-dia">
+        <h4>Sem data reconhecida <span>${semData.length}</span></h4>
+        ${semData.map(artigo).join("")}
+      </div>` : ""}
+  </div>`;
 }
 
-async function abrirSintese(){
-  if(!recolha.length) return;
-  await carregarHistorico();
+function corpoSintese(){
+  if(!recolha.length) return "";
   const a = consultaAtiva.area, corA = cor(a.grupo);
   const assuntos = assuntosRecorrentes(recolha, 14);
   const fontes = contarPor(recolha, "fonte");
@@ -1549,16 +1611,7 @@ async function abrirSintese(){
   const kpi = (valor, rotulo, cor2) =>
     `<div class="sin-kpi" style="--cor:${cor2}"><strong>${valor}</strong><span>${rotulo}</span></div>`;
 
-  $("#modal").innerHTML = `
-    <div class="modal-cab nota-cab">
-      <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg></div>
-      <div>
-        <h3>Síntese da recolha</h3>
-        <p>${a.nome} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
-      </div>
-      <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="modal-corpo">
+  return `
 
       <div class="sin-teto">
         <svg viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
@@ -1606,16 +1659,7 @@ async function abrirSintese(){
         <h4>Distribuição por dia</h4>
         ${colunas(dias, corA)}
         <p class="sin-nota">${comData} das ${recolha.length} notícias têm data reconhecida. O serviço ordena por relevância e a data é a de indexação, pelo que a distribuição é indicativa.</p>
-      </div>
-
-    </div>
-    <div class="modal-rodape">
-      <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
-      <button class="btn" data-exportar="${a.id}">Voltar</button>
-      <button class="btn primario" id="btnXLSX2" style="margin-left:auto">Descarregar Excel</button>
-    </div>`;
-  $("#veu").classList.add("aberto");
-  $("#btnXLSX2").addEventListener("click", descarregarXLSX);
+      </div>`;
 }
 
 /* Envia os títulos ao modelo configurado (interface compatível com a norma
@@ -2023,7 +2067,7 @@ async function recolherConsulta(){
   const btn = $("#btnRecolher"), estado = $("#expEstado");
   const meu = ++pedidoAtual;
   const valido = () => meu === pedidoAtual;
-  btn.disabled = true;
+  if(btn) btn.disabled = true;
   recolha = [];
   const endereco = urlRSS(consultaAtiva.q);
   const aviso = $("#avisoAlcance");
@@ -2084,7 +2128,7 @@ async function recolherConsulta(){
       if(arquivoCobreTermos(a.noticias)){
         const r = { itens: paraConsulta(a.noticias), origem: `arquivo de ${a.dias} dias` };
         if(r.itens.filter(dentroDoPeriodo).length){
-          btn.disabled = false;
+          if(btn) btn.disabled = false;
           assentarRecolha(r.itens, r.origem);
           return;
         }
@@ -2097,7 +2141,7 @@ async function recolherConsulta(){
     try{
       const r = await doServico();
       if(!valido()) return;
-      btn.disabled = false;
+      if(btn) btn.disabled = false;
       assentarRecolha(r.itens, r.origem);
       return;
     }catch(agregado){
@@ -2110,14 +2154,14 @@ async function recolherConsulta(){
     const r = await dosFicheiros();
     if(!valido()) return;
     if(r){
-      btn.disabled = false;
+      if(btn) btn.disabled = false;
       assentarRecolha(r.itens, r.origem);
       return;
     }
     try{
       const v = await doServico();
       if(!valido()) return;
-      btn.disabled = false;
+      if(btn) btn.disabled = false;
       assentarRecolha(v.itens, v.origem);
       return;
     }catch(agregado){
@@ -2128,15 +2172,15 @@ async function recolherConsulta(){
 
   /* Recurso: o que estiver nos ficheiros, assinalado como tal */
   if(guardado && guardado.itens.length){
-    btn.disabled = false;
+    if(btn) btn.disabled = false;
     assentarRecolha(guardado.itens, guardado.origem, true);
     if(aviso) aviso.hidden = false;
     return;
   }
 
-  btn.disabled = false;
+  if(btn) btn.disabled = false;
   estado.innerHTML = `<span style="color:var(--vermelho)">Sem notícias para esta consulta.</span>
-    <br><span style="font-size:.84rem">O serviço de pesquisa não respondeu e os ficheiros da recolha agendada não têm notícias desta área. Experimente alargar o período ou usar “Abrir no Google Notícias”.</span>
+    <br><span style="font-size:.84rem">O arquivo da recolha agendada não tem notícias que cumpram estes critérios e o serviço complementar não respondeu. Experimente alargar o período ou desligar um filtro.</span>
     <details style="margin-top:.6rem"><summary style="cursor:pointer;font-size:.8rem;color:var(--azul)">Detalhe técnico</summary>
     <ul style="font-size:.78rem;color:var(--texto-ligeiro);margin:.4rem 0 0 1.1rem;text-align:left">${erros.map(f => `<li>${f}</li>`).join("")}</ul></details>`;
 }
@@ -2393,7 +2437,7 @@ function descarregarXLSX(){
       so: "só redes sociais e plataformas de blogues",
       com: "imprensa e redes sociais, sem distinção"
     }[filtroRedes]],
-    ["Origem", "Google Notícias, edição portuguesa (hl=pt-PT, gl=PT, ceid=PT:pt-150)"],
+    ["Origem", "Feeds das publicações portuguesas de referência, recolhidos diariamente; Google Notícias como complemento"],
     ["Consulta enviada", consultaAtiva.q],
     ["Notícias exportadas", String(recolha.length)],
     ["Data da exportação", new Date().toLocaleString("pt-PT")],
@@ -2495,8 +2539,6 @@ function mostrarEstadoRecolha(origem, retiradas){
   const estado = $("#expEstado");
   if(!estado) return;
 
-  /* Um valor negativo em data significa que nenhuma notícia caía dentro da
-     janela pedida e que foram apresentadas assim mesmo, com esta ressalva. */
   const foraDaJanela = retiradas.data < 0;
   const partes = [];
   if(retiradas.termo) partes.push(`${retiradas.termo} sem o termo pesquisado`);
@@ -2505,33 +2547,26 @@ function mostrarEstadoRecolha(origem, retiradas){
   if(retiradas.data > 0) partes.push(`${retiradas.data} fora do período`);
   const fora = retiradas.termo + retiradas.redes + retiradas.origem + Math.max(0, retiradas.data);
 
-  /* Atalhos para desfazer o filtro que mais cortou, sem sair da janela */
   const atalhos = [];
   if(retiradas.origem && filtroFontes === "nacionais") atalhos.push(`<button class="btn-atalho" data-afrouxar="fontes">Aceitar todas as fontes</button>`);
   if(retiradas.redes && filtroRedes === "sem") atalhos.push(`<button class="btn-atalho" data-afrouxar="redes">Incluir redes sociais</button>`);
   if(retiradas.data) atalhos.push(`<button class="btn-atalho" data-afrouxar="periodo">Alargar para 7 dias</button>`);
   const barra = atalhos.length ? `<div class="atalhos">${atalhos.join("")}</div>` : "";
 
+  const notas = [];
+  if(foraDaJanela) notas.push(`<span style="color:var(--dourado)">Publicadas antes de ${ROTULO_PERIODO[periodo]} — datadas pela indexação do serviço. Apresentadas mesmo assim.</span>`);
+  if(fora) notas.push(`Foram retiradas ${fora}: ${partes.join(", ")}.`);
+
   if(recolha.length){
-    const ressalva = foraDaJanela
-      ? `<br><span style="font-size:.8rem;color:var(--dourado)">Publicadas antes de ${ROTULO_PERIODO[periodo]} — o serviço datou-as pela indexação. Apresentadas mesmo assim.</span>`
-      : "";
-    estado.innerHTML =
-      `<span class="exp-total">${recolha.length}</span> notícias prontas a exportar` +
-      `<span style="color:var(--texto-ligeiro);font-size:.8rem"> · ${origem}</span>` + ressalva +
-      (fora ? `<br><span style="font-size:.8rem;color:var(--texto-ligeiro)">Foram retiradas ${fora}: ${partes.join(", ")}.</span>${barra}` : "");
+    estado.innerHTML = notas.length ? `<div class="res-nota">${notas.join("<br>")}${barra}</div>` : "";
   }else{
     estado.innerHTML = fora
-      ? `<span style="color:var(--vermelho)">As ${fora} notícias recolhidas foram todas retiradas pelos filtros.</span>
-         <br><span style="font-size:.84rem">${partes.join(", ")}.</span>${barra}`
-      : `<span style="color:var(--vermelho)">Não foram encontradas notícias.</span>
-         <br><span style="font-size:.84rem">A consulta não devolveu resultados para este período.</span>${barra}`;
+      ? `<div class="res-vazio"><strong>As ${fora} notícias recolhidas foram todas retiradas pelos filtros.</strong>
+         <p>${partes.join(", ")}.</p>${barra}</div>`
+      : `<div class="res-vazio"><strong>Sem notícias para esta consulta.</strong>
+         <p>O arquivo da recolha agendada não tem notícias que cumpram estes critérios e o serviço complementar não respondeu. Experimente alargar o período ou desligar um filtro.</p>${barra}</div>`;
   }
-
-  const p2 = $("#passo2");
-  if(p2) p2.hidden = recolha.length === 0;
-  const p1 = $("#passo1");
-  if(p1) p1.classList.toggle("feito", recolha.length > 0);
+  apresentarResultados(origem);
 }
 
 /* =========================================================================

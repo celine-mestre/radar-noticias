@@ -365,17 +365,17 @@ def endereco_do_artigo(ligacao, tempo_limite=12):
 
 def resolver_ligacoes(linhas, trabalhadores=8):
     """Resolve em paralelo os reencaminhamentos de todas as notícias."""
-    enderecos = [l[6] for l in linhas]
+    enderecos = [l[7] for l in linhas]
     unicos = list(dict.fromkeys(enderecos))
     print(f"A resolver {len(unicos)} ligações…", end=" ", flush=True)
     with ThreadPoolExecutor(max_workers=trabalhadores) as piscina:
         resolvidos = dict(zip(unicos, piscina.map(endereco_do_artigo, unicos)))
     convertidas = 0
     for l in linhas:
-        novo = resolvidos.get(l[6], l[6])
-        if novo != l[6]:
+        novo = resolvidos.get(l[7], l[7])
+        if novo != l[7]:
             convertidas += 1
-            l[6] = novo
+            l[7] = novo
     print(f"{convertidas} convertidas em endereço do jornal")
     return linhas
 
@@ -597,7 +597,7 @@ def gravar(linhas, falhas, caminho, periodo, so_nacionais):
     ws = wb.active
     ws.title = "Notícias"
     cabecalhos = ["Área governativa", "Agrupamento temático", "Data de publicação", "Fonte",
-                  "Domínio", "Título", "Ligação"]
+                  "Domínio", "Título", "Resumo", "Ligação"]
     for j, h in enumerate(cabecalhos, 1):
         c = ws.cell(row=1, column=j, value=h)
         c.font = fonte(bold=True, color="FFFFFF", size=10)
@@ -610,19 +610,19 @@ def gravar(linhas, falhas, caminho, periodo, so_nacionais):
             c = ws.cell(row=i, column=j, value=v)
             c.font = fonte(size=10)
             c.border = borda
-            c.alignment = Alignment(vertical="top", wrap_text=(j == 6))
+            c.alignment = Alignment(vertical="top", wrap_text=(j in (6, 7)))
             if i % 2 == 0:
                 c.fill = alt
             if j == 3 and v is not None:
                 c.number_format = "yyyy-mm-dd hh:mm"
-            if j == 7 and v:
+            if j == 8 and v:
                 c.hyperlink = v
                 c.font = fonte(size=10, color="2B5683", underline="single")
 
-    for j, w in enumerate([30, 28, 19, 24, 22, 62, 52], 1):
+    for j, w in enumerate([30, 28, 19, 24, 22, 54, 54, 46], 1):
         ws.column_dimensions[get_column_letter(j)].width = w
     ws.freeze_panes = "A2"
-    ws.auto_filter.ref = f"A1:G{max(2, len(linhas) + 1)}"
+    ws.auto_filter.ref = f"A1:H{max(2, len(linhas) + 1)}"
 
     # --- Folha de síntese ---
     wr = wb.create_sheet("Síntese")
@@ -706,16 +706,30 @@ def principal():
     saida = args.saida or f"radar_noticias_{datetime.now():%Y%m%d_%H%M}.xlsx"
     so_nacionais = not args.todas_as_fontes
 
-    linhas, falhas = recolher(args.periodo, args.area, so_nacionais)
-    if not args.sem_resolver_ligacoes and linhas:
-        linhas = resolver_ligacoes(linhas)
+    alvo = [a for a in AREAS if args.area is None or a[0] == args.area]
+    das_fontes = []
+
+    if args.fontes:
+        # Origem principal: os feeds das próprias publicações
+        print("Leitura dos feeds das publicações:")
+        das_fontes, falhas = recolher_fontes(alvo, args.dias_arquivo)
+        campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "resumo", "ligacao"]
+        linhas = [[n["area"], n["grupo"], n["data"], n["fonte"], n["dominio"],
+                   n["titulo"], n["resumo"], n["ligacao"]] for n in das_fontes]
+        linhas.sort(key=lambda l: (l[2] is None, l[2]), reverse=True)
+    else:
+        # Origem alternativa: pesquisa no Google Notícias
+        linhas, falhas = recolher(args.periodo, args.area, so_nacionais)
+        if not args.sem_resolver_ligacoes and linhas:
+            linhas = resolver_ligacoes(linhas)
+        linhas = [l[:6] + [""] + l[6:] for l in linhas]   # coluna de resumo vazia
     gravar(linhas, falhas, saida, args.periodo, so_nacionais)
     print(f"\n{len(linhas)} notícias gravadas em {saida}")
 
     vistos_anteriores = ligacoes_da_recolha_anterior(args.json) if (args.json and args.historico) else {}
 
     if args.json:
-        campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "ligacao"]
+        campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "resumo", "ligacao"]
         noticias = []
         for l in linhas:
             registo = dict(zip(campos, l))
@@ -724,27 +738,22 @@ def principal():
         MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
                  "agosto", "setembro", "outubro", "novembro", "dezembro"]
         agora = datetime.now()
+        if args.fontes:
+            for registo, n in zip(noticias, das_fontes):
+                registo["palavras"] = sorted(n["palavras"])
         pacote = {
             "gerado": f"{agora.day} de {MESES[agora.month - 1]} de {agora.year}, {agora:%Hh%M}",
+            "origem": "feeds das publicações" if args.fontes else "Google Notícias",
             "periodo": args.periodo or "sem limite",
-            "so_nacionais": so_nacionais,
             "noticias": noticias,
         }
         with open(args.json, "w", encoding="utf-8") as destino:
             json.dump(pacote, destino, ensure_ascii=False, indent=1)
         print(f"{len(noticias)} notícias gravadas em {args.json}")
 
-    por_palavra = []
-
-    if args.fontes:
-        alvo = [a for a in AREAS if args.area is None or a[0] == args.area]
-        print("\nLeitura dos feeds das publicações:")
-        das_fontes, falhas_fontes = recolher_fontes(alvo, args.dias_arquivo)
-        por_palavra.extend(das_fontes)
-        falhas.extend(falhas_fontes)
+    por_palavra = list(das_fontes)
 
     if args.por_palavra:
-        alvo = [a for a in AREAS if args.area is None or a[0] == args.area]
         print("\nRecolha por palavra-chave:")
         por_palavra = recolher_palavras(args.periodo, alvo)
         if not args.sem_resolver_ligacoes and por_palavra:
@@ -870,7 +879,7 @@ def atualizar_historico(caminho, linhas, periodo, vistos=None):
     for l in linhas:
         registo = por_area.setdefault(l[0], {"noticias": 0, "novas": 0, "fontes": set()})
         registo["noticias"] += 1
-        if l[6] and l[6] not in vistos.get(l[0], set()):
+        if l[7] and l[7] not in vistos.get(l[0], set()):
             registo["novas"] += 1
         if l[3]:
             registo["fontes"].add(l[3])
