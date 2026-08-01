@@ -82,7 +82,20 @@ jobs:
           git commit -m "${{ inputs.acao }}: ${{ inputs.email }}"
           git push
 
+      # O envio só é tentado se as credenciais estiverem configuradas. Sem elas,
+      # o registo faz-se na mesma e o passo é ignorado em vez de dar erro.
+      - name: Verificar as credenciais
+        id: correio
+        run: |
+          if [ -n "${{ secrets.SMTP_SERVIDOR }}" ]; then
+            echo "pronto=sim" >> "$GITHUB_OUTPUT"
+          else
+            echo "pronto=nao" >> "$GITHUB_OUTPUT"
+            echo "::notice::Sem credenciais de correio configuradas. O registo foi gravado; a confirmação não é enviada."
+          fi
+
       - name: Enviar a confirmacao
+        if: steps.correio.outputs.pronto == 'sim'
         continue-on-error: true
         uses: dawidd6/action-send-mail@v3
         with:

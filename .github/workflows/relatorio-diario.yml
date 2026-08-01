@@ -87,7 +87,20 @@ jobs:
           name: relatorios-diarios
           path: relatorios
 
+      # Sem credenciais, os relatórios ficam disponíveis em Artifacts e o passo
+      # é ignorado em vez de dar erro.
+      - name: Verificar as credenciais
+        id: correio
+        run: |
+          if [ -n "${{ secrets.SMTP_SERVIDOR }}" ]; then
+            echo "pronto=sim" >> "$GITHUB_OUTPUT"
+          else
+            echo "pronto=nao" >> "$GITHUB_OUTPUT"
+            echo "::notice::Sem credenciais de correio. Os relatórios ficam em Artifacts."
+          fi
+
       - name: Enviar
+        if: steps.correio.outputs.pronto == 'sim'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVIDOR }}
