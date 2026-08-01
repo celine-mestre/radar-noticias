@@ -311,6 +311,13 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .ler-hora{font-size:.74rem;color:var(--texto-ligeiro);font-variant-numeric:tabular-nums;padding-top:.1rem}
 .ler-txt strong{display:block;font-size:.88rem;font-weight:400;color:var(--texto);line-height:1.4}
 .ler-txt em{font-style:normal;font-size:.75rem;color:var(--texto-ligeiro)}
+.ler-fonte{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.1rem}
+.etiqueta-origem{
+  font-size:.63rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--cor);border:1px solid color-mix(in srgb, var(--cor) 42%, transparent);
+  background:color-mix(in srgb, var(--cor) 8%, transparent);
+  border-radius:3px;padding:.08rem .34rem;line-height:1.5;white-space:nowrap;
+}
 .ler-img{
   flex:none;width:76px;height:56px;border-radius:var(--raio-s);overflow:hidden;
   background:var(--superficie-alt);border:1px solid var(--borda);
@@ -983,28 +990,26 @@ const ICONES = {
    Cada área tem um conjunto de palavras-chave que marca as notícias do corpus
    ========================================================================= */
 const AREAS = [
-  { id:"presidencia", nome:"Presidência", grupo:"soberania", icone:"presidencia",
-    palavras:["Conselho de Ministros","Presidência do Conselho de Ministros","Programa do Governo","comunicação do Governo","modernização administrativa","dados abertos","transparência administrativa"] },
-  { id:"parlamentares", nome:"Assuntos Parlamentares", grupo:"soberania", icone:"parlamento",
-    palavras:["Assembleia da República","debate parlamentar","interpelação ao Governo","audição parlamentar","comissão parlamentar de inquérito","regulação da comunicação social","Entidade Reguladora para a Comunicação Social"] },
-  { id:"reforma", nome:"Reforma do Estado", grupo:"soberania", icone:"reforma",
-    palavras:["reforma do Estado","Administração Pública","desburocratização","simplificação administrativa","trabalhadores da Administração Pública","inteligência artificial na Administração Pública","SIADAP"] },
   { id:"estrangeiros", nome:"Negócios Estrangeiros", grupo:"soberania", icone:"estrangeiros",
     palavras:["Ministério dos Negócios Estrangeiros","política externa portuguesa","Conselho Europeu","CPLP","Nações Unidas","diáspora portuguesa","cooperação para o desenvolvimento","rede consular"] },
+  { id:"financas", nome:"Finanças", grupo:"economia", icone:"financas",
+    palavras:["Ministério das Finanças","Orçamento do Estado","défice orçamental","dívida pública","IRS","tributação das empresas","execução orçamental","Autoridade Tributária"] },
+  { id:"presidencia", nome:"Presidência", grupo:"soberania", icone:"presidencia",
+    palavras:["Conselho de Ministros","Presidência do Conselho de Ministros","Programa do Governo","comunicação do Governo","modernização administrativa","dados abertos","transparência administrativa"] },
+  { id:"reforma", nome:"Reforma do Estado", grupo:"soberania", icone:"reforma",
+    palavras:["reforma do Estado","Administração Pública","desburocratização","simplificação administrativa","trabalhadores da Administração Pública","inteligência artificial na Administração Pública","SIADAP"] },
+  { id:"parlamentares", nome:"Assuntos Parlamentares", grupo:"soberania", icone:"parlamento",
+    palavras:["Assembleia da República","debate parlamentar","interpelação ao Governo","audição parlamentar","comissão parlamentar de inquérito","regulação da comunicação social","Entidade Reguladora para a Comunicação Social"] },
   { id:"defesa", nome:"Defesa Nacional", grupo:"soberania", icone:"defesa",
     palavras:["Ministério da Defesa Nacional","Forças Armadas","NATO","investimento em defesa","indústria de defesa","missões militares internacionais","serviço militar"] },
   { id:"interna", nome:"Administração Interna", grupo:"soberania", icone:"interna",
     palavras:["Ministério da Administração Interna","imigração","pedidos de asilo","controlo de fronteiras","AIMA","proteção civil","segurança interna","sinistralidade rodoviária"] },
   { id:"justica", nome:"Justiça", grupo:"soberania", icone:"justica",
     palavras:["Ministério da Justiça","tribunais","Ministério Público","pendências processuais","sistema prisional","registos e notariado","reforma da justiça"] },
-
-  { id:"financas", nome:"Finanças", grupo:"economia", icone:"financas",
-    palavras:["Ministério das Finanças","Orçamento do Estado","défice orçamental","dívida pública","IRS","tributação das empresas","execução orçamental","Autoridade Tributária"] },
   { id:"economia", nome:"Economia e Coesão Territorial", grupo:"economia", icone:"economia",
     palavras:["Ministério da Economia","crescimento económico","exportações portuguesas","investimento empresarial","turismo","fundos europeus","coesão territorial","interioridade"] },
   { id:"infraestruturas", nome:"Infraestruturas e Habitação", grupo:"economia", icone:"infraestruturas",
     palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","obras públicas","ferrovia","novo aeroporto","transportes públicos","licenciamento urbanístico"] },
-
   { id:"educacao", nome:"Educação, Ciência e Inovação", grupo:"social", icone:"educacao",
     palavras:["Ministério da Educação","escolas","professores","exames nacionais","ensino superior","investigação científica","bolsas de investigação","abandono escolar"] },
   { id:"saude", nome:"Saúde", grupo:"social", icone:"saude",
@@ -1013,12 +1018,12 @@ const AREAS = [
     palavras:["Ministério do Trabalho","emprego","desemprego","salário mínimo","pensões","segurança social","solidariedade social","negociação coletiva","apoios sociais"] },
   { id:"cultura", nome:"Cultura, Juventude e Desporto", grupo:"social", icone:"cultura",
     palavras:["Ministério da Cultura","património cultural","museus","criação artística","políticas de juventude","desporto","alta competição","língua portuguesa"] },
-
   { id:"ambiente", nome:"Ambiente e Energia", grupo:"ambiente", icone:"ambiente",
     palavras:["Ministério do Ambiente e Energia","preço da energia","mercado da eletricidade","energias renováveis","alterações climáticas","descarbonização","gestão de resíduos","situação de seca","incêndios florestais"],
     excluir:["clima de negócios","clima organizacional","clima de confiança"] },
   { id:"agricultura", nome:"Agricultura e Mar", grupo:"ambiente", icone:"agricultura",
     palavras:["Ministério da Agricultura e Mar","política agrícola comum","produção agrícola","agricultores","desenvolvimento rural","gestão florestal","pescas","aquicultura","economia do mar","segurança alimentar","regadio"] }
+
 ];
 
 /* =========================================================================
@@ -1038,6 +1043,19 @@ const PUBLICACOES_LUSOFONAS = [
   "expressodasilhas", "inforpress", "asemana", "tatoli", "timorpost", "stp-press",
   "agenciabrasil", "folha.uol", "globo.com", "uol.com.br", "conjur", "migalhas", "jota.info"
 ];
+
+/* Etiqueta de origem, para se distinguir a proveniência sem conhecer o título */
+const ETIQUETA_ORIGEM = {
+  nacionais:      { rotulo:"Portugal",      cor:"var(--verde)" },
+  lusofonas:      { rotulo:"Lusofonia",     cor:"var(--dourado)" },
+  internacionais: { rotulo:"Internacional", cor:"var(--teal)" }
+};
+
+function origemDaFonte(it){
+  if(fonteNacional(it)) return "nacionais";
+  if(fonteLusofona(it)) return "lusofonas";
+  return "internacionais";
+}
 
 function fonteLusofona(it){
   const d = (it.dominio || "").toLowerCase().replace(/^www\./, "");
@@ -1194,18 +1212,16 @@ function desenhar(){
     return;
   }
 
-  alvo.innerHTML = GRUPOS.map(g => {
-    const doGrupo = lista.filter(a => a.grupo === g.id);
-    if(!doGrupo.length) return "";
-    return `<section class="grupo" style="--cor:${g.cor}">
-      <div class="grupo-cab">
-        <div class="risco"></div>
-        <h2>${g.nome}</h2>
-        <span>${doGrupo.length} ${doGrupo.length === 1 ? "área" : "áreas"}</span>
-      </div>
-      <div class="grelha">${doGrupo.map(cartao).join("")}</div>
-    </section>`;
-  }).join("");
+  /* As áreas seguem a ordem do XXV Governo Constitucional, como no Portal do
+     Governo. Os agrupamentos temáticos mantêm-se como filtro, não como secções. */
+  alvo.innerHTML = `<section class="grupo">
+    <div class="grupo-cab">
+      <div class="risco" style="background:var(--azul)"></div>
+      <h2>XXV Governo Constitucional</h2>
+      <span>${lista.length} ${lista.length === 1 ? "área" : "áreas"}</span>
+    </div>
+    <div class="grelha">${lista.map(cartao).join("")}</div>
+  </section>`;
 }
 
 function atualizarKPI(){
@@ -1778,7 +1794,10 @@ function corpoLista(){
       <span class="ler-txt">
         <strong>${n.titulo}</strong>
         ${n.resumo ? `<span class="ler-resumo">${n.resumo}</span>` : ""}
-        <em>${n.fonte || "fonte não indicada"}</em>
+        <span class="ler-fonte">
+          <em>${n.fonte || "fonte não indicada"}</em>
+          <span class="etiqueta-origem" style="--cor:${ETIQUETA_ORIGEM[origemDaFonte(n)].cor}">${ETIQUETA_ORIGEM[origemDaFonte(n)].rotulo}</span>
+        </span>
       </span>
       <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
     </a>`;
