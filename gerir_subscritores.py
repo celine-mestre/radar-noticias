@@ -25,13 +25,24 @@ from datetime import datetime
 AZUL, VERDE, CINZA_TEXTO, CINZA_SUAVE, BORDA = "#2B5683", "#0E7433", "#171715", "#5b6068", "#e2e8f0"
 
 AREAS = [
-    "Presidência", "Assuntos Parlamentares", "Reforma do Estado", "Negócios Estrangeiros",
-    "Defesa Nacional", "Administração Interna", "Justiça", "Finanças",
-    "Economia e Coesão Territorial", "Infraestruturas e Habitação",
-    "Educação, Ciência e Inovação", "Saúde", "Trabalho, Solidariedade e Segurança Social",
-    "Cultura, Juventude e Desporto", "Ambiente e Energia", "Agricultura e Mar",
+    # Ordem protocolar do XXV Governo Constitucional, como no painel
+    "Negócios Estrangeiros",
+    "Finanças",
+    "Presidência",
+    "Reforma do Estado",
+    "Assuntos Parlamentares",
+    "Defesa Nacional",
+    "Administração Interna",
+    "Justiça",
+    "Economia e Coesão Territorial",
+    "Infraestruturas e Habitação",
+    "Educação, Ciência e Inovação",
+    "Saúde",
+    "Trabalho, Solidariedade e Segurança Social",
+    "Cultura, Juventude e Desporto",
+    "Ambiente e Energia",
+    "Agricultura e Mar",
 ]
-
 VALIDO = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
