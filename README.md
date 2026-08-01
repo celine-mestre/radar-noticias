@@ -208,7 +208,19 @@ as notícias da própria manhã.
 
 ### Subscrever e cancelar
 
-Os destinatários estão no `subscritores.json`, uma lista por área:
+**No painel.** O botão *Receber por email* abre uma janela onde a pessoa indica o
+endereço e escolhe as áreas. Ao confirmar, abre-se no seu programa de correio uma
+mensagem já preenchida, dirigida à Unidade de Pesquisa e Estatísticas, que basta
+enviar. Quem não tenha programa de correio configurado pode copiar o texto, que fica
+visível no ecrã.
+
+O painel é um ficheiro estático: não tem servidor para registar endereços nem para
+enviar mensagens. Este desenho evita essa dependência e tem uma vantagem — o pedido
+fica registado na caixa de enviados de quem subscreve e na caixa de entrada da
+unidade, com rasto dos dois lados.
+
+**No repositório.** Recebido o pedido, acrescenta-se o endereço às áreas pedidas no
+`subscritores.json`, uma lista por área:
 
 ```json
 {
@@ -219,8 +231,8 @@ Os destinatários estão no `subscritores.json`, uma lista por área:
 }
 ```
 
-Subscrever é acrescentar um endereço à área; cancelar é retirá-lo. A alteração
-entra em vigor no envio seguinte. Uma área sem endereços não gera mensagem, e uma
+Acrescentar um endereço subscreve; retirá-lo cancela. A alteração entra em vigor no
+envio seguinte, pelo que o primeiro relatório chega na manhã seguinte ao registo. Uma área sem endereços não gera mensagem, e uma
 área sem notícias no período também não — não se enviam relatórios vazios.
 
 Este desenho é deliberado: os destinatários ficam num ficheiro versionado, visível

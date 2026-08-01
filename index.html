@@ -609,6 +609,28 @@ main{padding:2.2rem 0 4rem}
   background:rgba(190,156,84,.09);border-left:3px solid var(--dourado);
   font-size:.82rem;color:var(--texto-suave);line-height:1.5;
 }
+.sub-feito{text-align:center;padding:1.8rem 1rem 1rem}
+.sub-ok{width:52px;height:52px;border-radius:50%;background:color-mix(in srgb, var(--verde) 12%, transparent);
+  border:1px solid color-mix(in srgb, var(--verde) 30%, transparent);
+  display:flex;align-items:center;justify-content:center;margin:0 auto .8rem}
+.sub-ok svg{width:24px;height:24px;stroke:var(--verde);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.sub-feito h4{font-size:1.05rem;font-weight:600;color:var(--texto);text-transform:none;letter-spacing:-.01em;margin-bottom:.4rem}
+.sub-feito p{font-size:.88rem;color:var(--texto-suave);max-width:44ch;margin:0 auto .5rem;line-height:1.55}
+.sub-texto{
+  text-align:left;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;
+  background:var(--superficie-alt);border:1px solid var(--borda);border-radius:var(--raio-s);
+  padding:.8rem .9rem;margin:.9rem 0;white-space:pre-wrap;color:var(--texto-suave);max-height:180px;overflow-y:auto;
+}
+.sub-nota{font-size:.83rem;color:var(--texto-suave);line-height:1.55;margin-top:.6rem}
+.sub-conta{font-size:.72rem;font-weight:500;color:var(--texto-ligeiro);text-transform:none;letter-spacing:0;margin-left:.4rem}
+.sub-accoes{display:flex;gap:.4rem;margin-bottom:.8rem}
+.sub-grupo{margin-bottom:.9rem;padding-left:.8rem;border-left:2px solid color-mix(in srgb, var(--cor) 45%, transparent)}
+.sub-grupo-nome{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--cor);font-weight:600;margin-bottom:.35rem}
+.sub-areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.15rem}
+.sub-area{display:flex;align-items:center;gap:.5rem;padding:.28rem .4rem;border-radius:var(--raio-s);
+  font-size:.85rem;color:var(--texto);cursor:pointer;transition:.14s}
+.sub-area:hover{background:var(--superficie-alt)}
+.sub-area input{accent-color:var(--cor);width:15px;height:15px;cursor:pointer;flex:none}
 .marca-selecao{font-size:.78rem;color:var(--texto-ligeiro);margin:-.2rem 0 .55rem}
 .consulta-txt{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;line-height:1.6;
@@ -794,6 +816,10 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <button data-fonte="internacionais">Internacionais</button>
       <button data-fonte="todas">Todas</button>
     </div>
+    <button class="btn" id="btnSubscrever">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 7-10 6L2 7"/></svg>
+      Receber por email
+    </button>
     <button class="btn-nota" id="btnManual">
       <span class="i">i</span>
       Manual e método
@@ -855,6 +881,8 @@ const CONFIG = {
   enderecoDados: "",
   /* Data da última alteração ao painel. Atualizar ao publicar uma versão nova. */
   versao: "agosto de 2026",
+  /* Endereço que recebe os pedidos de subscrição do relatório diário */
+  correioSubscricao: "upe@sggoverno.gov.pt",
   /* Os serviços de reencaminhamento vão buscar o feed e só depois respondem;
      em hora de ponta passam facilmente de meio minuto. */
   tempoLimiteRecolha: 12000,   // limite de cada tentativa
@@ -978,7 +1006,7 @@ const AREAS = [
     palavras:["Ministério do Ambiente e Energia","preço da energia","mercado da eletricidade","energias renováveis","alterações climáticas","descarbonização","gestão de resíduos","situação de seca","incêndios florestais"],
     excluir:["clima de negócios","clima organizacional","clima de confiança"] },
   { id:"agricultura", nome:"Agricultura e Mar", grupo:"ambiente", icone:"agricultura",
-    palavras:["Ministério da Agricultura e Mar","política agrícola comum","pescas","economia azul","floresta","regadio","segurança alimentar","produção agrícola"] }
+    palavras:["Ministério da Agricultura e Mar","política agrícola comum","produção agrícola","agricultores","desenvolvimento rural","gestão florestal","pescas","aquicultura","economia do mar","segurança alimentar","regadio"] }
 ];
 
 /* =========================================================================
@@ -1499,7 +1527,12 @@ const MANUAL = [
       <dt>Ligações</dt><dd>As do corpus são o endereço direto do artigo. Só as que venham da pesquisa aberta são reencaminhamentos.</dd>
     </dl>` },
 
-  { n:"8", titulo:"Recolha agendada", cor:"var(--teal)", icone:"engrenagem", corpo:`
+  { n:"8", titulo:"Receber por email", cor:"var(--dourado)", icone:"descarregar", corpo:`
+    <p>Todas as manhãs, às 10h00, é enviado um relatório por área governativa a quem o subscreve: as notícias das últimas 24 horas, com título, resumo, publicação e ligação, e um botão para abrir este painel.</p>
+    <p>Para subscrever, use o botão <strong>Receber por email</strong> na barra: indique o endereço, escolha as áreas e confirme. Abre-se uma mensagem já preenchida no seu programa de correio, que basta enviar. O primeiro relatório chega na manhã seguinte.</p>
+    <p class="man-aviso">Áreas sem notícias no período não geram mensagem — não se enviam relatórios vazios. Para cancelar, responda a qualquer relatório a pedir o cancelamento.</p>` },
+
+  { n:"9", titulo:"Recolha agendada", cor:"var(--teal)", icone:"engrenagem", corpo:`
     <p>A rede da Secretaria-Geral impede o painel de ir buscar notícias diretamente. A solução é fazer essa recolha noutro sítio: um programa que corre nos servidores do GitHub, todas as manhãs de dias úteis, e deixa o resultado ao lado do painel.</p>
     <p>Cada execução produz três coisas:</p>
     <dl>
@@ -1773,6 +1806,133 @@ function corpoSintese(){
       </div>
 
       ${blocoEvolucao(a)}`;
+}
+
+/* Subscrição do relatório diário.
+   O painel é um ficheiro estático: não tem servidor para registar endereços nem
+   para enviar mensagens. O pedido é por isso preparado aqui e aberto no programa
+   de correio da própria pessoa, que o envia com um clique — fica com o registo do
+   pedido na caixa de enviados e a unidade recebe-o na caixa de entrada. */
+function abrirSubscricao(){
+  const grupos = GRUPOS.map(g => ({
+    ...g, areas: AREAS.filter(a => a.grupo === g.id)
+  }));
+
+  $("#modal").innerHTML = `
+    <div class="modal-cab nota-cab">
+      <div class="icone"><svg viewBox="0 0 24 24" style="width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 7-10 6L2 7"/></svg></div>
+      <div>
+        <h3>Receber o relatório diário</h3>
+        <p>Um email por área governativa, todas as manhãs de dias úteis</p>
+      </div>
+      <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
+    </div>
+
+    <div class="modal-corpo">
+      <div class="bloco">
+        <h4>Endereço de correio eletrónico</h4>
+        <input class="campo" id="subEmail" type="email" placeholder="nome@sggoverno.gov.pt"
+               autocomplete="email" spellcheck="false">
+        <p class="sub-nota">Às 10h00 de cada dia útil recebe, por cada área escolhida, as notícias das últimas 24 horas — com título, resumo, publicação e ligação, e um botão para abrir este painel.</p>
+      </div>
+
+      <div class="bloco">
+        <h4>Áreas governativas <span class="sub-conta" id="subConta">nenhuma selecionada</span></h4>
+        <div class="sub-accoes">
+          <button class="btn-atalho" data-sub-todas="1">Selecionar todas</button>
+          <button class="btn-atalho" data-sub-nenhuma="1">Limpar</button>
+        </div>
+        ${grupos.map(g => `
+          <div class="sub-grupo" style="--cor:${g.cor}">
+            <div class="sub-grupo-nome">${g.nome}</div>
+            <div class="sub-areas">
+              ${g.areas.map(a => `
+                <label class="sub-area">
+                  <input type="checkbox" value="${a.nome}">
+                  <span>${a.nome}</span>
+                </label>`).join("")}
+            </div>
+          </div>`).join("")}
+      </div>
+
+      <div class="bloco" style="margin-bottom:.4rem">
+        <p class="sub-nota">O pedido abre no seu programa de correio, já preenchido, e basta enviar. A Unidade de Pesquisa e Estatísticas responde a confirmar e o primeiro relatório chega na manhã seguinte.</p>
+        <p class="sub-nota">Para deixar de receber, basta responder a qualquer relatório a pedir o cancelamento.</p>
+      </div>
+    </div>
+
+    <div class="modal-rodape">
+      <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
+      <button class="btn primario" id="btnEnviarSub" style="margin-left:auto">
+        <svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+        Enviar pedido
+      </button>
+    </div>`;
+  $("#veu").classList.add("aberto");
+
+  const contar = () => {
+    const n = document.querySelectorAll("#modal .sub-area input:checked").length;
+    $("#subConta").textContent = n
+      ? `${n} ${n === 1 ? "selecionada" : "selecionadas"}`
+      : "nenhuma selecionada";
+  };
+
+  $("#modal").addEventListener("change", contar);
+  $("#modal").addEventListener("click", e => {
+    if(e.target.closest("[data-sub-todas]")){
+      document.querySelectorAll("#modal .sub-area input").forEach(c => c.checked = true); contar();
+    }
+    if(e.target.closest("[data-sub-nenhuma]")){
+      document.querySelectorAll("#modal .sub-area input").forEach(c => c.checked = false); contar();
+    }
+  });
+
+  $("#btnEnviarSub").addEventListener("click", enviarSubscricao);
+}
+
+function enviarSubscricao(){
+  const campo = $("#subEmail");
+  const email = (campo.value || "").trim();
+  const areas = [...document.querySelectorAll("#modal .sub-area input:checked")].map(c => c.value);
+
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    campo.focus();
+    mostrarAviso("Indique um endereço de correio válido");
+    return;
+  }
+  if(!areas.length){
+    mostrarAviso("Escolha pelo menos uma área governativa");
+    return;
+  }
+
+  const corpo =
+    "Peço a subscrição do relatório diário do Radar de Notícias.\n\n" +
+    "Endereço: " + email + "\n\n" +
+    "Áreas governativas:\n" + areas.map(a => "  - " + a).join("\n") + "\n\n" +
+    "Pedido gerado no painel em " + new Date().toLocaleString("pt-PT") + ".\n";
+
+  const assunto = `Subscrição do Radar de Notícias · ${areas.length} ${areas.length === 1 ? "área" : "áreas"}`;
+  const endereco = `mailto:${CONFIG.correioSubscricao}` +
+    `?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+
+  const l = document.createElement("a");
+  l.href = endereco; l.style.display = "none";
+  document.body.appendChild(l); l.click(); l.remove();
+
+  /* Confirmação no próprio painel, para quem não tenha programa de correio */
+  $("#modal").querySelector(".modal-corpo").innerHTML = `
+    <div class="sub-feito">
+      <div class="sub-ok"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h4>Pedido preparado</h4>
+      <p>Abriu-se uma mensagem no seu programa de correio, já preenchida. <strong>Falta enviá-la.</strong></p>
+      <p class="sub-nota">Se não abriu nada, copie o texto abaixo e envie-o para
+         <strong>${CONFIG.correioSubscricao}</strong>.</p>
+      <pre class="sub-texto">${corpo.replace(/</g, "&lt;")}</pre>
+      <button class="btn" id="btnCopiarSub">Copiar o texto</button>
+    </div>`;
+  $("#btnCopiarSub").addEventListener("click", () => {
+    navigator.clipboard.writeText(corpo).then(() => mostrarAviso("Texto copiado"));
+  });
 }
 
 function abrirManual(n){
@@ -2872,6 +3032,7 @@ document.addEventListener("keydown", e => {
 $("#campoPesquisa").addEventListener("input", e => { termoPesquisa = e.target.value; desenhar(); });
 
 $("#btnManual").addEventListener("click", () => abrirManual("1"));
+$("#btnSubscrever").addEventListener("click", abrirSubscricao);
 
 $("#filtroFontes").addEventListener("click", e => {
   const b = e.target.closest("[data-fonte]");
