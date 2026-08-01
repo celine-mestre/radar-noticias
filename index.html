@@ -1293,8 +1293,8 @@ function abrirExportacao(id){
 
     <div class="barra-res" id="barraRes" hidden>
       <div class="segmentado compacto" id="vistaRes">
-        <button data-vista="lista" class="ativo">Notícias</button>
-        <button data-vista="sintese">Síntese</button>
+        <button data-vista="lista"${vistaAtual === "lista" ? ' class="ativo"' : ""}>Notícias</button>
+        <button data-vista="sintese"${vistaAtual === "sintese" ? ' class="ativo"' : ""}>Síntese</button>
       </div>
       <span class="res-contagem" id="resContagem"></span>
       <div class="res-accoes">
