@@ -117,5 +117,7 @@ jobs:
           subject: ${{ matrix.envio.assunto }}
           to: ${{ matrix.envio.destinatarios }}
           from: Radar de Noticias <${{ secrets.SMTP_UTILIZADOR }}>
+          # As duas versões seguem juntas: o cliente apresenta a que sabe ler.
           html_body: file://${{ matrix.envio.ficheiro }}
+          body: file://${{ matrix.envio.texto }}
           convert_markdown: false

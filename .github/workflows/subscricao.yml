@@ -114,7 +114,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: confirmacao
-          path: confirmacao.html
+          path: |
+            confirmacao.html
+            confirmacao.txt
           retention-days: 14
 
       - name: Enviar a confirmacao
@@ -129,5 +131,8 @@ jobs:
           subject: ${{ env.ASSUNTO }}
           to: ${{ inputs.email }}
           from: Radar de Noticias <${{ secrets.SMTP_UTILIZADOR }}>
+          # As duas versões seguem juntas: o cliente de correio apresenta a que
+          # sabe ler, e a mensagem nunca fica ilegível.
           html_body: file://confirmacao.html
+          body: file://confirmacao.txt
           convert_markdown: false
