@@ -27,8 +27,8 @@ on:
       periodo:
         description: "Janela a sintetizar"
         type: choice
-        default: "24h"
-        options: ["24h", "48h", "72h"]
+        default: "auto"
+        options: ["auto", "24h", "48h", "72h"]
   schedule:
     - cron: "10 8 * * 1-5"     # depois da recolha das 08h00, antes do relatório das 09h00
 
@@ -66,7 +66,7 @@ jobs:
       - name: Gerar as sinteses
         run: |
           PERIODO="${{ github.event.inputs.periodo }}"
-          if [ -z "$PERIODO" ]; then PERIODO="24h"; fi
+          if [ -z "$PERIODO" ]; then PERIODO="auto"; fi
           python sintese_ia.py \
             --local \
             --dados arquivo.json \

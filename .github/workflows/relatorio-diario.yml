@@ -23,8 +23,8 @@ on:
       periodo:
         description: "Janela do relatório"
         type: choice
-        default: "24h"
-        options: ["24h", "48h", "72h", "7d"]
+        default: "auto"
+        options: ["auto", "24h", "48h", "72h", "7d"]
   schedule:
     - cron: "0 9 * * 1-5"
 
@@ -56,7 +56,9 @@ jobs:
         run: |
           set -euo pipefail
           PERIODO="${{ github.event.inputs.periodo }}"
-          if [ -z "$PERIODO" ]; then PERIODO="24h"; fi
+          # Vazio (execução agendada) significa janela automática: 24 horas,
+          # ou 72 à segunda-feira, para cobrir o fim de semana.
+          if [ -z "$PERIODO" ]; then PERIODO="auto"; fi
           python relatorio_email.py \
             --dados arquivo.json \
             --todas \

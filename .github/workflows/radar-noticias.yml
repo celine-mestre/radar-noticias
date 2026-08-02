@@ -7,8 +7,10 @@ on:
       - "extrair_noticias.py"
       - ".github/workflows/radar-noticias.yml"
   schedule:
-    - cron: "0 6 * * 1-5"     # cedo, para o painel estar pronto
-    - cron: "0 8 * * 1-5"     # recolha da manhã, antes da síntese e do relatório
+    # Todos os dias, incluindo fim de semana: sem isso, o arquivo ficaria com um
+    # buraco de dois dias e a segunda-feira perderia o que aconteceu ao sábado.
+    - cron: "0 6 * * *"       # cedo, para o painel estar pronto
+    - cron: "0 8 * * *"       # recolha da manhã, antes da síntese e do relatório
 
 permissions:
   contents: write
