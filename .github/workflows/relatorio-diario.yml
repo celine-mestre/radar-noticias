@@ -13,9 +13,10 @@ name: Relatorio diario por email
 #   SMTP_PORTA       normalmente 587
 #   SMTP_UTILIZADOR  endereço que envia
 #   SMTP_SENHA       senha de aplicação, não a senha pessoal
+#   SUBSCRITORES     lista de destinatários em JSON, por área
 #
-# Os destinatários NÃO ficam em segredos: estão no subscritores.json, para que
-# possam ser alterados por quem gere o produto sem mexer em configurações.
+# Os destinatários ficam no segredo SUBSCRITORES, e não no repositório: são
+# dados de contacto de terceiros e o repositório é público.
 
 on:
   workflow_dispatch:
@@ -53,6 +54,8 @@ jobs:
 
       - name: Gerar os relatorios
         id: gerar
+        env:
+          SUBSCRITORES: ${{ secrets.SUBSCRITORES }}
         run: |
           set -euo pipefail
           PERIODO="${{ github.event.inputs.periodo }}"

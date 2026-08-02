@@ -1,16 +1,26 @@
 name: Subscricao do relatorio
 
-# Trata um pedido de subscrição ou de cancelamento de ponta a ponta:
-# grava o endereço no subscritores.json, envia a confirmação a quem pediu, e
-# deixa o registo da alteração no histórico do repositório.
+# Trata um pedido de subscrição ou de cancelamento de ponta a ponta: atualiza a
+# lista de destinatários, envia a confirmação a quem pediu, e não deixa qualquer
+# endereço visível no repositório.
+#
+# ONDE FICAM OS DESTINATÁRIOS. Num segredo do repositório chamado SUBSCRITORES,
+# com o conteúdo em JSON:
+#
+#   {"areas": {"Saúde": ["nome@sggoverno.gov.pt"], "Justiça": []}}
+#
+# Segredos não são legíveis por quem consulte o repositório, nem aparecem nos
+# registos das execuções — o GitHub oculta-os automaticamente.
+#
+# ATUALIZAÇÃO AUTOMÁTICA. Para o fluxo poder gravar no segredo é preciso um
+# segundo segredo, SUBSCRITORES_PAT, com um token de acesso pessoal de âmbito
+# restrito: apenas este repositório, e apenas a permissão "Secrets: read and
+# write". Sem esse token o fluxo corre na mesma e deixa a lista atualizada em
+# Artifacts, para se colar à mão no segredo.
 #
 # COMO SE USA. Em Actions > Subscricao do relatorio > Run workflow, preencher o
-# endereço e as áreas. Os nomes das áreas são tolerantes: aceitam-se sem acentos,
-# em minúsculas e parciais — "saude, agricultura" resolve para "Saúde" e
-# "Agricultura e Mar". Para todas, escrever "todas".
-#
-# É a via para os pedidos que chegam por correio. Quem tenha conta no GitHub pode
-# correr o fluxo diretamente, sem passar pela unidade.
+# endereço e as áreas. Os nomes das áreas aceitam-se sem acentos, em minúsculas
+# e parciais. Para todas, escrever "todas".
 
 on:
   workflow_dispatch:
@@ -32,7 +42,7 @@ on:
         options: ["subscrever", "cancelar"]
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   PAINEL: "https://celine-mestre.github.io/radar-noticias/"
@@ -50,53 +60,49 @@ jobs:
           python-version: "3.12"
 
       - name: Registar a alteracao
-        id: registo
+        env:
+          SUBSCRITORES: ${{ secrets.SUBSCRITORES }}
         run: |
           set -euo pipefail
           AREAS="${{ inputs.areas }}"
 
           # As áreas têm espaços no nome — "Agricultura e Mar" — pelo que o valor
-          # tem de seguir entre aspas. Sem isso, cada palavra era lida como um
-          # argumento separado e o comando falhava.
+          # tem de seguir entre aspas.
           if [ "${AREAS,,}" = "todas" ]; then
             python gerir_subscritores.py \
-              --acao "${{ inputs.acao }}" \
-              --email "${{ inputs.email }}" \
-              --todas \
-              --ficheiro subscritores.json \
-              --painel "$PAINEL" \
+              --acao "${{ inputs.acao }}" --email "${{ inputs.email }}" --todas \
+              --gravar-em subscritores_novo.json --painel "$PAINEL" \
               --confirmacao-para confirmacao.html \
+              --texto-para confirmacao.txt \
               --assunto-para assunto.txt
           else
             python gerir_subscritores.py \
-              --acao "${{ inputs.acao }}" \
-              --email "${{ inputs.email }}" \
-              --areas "$AREAS" \
-              --ficheiro subscritores.json \
-              --painel "$PAINEL" \
+              --acao "${{ inputs.acao }}" --email "${{ inputs.email }}" --areas "$AREAS" \
+              --gravar-em subscritores_novo.json --painel "$PAINEL" \
               --confirmacao-para confirmacao.html \
+              --texto-para confirmacao.txt \
               --assunto-para assunto.txt
           fi
           echo "ASSUNTO=$(cat assunto.txt)" >> "$GITHUB_ENV"
 
-      - name: Gravar no repositorio
+      - name: Gravar a lista no segredo
+        if: ${{ secrets.SUBSCRITORES_PAT != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.SUBSCRITORES_PAT }}
         run: |
           set -euo pipefail
-          if git diff --quiet subscritores.json; then
-            echo "Sem alterações a gravar."
-            exit 0
-          fi
-          git config user.name "Radar de Noticias"
-          git config user.email "actions@github.com"
-          git add subscritores.json
-          git commit -m "${{ inputs.acao }}: ${{ inputs.email }}"
-          # Três fluxos gravam no mesmo repositório e podem cruzar-se: puxa-se
-          # primeiro o que houver, para o envio não ser recusado.
-          git pull --rebase --autostash
-          git push
+          gh secret set SUBSCRITORES --repo "${{ github.repository }}" \
+            --body "$(cat subscritores_novo.json)"
+          echo "Lista atualizada no segredo SUBSCRITORES."
 
-      # O envio só é tentado se as credenciais estiverem configuradas. Sem elas,
-      # o registo faz-se na mesma e o passo é ignorado em vez de dar erro.
+      - name: Guardar a lista para atualizacao manual
+        if: ${{ secrets.SUBSCRITORES_PAT == '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: subscritores-atualizado
+          path: subscritores_novo.json
+          retention-days: 7
+
       - name: Verificar as credenciais
         id: correio
         run: |
@@ -104,11 +110,9 @@ jobs:
             echo "pronto=sim" >> "$GITHUB_OUTPUT"
           else
             echo "pronto=nao" >> "$GITHUB_OUTPUT"
-            echo "::notice::Sem credenciais de correio configuradas. O registo foi gravado; a confirmação não é enviada."
+            echo "::notice::Sem credenciais de correio. A confirmação não é enviada."
           fi
 
-      # A confirmação fica sempre disponível para descarregar, mesmo quando não é
-      # enviada: permite ver exatamente o que o subscritor receberá.
       - name: Guardar a confirmacao
         if: always()
         uses: actions/upload-artifact@v4
@@ -126,13 +130,12 @@ jobs:
         with:
           server_address: ${{ secrets.SMTP_SERVIDOR }}
           server_port: ${{ secrets.SMTP_PORTA }}
+          secure: false
           username: ${{ secrets.SMTP_UTILIZADOR }}
           password: ${{ secrets.SMTP_SENHA }}
           subject: ${{ env.ASSUNTO }}
           to: ${{ inputs.email }}
           from: Radar de Noticias <${{ secrets.SMTP_UTILIZADOR }}>
-          # As duas versões seguem juntas: o cliente de correio apresenta a que
-          # sabe ler, e a mensagem nunca fica ilegível.
           html_body: file://confirmacao.html
           body: file://confirmacao.txt
           convert_markdown: false
