@@ -20,7 +20,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 
 AZUL, VERDE, CINZA_TEXTO, CINZA_SUAVE, BORDA = "#2B5683", "#0E7433", "#171715", "#5b6068", "#e2e8f0"
 
@@ -106,15 +106,46 @@ def resolver_areas(pedidas, todas):
     return escolhidas
 
 
+DIAS_SEMANA = ["segunda-feira", "terça-feira", "quarta-feira", "quinta-feira",
+               "sexta-feira", "sábado", "domingo"]
+
+
+def quando_recebe(agora=None):
+    """Quando sai o primeiro relatório, contado a partir de agora.
+
+    Os relatórios são enviados às 10h00 de Lisboa, de segunda a sexta. Quem
+    subscreve a uma sexta-feira à tarde não recebe no dia seguinte — recebe na
+    segunda —, e dizer-lhe "a partir de amanhã" seria faltar à verdade.
+    """
+    agora = agora or datetime.now()
+    dia, hora = agora.weekday(), agora.hour
+
+    # Ainda dá para apanhar o envio de hoje, se for dia útil e antes das 10h00
+    if dia <= 4 and hora < 10:
+        return "hoje", "ainda esta manhã, às 10h00"
+
+    seguinte = agora + timedelta(days=1)
+    while seguinte.weekday() > 4:
+        seguinte += timedelta(days=1)
+
+    dias_passados = (seguinte.date() - agora.date()).days
+    if dias_passados == 1:
+        return "amanhã", "a partir de amanhã, às 10h00"
+    return (DIAS_SEMANA[seguinte.weekday()],
+            f"a partir de {DIAS_SEMANA[seguinte.weekday()]}, às 10h00")
+
+
 def mensagem_confirmacao(email, areas, acao, painel):
     """Mensagem enviada a quem subscreve ou cancela."""
     agora = datetime.now()
     subscreveu = acao == "subscrever"
 
     titulo = "Subscrição confirmada" if subscreveu else "Subscrição cancelada"
+    _, quando = quando_recebe()
     corpo = (
-        f"A partir de amanhã, e em todos os dias úteis, receberá às 10h00 um relatório "
-        f"por cada área abaixo, com as notícias das últimas 24 horas."
+        f"Receberá {quando}, e em todos os dias úteis, um relatório por cada área "
+        f"abaixo, com as notícias das últimas 24 horas. À segunda-feira a janela "
+        f"alarga para 72 horas, para cobrir o fim de semana."
         if subscreveu else
         "Deixará de receber os relatórios das áreas abaixo. Pode voltar a subscrever "
         "a qualquer momento, no painel."
@@ -192,10 +223,11 @@ def texto_confirmacao(email, areas, acao, painel):
         "",
     ]
     if subscreveu:
-        linhas += ["A partir de amanhã, e em todos os dias úteis, receberá às 10h00",
-                   "um relatório por cada área abaixo, com as notícias das últimas",
-                   "24 horas. À segunda-feira a janela alarga para 72 horas, para",
-                   "cobrir o fim de semana.", ""]
+        _, quando = quando_recebe()
+        linhas += [f"Receberá {quando}, e em todos os dias úteis, um relatório por",
+                   "cada área abaixo, com as notícias das últimas 24 horas. À",
+                   "segunda-feira a janela alarga para 72 horas, para cobrir o fim",
+                   "de semana.", ""]
     else:
         linhas += ["Deixará de receber os relatórios das áreas abaixo. Pode voltar",
                    "a subscrever a qualquer momento, no painel.", ""]
