@@ -45,13 +45,24 @@ REPO_GGUF = "layerx-labs/AMALIA-9B-0626-DPO-GGUF"
 FICHEIRO_GGUF = "AMALIA-9B-0626-DPO-Q4_K_M.gguf"
 HORAS = {"24h": 24, "48h": 48, "72h": 72, "7d": 168}
 
+# As mesmas plataformas que o relatório descarta: a síntese tem de descrever
+# exatamente o que a lista mostra, ou desmente-a.
+PLATAFORMAS = (
+    "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
+    "youtube.com", "youtu.be", "linkedin.com", "reddit.com", "threads.net",
+    "bsky.app", "t.me", "medium.com", "substack.com", "blogspot.com", "wordpress.com",
+)
+
 INSTRUCAO = (
     "És um analista da Secretaria-Geral do Governo. Recebes os títulos das notícias "
     "de hoje sobre uma área governativa e escreves um parágrafo único, de três a "
-    "cinco frases, que dê conta do que foi notícia.\n\n"
+    "cinco frases e no máximo 90 palavras, que dê conta do que foi notícia.\n\n"
     "Regras:\n"
     "- Usa apenas o que está nos títulos. Não acrescentes factos, números, causas "
     "ou consequências que não estejam lá.\n"
+    "- NÃO enumeres uma notícia atrás da outra. Escolhe os dois ou três assuntos "
+    "com mais peso e deixa os restantes de fora: o parágrafo é uma leitura, não "
+    "um índice.\n"
     "- Começa pelo assunto com mais peso e agrupa os que se repetem.\n"
     "- Escreve em português de Portugal, em registo institucional e neutro.\n"
     "- Não emitas juízos, não recomendes nada, não uses adjetivos valorativos.\n"
@@ -70,6 +81,9 @@ def do_periodo(noticias, area, periodo):
     saida = []
     for n in noticias:
         if n.get("area") != area or not n.get("data"):
+            continue
+        d = (n.get("dominio") or "").lower().replace("www.", "")
+        if d and any(d == p or d.endswith("." + p) for p in PLATAFORMAS):
             continue
         try:
             if datetime.strptime(n["data"][:16], "%Y-%m-%d %H:%M") < limite:
@@ -91,7 +105,7 @@ def perguntar(endereco, chave, titulos, area, tempo_limite=60):
             {"role": "user", "content": f"Área governativa: {area}\n\nTítulos:\n{lista}"},
         ],
         "temperature": 0.2,
-        "max_tokens": 320,
+        "max_tokens": 200,
     }
 
     pedido = urllib.request.Request(
@@ -149,7 +163,7 @@ def perguntar_local(titulos, area, repo, ficheiro):
             {"role": "user", "content": f"Área governativa: {area}\n\nTítulos:\n{lista}"},
         ],
         temperature=0.2,
-        max_tokens=320,
+        max_tokens=200,
     )
     return resposta["choices"][0]["message"]["content"].strip()
 

@@ -272,16 +272,31 @@ def ligacao_painel(endereco, areas):
   </td></tr>"""
 
 
-def carregar_sinteses(caminho="sinteses.json"):
-    """Sínteses do Amália, se o ficheiro existir. Devolve (áreas, hora)."""
+def carregar_sinteses(caminho="sinteses.json", periodo=""):
+    """Sínteses do Amália, se existirem e se ainda descreverem este período.
+
+    Uma síntese escrita ontem, ou sobre outra janela temporal, fala de notícias
+    que não estão na lista — e quem lê fica com a impressão de que o relatório
+    se contradiz. Nesses casos é preferível não a apresentar.
+    """
     if not os.path.exists(caminho):
         return {}, ""
     try:
         with open(caminho, encoding="utf-8") as origem:
             d = json.load(origem)
-        return d.get("areas", {}), d.get("gerado", "")
     except (json.JSONDecodeError, OSError):
         return {}, ""
+
+    gerado = d.get("gerado", "")
+    if periodo and d.get("periodo") and d["periodo"] != periodo:
+        print(f"Síntese ignorada: foi escrita sobre {d['periodo']}, o relatório é de {periodo}.")
+        return {}, ""
+
+    if gerado[:10] != datetime.now().strftime("%Y-%m-%d"):
+        print(f"Síntese ignorada: é de {gerado[:10] or 'data desconhecida'}, não de hoje.")
+        return {}, ""
+
+    return d.get("areas", {}), gerado
 
 
 def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None, escrita_em=""):
@@ -362,7 +377,7 @@ def um_por_area(dados, areas, args, origens):
     destinatários são apurados mais tarde, já no envio: assim o manifesto não
     tem contacto com o segredo, e o GitHub não recusa passá-lo adiante.
     """
-    sinteses, escrita_em = carregar_sinteses(args.sinteses)
+    sinteses, escrita_em = carregar_sinteses(args.sinteses, args.periodo)
     """Escreve um relatório por área e um manifesto com os destinatários.
 
     O manifesto é lido pelo fluxo de trabalho, que envia uma mensagem por área.
@@ -555,7 +570,7 @@ def principal():
         um_por_area(dados, areas, args, origens)
         return
 
-    sinteses, escrita_em = carregar_sinteses(args.sinteses)
+    sinteses, escrita_em = carregar_sinteses(args.sinteses, args.periodo)
     html = construir(dados, areas, args.periodo, origens, args.painel, sinteses, escrita_em)
 
     with open(args.saida, "w", encoding="utf-8") as destino:
