@@ -25,21 +25,22 @@ name: Subscricao do relatorio
 on:
   workflow_dispatch:
     inputs:
-      email:
-        description: "Endereço de correio eletrónico"
-        type: string
-        required: true
-      areas:
-        description: "Áreas, separadas por vírgula, ou 'todas'"
-        type: string
-        required: true
-        default: "todas"
       acao:
         description: "O que fazer"
         type: choice
         required: true
         default: "subscrever"
-        options: ["subscrever", "cancelar"]
+        options: ["subscrever", "cancelar", "listar"]
+      email:
+        description: "Endereço (deixar vazio para listar)"
+        type: string
+        required: false
+        default: ""
+      areas:
+        description: "Áreas, separadas por vírgula, ou 'todas'"
+        type: string
+        required: false
+        default: "todas"
 
 permissions:
   contents: read
@@ -62,7 +63,16 @@ jobs:
         with:
           python-version: "3.12"
 
+      # A listagem mostra quantos subscritores tem cada área e os endereços
+      # parcialmente ocultos: os registos das execuções são públicos.
+      - name: Listar os subscritores
+        if: inputs.acao == 'listar'
+        env:
+          SUBSCRITORES: ${{ secrets.SUBSCRITORES }}
+        run: python gerir_subscritores.py --acao listar
+
       - name: Registar a alteracao
+        if: inputs.acao != 'listar'
         env:
           SUBSCRITORES: ${{ secrets.SUBSCRITORES }}
         run: |
@@ -89,7 +99,7 @@ jobs:
           echo "ASSUNTO=$(cat assunto.txt)" >> "$GITHUB_ENV"
 
       - name: Gravar a lista no segredo
-        if: env.TEM_PAT == 'true'
+        if: inputs.acao != 'listar' && env.TEM_PAT == 'true'
         env:
           GH_TOKEN: ${{ secrets.SUBSCRITORES_PAT }}
         run: |
@@ -99,7 +109,7 @@ jobs:
           echo "Lista atualizada no segredo SUBSCRITORES."
 
       - name: Guardar a lista para atualizacao manual
-        if: env.TEM_PAT != 'true'
+        if: inputs.acao != 'listar' && env.TEM_PAT != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: subscritores-atualizado
@@ -108,6 +118,7 @@ jobs:
 
       - name: Verificar as credenciais
         id: correio
+        if: inputs.acao != 'listar'
         run: |
           if [ -n "${{ secrets.SMTP_SERVIDOR }}" ]; then
             echo "pronto=sim" >> "$GITHUB_OUTPUT"
@@ -117,7 +128,7 @@ jobs:
           fi
 
       - name: Guardar a confirmacao
-        if: always()
+        if: inputs.acao != 'listar'
         uses: actions/upload-artifact@v4
         with:
           name: confirmacao
