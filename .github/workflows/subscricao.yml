@@ -139,7 +139,8 @@ jobs:
 
       - name: Enviar a confirmacao
         if: steps.correio.outputs.pronto == 'sim'
-        continue-on-error: true
+        # Sem continue-on-error: uma falha de envio tem de ficar visível. Antes,
+        # o fluxo ficava verde mesmo quando a mensagem não saía.
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVIDOR }}
@@ -153,3 +154,14 @@ jobs:
           html_body: file://confirmacao.html
           body: file://confirmacao.txt
           convert_markdown: false
+
+      - name: Resultado
+        if: always() && inputs.acao != 'listar'
+        run: |
+          if [ "${{ steps.correio.outputs.pronto }}" != "sim" ]; then
+            echo "::warning::Credenciais de correio em falta: a confirmação não foi enviada."
+          elif [ "${{ job.status }}" = "success" ]; then
+            echo "Confirmação enviada para ${{ inputs.email }}."
+          else
+            echo "::error::O envio falhou. Veja o passo 'Enviar a confirmacao'."
+          fi
