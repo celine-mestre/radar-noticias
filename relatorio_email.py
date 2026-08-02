@@ -57,6 +57,23 @@ def sem_acentos(t):
 
 DOMINIOS_LUSOFONOS = (".ao", ".mz", ".cv", ".st", ".gw", ".tl", ".br")
 
+# Plataformas que não são publicações noticiosas. O corpus é de imprensa: se algo
+# delas estiver no arquivo — de recolhas antigas, ou por engano —, não entra no
+# relatório. O painel já as descartava; faltava fazer o mesmo aqui.
+PLATAFORMAS = (
+    "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
+    "youtube.com", "youtu.be", "linkedin.com", "reddit.com", "threads.net", "threads.com",
+    "bsky.app", "t.me", "telegram.me", "whatsapp.com", "pinterest.com", "tumblr.com",
+    "flipboard.com", "medium.com", "substack.com", "blogspot.com", "wordpress.com",
+)
+
+
+def e_plataforma(n):
+    d = (n.get("dominio") or "").lower().replace("www.", "")
+    if not d:
+        return False
+    return any(d == p or d.endswith("." + p) or d.startswith(p) for p in PLATAFORMAS)
+
 ETIQUETA_ORIGEM = {
     "nacionais": ("Portugal", "#0E7433"),
     "lusofonas": ("Lusofonia", "#BE9C54"),
@@ -97,6 +114,8 @@ def filtrar(noticias, area, periodo, origens):
     saida = []
     for n in noticias:
         if area and n.get("area") != area:
+            continue
+        if e_plataforma(n):
             continue
         if origens and origem_da_fonte(n) not in origens:
             continue
