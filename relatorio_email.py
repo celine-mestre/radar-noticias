@@ -327,8 +327,16 @@ def um_por_area(dados, areas, args, origens):
     O manifesto é lido pelo fluxo de trabalho, que envia uma mensagem por área.
     Áreas sem destinatários ou sem notícias não geram mensagem.
     """
+    # Os destinatários vêm do segredo SUBSCRITORES quando existe, para não
+    # ficarem visíveis no repositório. Não existindo, recorre-se ao ficheiro.
     subscritores = {}
-    if os.path.exists(args.subscritores):
+    bruto = os.environ.get("SUBSCRITORES", "").strip()
+    if bruto:
+        try:
+            subscritores = json.loads(bruto).get("areas", {})
+        except json.JSONDecodeError:
+            sys.exit("O segredo SUBSCRITORES não contém JSON válido.")
+    elif os.path.exists(args.subscritores):
         with open(args.subscritores, encoding="utf-8") as origem:
             subscritores = json.load(origem).get("areas", {})
 

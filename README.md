@@ -226,41 +226,40 @@ do período, que é a predefinição das execuções agendadas.
 **No painel.** O botão *Receber por email* abre uma janela onde a pessoa indica o
 endereço e escolhe as áreas. Ao confirmar, abre-se no seu programa de correio uma
 mensagem já preenchida, dirigida à Unidade de Pesquisa e Estatísticas, que basta
-enviar. Quem não tenha programa de correio configurado pode copiar o texto, que fica
-visível no ecrã.
+enviar.
 
-O painel é um ficheiro estático: não tem servidor para registar endereços nem para
-enviar mensagens. Este desenho evita essa dependência e tem uma vantagem — o pedido
-fica registado na caixa de enviados de quem subscreve e na caixa de entrada da
-unidade, com rasto dos dois lados.
+**Onde ficam os destinatários.** No segredo **`SUBSCRITORES`** do repositório, e não
+num ficheiro. O repositório é público e os endereços são dados de contacto de
+terceiros: num segredo não são legíveis por quem consulte o repositório, nem aparecem
+nos registos das execuções.
 
-**Processamento automático.** Recebido o pedido, corre-se em **Actions › Subscricao
-do relatorio › Run workflow** com o endereço e as áreas. O fluxo grava a alteração no
-`subscritores.json`, envia a confirmação a quem pediu e deixa o registo no histórico
-do repositório. Não é preciso editar ficheiros à mão.
-
-Os nomes das áreas são tolerantes: aceitam-se sem acentos, em minúsculas e parciais —
-`saude, agricultura` resolve para *Saúde* e *Agricultura e Mar*. Para todas, escrever
-`todas`.
-
-O ficheiro tem uma lista por área:
+O conteúdo é JSON, uma lista por área:
 
 ```json
 {
   "areas": {
     "Saúde": ["nome@sggoverno.gov.pt", "gabinete@min-saude.gov.pt"],
-    "Justiça": ["nome@sggoverno.gov.pt"]
+    "Justiça": []
   }
 }
 ```
 
-Acrescentar um endereço subscreve; retirá-lo cancela. A alteração entra em vigor no
-envio seguinte, pelo que o primeiro relatório chega na manhã seguinte ao registo. Uma área sem endereços não gera mensagem, e uma
-área sem notícias no período também não — não se enviam relatórios vazios.
+O ficheiro `subscritores.json` do repositório é apenas o modelo, com as dezasseis
+áreas e sem endereços. Serve para copiar a estrutura e para trabalho local.
 
-Este desenho é deliberado: os destinatários ficam num ficheiro versionado, visível
-e auditável, em vez de numa configuração escondida. Quem gere o produto altera a
-lista sem depender de ninguém, e o histórico de alterações fica registado.
+**Processamento.** Em **Actions › Subscricao do relatorio › Run workflow**, com o
+endereço e as áreas. O fluxo atualiza a lista, envia a confirmação e não deixa
+qualquer endereço à vista.
+
+Para o fluxo poder gravar no segredo é preciso um segundo segredo,
+**`SUBSCRITORES_PAT`**, com um token de acesso pessoal de âmbito restrito — apenas
+este repositório, apenas a permissão *Secrets: read and write*. Sem esse token o
+fluxo corre na mesma e deixa a lista atualizada em *Artifacts*, para se colar à mão
+no segredo.
+
+Os nomes das áreas são tolerantes: aceitam-se sem acentos, em minúsculas e parciais —
+`saude, agricultura` resolve para *Saúde* e *Agricultura e Mar*. Para todas, escrever
+`todas`.
 
 ### Credenciais
 

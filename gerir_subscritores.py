@@ -47,10 +47,25 @@ VALIDO = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 def carregar(caminho):
-    if not os.path.exists(caminho):
-        return {"areas": {a: [] for a in AREAS}}
-    with open(caminho, encoding="utf-8") as origem:
-        d = json.load(origem)
+    """Lê a lista de subscritores.
+
+    Por predefinição vem da variável de ambiente SUBSCRITORES, alimentada por um
+    segredo do repositório: os endereços não ficam visíveis para quem consulte o
+    repositório. Não existindo, recorre-se ao ficheiro.
+    """
+    bruto = os.environ.get("SUBSCRITORES", "").strip()
+    d = None
+    if bruto:
+        try:
+            d = json.loads(bruto)
+        except json.JSONDecodeError:
+            sys.exit("O segredo SUBSCRITORES não contém JSON válido.")
+    elif os.path.exists(caminho):
+        with open(caminho, encoding="utf-8") as origem:
+            d = json.load(origem)
+
+    if d is None:
+        d = {"areas": {}}
     d.setdefault("areas", {})
     for a in AREAS:
         d["areas"].setdefault(a, [])
@@ -58,6 +73,8 @@ def carregar(caminho):
 
 
 def gravar(caminho, dados):
+    """Escreve a lista atualizada. O ficheiro é sempre local ao trabalho em curso:
+    o fluxo grava-o no segredo e não o publica no repositório."""
     dados["atualizado"] = datetime.now().strftime("%Y-%m-%d %H:%M")
     with open(caminho, "w", encoding="utf-8") as destino:
         json.dump(dados, destino, ensure_ascii=False, indent=2)
@@ -204,7 +221,10 @@ def principal():
     ap.add_argument("--email", default=None)
     ap.add_argument("--areas", default="", help="nomes separados por vírgula")
     ap.add_argument("--todas", action="store_true")
-    ap.add_argument("--ficheiro", default="subscritores.json")
+    ap.add_argument("--ficheiro", default="subscritores.json",
+                    help="ficheiro a usar quando o segredo SUBSCRITORES não existe")
+    ap.add_argument("--gravar-em", default=None,
+                    help="ficheiro onde escrever a lista atualizada")
     ap.add_argument("--painel", default="")
     ap.add_argument("--confirmacao-para", default=None,
                     help="ficheiro HTML da mensagem de confirmação")
@@ -242,11 +262,13 @@ def principal():
             dados["areas"][area] = [e for e in dados["areas"][area] if e.lower() != email]
             mexidas.append(area)
 
+    destino_lista = args.gravar_em or args.ficheiro
     if not mexidas:
         estado = "já estava subscrito" if args.acao == "subscrever" else "não estava subscrito"
         print(f"Nada a alterar: {email} {estado} em todas as áreas indicadas.")
+        gravar(destino_lista, dados)      # devolve a lista tal como está
     else:
-        gravar(args.ficheiro, dados)
+        gravar(destino_lista, dados)
         verbo = "subscrito em" if args.acao == "subscrever" else "retirado de"
         print(f"{email} {verbo} {len(mexidas)} área(s):")
         for a in mexidas:
