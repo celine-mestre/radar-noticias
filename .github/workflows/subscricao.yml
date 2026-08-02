@@ -107,6 +107,16 @@ jobs:
             echo "::notice::Sem credenciais de correio configuradas. O registo foi gravado; a confirmação não é enviada."
           fi
 
+      # A confirmação fica sempre disponível para descarregar, mesmo quando não é
+      # enviada: permite ver exatamente o que o subscritor receberá.
+      - name: Guardar a confirmacao
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: confirmacao
+          path: confirmacao.html
+          retention-days: 14
+
       - name: Enviar a confirmacao
         if: steps.correio.outputs.pronto == 'sim'
         continue-on-error: true
