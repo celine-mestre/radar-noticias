@@ -159,6 +159,45 @@ def mensagem_confirmacao(email, areas, acao, painel):
 </body></html>"""
 
 
+def texto_confirmacao(email, areas, acao, painel):
+    """Versão em texto simples, para clientes que bloqueiam o formato HTML.
+
+    Enviada em paralelo com a versão formatada: o cliente escolhe a que sabe
+    apresentar, e nenhuma mensagem fica ilegível.
+    """
+    subscreveu = acao == "subscrever"
+    agora = datetime.now()
+    linhas = [
+        "SECRETARIA-GERAL DO GOVERNO",
+        "Radar de Notícias por Área Governativa",
+        "",
+        "SUBSCRIÇÃO CONFIRMADA" if subscreveu else "SUBSCRIÇÃO CANCELADA",
+        "",
+    ]
+    if subscreveu:
+        linhas += ["A partir de amanhã, e em todos os dias úteis, receberá às 10h00",
+                   "um relatório por cada área abaixo, com as notícias das últimas",
+                   "24 horas. À segunda-feira a janela alarga para 72 horas, para",
+                   "cobrir o fim de semana.", ""]
+    else:
+        linhas += ["Deixará de receber os relatórios das áreas abaixo. Pode voltar",
+                   "a subscrever a qualquer momento, no painel.", ""]
+
+    linhas.append(f"{len(areas)} {'área' if len(areas) == 1 else 'áreas'}:")
+    linhas += [f"  - {a}" for a in areas]
+    linhas += ["",
+               "Para alterar as áreas ou cancelar, responda a esta mensagem ou a",
+               "qualquer relatório.",
+               ""]
+    if painel:
+        linhas += ["Painel: " + painel, ""]
+    linhas += ["--",
+               "Direção de Serviços de Suporte à Decisão",
+               "Unidade de Pesquisa e Estatísticas",
+               f"Registo processado em {agora.strftime('%d/%m/%Y às %H:%M')}."]
+    return "\n".join(linhas)
+
+
 def principal():
     ap = argparse.ArgumentParser(description="Gestão de subscritores do Radar de Notícias.")
     ap.add_argument("--acao", choices=["subscrever", "cancelar", "listar"], default="listar")
@@ -169,6 +208,8 @@ def principal():
     ap.add_argument("--painel", default="")
     ap.add_argument("--confirmacao-para", default=None,
                     help="ficheiro HTML da mensagem de confirmação")
+    ap.add_argument("--texto-para", default=None,
+                    help="ficheiro com a mesma mensagem em texto simples")
     ap.add_argument("--assunto-para", default=None)
     args = ap.parse_args()
 
@@ -214,6 +255,10 @@ def principal():
     if args.confirmacao_para:
         with open(args.confirmacao_para, "w", encoding="utf-8") as destino:
             destino.write(mensagem_confirmacao(email, areas, args.acao, args.painel))
+
+    if args.texto_para:
+        with open(args.texto_para, "w", encoding="utf-8") as destino:
+            destino.write(texto_confirmacao(email, areas, args.acao, args.painel))
 
     if args.assunto_para:
         titulo = ("Radar de Notícias · subscrição confirmada"

@@ -347,16 +347,21 @@ def um_por_area(dados, areas, args, origens):
             print(f"  {nome}: sem notícias no período, não é enviada")
             continue
 
-        ficheiro = os.path.join(
+        base = os.path.join(
             args.pasta,
-            re.sub(r"[^a-z0-9]+", "_", sem_acentos(nome)).strip("_") + ".html")
+            re.sub(r"[^a-z0-9]+", "_", sem_acentos(nome)).strip("_"))
+        ficheiro = base + ".html"
         with open(ficheiro, "w", encoding="utf-8") as destino:
             destino.write(construir(dados, [nome], args.periodo, origens, args.painel,
                                     sinteses, escrita_em))
+        with open(base + ".txt", "w", encoding="utf-8") as destino:
+            destino.write(versao_texto(dados, [nome], args.periodo, origens,
+                                       args.painel, sinteses))
 
         manifesto.append({
             "area": nome,
             "ficheiro": ficheiro,
+            "texto": base + ".txt",
             "destinatarios": ",".join(destinos),
             "assunto": (f"Radar de Notícias · {nome} · "
                         f"{agora.day} de {MESES[agora.month - 1]} · "
@@ -369,6 +374,46 @@ def um_por_area(dados, areas, args, origens):
         json.dump(manifesto, destino, ensure_ascii=False)
 
     print(f"\n{len(manifesto)} mensagens a enviar")
+
+
+def versao_texto(dados, areas, periodo, origens, painel, sinteses=None):
+    """A mesma informação em texto simples, para clientes que bloqueiam HTML."""
+    agora = datetime.now()
+    linhas = ["SECRETARIA-GERAL DO GOVERNO",
+              "Radar de Notícias por Área Governativa",
+              f"{agora.day} de {MESES[agora.month - 1]} de {agora.year} · "
+              f"{ROTULO_PERIODO.get(periodo, periodo)}", ""]
+
+    for nome in areas:
+        noticias = filtrar(dados, nome, periodo, origens)
+        linhas += ["=" * 62, nome.upper(),
+                   f"{len(noticias)} {'notícia' if len(noticias) == 1 else 'notícias'}", ""]
+
+        texto = (sinteses or {}).get(nome, {}).get("texto", "")
+        if texto:
+            linhas += ["SÍNTESE REDIGIDA · AMÁLIA", texto, ""]
+
+        if not noticias:
+            linhas += ["Sem notícias no período.", ""]
+            continue
+
+        for n in noticias:
+            hora = (n.get("data") or "")[11:16] or "--:--"
+            linhas.append(f"[{hora}] {n.get('titulo')}")
+            if n.get("resumo"):
+                linhas.append(f"        {n['resumo'][:150]}")
+            linhas.append(f"        {n.get('fonte')} · {ETIQUETA_ORIGEM[origem_da_fonte(n)][0]}")
+            if endereco_seguro(n.get("ligacao")):
+                linhas.append(f"        {n['ligacao']}")
+            linhas.append("")
+
+    if painel:
+        linhas += ["Abrir o painel: " + painel, ""]
+    linhas += ["--",
+               "Direção de Serviços de Suporte à Decisão",
+               "Unidade de Pesquisa e Estatísticas",
+               "Recolha automática a partir dos feeds das publicações subscritas."]
+    return "\n".join(linhas)
 
 
 def principal():
