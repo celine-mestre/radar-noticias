@@ -355,6 +355,13 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
 
 
 def um_por_area(dados, areas, args, origens):
+    """Escreve um relatório por área e um manifesto para o fluxo.
+
+    Sem informação de subscritores — que é o caso quando o fluxo não recebe o
+    segredo —, geram-se relatórios para todas as áreas com notícias. Os
+    destinatários são apurados mais tarde, já no envio: assim o manifesto não
+    tem contacto com o segredo, e o GitHub não recusa passá-lo adiante.
+    """
     sinteses, escrita_em = carregar_sinteses(args.sinteses)
     """Escreve um relatório por área e um manifesto com os destinatários.
 
@@ -378,9 +385,12 @@ def um_por_area(dados, areas, args, origens):
     agora = datetime.now()
     manifesto = []
 
+    # O modelo do repositório traz as áreas todas com listas vazias: só se
+    # considera que há informação de destinatários se algum endereço existir.
+    sabe_destinos = any(subscritores.get(a) for a in subscritores)
     for nome in areas:
         destinos = subscritores.get(nome, [])
-        if not destinos:
+        if sabe_destinos and not destinos:
             print(f"  {nome}: sem destinatários, ignorada")
             continue
 
@@ -413,7 +423,8 @@ def um_por_area(dados, areas, args, origens):
                         f"{len(noticias)} {'notícia' if len(noticias) == 1 else 'notícias'}"),
             "noticias": len(noticias),
         })
-        print(f"  {nome}: {len(noticias)} notícias → {len(destinos)} destinatário(s)")
+        print(f"  {nome}: {len(noticias)} notícias"
+              + (f" → {len(destinos)} destinatário(s)" if sabe_destinos else ""))
 
     with open(os.path.join(args.pasta, "manifesto.json"), "w", encoding="utf-8") as destino:
         json.dump(manifesto, destino, ensure_ascii=False)
