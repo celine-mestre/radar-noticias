@@ -29,6 +29,11 @@ on:
         type: choice
         default: "auto"
         options: ["auto", "24h", "48h", "72h"]
+      apenas:
+        description: "Ensaio: tratar só esta área (vazio = todas)"
+        type: string
+        required: false
+        default: ""
   schedule:
     - cron: "10 8 * * 1-5"     # depois da recolha das 08h00, antes do relatório das 09h00
 
@@ -67,13 +72,20 @@ jobs:
         run: |
           PERIODO="${{ github.event.inputs.periodo }}"
           if [ -z "$PERIODO" ]; then PERIODO="auto"; fi
-          python sintese_ia.py \
-            --local \
-            --dados arquivo.json \
-            --periodo "$PERIODO" \
-            --saida sinteses.json
+          APENAS="${{ inputs.apenas }}"
+          if [ -n "$APENAS" ]; then
+            # Ensaio: uma área só, para se confirmar em minutos que o modelo
+            # carrega e escreve como deve, sem esperar pelas dezasseis.
+            python sintese_ia.py --local --dados arquivo.json \
+              --periodo "$PERIODO" --apenas "$APENAS" --saida sinteses_ensaio.json
+          else
+            python sintese_ia.py --local --dados arquivo.json \
+              --periodo "$PERIODO" --saida sinteses.json
+          fi
 
+      # O ensaio de uma área não é gravado: serve para ver o texto no registo.
       - name: Gravar no repositorio
+        if: inputs.apenas == ''
         run: |
           set -euo pipefail
           if [ ! -f sinteses.json ]; then
