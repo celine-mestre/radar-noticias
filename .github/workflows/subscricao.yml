@@ -47,13 +47,15 @@ permissions:
 
 env:
   PAINEL: "https://celine-mestre.github.io/radar-noticias/"
-  # Os segredos não podem ser lidos diretamente numa condição "if": passam-se
-  # primeiro para variáveis de ambiente, que já podem ser testadas.
-  TEM_PAT: ${{ secrets.SUBSCRITORES_PAT != '' }}
 
 jobs:
   registar:
     runs-on: ubuntu-latest
+    # Os segredos não são legíveis no bloco env do fluxo, apenas no do trabalho.
+    # Estando no sítio errado, TEM_PAT ficava vazio e a lista nunca era gravada
+    # no segredo — a confirmação seguia à mesma, o que tornava a falha invisível.
+    env:
+      TEM_PAT: ${{ secrets.SUBSCRITORES_PAT != '' }}
     steps:
       - name: Obter o repositorio
         uses: actions/checkout@v4
@@ -107,6 +109,11 @@ jobs:
           gh secret set SUBSCRITORES --repo "${{ github.repository }}" \
             --body "$(cat subscritores_novo.json)"
           echo "Lista atualizada no segredo SUBSCRITORES."
+
+      - name: Avisar que a lista nao foi gravada
+        if: inputs.acao != 'listar' && env.TEM_PAT != 'true'
+        run: |
+          echo "::warning::A lista NÃO foi gravada no segredo: falta o segredo SUBSCRITORES_PAT. A alteração está no artefacto 'subscritores-atualizado', para colar à mão em Settings > Secrets > SUBSCRITORES."
 
       - name: Guardar a lista para atualizacao manual
         if: inputs.acao != 'listar' && env.TEM_PAT != 'true'
