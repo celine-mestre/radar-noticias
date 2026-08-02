@@ -206,12 +206,20 @@ exportar para Excel.
 
 O dia corre assim, em hora UTC — mais uma hora em Lisboa no horário de verão:
 
-| Hora | O quê |
-|---|---|
-| 06h00 | Recolha, para o painel estar pronto de manhã cedo |
-| 08h00 | Recolha da manhã |
-| 08h10 | Síntese do Amália, sobre essa recolha |
-| 09h00 | Envio dos relatórios |
+| Hora | O quê | Dias |
+|---|---|---|
+| 06h00 | Recolha, para o painel estar pronto de manhã cedo | Todos |
+| 08h00 | Recolha da manhã | Todos |
+| 08h10 | Síntese do Amália, sobre essa recolha | Seg a sex |
+| 09h00 | Envio dos relatórios | Seg a sex |
+
+A recolha corre **todos os dias**, incluindo fim de semana: de outro modo o arquivo
+ficaria com um buraco de dois dias e o que fosse notícia ao sábado nunca chegaria ao
+painel.
+
+Os relatórios são enviados apenas em dias úteis, mas **à segunda-feira a janela alarga
+automaticamente para 72 horas**, cobrindo sábado e domingo. É o que faz o valor `auto`
+do período, que é a predefinição das execuções agendadas.
 
 ### Subscrever e cancelar
 

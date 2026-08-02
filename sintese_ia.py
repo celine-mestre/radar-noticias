@@ -152,7 +152,8 @@ def principal():
     ap = argparse.ArgumentParser(description="Síntese diária por área, pelo Amália.")
     ap.add_argument("--dados", default="arquivo.json")
     ap.add_argument("--saida", default="sinteses.json")
-    ap.add_argument("--periodo", default="24h", choices=list(HORAS))
+    ap.add_argument("--periodo", default="24h", choices=list(HORAS) + ["auto"],
+                    help="'auto' alarga a janela à segunda-feira, para cobrir o fim de semana")
     ap.add_argument("--local", action="store_true",
                     help="correr o Amália neste computador, sem serviço externo")
     ap.add_argument("--repo", default=REPO_GGUF, help="repositório da conversão quantizada")
@@ -169,6 +170,11 @@ def principal():
     if not args.local and (not args.endereco or not chave):
         print("Sem modo local nem ponto de acesso configurado. Nada a fazer.")
         return
+
+    # A síntese acompanha a janela do relatório que a vai apresentar
+    if args.periodo == "auto":
+        args.periodo = "72h" if datetime.now().weekday() == 0 else "24h"
+        print(f"Janela automática: {args.periodo}")
 
     if not os.path.exists(args.dados):
         sys.exit(f"Ficheiro de dados não encontrado: {args.dados}")

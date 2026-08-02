@@ -377,7 +377,8 @@ def principal():
     ap.add_argument("--area", default=None, help="nome exato de uma área governativa")
     ap.add_argument("--areas", default=None, help="várias áreas, separadas por vírgula")
     ap.add_argument("--todas", action="store_true", help="todas as áreas com notícias")
-    ap.add_argument("--periodo", default="24h", choices=list(HORAS))
+    ap.add_argument("--periodo", default="24h", choices=list(HORAS) + ["auto"],
+                    help="'auto' alarga a janela à segunda-feira, para cobrir o fim de semana")
     ap.add_argument("--origens", default="",
                     help="origens a incluir: nacionais, lusofonas, internacionais — "
                          "separadas por vírgula. Vazio inclui todas.")
@@ -398,6 +399,12 @@ def principal():
 
     if not os.path.exists(args.dados):
         sys.exit(f"Ficheiro de dados não encontrado: {args.dados}")
+
+    # À segunda-feira a janela alarga para 72 horas: de outro modo, o que foi
+    # notícia ao sábado e ao domingo nunca chegaria a ser relatado.
+    if args.periodo == "auto":
+        args.periodo = "72h" if datetime.now().weekday() == 0 else "24h"
+        print(f"Janela automática: {ROTULO_PERIODO[args.periodo]}")
 
     dados = carregar(args.dados)
     if not dados:
