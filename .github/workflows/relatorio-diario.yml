@@ -85,20 +85,38 @@ jobs:
     needs: preparar
     if: needs.preparar.outputs.envios != '[]' && needs.preparar.outputs.envios != ''
     runs-on: ubuntu-latest
+    # O nome do trabalho usa apenas a área: os valores da matriz aparecem no
+    # nome, e num repositório público seriam visíveis para qualquer pessoa.
+    name: Enviar ${{ matrix.envio.area }}
     strategy:
       fail-fast: false
       max-parallel: 4
       matrix:
         envio: ${{ fromJSON(needs.preparar.outputs.envios) }}
     steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Obter os relatorios
         uses: actions/download-artifact@v4
         with:
           name: relatorios-diarios
           path: relatorios
 
-      # Sem credenciais, os relatórios ficam disponíveis em Artifacts e o passo
-      # é ignorado em vez de dar erro.
+      # Os endereços são apurados aqui, a partir do segredo, e nunca chegam a
+      # aparecer nos registos: seguem pelo ficheiro de saída do passo e são
+      # ocultados pelo GitHub.
+      - name: Apurar os destinatarios
+        id: dest
+        env:
+          SUBSCRITORES: ${{ secrets.SUBSCRITORES }}
+        run: python relatorio_email.py --destinatarios-de "${{ matrix.envio.area }}"
+
       - name: Verificar as credenciais
         id: correio
         run: |
@@ -110,15 +128,16 @@ jobs:
           fi
 
       - name: Enviar
-        if: steps.correio.outputs.pronto == 'sim'
+        if: steps.correio.outputs.pronto == 'sim' && steps.dest.outputs.para != ''
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVIDOR }}
           server_port: ${{ secrets.SMTP_PORTA }}
+          secure: false
           username: ${{ secrets.SMTP_UTILIZADOR }}
           password: ${{ secrets.SMTP_SENHA }}
           subject: ${{ matrix.envio.assunto }}
-          to: ${{ matrix.envio.destinatarios }}
+          to: ${{ steps.dest.outputs.para }}
           from: Radar de Noticias <${{ secrets.SMTP_UTILIZADOR }}>
           # As duas versões seguem juntas: o cliente apresenta a que sabe ler.
           html_body: file://${{ matrix.envio.ficheiro }}

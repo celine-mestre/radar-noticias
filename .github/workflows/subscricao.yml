@@ -51,11 +51,6 @@ env:
 jobs:
   registar:
     runs-on: ubuntu-latest
-    # Os segredos não são legíveis no bloco env do fluxo, apenas no do trabalho.
-    # Estando no sítio errado, TEM_PAT ficava vazio e a lista nunca era gravada
-    # no segredo — a confirmação seguia à mesma, o que tornava a falha invisível.
-    env:
-      TEM_PAT: ${{ secrets.SUBSCRITORES_PAT != '' }}
     steps:
       - name: Obter o repositorio
         uses: actions/checkout@v4
@@ -100,28 +95,37 @@ jobs:
           fi
           echo "ASSUNTO=$(cat assunto.txt)" >> "$GITHUB_ENV"
 
+      # Toda a lógica dentro do comando: nos blocos "if" o acesso aos segredos
+      # depende do nível em que estão declarados, e foi aí que isto falhou duas
+      # vezes. Dentro de um "run" os segredos são sempre legíveis.
       - name: Gravar a lista no segredo
-        if: inputs.acao != 'listar' && env.TEM_PAT == 'true'
+        if: inputs.acao != 'listar'
         env:
           GH_TOKEN: ${{ secrets.SUBSCRITORES_PAT }}
         run: |
-          set -euo pipefail
-          gh secret set SUBSCRITORES --repo "${{ github.repository }}" \
-            --body "$(cat subscritores_novo.json)"
-          echo "Lista atualizada no segredo SUBSCRITORES."
+          set -uo pipefail
+          if [ ! -f subscritores_novo.json ]; then
+            echo "::error::A lista atualizada não foi produzida."
+            exit 1
+          fi
 
-      - name: Avisar que a lista nao foi gravada
-        if: inputs.acao != 'listar' && env.TEM_PAT != 'true'
-        run: |
-          echo "::warning::A lista NÃO foi gravada no segredo: falta o segredo SUBSCRITORES_PAT. A alteração está no artefacto 'subscritores-atualizado', para colar à mão em Settings > Secrets > SUBSCRITORES."
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::Falta o segredo SUBSCRITORES_PAT: a lista NÃO foi gravada."
+            echo "A alteração não é publicada por outra via — a lista contém"
+            echo "endereços de terceiros e este repositório é público."
+            echo "Crie o token e volte a correr."
+            exit 1
+          fi
 
-      - name: Guardar a lista para atualizacao manual
-        if: inputs.acao != 'listar' && env.TEM_PAT != 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: subscritores-atualizado
-          path: subscritores_novo.json
-          retention-days: 7
+          echo "Token presente. A gravar no segredo SUBSCRITORES…"
+          if gh secret set SUBSCRITORES --repo "${{ github.repository }}" \
+               --body "$(cat subscritores_novo.json)"; then
+            echo "Lista gravada. As alterações valem a partir da próxima execução."
+          else
+            echo "::error::A gravação falhou. Verifique se o token tem a permissão"
+            echo "'Secrets: Read and write' sobre este repositório."
+            exit 1
+          fi
 
       - name: Verificar as credenciais
         id: correio
@@ -133,16 +137,6 @@ jobs:
             echo "pronto=nao" >> "$GITHUB_OUTPUT"
             echo "::notice::Sem credenciais de correio. A confirmação não é enviada."
           fi
-
-      - name: Guardar a confirmacao
-        if: inputs.acao != 'listar'
-        uses: actions/upload-artifact@v4
-        with:
-          name: confirmacao
-          path: |
-            confirmacao.html
-            confirmacao.txt
-          retention-days: 14
 
       - name: Enviar a confirmacao
         if: steps.correio.outputs.pronto == 'sim'
@@ -168,7 +162,7 @@ jobs:
           if [ "${{ steps.correio.outputs.pronto }}" != "sim" ]; then
             echo "::warning::Credenciais de correio em falta: a confirmação não foi enviada."
           elif [ "${{ job.status }}" = "success" ]; then
-            echo "Confirmação enviada para ${{ inputs.email }}."
+            echo "Confirmação enviada."
           else
             echo "::error::O envio falhou. Veja o passo 'Enviar a confirmacao'."
           fi
