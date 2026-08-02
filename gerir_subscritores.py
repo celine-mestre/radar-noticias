@@ -46,6 +46,15 @@ AREAS = [
 VALIDO = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
+def ocultar(email):
+    """Mostra o suficiente para reconhecer o endereço, sem o revelar."""
+    if "@" not in email:
+        return email
+    nome, dominio = email.split("@", 1)
+    visivel = nome[:3] if len(nome) > 4 else nome[:1]
+    return f"{visivel}{'*' * max(3, len(nome) - len(visivel))}@{dominio}"
+
+
 def carregar(caminho):
     """Lê a lista de subscritores.
 
@@ -268,12 +277,19 @@ def principal():
     dados = carregar(args.ficheiro)
 
     if args.acao == "listar":
-        total = set()
+        # Os registos das execuções são públicos num repositório público: os
+        # endereços saem parcialmente ocultos, o suficiente para se reconhecer
+        # quem está subscrito sem os expor.
+        total = {}
         for area in AREAS:
             enderecos = dados["areas"].get(area, [])
-            total.update(enderecos)
-            print(f"{area:46} {len(enderecos)}")
-        print(f"\n{len(total)} endereços distintos")
+            for e in enderecos:
+                total.setdefault(e, []).append(area)
+            print(f"  {area:46} {len(enderecos)}")
+
+        print(f"\n{len(total)} {'endereço' if len(total) == 1 else 'endereços'} distintos:")
+        for e in sorted(total):
+            print(f"  {ocultar(e):34} {len(total[e])} área(s)")
         return
 
     email = (args.email or "").strip().lower()
