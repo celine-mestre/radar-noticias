@@ -329,12 +329,12 @@ def principal():
     destino_lista = args.gravar_em or args.ficheiro
     if not mexidas:
         estado = "já estava subscrito" if args.acao == "subscrever" else "não estava subscrito"
-        print(f"Nada a alterar: {email} {estado} em todas as áreas indicadas.")
+        print(f"Nada a alterar: {ocultar(email)} {estado} em todas as áreas indicadas.")
         gravar(destino_lista, dados)      # devolve a lista tal como está
     else:
         gravar(destino_lista, dados)
         verbo = "subscrito em" if args.acao == "subscrever" else "retirado de"
-        print(f"{email} {verbo} {len(mexidas)} área(s):")
+        print(f"{ocultar(email)} {verbo} {len(mexidas)} área(s):")
         for a in mexidas:
             print(f"  - {a}")
 

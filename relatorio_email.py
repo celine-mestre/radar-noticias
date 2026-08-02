@@ -400,11 +400,14 @@ def um_por_area(dados, areas, args, origens):
             destino.write(versao_texto(dados, [nome], args.periodo, origens,
                                        args.painel, sinteses))
 
+        # Sem endereços: o manifesto alimenta a matriz do fluxo, e os valores da
+        # matriz aparecem nos nomes dos trabalhos, que num repositório público
+        # são visíveis para qualquer pessoa. Os destinatários são apurados no
+        # momento do envio, a partir do segredo.
         manifesto.append({
             "area": nome,
             "ficheiro": ficheiro,
             "texto": base + ".txt",
-            "destinatarios": ",".join(destinos),
             "assunto": (f"Radar de Notícias · {nome} · "
                         f"{agora.day} de {MESES[agora.month - 1]} · "
                         f"{len(noticias)} {'notícia' if len(noticias) == 1 else 'notícias'}"),
@@ -458,6 +461,19 @@ def versao_texto(dados, areas, periodo, origens, painel, sinteses=None):
     return "\n".join(linhas)
 
 
+def destinatarios_de(area, caminho="subscritores.json"):
+    """Endereços de uma área. Devolvido para consumo do fluxo, nunca impresso."""
+    bruto = os.environ.get("SUBSCRITORES", "").strip()
+    if bruto:
+        areas = json.loads(bruto).get("areas", {})
+    elif os.path.exists(caminho):
+        with open(caminho, encoding="utf-8") as origem:
+            areas = json.load(origem).get("areas", {})
+    else:
+        areas = {}
+    return [e for e in areas.get(area, []) if e]
+
+
 def principal():
     ap = argparse.ArgumentParser(description="Relatório diário do Radar de Notícias.")
     ap.add_argument("--dados", default="arquivo.json", help="ficheiro de dados da recolha")
@@ -476,6 +492,8 @@ def principal():
                     help="ficheiro com as sínteses redigidas pelo Amália")
     ap.add_argument("--painel", default="",
                     help="endereço do painel, para a ligação no fim da mensagem")
+    ap.add_argument("--destinatarios-de", default=None,
+                    help="escreve em GITHUB_OUTPUT os destinatários desta área")
     ap.add_argument("--um-por-area", action="store_true",
                     help="um relatório por área, com o mapa de destinatários")
     ap.add_argument("--subscritores", default="subscritores.json",
@@ -483,6 +501,20 @@ def principal():
     ap.add_argument("--pasta", default="relatorios",
                     help="pasta onde escrever os relatórios, com --um-por-area")
     args = ap.parse_args()
+
+    # Apuramento dos destinatários para o fluxo. O valor vai para o ficheiro de
+    # saída do GitHub, que não é escrito nos registos; e pede-se ao GitHub que
+    # oculte cada endereço, caso algo o imprima por engano.
+    if args.destinatarios_de:
+        enderecos = destinatarios_de(args.destinatarios_de, args.subscritores)
+        for e in enderecos:
+            print(f"::add-mask::{e}")
+        saida = os.environ.get("GITHUB_OUTPUT")
+        if saida:
+            with open(saida, "a", encoding="utf-8") as destino:
+                destino.write(f"para={','.join(enderecos)}\n")
+        print(f"{len(enderecos)} destinatário(s) apurado(s).")
+        return
 
     if not os.path.exists(args.dados):
         sys.exit(f"Ficheiro de dados não encontrado: {args.dados}")
