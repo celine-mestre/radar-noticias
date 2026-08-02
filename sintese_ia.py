@@ -26,8 +26,14 @@ import json
 import os
 import sys
 import urllib.error
+import time
 import urllib.request
+import unicodedata
 from datetime import datetime, timedelta
+
+
+def _sem_acentos(t):
+    return unicodedata.normalize("NFD", (t or "").lower()).encode("ascii", "ignore").decode()
 
 MODELO = "amalia-llm/AMALIA-9B-0626-DPO"
 
@@ -160,6 +166,8 @@ def principal():
     ap.add_argument("--ficheiro", default=FICHEIRO_GGUF, help="ficheiro do modelo")
     ap.add_argument("--endereco", default=os.environ.get("AMALIA_ENDERECO", ""),
                     help="ponto de acesso a um serviço já instalado (alternativa a --local)")
+    ap.add_argument("--apenas", default=None,
+                    help="tratar apenas esta área — útil para um primeiro ensaio")
     ap.add_argument("--minimo", type=int, default=3,
                     help="notícias mínimas para valer a pena sintetizar")
     ap.add_argument("--maximo", type=int, default=40,
@@ -182,6 +190,13 @@ def principal():
     noticias = carregar(args.dados)
     areas = sorted({n.get("area") for n in noticias if n.get("area")})
 
+    if args.apenas:
+        alvo = _sem_acentos(args.apenas)
+        areas = [a for a in areas if alvo in _sem_acentos(a)]
+        if not areas:
+            sys.exit(f"Área não encontrada: {args.apenas}")
+        print(f"Ensaio limitado a: {areas[0]}")
+
     agora = datetime.now()
     resultado = {"gerado": agora.strftime("%Y-%m-%d %H:%M"),
                  "periodo": args.periodo, "modelo": MODELO,
@@ -194,6 +209,7 @@ def principal():
             continue
 
         titulos = [n["titulo"] for n in doDia[: args.maximo]]
+        inicio = time.monotonic()
         try:
             texto = (perguntar_local(titulos, area, args.repo, args.ficheiro)
                      if args.local else
@@ -213,7 +229,9 @@ def principal():
             "noticias": len(doDia),
             "titulos": titulos[:10],   # amostra, para verificação
         }
-        print(f"  {area}: {len(doDia)} notícias → {len(texto)} caracteres")
+        print(f"  {area}: {len(doDia)} notícias → {len(texto)} caracteres "
+              f"em {time.monotonic() - inicio:.0f}s")
+        print(f"     {texto[:160]}{'…' if len(texto) > 160 else ''}")
 
     with open(args.saida, "w", encoding="utf-8") as destino:
         json.dump(resultado, destino, ensure_ascii=False, indent=1)
