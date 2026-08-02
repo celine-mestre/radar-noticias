@@ -92,13 +92,19 @@ jobs:
             echo "Sem sínteses a gravar."
             exit 0
           fi
-          if git diff --quiet sinteses.json 2>/dev/null; then
-            echo "Sem alterações."
-            exit 0
-          fi
           git config user.name "Radar de Noticias"
           git config user.email "actions@github.com"
+
+          # O ficheiro tem de ser acrescentado ANTES da comparação. Um ficheiro
+          # que ainda não existe no repositório não é visto por "git diff", que
+          # só olha para os já seguidos — a primeira gravação de sempre era
+          # tomada por "sem alterações" e nunca acontecia.
           git add sinteses.json
+          if git diff --cached --quiet; then
+            echo "Sem alterações a gravar."
+            exit 0
+          fi
+
           git commit -m "sínteses do Amália"
           # Três fluxos gravam no mesmo repositório e podem cruzar-se: puxa-se
           # primeiro o que houver, para o envio não ser recusado.
