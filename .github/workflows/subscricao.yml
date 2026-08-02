@@ -46,6 +46,9 @@ permissions:
 
 env:
   PAINEL: "https://celine-mestre.github.io/radar-noticias/"
+  # Os segredos não podem ser lidos diretamente numa condição "if": passam-se
+  # primeiro para variáveis de ambiente, que já podem ser testadas.
+  TEM_PAT: ${{ secrets.SUBSCRITORES_PAT != '' }}
 
 jobs:
   registar:
@@ -86,7 +89,7 @@ jobs:
           echo "ASSUNTO=$(cat assunto.txt)" >> "$GITHUB_ENV"
 
       - name: Gravar a lista no segredo
-        if: ${{ secrets.SUBSCRITORES_PAT != '' }}
+        if: env.TEM_PAT == 'true'
         env:
           GH_TOKEN: ${{ secrets.SUBSCRITORES_PAT }}
         run: |
@@ -96,7 +99,7 @@ jobs:
           echo "Lista atualizada no segredo SUBSCRITORES."
 
       - name: Guardar a lista para atualizacao manual
-        if: ${{ secrets.SUBSCRITORES_PAT == '' }}
+        if: env.TEM_PAT != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: subscritores-atualizado
