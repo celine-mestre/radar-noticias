@@ -24,6 +24,11 @@ from datetime import datetime, timedelta
 
 AZUL, VERDE, CINZA_TEXTO, CINZA_SUAVE, BORDA = "#2B5683", "#0E7433", "#171715", "#5b6068", "#e2e8f0"
 
+# Sem imagem no cabeçalho: em correio, as imagens são bloqueadas por
+# predefinição na maioria dos clientes, e uma marca que não aparece é pior do
+# que marca nenhuma. A identidade é feita com tipografia e com a barra de cor
+# nacional — verde e vermelho —, que qualquer cliente apresenta sempre.
+
 AREAS = [
     # Ordem protocolar do XXV Governo Constitucional, como no painel
     "Negócios Estrangeiros",
@@ -180,10 +185,21 @@ def mensagem_confirmacao(email, areas, acao, painel):
 <table width="600" cellpadding="0" cellspacing="0" role="presentation"
        style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden">
 
-  <tr><td style="background:{AZUL};padding:22px 24px">
-    <div style="font:600 10px Arial,sans-serif;color:#ffffff;opacity:.8;letter-spacing:1.4px;
-                text-transform:uppercase">Secretaria-Geral do Governo</div>
-    <div style="font:600 20px Arial,sans-serif;color:#ffffff;padding-top:6px">{titulo}</div>
+  <tr><td style="padding:0">
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr>
+      <td width="50%" height="5" style="background:#0E7433;font-size:0;line-height:0">&nbsp;</td>
+      <td width="50%" height="5" style="background:#D02117;font-size:0;line-height:0">&nbsp;</td>
+    </tr></table>
+  </td></tr>
+
+  <tr><td style="background:{AZUL};padding:20px 24px">
+    <table cellpadding="0" cellspacing="0" role="presentation"><tr>
+      <td valign="middle">
+        <div style="font:600 10px Arial,sans-serif;color:#ffffff;opacity:.8;letter-spacing:1.4px;
+                    text-transform:uppercase">Secretaria-Geral do Governo</div>
+        <div style="font:600 20px Arial,sans-serif;color:#ffffff;padding-top:5px">{titulo}</div>
+      </td>
+    </tr></table>
   </td></tr>
 
   <tr><td style="padding:22px 24px 6px">

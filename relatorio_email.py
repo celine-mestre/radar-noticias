@@ -24,6 +24,10 @@ import unicodedata
 from datetime import datetime, timedelta
 
 VERDE, AZUL, DOURADO, TEAL, VERMELHO = "#0E7433", "#2B5683", "#BE9C54", "#266B73", "#D02117"
+
+# Sem imagem no cabeçalho: em correio, as imagens são bloqueadas por
+# predefinição na maioria dos clientes. A identidade é feita com tipografia e
+# com a barra de cor nacional, que qualquer cliente apresenta sempre.
 CINZA_TEXTO, CINZA_SUAVE, BORDA = "#171715", "#5b6068", "#e2e8f0"
 
 MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho",
@@ -288,12 +292,23 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
        style="max-width:640px;background:#ffffff;border-radius:12px;overflow:hidden;
               box-shadow:0 1px 3px rgba(23,23,21,.08)">
 
-  <tr><td style="background:{AZUL};padding:22px 24px">
-    <div style="font:600 10px Arial,sans-serif;color:#ffffff;opacity:.8;letter-spacing:1.4px;
-                text-transform:uppercase">Secretaria-Geral do Governo</div>
-    <div style="font:600 20px Arial,sans-serif;color:#ffffff;padding-top:6px">Radar de Notícias</div>
-    <div style="font:400 13px Arial,sans-serif;color:#ffffff;opacity:.85;padding-top:4px">
-      {data_extenso} · {criterios}</div>
+  <tr><td style="padding:0">
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr>
+      <td width="50%" height="5" style="background:#0E7433;font-size:0;line-height:0">&nbsp;</td>
+      <td width="50%" height="5" style="background:#D02117;font-size:0;line-height:0">&nbsp;</td>
+    </tr></table>
+  </td></tr>
+
+  <tr><td style="background:{AZUL};padding:20px 24px">
+    <table cellpadding="0" cellspacing="0" role="presentation"><tr>
+      <td valign="middle">
+        <div style="font:600 10px Arial,sans-serif;color:#ffffff;opacity:.8;letter-spacing:1.4px;
+                    text-transform:uppercase">Secretaria-Geral do Governo</div>
+        <div style="font:600 20px Arial,sans-serif;color:#ffffff;padding-top:5px">Radar de Notícias</div>
+        <div style="font:400 13px Arial,sans-serif;color:#ffffff;opacity:.85;padding-top:4px">
+          {data_extenso} · {criterios}</div>
+      </td>
+    </tr></table>
   </td></tr>
 
   <tr><td style="padding:16px 24px 4px;background:#fbfcfd;border-bottom:1px solid {BORDA}">
