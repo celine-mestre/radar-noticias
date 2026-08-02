@@ -52,10 +52,12 @@ jobs:
         with:
           python-version: "3.12"
 
+      # Sem o segredo neste passo. O GitHub recusa passar adiante um resultado
+      # produzido por um passo que teve acesso a segredos — foi o que aconteceu:
+      # "Skip output 'envios' since it may contain secret". Os destinatários são
+      # apurados no envio, onde o segredo é de facto preciso.
       - name: Gerar os relatorios
         id: gerar
-        env:
-          SUBSCRITORES: ${{ secrets.SUBSCRITORES }}
         run: |
           set -euo pipefail
           PERIODO="${{ github.event.inputs.periodo }}"
