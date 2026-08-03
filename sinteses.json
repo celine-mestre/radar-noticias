@@ -1,16 +1,16 @@
 {
- "gerado": "2026-08-03 18:34",
+ "gerado": "2026-08-03 19:14",
  "periodo": "72h",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "modo": "local",
  "areas": {
   "Finanças": {
-   "noticias": 34,
+   "noticias": 32,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "Em Portugal, o Governo justificou a subida da dívida pública com depósitos, enquanto o Observador e o Jornal de Negócios noticiaram a dimensão de seletividade na taxa sobre os lucros extraordinários e a preocupação com o número de candidatos ao ensino superior. A CNN Portugal reportou a manutenção da meta de redução da dívida pública para 87,5% do PIB em 2026, apesar do aumento para 92,9% no segundo trimestre, e a subida para 92,9% do PIB no segundo trimestre foi também referida. Em Espanha, foi noticiado que este país não pode ser suspenso do Acordo de Schengen, e em Itália foi comunicada a suspensão dos acordos Schengen com Espanha e o encerramento de fronteiras aéreas e marítimas.",
-     "noticias": 12
+     "texto": "Em Portugal, o Governo divulgou informação sobre a evolução da dívida pública, indicando um aumento para 92,9% do PIB no segundo trimestre, mantendo a meta de redução para 87,5% em 2026. O Executivo justificou a subida da dívida com depósitos, enquanto o Governo justificou a variação do número de candidatos ao ensino superior face ao ano anterior. Adicionalmente, foi noticiado que a reforma das Finanças Locais responde a exigências de um Estado de proximidade.",
+     "noticias": 11
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
@@ -19,8 +19,8 @@
     },
     "internacionais": {
      "rotulo": "Internacional",
-     "texto": "Em Angola, não foram reportadas alterações na dívida pública. Em França, foi noticiado que Moçambique incorre em gastos anuais de 700 milhões de dólares na importação de cereais. Em Brasil, a dívida pública atingiu 82% do PIB, nível mais elevado desde a pandemia de Covid. Em Vietname, o Grupo da Indústria de Carvão e Minerais do Vietnã superou a meta de lucro nos primeiros sete meses, contribuindo com quase 16,9 trilhões de VND para o orçamento do Estado. Empresas com faturamento superior a 1 bilhão de VND foram notificadas para a utilização de faturas eletrónicas com códigos da autoridade tributária.",
-     "noticias": 10
+     "texto": "Em Angola, a relação dívida pública/PIB atinge 93,2%, segundo dados oficiais. Em França, Moçambique importa cereais no valor de 700 milhões de dólares anuais. No Brasil, a dívida pública atinge 82% do PIB, nível mais elevado desde a pandemia de Covid. Em Espanha, não foram reportadas notícias sobre finanças públicas. Em Vietname, o Grupo da Indústria de Carvão e Minerais contribuiu com quase 16,9 trilhões de VND para o orçamento do Estado nos primeiros sete meses, superando a meta estabelecida. Empresas com faturamento superior a 1 bilião de VND devem utilizar faturas eletrónicas com códigos da autoridade tributária, conforme estabelecido em regulamentos recentes.",
+     "noticias": 9
     }
    }
   }
