@@ -489,13 +489,47 @@ def ler_feed(url, tempo_limite=30):
         return resposta.read()
 
 
+def descodificar(bruto):
+    """Converte os bytes do feed em texto, respeitando a codificação declarada.
+
+    Nem todas as publicações publicam em UTF-8: algumas usam ISO-8859-1 ou
+    Windows-1252. Descodificar tudo como UTF-8 fazia aparecer losangos com ponto
+    de interrogação no lugar dos acentos — "incêndios" saía "inc?ndios".
+
+    A codificação vem declarada na primeira linha do XML. Não vindo, tenta-se
+    UTF-8 e recorre-se ao Windows-1252, que é o mais frequente na imprensa e
+    aceita qualquer byte sem falhar.
+    """
+    if not isinstance(bruto, bytes):
+        return bruto
+
+    declarada = None
+    achado = re.search(rb'encoding=["\']([\w-]+)["\']', bruto[:200], re.I)
+    if achado:
+        declarada = achado.group(1).decode("ascii", "ignore").lower()
+
+    tentativas = []
+    if declarada:
+        tentativas.append(declarada)
+    tentativas += ["utf-8", "cp1252", "iso-8859-1"]
+
+    for codificacao in tentativas:
+        try:
+            return bruto.decode(codificacao)
+        except (UnicodeDecodeError, LookupError):
+            continue
+
+    # Nenhuma serve por inteiro: fica a que menos estraga
+    return bruto.decode("cp1252", errors="replace")
+
+
 def preparar_xml(bruto):
     """Converte entidades HTML que o XML não reconhece (&nbsp;, &eacute;, ...).
 
     Os feeds noticiosos incluem com frequência entidades definidas em HTML mas não
     em XML, que fariam falhar a leitura de todo o feed.
     """
-    texto = bruto.decode("utf-8", errors="replace") if isinstance(bruto, bytes) else bruto
+    texto = descodificar(bruto)
     reservadas = {"amp", "lt", "gt", "quot", "apos"}
 
     def trocar(m):
