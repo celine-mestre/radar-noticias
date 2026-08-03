@@ -1176,6 +1176,18 @@ def ligacoes_da_recolha_anterior(caminho_json):
     return vistos
 
 
+# Caractere que substitui os bytes que não puderam ser descodificados. Aparecia
+# no lugar dos acentos nos feeds que não publicam em UTF-8, antes de a leitura
+# passar a respeitar a codificação declarada.
+SUBSTITUTO = "\ufffd"
+
+
+def texto_estragado(registo):
+    """Verdadeiro se o registo traz caracteres que não puderam ser lidos."""
+    return any(SUBSTITUTO in (registo.get(campo) or "")
+               for campo in ("titulo", "resumo", "fonte"))
+
+
 def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
     """Acumula as notícias dos últimos dias num único ficheiro.
 
@@ -1193,6 +1205,14 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
                 anteriores = json.load(origem).get("noticias", [])
         except (json.JSONDecodeError, OSError):
             anteriores = []
+
+    # Registos guardados antes de a leitura respeitar a codificação de cada feed
+    # trazem losangos no lugar dos acentos. Saem daqui: a recolha seguinte volta
+    # a trazê-los legíveis, e mantê-los duplicaria a mesma notícia.
+    estragados = sum(1 for r in anteriores if texto_estragado(r))
+    if estragados:
+        anteriores = [r for r in anteriores if not texto_estragado(r)]
+        print(f"arquivo: {estragados} registos com caracteres ilegíveis descartados")
 
     def registo(l):
         r = dict(zip(campos, l))
@@ -1302,6 +1322,8 @@ def guardar_mensal(pasta, linhas):
                         r = json.loads(linha)
                     except json.JSONDecodeError:
                         continue
+                    if texto_estragado(r):
+                        continue          # volta a entrar legível na recolha seguinte
                     anteriores.append(r)
                     vistos.add((r.get("area", ""), (r.get("titulo") or "").lower()))
 
@@ -1343,6 +1365,11 @@ def gravar_corpus(caminho, lidos, dias=7):
                 anteriores = json.load(origem).get("noticias", [])
         except (json.JSONDecodeError, OSError):
             anteriores = []
+
+    estragados = sum(1 for r in anteriores if texto_estragado(r))
+    if estragados:
+        anteriores = [r for r in anteriores if not texto_estragado(r)]
+        print(f"corpus: {estragados} registos com caracteres ilegíveis descartados")
 
     novos = []
     for n in lidos:
