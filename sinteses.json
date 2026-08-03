@@ -1,46 +1,26 @@
 {
- "gerado": "2026-08-03 14:54",
+ "gerado": "2026-08-03 18:08",
  "periodo": "72h",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "modo": "local",
  "areas": {
   "Finanças": {
-   "noticias": 87,
+   "noticias": 34,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A evolução da dívida pública para 92,9% do PIB no segundo trimestre foi objeto de divulgação governamental, reiterando a previsão de descida para 87,5% em 2026. A justificação da subida da dívida pública recaiu sobre a existência de depósitos, enquanto a gestão empresarial e a inteligência artificial foram temas de destaque para a administração pública. O Ministério das Finanças indicou desconhecimento quanto à indemnização de famílias afetadas em exames, e a execução orçamental da Madeira registou défice no primeiro semestre de 2026. A receita fiscal do Estado registou aumento de 1,9% até junho, atingindo 29.089 milhões de euros, e o défice do Estado reduziu-se para 212,6 milhões de euros.",
-     "noticias": 42
+     "texto": "O Governo justificou a subida da dívida pública para 92,9% do PIB no segundo trimestre com depósitos, reiterando a manutenção da meta de 87,5% em 2026, enquanto o Jornal de Negócios expressa preocupação com a seletividade da taxa sobre lucros extraordinários. Adicionalmente, a reforma das Finanças Locais é destacada como necessária para o Estado de proximidade, e Mário Campos assume a liderança do fisco após Helena Borges.",
+     "noticias": 12
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A conjuntura financeira nacional é marcada pelo aumento da dívida pública, atingindo 81,9% do Produto Interno Bruto, um patamar não observado há mais de cinco anos, e pelo consequente incremento do custo da dívida pública, que alcança o maior nível em quase uma década. A Autoridade Tributária procedeu a alterações nas regras de desembaraço aduaneiro e na tabela de taxas, enquanto a economia do Mar contribuiu com 20,1% para o Produto Interno Bruto em 2023. A gestão do vencimento de um quinto da dívida pública com juros flutuantes em 40% da conta representa um desafio acrescido para as contas do Governo.",
-     "noticias": 29
+     "texto": "Foram noticiadas alterações na gestão da dívida pública, com destaque para o aumento do seu peso no Produto Interno Bruto para 81,9%, e para a pressão acrescida sobre as contas do Governo face ao custo da dívida, que atinge o seu nível mais elevado em quase uma década. Adicionalmente, foi registada a emissão de notas fiscais com CBS e IBS, e a Autoridade Tributária procedeu à alteração das regras de desembaraço aduaneiro e da tabela de taxas. Em sede orçamental, a discussão sobre o desafio da dívida pública de R$ 10 trilhões e a gestão do vencimento de um quinto dela em 12 meses com juros flutuantes em 40% da conta, constitui um ponto central de atenção.",
+     "noticias": 12
     },
     "internacionais": {
      "rotulo": "Internacional",
-     "texto": "A área governativa das finanças foi marcada por um aumento significativo da dívida pública, atingindo 81,9% do PIB em Julho, um patamar não observado desde 2021. Adicionalmente, a relação entre a dívida pública e a dimensão da economia brasileira registou o maior nível desde a pandemia de Covid-19. O Governo brasileiro reportou um incremento da dívida pública superior a 10 pontos percentuais no período governativo de Lula. Em Moçambique, foi evidenciado um dispêndio anual de 700 milhões de dólares na importação de cereais.",
-     "noticias": 16
-    }
-   }
-  },
-  "Saúde": {
-   "noticias": 124,
-   "origens": {
-    "nacionais": {
-     "rotulo": "Portugal",
-     "texto": "A área governativa da saúde registou a abertura de uma unidade local de saúde com gestão privada no serviço nacional de saúde, em Torres Vedras, e o início de um curso pioneiro para técnicos de emergência pré-hospitalar, com arranque previsto para 2027. Adicionalmente, os Açores procederam ao investimento em dois novos robôs cirúrgicos para o Faial e a Terceira, enquanto o Governo adiou a entrada em vigor do novo sistema de gestão de cirurgias.",
-     "noticias": 20
-    },
-    "lusofonas": {
-     "rotulo": "Lusofonia",
-     "texto": "A área da saúde registou diversas iniciativas e desenvolvimentos, incluindo a oficialização de aposentações de servidores, a habilitação de unidades de saúde mental e a disponibilização de plataformas de apoio à saúde mental para jovens no âmbito do Meu SUS Digital. O Ministério da Saúde promoveu a segurança e o backup de dados, enquanto a Anvisa suspendeu medicamentos e dispositivos médicos por irregularidades. Foram noticiados aumentos de casos de sarampo e de afastamentos por saúde mental, com recomendações de vacinação e reforço de medidas preventivas. Adicionalmente, foram realizadas operações de fiscalização e apreensões de medicamentos ilegais, incluindo apreensões de valor significativo em diversas localidades.",
-     "noticias": 65
-    },
-    "internacionais": {
-     "rotulo": "Internacional",
-     "texto": "O Ministério da Saúde divulgou recomendações atualizadas de exercícios físicos para diversas faixas etárias e estabeleceu o tempo semanal recomendado para a prática de atividade física em adultos. Adicionalmente, foi publicado um manual com orientações sobre atividade física para a comunidade. As autoridades alertam para os riscos associados ao uso de medicamentos emagrecedores sem procedência e promovem a segurança alimentar. O Ministério da Saúde, em colaboração com a OMS, promove a cooperação em cuidados primários de saúde e prevenção de doenças.",
-     "noticias": 39
+     "texto": "A área das finanças registou, em diversos países, um aumento da dívida pública para níveis superiores aos observados durante a pandemia de Covid-19. Em Angola, a dívida pública atingiu 81,9% do PIB em julho, enquanto no Brasil atingiu 82% do PIB, representando o maior patamar desde o período pandémico. Adicionalmente, em Moçambique, foram registados gastos anuais de 700 milhões de dólares na importação de cereais.",
+     "noticias": 10
     }
    }
   }
