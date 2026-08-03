@@ -30,12 +30,12 @@ As propriedades que daí resultam, e que uma pesquisa não dá:
 | Fontes | Lista conhecida e estável |
 
 Nenhuma listagem, síntese ou exportação depende de serviços externos: tudo o que o
-painel mostra vem deste corpus. A **pesquisa aberta** é um botão que abre uma consulta
-ao Google Notícias em janela nova, sem trazer dados para o painel.
+painel mostra vem deste corpus. O que não estiver nas publicações subscritas, ou for
+anterior ao arquivo, não aparece — e alargar o âmbito é acrescentar feeds à lista.
 
 ### O percurso de uma notícia, passo a passo
 
-1. **06h00 de cada dia útil.** O GitHub executa `extrair_noticias.py --fontes`.
+1. **06h00 e 08h00, todos os dias.** O GitHub executa `extrair_noticias.py --fontes`.
    O programa está no repositório e é legível: a lista de publicações está na
    constante `FONTES`, as áreas e palavras-chave na constante `AREAS`, e a marcação
    na função `marcar_por_areas()`.
@@ -45,10 +45,12 @@ ao Google Notícias em janela nova, sem trazer dados para o painel.
    cada área no título e no resumo. Encontrando, marca o artigo com essa área e com
    as expressões que a acionaram. Um artigo pode ficar em mais de uma área.
 4. **Gravação.** Os artigos marcados são acumulados no `arquivo.json`, sem
-   repetições, mantendo 30 dias. Gravam-se também o retrato do dia e a série.
-5. **No painel.** Ao abrir uma área, o painel lê o `arquivo.json` e filtra-o pela
-   área, pelas palavras-chave selecionadas, pelo período, pela origem das fontes e
-   pelo tipo de fonte. Tudo local, em milissegundos.
+   repetições, mantendo sete dias. Gravam-se também o retrato do dia e a série
+   diária de contagens.
+5. **No painel.** O radar lê o `arquivo.json` e conta as notícias de cada área
+   dentro do período e da origem escolhidos. Ao abrir uma área, o mesmo ficheiro é
+   filtrado pelas palavras-chave selecionadas. As duas contagens seguem os mesmos
+   critérios, pelo que dizem sempre o mesmo número. Tudo local, em milissegundos.
 
 Nada disto passa por serviços intermediários nem depende da rede de quem consulta.
 
@@ -56,16 +58,35 @@ Nada disto passa por serviços intermediários nem depende da rede de quem consu
 
 ## O que o painel faz
 
-- Cartões por área governativa, com filtros por agrupamento temático.
-- Seleção de várias palavras-chave em simultâneo, e pesquisa por termo livre.
-- Filtros por janela temporal, origem das fontes (nacionais, internacionais, todas) e
-  tipo de fonte (imprensa, redes sociais, todas).
-- Leitura das notícias por ordem cronológica, com resumo, agrupadas por dia.
-- Síntese visual: distribuição por publicação, assuntos recorrentes, cobertura de cada
-  palavra-chave, distribuição por dia e evolução da área ao longo do tempo.
-- Exportação para Excel, com folha de notícias, folha de especificações e folha de
-  evolução.
-- Manual de utilização embutido no painel.
+**Entrada em radar.** As dezasseis áreas dispostas em círculo, ordenadas por volume de
+notícias, com a distância ao centro a significar quanto foi noticiado — quanto mais
+perto do centro, mais notícias. Ao centro, o total do período e da origem escolhidos.
+Em ecrãs estreitos o círculo dá lugar a uma grelha de cartões, que faz o mesmo trabalho.
+
+**Predefinições.** Últimos sete dias e imprensa de todas as origens. O período vai das
+24 horas aos sete dias que o arquivo guarda; a origem escolhe entre Portugal, lusofonia,
+internacional ou todas. Ambos valem para o radar e para as consultas.
+
+**Uma área abre-se num clique**, já com as notícias recolhidas. Dentro da janela:
+
+- Todas as palavras-chave da área à cabeça, selecionáveis uma a uma ou em conjunto, com
+  a consulta a refazer-se no momento; e uma caixa para pesquisa por termo livre.
+- Seletores de período, imprensa e **área**, este último para trocar de área sem fechar
+  a janela — útil para comparar duas áreas com os mesmos critérios.
+- Botão para **ampliar** a janela a quase todo o ecrã, e outro para voltar ao radar.
+- Notícias por ordem cronológica, agrupadas por dia, com hora, imagem quando a
+  publicação a fornece, resumo, publicação e etiqueta de origem.
+- Síntese com indicadores: distribuição por publicação, assuntos recorrentes, cobertura
+  de cada palavra-chave e evolução da área ao longo do tempo.
+- Impressão em PDF com cabeçalho institucional, e exportação para Excel com folha de
+  notícias, folha de especificações e folha de síntese.
+
+**Nada reduz sem explicar.** Sempre que a consulta deixa notícias de fora, o painel diz
+quantas e porquê: com outras palavras-chave da área, de outra origem, ou no arquivo mas
+fora do período.
+
+**Botão de ecrã inteiro** no canto superior direito, para apresentar em reunião, e
+**manual de utilização** embutido no próprio painel.
 
 ---
 
@@ -85,7 +106,7 @@ Nada disto passa por serviços intermediários nem depende da rede de quem consu
 | `subscritores.json` | Destinatários de cada área governativa. É aqui que se subscreve e cancela. |
 | `.github/workflows/relatorio-diario.yml` | Tarefa agendada que envia um relatório por área. |
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
-| `arquivo.json` | **Arquivo de 30 dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
+| `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
 | `historico.json` | **Série diária.** Notícias, notícias novas e publicações distintas, por dia e por área. Não contém notícias, apenas contagens. |
 
 Os três ficheiros de dados são gerados pela recolha. Não devem ser editados à mão.
@@ -138,7 +159,7 @@ comparáveis entre áreas. Fica de fora:
   fora da lista.
 - **Redes sociais** — as plataformas sociais não publicam feeds e estão fora do
   âmbito da aplicação, que é a imprensa.
-- **Períodos anteriores ao arquivo** — que guarda 30 dias, valor definido na recolha.
+- **Períodos anteriores ao arquivo** — que guarda sete dias, valor definido na recolha.
 
 Alargar o âmbito é acrescentar feeds à lista — e passa a valer na recolha seguinte.
 

@@ -1766,26 +1766,28 @@ const MANUAL = [
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida, e não por operadores de pesquisa — o que a torna exata e verificável.</dd>
     </dl>` },
 
-  { n:"3", titulo:"Detalhe de uma área", cor:"var(--dourado)", icone:"lupa", corpo:`
+  { n:"3", titulo:"Escolher o que ver", cor:"var(--dourado)", icone:"lupa", corpo:`
+    <p>Aberta uma área, três controlos decidem o que a lista mostra. Todos podem ser combinados e qualquer alteração refaz a recolha no momento.</p>
     <dl>
-      <dt>Palavras-chave</dt><dd>Clicar numa delas pesquisa apenas esse termo e a etiqueta fica marcada.</dd>
-      <dt>Pesquisa específica</dt><dd>Para o que as palavras-chave não cobrem: uma entidade, um diploma, um nome próprio. Aceita aspas para expressão exata.</dd>
-      <dt>Consulta</dt><dd>Mostra o que é efetivamente enviado ao serviço, com as expressões ligadas por OR e as exclusões.</dd>
+      <dt>Palavras-chave</dt><dd>À cabeça da janela, todas as expressões da área. Clicar numa restringe a lista a essa; clicar em várias soma-as, e uma notícia entra se satisfizer qualquer uma delas. <strong>Todas as palavras-chave</strong>, no rodapé, repõe a área completa.</dd>
+      <dt>Pesquisa por termo</dt><dd>A caixa à direita, para o que as palavras-chave não cobrem: uma entidade, um diploma, um nome próprio. Prima Enter. Substitui a seleção de palavras-chave enquanto estiver ativa.</dd>
+      <dt>Período, imprensa e área</dt><dd>Na barra por baixo. O período vai das 24 horas aos sete dias que o arquivo guarda; a imprensa escolhe entre Portugal, lusofonia, internacional ou todas; e o seletor de área troca de área sem fechar a janela, mantendo tudo o resto. <strong>Repor predefinições</strong> volta a sete dias e todas as origens.</dd>
     </dl>
-    <p class="man-aviso">A exportação segue sempre a consulta ativa: se clicou numa palavra-chave, exporta só essa; caso contrário, exporta a área completa.</p>` },
+    <p class="man-aviso">Quando alguma coisa fica de fora, o painel di-lo por baixo da contagem e diz quanto: quantas notícias da área têm outras palavras-chave, quantas são de outra origem, e quantas existem no arquivo fora do período escolhido. Nunca reduz sem explicar.</p>` },
+
 
   { n:"4", titulo:"Recolher e exportar", cor:"var(--verde)", icone:"descarregar", corpo:`
-    <p>Clicar em <strong>Visualizar no painel</strong> recolhe e apresenta logo as notícias, por ordem cronológica e com resumo. Em cima, o separador alterna entre <strong>Notícias</strong> e <strong>Síntese</strong>, e há três ações: recolher de novo, <strong>Imprimir</strong> e <strong>Excel</strong>.</p>
+    <p>Aberta a área, as notícias são apresentadas por ordem cronológica, com hora, imagem quando a publicação a fornece, resumo, publicação e etiqueta de origem. Em cima, o separador alterna entre <strong>Notícias</strong> e <strong>Síntese</strong>, e há três ações: recolher de novo, <strong>Imprimir</strong> e <strong>Excel</strong>.</p>
     <p>A recolha procura por esta ordem:</p>
     <dl>
       <dt>Arquivo de sete dias</dt><dd>O corpus próprio, construído todas as manhãs a partir dos feeds das publicações. É onde quase todas as consultas são respondidas, em milissegundos e sem depender da rede.</dd>
       <dt>Retrato do dia</dt><dd>O que a última recolha trouxe, usado quando o arquivo não está disponível.</dd>
 
     </dl>
-    <p class="man-aviso">A etiqueta ao lado da contagem diz <em>onde</em> as notícias foram procuradas — “arquivo de 7 dias”, “recolha agendada” ou o nome do serviço. O período indicado antes é o filtro que lhes foi <em>aplicado</em>. São coisas distintas: o arquivo cobre sete dias, e dele extraem-se as das últimas 24 horas quando é essa a janela escolhida.</p>
+    <p class="man-aviso">A etiqueta ao lado da contagem diz <em>onde</em> as notícias foram procuradas — “arquivo de 7 dias” ou “recolha agendada”. O período indicado antes é o filtro que lhes foi <em>aplicado</em>. São coisas distintas: o arquivo cobre sete dias, e dele extraem-se as das últimas 24 horas quando é essa a janela escolhida.</p>
     <p><strong>Imprimir</strong> gera uma folha com cabeçalho institucional, os critérios da consulta e a lista em tabela — pronta para anexar a uma nota.</p>
     <p><strong>Ler notícias</strong> apresenta a lista por ordem cronológica, da mais recente para a mais antiga — a ordenação que o serviço não dá.</p>
-    <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, as exclusões, a consulta enviada e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
+    <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, a origem das fontes, as palavras-chave da consulta e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
 
   { n:"5", titulo:"Síntese e evolução", cor:"var(--teal)", icone:"grafico", corpo:`
     <dl>
@@ -2618,8 +2620,8 @@ function confirmaTermos(itens){
     const texto = it._b || simplificar((it.titulo || "") + " " + (it.resumo || ""));
     return alvos.some(t => contemExpressao(texto, t, it.titulo));
   });
-  /* Só se conta como "retirada" quando o utilizador pediu um termo. Sem termo
-     pedido, o que sai é ruído do serviço externo e é descartado em silêncio —
+  /* Só se conta como "retirada" quando há termo ou palavras-chave escolhidas.
+     Sem escolha, o que sai é ruído de marcação antiga, descartado em silêncio —
      como as plataformas sociais. */
   return { itens: bons, fora: consultaAtiva.termos ? itens.length - bons.length : 0 };
 }
