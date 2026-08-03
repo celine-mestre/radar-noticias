@@ -1553,7 +1553,13 @@ function abrirExportacao(id){
     if(sel) sel.value = periodo;
     document.querySelectorAll("#filtroFontes button")
       .forEach(x => x.classList.toggle("ativo", x.dataset.fonte === filtroFontes));
+    /* Mudar o período ou a origem aqui dentro altera o que o radar deve contar:
+       sem isto, o painel por trás ficava a mostrar os números anteriores. */
+    limparContagens();
+    desenharRadar();
+    const amplo = $("#modal").classList.contains("amplo");
     abrirExportacao(a.id);
+    if(amplo) $("#modal").classList.add("amplo");
   };
   $("#critPeriodo").addEventListener("change", e => { periodo = e.target.value; aplicar(); });
   $("#critFontes").addEventListener("change", e => { filtroFontes = e.target.value; aplicar(); });
@@ -3044,23 +3050,32 @@ function descarregarXLSX(){
 }
 
 
-function mostrarEstadoRecolha(origem, retiradas){
+async function mostrarEstadoRecolha(origem, retiradas){
   retiradas = retiradas || { origem:0, data:0, termo:0 };
   const estado = $("#expEstado");
   if(!estado) return;
 
+  /* As contagens por área são refeitas quando o período ou a origem mudam.
+     Sem esperar por elas, a nota comparava o resultado novo com um total
+     antigo e anunciava um número errado. */
+  await apurarContagens();
+
   const foraDaJanela = retiradas.data < 0;
   const partes = [];
-  /* A mesma verificação serve dois casos que a pessoa vive de maneira diferente:
-     escolher palavras-chave da área, ou escrever um termo na caixa. A frase tem
-     de dizer qual deles é, ou fala de uma pesquisa que ninguém fez. */
-  if(retiradas.termo){
+  /* Quando há palavras-chave escolhidas ou um termo pesquisado, o que interessa
+     saber é quantas notícias da área ficaram de fora por causa dessa escolha —
+     não quantas caíram na última verificação interna. A conta faz-se contra o
+     total da área no mesmo período e origem, que é o número do radar. */
+  const totalDaArea = (contagens && contagens.por && consultaAtiva)
+    ? (contagens.por[consultaAtiva.area.nome] || 0) : 0;
+  const porEscolha = (consultaAtiva && consultaAtiva.termos && totalDaArea)
+    ? Math.max(0, totalDaArea - recolha.length) : 0;
+
+  if(porEscolha){
     const sel = document.querySelectorAll(".chip.sel[data-termo]").length;
-    const livre = consultaAtiva && consultaAtiva.termos && !sel;
-    partes.push(livre
-      ? `${retiradas.termo} sem o termo pesquisado`
-      : `${retiradas.termo} sem ${sel === 1 ? "a palavra-chave escolhida"
-                                            : "nenhuma das palavras-chave escolhidas"}`);
+    partes.push(sel
+      ? `${porEscolha} com outras palavras-chave da área`
+      : `${porEscolha} sem o termo pesquisado`);
   }
   /* A frase tinha ficado presa ao tempo em que só havia "nacionais": agora
      nomeia a origem que está escolhida. */
@@ -3069,8 +3084,8 @@ function mostrarEstadoRecolha(origem, retiradas){
                    internacionais:"internacional" }[filtroFontes] || "escolhida";
     partes.push(`${retiradas.origem} de fora da imprensa ${onde}`);
   }
-  if(retiradas.data > 0) partes.push(`${retiradas.data} fora do período`);
-  const fora = retiradas.termo + retiradas.origem + retiradas.data;
+
+  const fora = porEscolha + retiradas.origem;
 
   const barra = "";
 
@@ -3081,7 +3096,15 @@ function mostrarEstadoRecolha(origem, retiradas){
     notas.push(`O arquivo cobre ${meses >= 2 ? meses + " meses" : diasArquivo + " dias"} — é tudo o que o arquivo guarda.`);
   }
   if(foraDaJanela) notas.push(`<span style="color:var(--dourado)">Publicadas antes de ${ROTULO_PERIODO[periodo]} — datadas pela indexação do serviço. Apresentadas mesmo assim.</span>`);
-  if(fora) notas.push(`Foram retiradas ${fora}: ${partes.join(", ")}.`);
+  if(fora) notas.push(
+    `A área tem mais ${fora} ${fora === 1 ? "notícia" : "notícias"} neste período: ${partes.join(", ")}.`);
+
+  /* O que está fora da janela temporal é outra coisa e merece frase própria:
+     dizer "tem mais 3 no período: 3 fora do período" seria contradizer-se. */
+  if(retiradas.data > 0) notas.push(
+    `Há ainda ${retiradas.data} ${retiradas.data === 1 ? "notícia" : "notícias"} `
+    + `no arquivo fora ${["24h","48h","72h"].includes(periodo) ? "das" : "dos"} `
+    + `${ROTULO_PERIODO[periodo].replace("últimas ", "").replace("últimos ", "")}.`);
 
   if(recolha.length){
     estado.innerHTML = notas.length ? `<div class="res-nota">${notas.join("<br>")}${barra}</div>` : "";
