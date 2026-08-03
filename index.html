@@ -1774,7 +1774,7 @@ const MANUAL = [
     <p>Aberta uma área, três controlos decidem o que a lista mostra. Todos podem ser combinados e qualquer alteração refaz a recolha no momento.</p>
     <dl>
       <dt>Palavras-chave</dt><dd>À cabeça da janela, todas as expressões da área. Clicar numa restringe a lista a essa; clicar em várias soma-as, e uma notícia entra se satisfizer qualquer uma delas. <strong>Todas as palavras-chave</strong>, no rodapé, repõe a área completa.</dd>
-      <dt>Pesquisa por termo</dt><dd>A caixa à direita, para o que as palavras-chave não cobrem: uma entidade, um diploma, um nome próprio. Prima Enter. Substitui a seleção de palavras-chave enquanto estiver ativa.</dd>
+      <dt>Pesquisa por termo</dt><dd>A caixa à direita, para o que as palavras-chave não cobrem: uma entidade, um acontecimento, um nome próprio. Prima Enter. <strong>Procura em toda a imprensa recolhida</strong>, e não apenas nas notícias que as palavras-chave da área apanharam — é por isso que encontra matéria que a área não classificou. A etiqueta ao lado da contagem passa a dizer “imprensa recolhida”. À primeira pesquisa demora alguns segundos, enquanto carrega esse corpus.</dd>
       <dt>Período, imprensa e área</dt><dd>Na barra por baixo. O período vai das 24 horas aos sete dias que o arquivo guarda; a imprensa escolhe entre Portugal, lusofonia, internacional ou todas; e o seletor de área troca de área sem fechar a janela, mantendo tudo o resto. <strong>Repor predefinições</strong> volta a sete dias e todas as origens.</dd>
     </dl>
     <p class="man-aviso">Quando alguma coisa fica de fora, o painel di-lo por baixo da contagem e diz quanto: quantas notícias da área têm outras palavras-chave, quantas são de outra origem, e quantas existem no arquivo fora do período escolhido. Nunca reduz sem explicar.</p>` },
@@ -2342,11 +2342,12 @@ let consultaAtiva = null;  // { area, q, rotulo } — consulta em curso no detal
 function assinaturaConsulta(){
   if(!consultaAtiva) return "";
   return [consultaAtiva.area.id, (consultaAtiva.termos || []).join("|"),
-          periodo, filtroFontes].join("::");
+          consultaAtiva.livre ? "livre" : "", periodo, filtroFontes].join("::");
 }
 
-function definirConsulta(area, q, rotulo, termos){
-  consultaAtiva = { area, q, rotulo, termos: termos && termos.length ? termos : null };
+function definirConsulta(area, q, rotulo, termos, livre){
+  consultaAtiva = { area, q, rotulo, termos: termos && termos.length ? termos : null,
+                    livre: livre || null };
   recolha = [];
   assinaturaRecolha = "";
 }
@@ -2449,6 +2450,52 @@ async function carregarArquivo(){
 }
 
 /* Notícias do arquivo que servem a consulta em curso */
+/* Corpus de imprensa em bruto: tudo o que os feeds trouxeram, marcado ou não.
+   É pesado e só serve à pesquisa por termo, pelo que se carrega à primeira vez
+   que alguém pesquisa e não no arranque. */
+let corpusLivre = null;
+
+async function carregarCorpus(){
+  if(corpusLivre !== null) return corpusLivre;
+  for(const base of enderecosDados()){
+    try{
+      const r = await fetch(base.replace("noticias.json", "corpus.json"));
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(d && Array.isArray(d.noticias)){
+        d.noticias.forEach(n => { if(!n._b) n._b = simplificar((n.titulo || "") + " " + (n.resumo || "")); });
+        corpusLivre = d;
+        return corpusLivre;
+      }
+    }catch(e){ /* segue */ }
+  }
+  corpusLivre = { noticias: [], dias: 0 };
+  return corpusLivre;
+}
+
+/* Pesquisa por termo em toda a imprensa recolhida, sem se limitar às notícias
+   que as palavras-chave da área apanharam. */
+async function doCorpus(termo){
+  const estado = $("#expEstado");
+  if(corpusLivre === null && estado){
+    estado.innerHTML = `<div class="res-nota">A carregar a imprensa recolhida dos
+      últimos dias — só é preciso à primeira pesquisa.</div>`;
+  }
+  const c = await carregarCorpus();
+  if(!c.noticias.length) return null;
+
+  const alvo = simplificar(termo);
+  const achadas = c.noticias.filter(n => contemExpressao(n._b, termo, n.titulo));
+  return {
+    itens: achadas.map(n => Object.assign({}, n, {
+      area: consultaAtiva.area.nome, grupo: consultaAtiva.area.grupo,
+      palavras: [termo], consulta: termo,
+    })),
+    origem: `imprensa recolhida · ${c.dias} dias`,
+    dias: c.dias,
+  };
+}
+
 async function doArquivo(){
   const a = await carregarArquivo();
   diasArquivo = a.dias || 0;
@@ -2619,6 +2666,8 @@ function confirmaTermos(itens){
      notícia marcada por uma expressão entretanto retirada da lista deixa de
      pertencer à área. Sem isto, "área completa" dava mais notícias do que
      escolher todas as palavras-chave, o que não faz sentido nenhum. */
+  /* Na pesquisa por termo, o que confirma é o termo — as palavras-chave da área
+     não se aplicam, porque a procura é em toda a imprensa recolhida. */
   const alvos = consultaAtiva.termos || consultaAtiva.area.palavras;
   const bons = itens.filter(it => {
     const texto = it._b || simplificar((it.titulo || "") + " " + (it.resumo || ""));
@@ -2675,8 +2724,19 @@ async function recolherConsulta(){
   /* Tudo vem do corpus: o arquivo dos últimos dias, e o retrato do dia se aquele
      não estiver disponível. Não há consultas a serviços externos. */
   let r = null;
-  try{ r = await doArquivo(); }catch(e){ /* sem arquivo */ }
-  if(!valido()) return;
+
+  /* Pesquisa por termo: procura-se em toda a imprensa recolhida. Recair no
+     arquivo da área daria só o que as palavras-chave já tinham apanhado — que
+     é justamente o que a pesquisa livre existe para ultrapassar. */
+  if(consultaAtiva.livre){
+    try{ r = await doCorpus(consultaAtiva.livre); }catch(e){ /* sem corpus */ }
+    if(!valido()) return;
+  }
+
+  if(!r){
+    try{ r = await doArquivo(); }catch(e){ /* sem arquivo */ }
+    if(!valido()) return;
+  }
 
   if(!r || !r.itens.length){
     try{ r = await deDadosPublicados(); }catch(e){ /* sem retrato do dia */ }
@@ -3103,7 +3163,7 @@ async function mostrarEstadoRecolha(origem, retiradas){
      total da área no mesmo período e origem, que é o número do radar. */
   const totalDaArea = (contagens && contagens.por && consultaAtiva)
     ? (contagens.por[consultaAtiva.area.nome] || 0) : 0;
-  const porEscolha = (consultaAtiva && consultaAtiva.termos && totalDaArea)
+  const porEscolha = (consultaAtiva && consultaAtiva.termos && !consultaAtiva.livre && totalDaArea)
     ? Math.max(0, totalDaArea - recolha.length) : 0;
 
   if(porEscolha){
@@ -3204,7 +3264,7 @@ function pesquisaLivre(){
   const termo = (campo && campo.value || "").trim();
   if(!termo) { if(campo) campo.focus(); return; }
   const q = termo + sufixo();
-  if(consultaAtiva) definirConsulta(consultaAtiva.area, q, `“${termo}”`, [termo]);
+  if(consultaAtiva) definirConsulta(consultaAtiva.area, q, `“${termo}”`, [termo], termo);
   document.querySelectorAll(".chip[data-termo]").forEach(c => c.classList.remove("sel"));
   anunciarConsulta();
   /* A caixa passou a viver dentro da janela de resultados: escrever um termo

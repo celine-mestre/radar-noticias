@@ -108,6 +108,7 @@ fora do período.
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
 | `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
 | `historico.json` | **Série diária.** Por dia e por área: notícias, notícias novas, publicações distintas, repartição por origem e contagem de cada palavra-chave. Agregados, não notícias. |
+| `corpus.json` | **Imprensa em bruto, sete dias.** Todos os artigos lidos dos feeds, marcados ou não. Serve a pesquisa por termo livre; o painel só o carrega quando alguém pesquisa. |
 | `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente.** Um ficheiro comprimido por mês, com todas as notícias desse mês. Nada o lê no dia a dia. |
 
 Os três ficheiros de dados são gerados pela recolha. Não devem ser editados à mão.
@@ -377,6 +378,29 @@ python sintese_ia.py --local --dados arquivo.json --apenas "Finanças"   # ensai
 
 Sem modo local nem ponto de acesso, o programa não faz nada e a aplicação funciona como
 antes, apenas sem os parágrafos.
+
+---
+
+## Pesquisa por termo livre
+
+As palavras-chave definem o que cada área **classifica**. Um acontecimento que a
+imprensa noticie sem usar nenhuma dessas expressões não entra na área — foi o que
+sucedeu com a crise de Ceuta, noticiada em força sem que as expressões da Presidência a
+cobrissem.
+
+Para isso existe a caixa de **pesquisa por termo**, dentro da janela de uma área. Ao
+contrário da seleção de palavras-chave, procura no `corpus.json` — **todos os artigos
+lidos dos feeds nos últimos sete dias**, marcados ou não por qualquer área.
+
+É, portanto, pesquisa livre sobre imprensa em bruto, sem sair do corpus próprio: nenhum
+serviço externo é consultado, e o que se encontra continua a ser das 48 publicações
+subscritas.
+
+O ficheiro ronda os 7 MB com o volume atual. O painel só o carrega à primeira pesquisa
+da sessão, o que demora alguns segundos; daí em diante fica em memória.
+
+Quando os resultados vêm daqui, a etiqueta ao lado da contagem diz **"imprensa
+recolhida"** em vez de "arquivo de 7 dias".
 
 ---
 

@@ -677,6 +677,10 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
     """
     limite = datetime.now() - timedelta(days=dias)
     encontrados, lidos, falhas = {}, 0, []
+    # Todos os artigos lidos, marcados ou não: é este o corpus que a pesquisa
+    # por termo livre percorre. Sem ele, procurar "Ceuta" só encontraria o que
+    # já tivesse sido marcado por uma palavra-chave de área.
+    todos = {}
     lista = list(FONTES)
     if lusofonas:
         lista += FONTES_LUSOFONAS
@@ -697,6 +701,18 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         for it in itens:
             if it["data"] and it["data"] < limite:
                 continue
+
+            chave_geral = (it["titulo"] or "").lower()
+            if chave_geral and chave_geral not in todos:
+                todos[chave_geral] = {
+                    "data": it["data"],
+                    "fonte": it["fonte"] or nome_fonte,
+                    "dominio": it["dominio"] or dominio,
+                    "titulo": it["titulo"],
+                    "resumo": (it["resumo"] or "")[:240],
+                    "ligacao": it["ligacao"],
+                    "imagem": it.get("imagem", ""),
+                }
             for nome_area, grupo_nome, palavras in marcar_por_areas(it, alvo):
                 chave = (nome_area, it["titulo"].lower())
                 if chave in encontrados:
@@ -714,8 +730,9 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         if i < len(lista):
             time.sleep(pausa)
 
-    print(f"\n{lidos} artigos lidos · {len(encontrados)} marcados por área")
-    return list(encontrados.values()), falhas
+    print(f"\n{lidos} artigos lidos · {len(todos)} distintos · "
+          f"{len(encontrados)} marcados por área")
+    return list(encontrados.values()), falhas, list(todos.values())
 
 
 def recolher_palavras(periodo, alvo, pausa=1.0, teto=60):
@@ -903,6 +920,8 @@ def principal():
                     help="ficheiro JSON de série diária, atualizado a cada recolha")
     ap.add_argument("--arquivo", default=None,
                     help="ficheiro JSON com as notícias dos últimos dias, acumulado a cada recolha")
+    ap.add_argument("--corpus", default=None,
+                    help="ficheiro com todos os artigos lidos, para a pesquisa livre")
     ap.add_argument("--mensal", default=None,
                     help="pasta do arquivo permanente, um ficheiro comprimido por mês")
     ap.add_argument("--dias-arquivo", type=int, default=7,
@@ -927,7 +946,7 @@ def principal():
     if args.fontes:
         # Origem principal: os feeds das próprias publicações
         print("Leitura dos feeds das publicações:")
-        das_fontes, falhas = recolher_fontes(
+        das_fontes, falhas, todos_lidos = recolher_fontes(
             alvo, args.dias_arquivo,
             internacionais=not args.sem_internacionais,
             lusofonas=not args.sem_internacionais)
@@ -936,7 +955,7 @@ def principal():
                    n["titulo"], n["resumo"], n["ligacao"]] for n in das_fontes]
         linhas.sort(key=lambda l: (l[2] is None, l[2]), reverse=True)
     else:
-        # Origem alternativa: pesquisa no Google Notícias
+        todos_lidos = []
         linhas, falhas = recolher(args.periodo, args.area, so_nacionais)
         if not args.sem_resolver_ligacoes and linhas:
             linhas = resolver_ligacoes(linhas)
@@ -986,6 +1005,9 @@ def principal():
 
     if args.arquivo:
         atualizar_arquivo(args.arquivo, linhas, args.dias_arquivo, por_palavra)
+
+    if args.corpus and todos_lidos:
+        gravar_corpus(args.corpus, todos_lidos, args.dias_arquivo)
 
     if args.mensal:
         guardar_mensal(args.mensal, linhas)
@@ -1163,6 +1185,54 @@ def guardar_mensal(pasta, linhas):
         print(f"arquivo mensal {mes}: +{len(novas)} novas, "
               f"{len(juntas)} ao todo ({tamanho:.0f} KB)")
     return total
+
+
+def gravar_corpus(caminho, lidos, dias=7):
+    """Todos os artigos lidos dos feeds, marcados ou não, dos últimos dias.
+
+    É o que permite a pesquisa por termo livre encontrar matéria que nenhuma
+    palavra-chave de área apanhou — o caso de Ceuta, que era noticiado sem que
+    as expressões da Presidência o cobrissem.
+
+    Guarda-se sem área e sem palavras-chave: é imprensa em bruto, não corpus
+    classificado. O painel só o carrega quando alguém pesquisa por termo.
+    """
+    limite = (datetime.now() - timedelta(days=dias)).strftime("%Y-%m-%d")
+
+    anteriores = []
+    if os.path.exists(caminho):
+        try:
+            with open(caminho, encoding="utf-8") as origem:
+                anteriores = json.load(origem).get("noticias", [])
+        except (json.JSONDecodeError, OSError):
+            anteriores = []
+
+    novos = []
+    for n in lidos:
+        novos.append({
+            "data": n["data"].strftime("%Y-%m-%d %H:%M") if n["data"] else "",
+            "fonte": n["fonte"], "dominio": n["dominio"],
+            "titulo": n["titulo"], "resumo": n["resumo"],
+            "ligacao": n["ligacao"], "imagem": n.get("imagem", ""),
+        })
+
+    vistos, mantidos = set(), []
+    for n in novos + anteriores:
+        if not n.get("data") or n["data"][:10] < limite:
+            continue
+        chave = (n.get("titulo") or "").lower()
+        if chave in vistos:
+            continue
+        vistos.add(chave)
+        mantidos.append(n)
+
+    mantidos.sort(key=lambda n: n["data"], reverse=True)
+    with open(caminho, "w", encoding="utf-8") as destino:
+        json.dump({"dias": dias, "atualizado": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                   "noticias": mantidos}, destino, ensure_ascii=False, indent=1)
+
+    tamanho = os.path.getsize(caminho) / 1024 / 1024
+    print(f"corpus de {dias} dias: {len(mantidos)} artigos em {caminho} ({tamanho:.1f} MB)")
 
 
 def atualizar_historico(caminho, linhas, periodo, vistos=None):
