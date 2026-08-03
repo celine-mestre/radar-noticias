@@ -1642,7 +1642,10 @@ function abrirExportacao(id){
     mostrarVista(b.dataset.vista);
   });
 
-  if(recolha.length) apresentarResultados("recolha anterior");
+  /* Reabrindo a janela com a mesma consulta, reaproveita-se o que já foi lido —
+     mas a etiqueta deve continuar a dizer de onde vieram os dados, e não que
+     foram reaproveitados. */
+  if(recolha.length) apresentarResultados(origemRecolha || "arquivo de 7 dias");
   else recolherConsulta();
 }
 
@@ -2010,7 +2013,7 @@ function blocoEvolucao(area){
     <div class="bloco">
       <h4>Evolução da área</h4>
       <div class="evo-topo">
-        <div><strong>${valor(ultimo)}</strong><span>${temNovas ? "notícias novas no último dia" : "notícias no último dia"}</span></div>
+        <div><strong>${valor(ultimo)}</strong><span>${temNovas ? "publicadas no último dia" : "notícias no último dia"}</span></div>
         <div><strong>${media.toFixed(1).replace(".", ",")}</strong><span>média dos ${anteriores.length} dias anteriores</span></div>
         <div><strong style="color:${corVar}">${sinal}${variacao}%</strong><span>face a essa média</span></div>
       </div>
@@ -2718,7 +2721,10 @@ function confirmaTermos(itens){
   return { itens: bons, fora: consultaAtiva.termos ? itens.length - bons.length : 0 };
 }
 
+let origemRecolha = "";
+
 function assentarRecolha(itens, origem){
+  origemRecolha = origem;
   const confirmados = confirmaTermos(itens);
   itens = confirmados.itens;
   const total = itens.length;

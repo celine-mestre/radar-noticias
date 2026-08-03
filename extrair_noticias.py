@@ -1238,9 +1238,14 @@ def gravar_corpus(caminho, lidos, dias=7):
 def atualizar_historico(caminho, linhas, periodo, vistos=None):
     """Acrescenta à série diária o retrato de hoje, por área governativa.
 
-    Guarda apenas agregados — notícias recolhidas, notícias novas face à recolha
-    anterior e publicações distintas. É deliberadamente pequeno: cresce cerca de
-    2 KB por dia e pode ser lido de uma vez pelo painel.
+    Guarda apenas agregados — notícias recolhidas, notícias publicadas nesse dia
+    e publicações distintas. É deliberadamente pequeno: cresce cerca de 2 KB por
+    dia e pode ser lido de uma vez pelo painel.
+
+    A contagem do que é próprio do dia usa a DATA DE PUBLICAÇÃO, e não a
+    comparação com a recolha anterior. Com recolhas de duas em duas horas, a
+    segunda recolha do dia quase nada traria de novo face à primeira, e a série
+    passava a mostrar zeros — foi o que sucedeu.
     """
     vistos = vistos or {}
     hoje = datetime.now().strftime("%Y-%m-%d")
@@ -1263,7 +1268,7 @@ def atualizar_historico(caminho, linhas, periodo, vistos=None):
             "palavras": {},
         })
         registo["noticias"] += 1
-        if l[7] and l[7] not in vistos.get(l[0], set()):
+        if l[2] and l[2].strftime("%Y-%m-%d") == hoje:
             registo["novas"] += 1
         if l[3]:
             registo["fontes"].add(l[3])
