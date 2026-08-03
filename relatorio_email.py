@@ -22,6 +22,37 @@ import re
 import sys
 import unicodedata
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+
+# ── HORAS ────────────────────────────────────────────────────────────────────
+# Tudo o que este programa escreve fica na hora de Lisboa. São dois problemas
+# distintos e ambos davam incoerências visíveis no painel:
+#
+#  1. O servidor do GitHub corre em UTC. Escrevendo agora_lisboa(), a hora da
+#     recolha saía uma hora atrás da real no horário de verão.
+#  2. Os feeds datam os artigos no seu próprio fuso. Retirar o fuso sem
+#     converter — que era o que se fazia — deixava a hora de Berlim ou de
+#     Bruxelas como se fosse a nossa, e apareciam notícias "do futuro".
+#
+# Converte-se tudo para Europa/Lisboa e só depois se retira o fuso, para que as
+# comparações e o que se apresenta digam respeito ao mesmo relógio.
+LISBOA = ZoneInfo("Europe/Lisbon")
+
+
+def agora_lisboa():
+    """Hora de Lisboa, sem fuso, para gravar e comparar."""
+    return datetime.now(LISBOA).replace(tzinfo=None)
+
+
+def para_lisboa(momento):
+    """Converte uma data com fuso para hora de Lisboa, sem fuso."""
+    if momento is None:
+        return None
+    if momento.tzinfo is None:
+        return momento
+    return momento.astimezone(LISBOA).replace(tzinfo=None)
+
+
 
 VERDE, AZUL, DOURADO, TEAL, VERMELHO = "#0E7433", "#2B5683", "#BE9C54", "#266B73", "#D02117"
 
@@ -114,7 +145,7 @@ def filtrar(noticias, area, periodo, origens):
     """`origens` é o conjunto de origens a manter, ou None para todas."""
     limite = None
     if periodo in HORAS:
-        limite = datetime.now() - timedelta(hours=HORAS[periodo])
+        limite = agora_lisboa() - timedelta(hours=HORAS[periodo])
 
     saida = []
     for n in noticias:
@@ -254,7 +285,7 @@ def bloco_area(nome, noticias, cor, sintese=None, escrita_em="", origens=None):
         dia = (n.get("data") or "")[:10] or "sem data"
         por_dia.setdefault(dia, []).append(n)
 
-    hoje = datetime.now().strftime("%Y-%m-%d")
+    hoje = agora_lisboa().strftime("%Y-%m-%d")
 
     def rotulo(d):
         if d == hoje:
@@ -361,7 +392,7 @@ def carregar_sinteses(caminho="sinteses.json", periodo=""):
     # às 23h e um relatório enviado à 01h estão a duas horas de distância, mas
     # em dias diferentes — e a regra anterior descartava-a por isso.
     try:
-        idade = (datetime.now() - datetime.strptime(gerado[:16], "%Y-%m-%d %H:%M"))
+        idade = (agora_lisboa() - datetime.strptime(gerado[:16], "%Y-%m-%d %H:%M"))
         horas = idade.total_seconds() / 3600
     except (ValueError, TypeError):
         print("Síntese ignorada: data de geração ilegível.")
@@ -378,7 +409,7 @@ def carregar_sinteses(caminho="sinteses.json", periodo=""):
 
 
 def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None, escrita_em=""):
-    agora = datetime.now()
+    agora = agora_lisboa()
     data_extenso = f"{agora.day} de {MESES[agora.month - 1]} de {agora.year}"
 
     seccoes, total = [], 0
@@ -469,7 +500,7 @@ def um_por_area(dados, areas, args, origens):
             subscritores = json.load(origem).get("areas", {})
 
     os.makedirs(args.pasta, exist_ok=True)
-    agora = datetime.now()
+    agora = agora_lisboa()
     manifesto = []
 
     # O modelo do repositório traz as áreas todas com listas vazias: só se
@@ -521,7 +552,7 @@ def um_por_area(dados, areas, args, origens):
 
 def versao_texto(dados, areas, periodo, origens, painel, sinteses=None):
     """A mesma informação em texto simples, para clientes que bloqueiam HTML."""
-    agora = datetime.now()
+    agora = agora_lisboa()
     linhas = ["SECRETARIA-GERAL DO GOVERNO",
               "Radar de Notícias por Área Governativa",
               f"{agora.day} de {MESES[agora.month - 1]} de {agora.year} · "
@@ -629,7 +660,7 @@ def principal():
     # À segunda-feira a janela alarga para 72 horas: de outro modo, o que foi
     # notícia ao sábado e ao domingo nunca chegaria a ser relatado.
     if args.periodo == "auto":
-        args.periodo = "72h" if datetime.now().weekday() == 0 else "24h"
+        args.periodo = "72h" if agora_lisboa().weekday() == 0 else "24h"
         print(f"Janela automática: {ROTULO_PERIODO[args.periodo]}")
 
     dados = carregar(args.dados)
@@ -658,7 +689,7 @@ def principal():
         destino.write(html)
 
     total = sum(len(filtrar(dados, a, args.periodo, origens)) for a in areas)
-    agora = datetime.now()
+    agora = agora_lisboa()
     rotulo_areas = areas[0] if len(areas) == 1 else f"{len(areas)} áreas"
     assunto = (f"Radar de Notícias · {rotulo_areas} · "
                f"{agora.day} de {MESES[agora.month - 1]} · {total} notícias")

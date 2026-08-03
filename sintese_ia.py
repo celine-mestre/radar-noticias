@@ -30,6 +30,37 @@ import time
 import urllib.request
 import unicodedata
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+
+# ── HORAS ────────────────────────────────────────────────────────────────────
+# Tudo o que este programa escreve fica na hora de Lisboa. São dois problemas
+# distintos e ambos davam incoerências visíveis no painel:
+#
+#  1. O servidor do GitHub corre em UTC. Escrevendo agora_lisboa(), a hora da
+#     recolha saía uma hora atrás da real no horário de verão.
+#  2. Os feeds datam os artigos no seu próprio fuso. Retirar o fuso sem
+#     converter — que era o que se fazia — deixava a hora de Berlim ou de
+#     Bruxelas como se fosse a nossa, e apareciam notícias "do futuro".
+#
+# Converte-se tudo para Europa/Lisboa e só depois se retira o fuso, para que as
+# comparações e o que se apresenta digam respeito ao mesmo relógio.
+LISBOA = ZoneInfo("Europe/Lisbon")
+
+
+def agora_lisboa():
+    """Hora de Lisboa, sem fuso, para gravar e comparar."""
+    return datetime.now(LISBOA).replace(tzinfo=None)
+
+
+def para_lisboa(momento):
+    """Converte uma data com fuso para hora de Lisboa, sem fuso."""
+    if momento is None:
+        return None
+    if momento.tzinfo is None:
+        return momento
+    return momento.astimezone(LISBOA).replace(tzinfo=None)
+
+
 
 
 def _sem_acentos(t):
@@ -102,7 +133,7 @@ def origem_da_fonte(n):
 
 
 def do_periodo(noticias, area, periodo):
-    limite = datetime.now() - timedelta(hours=HORAS.get(periodo, 24))
+    limite = agora_lisboa() - timedelta(hours=HORAS.get(periodo, 24))
     saida = []
     for n in noticias:
         if n.get("area") != area or not n.get("data"):
@@ -251,7 +282,7 @@ def principal():
 
     # A síntese acompanha a janela do relatório que a vai apresentar
     if args.periodo == "auto":
-        args.periodo = "72h" if datetime.now().weekday() == 0 else "24h"
+        args.periodo = "72h" if agora_lisboa().weekday() == 0 else "24h"
         print(f"Janela automática: {args.periodo}")
 
     if not os.path.exists(args.dados):
@@ -275,7 +306,7 @@ def principal():
         areas = escolhidas
         print(f"Ensaio limitado a: {', '.join(areas)}")
 
-    agora = datetime.now()
+    agora = agora_lisboa()
     resultado = {"gerado": agora.strftime("%Y-%m-%d %H:%M"),
                  "periodo": args.periodo, "modelo": MODELO,
                  "modo": "local" if args.local else "serviço", "areas": {}}

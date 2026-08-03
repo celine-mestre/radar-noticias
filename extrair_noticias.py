@@ -25,6 +25,37 @@ import re
 import sys
 import time
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+
+# ── HORAS ────────────────────────────────────────────────────────────────────
+# Tudo o que este programa escreve fica na hora de Lisboa. São dois problemas
+# distintos e ambos davam incoerências visíveis no painel:
+#
+#  1. O servidor do GitHub corre em UTC. Escrevendo agora_lisboa(), a hora da
+#     recolha saía uma hora atrás da real no horário de verão.
+#  2. Os feeds datam os artigos no seu próprio fuso. Retirar o fuso sem
+#     converter — que era o que se fazia — deixava a hora de Berlim ou de
+#     Bruxelas como se fosse a nossa, e apareciam notícias "do futuro".
+#
+# Converte-se tudo para Europa/Lisboa e só depois se retira o fuso, para que as
+# comparações e o que se apresenta digam respeito ao mesmo relógio.
+LISBOA = ZoneInfo("Europe/Lisbon")
+
+
+def agora_lisboa():
+    """Hora de Lisboa, sem fuso, para gravar e comparar."""
+    return datetime.now(LISBOA).replace(tzinfo=None)
+
+
+def para_lisboa(momento):
+    """Converte uma data com fuso para hora de Lisboa, sem fuso."""
+    if momento is None:
+        return None
+    if momento.tzinfo is None:
+        return momento
+    return momento.astimezone(LISBOA).replace(tzinfo=None)
+
+
 from email.utils import parsedate_to_datetime
 from html.entities import name2codepoint
 from base64 import urlsafe_b64decode
@@ -662,7 +693,7 @@ def extrair_itens(xml_bruto):
         bruta = item.findtext("pubDate") or item.findtext("published") or item.findtext("updated")
         if bruta:
             try:
-                data = parsedate_to_datetime(bruta).replace(tzinfo=None)
+                data = para_lisboa(parsedate_to_datetime(bruta))
             except (TypeError, ValueError):
                 data = None
 
@@ -812,7 +843,7 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
     Um artigo é recolhido por ser de uma fonte conhecida, e não por corresponder
     a uma pesquisa.
     """
-    limite = datetime.now() - timedelta(days=dias)
+    limite = agora_lisboa() - timedelta(days=dias)
     encontrados, lidos, falhas = {}, 0, []
     # Todos os artigos lidos, marcados ou não: é este o corpus que a pesquisa
     # por termo livre percorre. Sem ele, procurar "Ceuta" só encontraria o que
@@ -997,7 +1028,7 @@ def gravar(linhas, falhas, caminho, periodo, so_nacionais):
     wr["A1"].font = fonte(size=13, bold=True, color=AZUL)
 
     contexto = [
-        ("Data da recolha", datetime.now().strftime("%Y-%m-%d %H:%M")),
+        ("Data da recolha", agora_lisboa().strftime("%Y-%m-%d %H:%M")),
         ("Janela temporal", periodo or "sem limite"),
         ("Restrição a fontes nacionais", "sim" if so_nacionais else "não"),
         ("Notícias recolhidas", len(linhas)),
@@ -1074,7 +1105,7 @@ def principal():
     if args.area and args.area not in {a[0] for a in AREAS}:
         sys.exit(f"Área desconhecida: {args.area}")
 
-    saida = args.saida or f"radar_noticias_{datetime.now():%Y%m%d_%H%M}.xlsx"
+    saida = args.saida or f"radar_noticias_{agora_lisboa():%Y%m%d_%H%M}.xlsx"
     so_nacionais = not args.todas_as_fontes
 
     alvo = [a for a in AREAS if args.area is None or a[0] == args.area]
@@ -1111,7 +1142,7 @@ def principal():
             noticias.append(registo)
         MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
                  "agosto", "setembro", "outubro", "novembro", "dezembro"]
-        agora = datetime.now()
+        agora = agora_lisboa()
         if args.fontes:
             for registo, n in zip(noticias, das_fontes):
                 registo["palavras"] = sorted(n["palavras"])
@@ -1196,7 +1227,7 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
     interrogar o serviço, filtra este arquivo.
     """
     campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "ligacao"]
-    limite = (datetime.now() - timedelta(days=dias)).strftime("%Y-%m-%d")
+    limite = (agora_lisboa() - timedelta(days=dias)).strftime("%Y-%m-%d")
 
     anteriores = []
     if os.path.exists(caminho):
@@ -1253,7 +1284,7 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
 
     mantidas.sort(key=lambda n: n.get("data", ""), reverse=True)
     with open(caminho, "w", encoding="utf-8") as destino:
-        json.dump({"dias": dias, "atualizado": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        json.dump({"dias": dias, "atualizado": agora_lisboa().strftime("%Y-%m-%d %H:%M"),
                    "noticias": mantidas}, destino, ensure_ascii=False)
     print(f"arquivo de {dias} dias: {len(mantidas)} notícias em {caminho}")
 
@@ -1356,7 +1387,7 @@ def gravar_corpus(caminho, lidos, dias=7):
     Guarda-se sem área e sem palavras-chave: é imprensa em bruto, não corpus
     classificado. O painel só o carrega quando alguém pesquisa por termo.
     """
-    limite = (datetime.now() - timedelta(days=dias)).strftime("%Y-%m-%d")
+    limite = (agora_lisboa() - timedelta(days=dias)).strftime("%Y-%m-%d")
 
     anteriores = []
     if os.path.exists(caminho):
@@ -1392,7 +1423,7 @@ def gravar_corpus(caminho, lidos, dias=7):
 
     mantidos.sort(key=lambda n: n["data"], reverse=True)
     with open(caminho, "w", encoding="utf-8") as destino:
-        json.dump({"dias": dias, "atualizado": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        json.dump({"dias": dias, "atualizado": agora_lisboa().strftime("%Y-%m-%d %H:%M"),
                    "noticias": mantidos}, destino, ensure_ascii=False, indent=1)
 
     tamanho = os.path.getsize(caminho) / 1024 / 1024
@@ -1412,7 +1443,7 @@ def atualizar_historico(caminho, linhas, periodo, vistos=None):
     passava a mostrar zeros — foi o que sucedeu.
     """
     vistos = vistos or {}
-    hoje = datetime.now().strftime("%Y-%m-%d")
+    hoje = agora_lisboa().strftime("%Y-%m-%d")
 
     serie = {"atualizado": hoje, "dias": []}
     if os.path.exists(caminho):

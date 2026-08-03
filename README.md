@@ -214,6 +214,22 @@ python extrair_noticias.py --fontes --area saude --saida saude.xlsx
 
 ---
 
+## Horas
+
+Tudo o que a aplicação escreve e apresenta está na **hora de Lisboa**.
+
+Há duas conversões a fazer, e ambas davam incoerências antes de existirem. O servidor
+do GitHub corre em UTC, pelo que a hora da recolha saía uma hora atrasada no horário de
+verão. E os feeds datam os artigos no fuso de cada publicação: o mesmo instante vem como
+16h40 num jornal alemão, 15h40 num português e 10h40 num norte-americano.
+
+A recolha converte cada data para Lisboa antes de a gravar, e usa a hora de Lisboa para
+as suas próprias comparações. Assim a hora da recolha, as horas das notícias e as janelas
+temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com hora posterior
+à atual.
+
+---
+
 ## Ressalvas metodológicas
 
 - **Cobertura.** O corpus são as 66 publicações subscritas e os últimos sete dias.
