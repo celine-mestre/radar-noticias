@@ -55,14 +55,13 @@ PLATAFORMAS = (
 
 INSTRUCAO = (
     "És um analista da Secretaria-Geral do Governo. Recebes os títulos das notícias "
-    "de hoje sobre uma área governativa e escreves um parágrafo único, de três a "
-    "cinco frases e no máximo 90 palavras, que dê conta do que foi notícia.\n\n"
+    "de hoje sobre uma área governativa e escreves um parágrafo único, de quatro a "
+    "seis frases, que dê conta do que foi notícia.\n\n"
     "Regras:\n"
     "- Usa apenas o que está nos títulos. Não acrescentes factos, números, causas "
     "ou consequências que não estejam lá.\n"
-    "- NÃO enumeres uma notícia atrás da outra. Escolhe os dois ou três assuntos "
-    "com mais peso e deixa os restantes de fora: o parágrafo é uma leitura, não "
-    "um índice.\n"
+    "- NÃO enumeres uma notícia atrás da outra. Escolhe os assuntos com mais peso "
+    "e agrupa os que se repetem: o parágrafo é uma leitura, não um índice.\n"
     "- Começa pelo assunto com mais peso e agrupa os que se repetem.\n"
     "- Escreve em português de Portugal, em registo institucional e neutro.\n"
     "- Não emitas juízos, não recomendes nada, não uses adjetivos valorativos.\n"
@@ -104,8 +103,8 @@ def perguntar(endereco, chave, titulos, area, tempo_limite=60):
             {"role": "system", "content": INSTRUCAO},
             {"role": "user", "content": f"Área governativa: {area}\n\nTítulos:\n{lista}"},
         ],
-        "temperature": 0.2,
-        "max_tokens": 200,
+        "temperature": 0.3,
+        "max_tokens": 400,
     }
 
     pedido = urllib.request.Request(
@@ -162,8 +161,8 @@ def perguntar_local(titulos, area, repo, ficheiro):
             {"role": "system", "content": INSTRUCAO},
             {"role": "user", "content": f"Área governativa: {area}\n\nTítulos:\n{lista}"},
         ],
-        temperature=0.2,
-        max_tokens=200,
+        temperature=0.3,
+        max_tokens=400,
     )
     return resposta["choices"][0]["message"]["content"].strip()
 
@@ -216,27 +215,37 @@ def principal():
                  "periodo": args.periodo, "modelo": MODELO,
                  "modo": "local" if args.local else "serviço", "areas": {}}
 
+    contas = {"poucas": 0, "falhou": 0, "curta": 0, "escrita": 0}
+
     for area in areas:
         doDia = do_periodo(noticias, area, args.periodo)
         if len(doDia) < args.minimo:
-            print(f"  {area}: {len(doDia)} notícias, abaixo do mínimo — sem síntese")
+            print(f"  {area}: {len(doDia)} notícias, abaixo do mínimo de {args.minimo} — sem síntese")
+            contas["poucas"] += 1
             continue
 
         titulos = [n["titulo"] for n in doDia[: args.maximo]]
+        print(f"  {area}: {len(doDia)} notícias no período, "
+              f"{len(titulos)} títulos enviados ao modelo")
         inicio = time.monotonic()
         try:
             texto = (perguntar_local(titulos, area, args.repo, args.ficheiro)
                      if args.local else
                      perguntar(args.endereco, chave, titulos, area))
         except (urllib.error.URLError, KeyError, ValueError, TimeoutError, RuntimeError) as erro:
-            print(f"  {area}: falhou ({erro})")
+            print(f"  {area}: falhou ({type(erro).__name__}: {erro})")
+            contas["falhou"] += 1
             continue
 
         # O modelo pode devolver texto vazio ou marcas de formatação
+        print(f"     [modelo devolveu {len(texto)} caracteres]")
         texto = texto.strip().strip("*_` ")
-        if len(texto) < 60:
-            print(f"  {area}: resposta demasiado curta, ignorada")
+        if len(texto) < 40:
+            print(f"  {area}: resposta demasiado curta ({len(texto)} caracteres), ignorada")
+            print(f"     conteúdo: {texto!r}")
+            contas["curta"] += 1
             continue
+        contas["escrita"] += 1
 
         resultado["areas"][area] = {
             "texto": texto,
@@ -250,7 +259,14 @@ def principal():
     with open(args.saida, "w", encoding="utf-8") as destino:
         json.dump(resultado, destino, ensure_ascii=False, indent=1)
 
-    print(f"\n{len(resultado['areas'])} sínteses gravadas em {args.saida}")
+    print(f"\nResumo: {contas['escrita']} escritas · {contas['poucas']} sem notícias "
+          f"suficientes · {contas['falhou']} falhadas · {contas['curta']} descartadas "
+          f"por serem curtas")
+    print(f"{len(resultado['areas'])} sínteses gravadas em {args.saida} "
+          f"({os.path.getsize(args.saida)} bytes)")
+    if not resultado["areas"]:
+        print("::warning::O ficheiro foi gravado sem qualquer síntese. "
+              "Veja acima o motivo de cada área.")
 
 
 if __name__ == "__main__":
