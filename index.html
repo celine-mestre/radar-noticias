@@ -1305,11 +1305,8 @@ async function apurarContagens(){
 
       const daArea = chaves[n.area];
       if(daArea){
-        const marcada = n.palavras && n.palavras.length;
-        if(!marcada){
-          const texto = n._b || simplificar((n.titulo || "") + " " + (n.resumo || ""));
-          if(!daArea.some(t => contemExpressao(texto, t, n.titulo))) return;
-        }
+        const texto = n._b || simplificar((n.titulo || "") + " " + (n.resumo || ""));
+        if(!daArea.some(t => contemExpressao(texto, t, n.titulo))) return;
       }
 
       const k = (n.area || "") + "|" + chaveNoticia(n);
@@ -2457,7 +2454,13 @@ async function lerFicheiroDados(nome){
   if(antes !== dados.noticias.length)
     console.info(`${nome}: ${antes - dados.noticias.length} notícias fora da janela de ${dias} dias, ignoradas`);
   /* Índice de pesquisa pré-calculado, para não repetir o trabalho a cada consulta */
-  dados.noticias.forEach(n => { if(!n._b) n._b = simplificar(n.titulo || ""); });
+  /* O texto de confirmação tem de ser o mesmo que a recolha usou para marcar:
+     título E resumo. Só com o título, notícias marcadas por uma expressão que
+     aparecia no resumo eram depois recusadas — e apareciam como "com outras
+     palavras-chave" mesmo estando todas escolhidas. */
+  dados.noticias.forEach(n => {
+    if(!n._b) n._b = simplificar((n.titulo || "") + " " + (n.resumo || ""));
+  });
   cache[nome] = dados;
   return dados;
 }
@@ -2583,9 +2586,12 @@ function dentroDoPeriodo(it){
    resultados vindos do serviço são por isso confirmados contra o termo. */
 function confirmaTermos(itens){
   if(!consultaAtiva) return { itens, fora:0 };
+  /* A área completa é, por definição, a soma das suas palavras-chave: uma
+     notícia marcada por uma expressão entretanto retirada da lista deixa de
+     pertencer à área. Sem isto, "área completa" dava mais notícias do que
+     escolher todas as palavras-chave, o que não faz sentido nenhum. */
   const alvos = consultaAtiva.termos || consultaAtiva.area.palavras;
   const bons = itens.filter(it => {
-    if(it.palavras && it.palavras.length && !consultaAtiva.termos) return true;
     const texto = it._b || simplificar((it.titulo || "") + " " + (it.resumo || ""));
     return alvos.some(t => contemExpressao(texto, t, it.titulo));
   });
