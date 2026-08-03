@@ -1456,7 +1456,7 @@ function abrirExportacao(id){
       <div class="icone"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
       <div>
         <h3>${a.nome}</h3>
-        <p>${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave da área"}</p>
+        <p id="cabConsulta">${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave da área"}</p>
       </div>
       <div class="cab-accoes">
         <button class="btn-cab" id="btnAmpliar" title="Ampliar a janela" aria-pressed="false">
@@ -1587,8 +1587,10 @@ function abrirExportacao(id){
   const limpar = $("#btnLimparChaves");
   if(limpar) limpar.addEventListener("click", () => {
     document.querySelectorAll("#modal .chip[data-termo]").forEach(c => c.classList.remove("sel"));
+    const campo = $("#campoLivre");
+    if(campo) campo.value = "";
     definirConsulta(a, consulta(a), a.palavras.join("; "));
-    $("#marcaSelecao").textContent = "Todas as palavras-chave da área";
+    anunciarConsulta();
     recolha = []; recolherConsulta();
   });
   $("#btnAtualizar").addEventListener("click", () => { recolha = []; recolherConsulta(); });
@@ -2345,6 +2347,27 @@ function definirConsulta(area, q, rotulo, termos){
 
 /* Consulta a partir das palavras-chave selecionadas. Nenhuma selecionada
    significa a área completa. */
+/* O subtítulo da janela e a marca acima das palavras-chave anunciam a mesma
+   coisa: têm de mudar juntos, ou a janela fica a dizer que procura por um termo
+   que já ninguém escolheu. */
+function anunciarConsulta(){
+  const n = document.querySelectorAll(".chip.sel[data-termo]").length;
+  const marca = $("#marcaSelecao");
+  if(marca){
+    marca.textContent = n
+      ? `${n} ${n === 1 ? "palavra-chave selecionada" : "palavras-chave selecionadas"}`
+      : (consultaAtiva && consultaAtiva.termos
+          ? `Pesquisa por ${consultaAtiva.rotulo}`
+          : "Todas as palavras-chave da área");
+  }
+  const cab = $("#cabConsulta");
+  if(cab && consultaAtiva){
+    cab.textContent = consultaAtiva.termos
+      ? consultaAtiva.rotulo
+      : "todas as palavras-chave da área";
+  }
+}
+
 function definirPorSelecao(area){
   const sel = [...document.querySelectorAll(".chip.sel[data-termo]")].map(c => c.dataset.termo);
   if(!sel.length){
@@ -3134,13 +3157,7 @@ document.addEventListener("click", e => {
   if(chip){
     chip.classList.toggle("sel");                 // seleção múltipla
     if(consultaAtiva) definirPorSelecao(consultaAtiva.area);
-    const marca = $("#marcaSelecao");
-    if(marca){
-      const n = document.querySelectorAll(".chip.sel[data-termo]").length;
-      marca.textContent = n
-        ? `${n} ${n === 1 ? "palavra-chave selecionada" : "palavras-chave selecionadas"}`
-        : "Todas as palavras-chave da área";
-    }
+    anunciarConsulta();
     /* As palavras-chave passaram a viver dentro da janela de resultados:
        escolher uma tem de refazer a consulta ali mesmo. */
     if($("#barraRes")){ recolha = []; recolherConsulta(); }
@@ -3183,8 +3200,7 @@ function pesquisaLivre(){
   const q = termo + sufixo();
   if(consultaAtiva) definirConsulta(consultaAtiva.area, q, `“${termo}”`, [termo]);
   document.querySelectorAll(".chip[data-termo]").forEach(c => c.classList.remove("sel"));
-  const marca = $("#marcaSelecao");
-  if(marca) marca.textContent = `Pesquisa por “${termo}”`;
+  anunciarConsulta();
   /* A caixa passou a viver dentro da janela de resultados: escrever um termo
      tem de refazer a recolha ali mesmo, como acontece com as palavras-chave. */
   if($("#barraRes")){ recolha = []; recolherConsulta(); }
