@@ -210,6 +210,11 @@ python extrair_noticias.py --fontes --area saude --saida saude.xlsx
   quando houver espaço para isso.
 - **Marcação literal.** Um artigo entra numa área por conter a expressão no título ou
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
+- **As expressões são curtas, como a imprensa escreve.** "política de imigração" quase
+  nunca aparece num título; "imigração", "imigrantes" e "migrantes" aparecem sempre. Uma
+  expressão longa é precisa e não apanha nada. Onde a palavra curta é ambígua, usa-se a
+  lista `excluir` da área para afastar o uso figurado — "fronteira entre o público e o
+  privado" não é matéria da Administração Interna.
 - **As expressões seguem as tutelas.** Cada área tem as palavras-chave das matérias que
   o respetivo ministério tutela, incluindo as das secretarias de Estado — é por isso que
   a política de imigração está na Presidência, que tem o Secretário de Estado Adjunto da
