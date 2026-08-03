@@ -212,7 +212,7 @@ def perguntar(endereco, chave, titulos, area, rotulo="", tempo_limite=60):
                                         f"Títulos:\n{lista}")},
         ],
         "temperature": 0.3,
-        "max_tokens": 520,
+        "max_tokens": 380,
     }
 
     pedido = urllib.request.Request(
@@ -298,9 +298,39 @@ def perguntar_local(titulos, area, repo, ficheiro, rotulo=""):
                                         f"Títulos:\n{lista}")},
         ],
         temperature=0.3,
-        max_tokens=520,
+        max_tokens=380,
     )
     return resposta["choices"][0]["message"]["content"].strip()
+
+
+def juntar(pasta, saida):
+    """Junta as sínteses parciais produzidas em paralelo.
+
+    Cada área é tratada por um trabalho seu, porque uma área demora mais de vinte
+    minutos e dezasseis, em sequência, não caberiam na manhã. Cada trabalho grava
+    um ficheiro; este passo funde-os num só.
+    """
+    partes = sorted(f for f in os.listdir(pasta) if f.endswith(".json"))
+    if not partes:
+        sys.exit(f"Sem ficheiros parciais em {pasta}.")
+
+    resultado = None
+    for nome in partes:
+        with open(os.path.join(pasta, nome), encoding="utf-8") as origem:
+            d = json.load(origem)
+        if resultado is None:
+            resultado = {k: v for k, v in d.items() if k != "areas"}
+            resultado["areas"] = {}
+        resultado["areas"].update(d.get("areas", {}))
+
+    # A hora é a da parte mais recente: é a que o relatório usa para se datar
+    resultado["gerado"] = max(
+        (json.load(open(os.path.join(pasta, n), encoding="utf-8")).get("gerado", "")
+         for n in partes), default=resultado.get("gerado", ""))
+
+    with open(saida, "w", encoding="utf-8") as destino:
+        json.dump(resultado, destino, ensure_ascii=False, indent=1)
+    print(f"{len(partes)} ficheiros juntos · {len(resultado['areas'])} áreas em {saida}")
 
 
 def principal():
@@ -317,11 +347,17 @@ def principal():
                     help="ponto de acesso a um serviço já instalado (alternativa a --local)")
     ap.add_argument("--apenas", default=None,
                     help="tratar apenas esta área — útil para um primeiro ensaio")
+    ap.add_argument("--juntar", default=None,
+                    help="pasta com sínteses parciais, a juntar num só ficheiro")
     ap.add_argument("--minimo", type=int, default=3,
                     help="notícias mínimas para valer a pena sintetizar")
-    ap.add_argument("--maximo", type=int, default=50,
+    ap.add_argument("--maximo", type=int, default=35,
                     help="títulos a enviar por área, dos mais recentes")
     args = ap.parse_args()
+
+    if args.juntar:
+        juntar(args.juntar, args.saida)
+        return
 
     chave = os.environ.get("AMALIA_CHAVE", "")
     if not args.local and (not args.endereco or not chave):

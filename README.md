@@ -407,14 +407,20 @@ Apache 2.0, pelo que corre **no próprio fluxo de trabalho**, sem serviço, cred
 ou contrato. Usa-se a conversão quantizada de 4 bits, com cerca de 5,5 GB, que dispensa
 placa gráfica.
 
+**Corre em paralelo, uma área por trabalho.** Sem placa gráfica, um parágrafo demora
+vários minutos, e uma área com notícias nas três origens passa dos vinte. As dezasseis
+em sequência levariam horas. Cada área tem por isso o seu próprio trabalho — o GitHub
+corre até vinte em simultâneo em repositórios públicos — e um passo final junta as
+partes num só `sinteses.json`. O tempo total passa a ser o da área mais demorada, não a
+soma de todas.
+
+Se alguma área falhar, as restantes seguem: mais vale um ficheiro com quinze áreas do
+que nenhum.
+
 O fluxo `sintese-amalia.yml` corre às 09h22 de Lisboa, entre a recolha das 09h07 e o
 envio das 10h17, para que a síntese e a lista digam respeito ao mesmo momento. É
 deliberadamente separado da recolha: se falhar ou demorar, as notícias do dia já estão
 publicadas e o painel funciona na mesma. O modelo fica em cache entre execuções.
-
-Sem placa gráfica, cada parágrafo demora cerca de um minuto e meio. Com dezasseis áreas
-e até três origens em cada, o pior caso ronda a hora — na prática fica bem abaixo,
-porque poucas áreas têm volume nas três origens.
 
 ### Ensaiar sem esperar
 
