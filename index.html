@@ -1129,7 +1129,7 @@ const AREAS = [
   { id:"infraestruturas", nome:"Infraestruturas e Habitação", grupo:"economia", icone:"infraestruturas",
     palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","preço das casas","compra de casa","obras públicas","ferrovia","comboios","novo aeroporto","transportes públicos","mobilidade","licenciamento urbanístico"] },
   { id:"educacao", nome:"Educação, Ciência e Inovação", grupo:"social", icone:"educacao",
-    palavras:["Ministério da Educação","escolas","alunos","professores","exames nacionais","ensino superior","universidades","ciência","investigação científica","bolsas de estudo","bolsas de investigação","abandono escolar","manuais escolares"], excluir:["bolsa de valores","bolsa espanhola","bolsa de Lisboa"] },
+    palavras:["Ministério da Educação","educação pré-escolar","creches","ensino básico","ensino secundário","ensino profissional","escolas","alunos","professores","exames nacionais","manuais escolares","abandono escolar","ensino superior","universidades","ciência","investigação científica","bolsas de estudo","bolsas de investigação"], excluir:["bolsa de valores","bolsa espanhola","bolsa de Lisboa"] },
   { id:"saude", nome:"Saúde", grupo:"social", icone:"saude",
     palavras:["Ministério da Saúde","Serviço Nacional de Saúde","hospitais","urgências","médicos de família","listas de espera","cuidados continuados","medicamentos","saúde mental","enfermeiros"] },
   { id:"trabalho", nome:"Trabalho, Solidariedade e Segurança Social", grupo:"social", icone:"trabalho",
@@ -1682,14 +1682,41 @@ function apresentarResultados(origem){
 }
 
 /* Extrai os dados agregados da recolha, para a impressão e para o Excel */
+/* Todos os dias da janela, mesmo os que não tiveram notícias.
+   Contando apenas os dias com notícias, uma janela de sete dias podia apresentar
+   seis linhas e dar a impressão de faltar um dia — quando o que faltava eram
+   notícias nesse dia, que é informação e não omissão. */
+function diasDoPeriodo(){
+  const contadas = new Map();
+  recolha.forEach(it => {
+    const d = (it.data || "").slice(0, 10);
+    if(d) contadas.set(d, (contadas.get(d) || 0) + 1);
+  });
+
+  const horas = HORAS_PERIODO[periodo] || 24;
+  const quantos = Math.max(1, Math.round(horas / 24));
+  const hoje = new Date();
+  const saida = [];
+  for(let i = quantos - 1; i >= 0; i--){
+    const d = new Date(hoje);
+    d.setDate(d.getDate() - i);
+    const chave = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    saida.push([chave, contadas.get(chave) || 0]);
+    contadas.delete(chave);
+  }
+  // Notícias com data fora da janela — republicações — aparecem à cabeça
+  [...contadas.entries()].sort((x, y) => x[0].localeCompare(y[0]))
+    .forEach(par => saida.unshift(par));
+  return saida;
+}
+
 function agregados(){
   const a = consultaAtiva.area;
   return {
     fontes: contarPor(recolha, "fonte"),
     assuntos: assuntosRecorrentes(recolha, 14),
     cobertura: cobertura(recolha, a),
-    dias: contarPor(recolha.map(it => ({ dia: (it.data || "").slice(0, 10) || "sem data" })), "dia")
-            .sort((x, y) => x[0].localeCompare(y[0]))
+    dias: diasDoPeriodo()
   };
 }
 
