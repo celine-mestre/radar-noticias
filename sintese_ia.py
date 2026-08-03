@@ -47,6 +47,17 @@ HORAS = {"24h": 24, "48h": 48, "72h": 72, "7d": 168}
 
 # As mesmas plataformas que o relatório descarta: a síntese tem de descrever
 # exatamente o que a lista mostra, ou desmente-a.
+DOMINIOS_NACIONAIS = ("noticiasaominuto.com", "cnnportugal.iol.pt", "eco.sapo.pt",
+                      "sapo.pt", "impresa.pt", "medialivre.pt", "lusa.pt")
+DOMINIOS_LUSOFONOS = (".ao", ".mz", ".cv", ".st", ".gw", ".tl", ".br")
+
+# As mesmas três origens do painel e das etiquetas do relatório
+ORIGENS = [
+    ("nacionais", "Portugal"),
+    ("lusofonas", "Lusofonia"),
+    ("internacionais", "Internacional"),
+]
+
 PLATAFORMAS = (
     "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
     "youtube.com", "youtu.be", "linkedin.com", "reddit.com", "threads.net",
@@ -66,6 +77,9 @@ INSTRUCAO = (
     "- Escreve em português de Portugal, em registo institucional e neutro.\n"
     "- Não emitas juízos, não recomendes nada, não uses adjetivos valorativos.\n"
     "- Não uses expressões como 'as notícias indicam' ou 'segundo os títulos'.\n"
+    "- Os títulos são todos da mesma origem de imprensa, indicada acima. Escreve "
+    "sobre eles como o que são: sendo imprensa estrangeira, não os apresentes "
+    "como factos nacionais.\n"
     "- Devolve apenas o parágrafo, sem título nem marcas de formatação."
 )
 
@@ -73,6 +87,18 @@ INSTRUCAO = (
 def carregar(caminho):
     with open(caminho, encoding="utf-8") as origem:
         return json.load(origem).get("noticias", [])
+
+
+def origem_da_fonte(n):
+    """Portugal, lusofonia ou internacional — as mesmas três do painel."""
+    d = (n.get("dominio") or "").lower().replace("www.", "")
+    if not d:
+        return "nacionais"
+    if d.endswith(".pt") or any(d == x or d.endswith("." + x) for x in DOMINIOS_NACIONAIS):
+        return "nacionais"
+    if any(d.endswith(t) for t in DOMINIOS_LUSOFONOS):
+        return "lusofonas"
+    return "internacionais"
 
 
 def do_periodo(noticias, area, periodo):
@@ -94,14 +120,16 @@ def do_periodo(noticias, area, periodo):
     return saida
 
 
-def perguntar(endereco, chave, titulos, area, tempo_limite=60):
+def perguntar(endereco, chave, titulos, area, rotulo="", tempo_limite=60):
     """Uma chamada ao Amália, pela interface compatível com OpenAI."""
     lista = "\n".join(f"- {t}" for t in titulos)
     corpo = {
         "model": MODELO,
         "messages": [
             {"role": "system", "content": INSTRUCAO},
-            {"role": "user", "content": f"Área governativa: {area}\n\nTítulos:\n{lista}"},
+            {"role": "user", "content": (f"Área governativa: {area}\n"
+                                        f"Origem da imprensa: {rotulo or 'não especificada'}\n\n"
+                                        f"Títulos:\n{lista}")},
         ],
         "temperature": 0.3,
         "max_tokens": 400,
@@ -152,14 +180,16 @@ def carregar_modelo_local(repo, ficheiro, contexto=4096, fios=0):
     return _modelo_local
 
 
-def perguntar_local(titulos, area, repo, ficheiro):
+def perguntar_local(titulos, area, repo, ficheiro, rotulo=""):
     """A mesma pergunta, respondida pelo modelo carregado neste computador."""
     modelo = carregar_modelo_local(repo, ficheiro)
     lista = "\n".join(f"- {t}" for t in titulos)
     resposta = modelo.create_chat_completion(
         messages=[
             {"role": "system", "content": INSTRUCAO},
-            {"role": "user", "content": f"Área governativa: {area}\n\nTítulos:\n{lista}"},
+            {"role": "user", "content": (f"Área governativa: {area}\n"
+                                        f"Origem da imprensa: {rotulo or 'não especificada'}\n\n"
+                                        f"Títulos:\n{lista}")},
         ],
         temperature=0.3,
         max_tokens=400,
@@ -217,44 +247,61 @@ def principal():
 
     contas = {"poucas": 0, "falhou": 0, "curta": 0, "escrita": 0}
 
+    # Um parágrafo por origem: misturar o orçamento português com o cabo-verdiano
+    # num só texto confunde quem lê, e a origem é justamente o que distingue as
+    # duas notícias.
     for area in areas:
         doDia = do_periodo(noticias, area, args.periodo)
-        if len(doDia) < args.minimo:
-            print(f"  {area}: {len(doDia)} notícias, abaixo do mínimo de {args.minimo} — sem síntese")
+        if not doDia:
+            print(f"  {area}: sem notícias no período")
             contas["poucas"] += 1
             continue
 
-        titulos = [n["titulo"] for n in doDia[: args.maximo]]
-        print(f"  {area}: {len(doDia)} notícias no período, "
-              f"{len(titulos)} títulos enviados ao modelo")
-        inicio = time.monotonic()
-        try:
-            texto = (perguntar_local(titulos, area, args.repo, args.ficheiro)
-                     if args.local else
-                     perguntar(args.endereco, chave, titulos, area))
-        except (urllib.error.URLError, KeyError, ValueError, TimeoutError, RuntimeError) as erro:
-            print(f"  {area}: falhou ({type(erro).__name__}: {erro})")
-            contas["falhou"] += 1
-            continue
+        print(f"  {area}: {len(doDia)} notícias no período")
+        por_origem = {}
 
-        # O modelo pode devolver texto vazio ou marcas de formatação
-        print(f"     [modelo devolveu {len(texto)} caracteres]")
-        texto = texto.strip().strip("*_` ")
-        if len(texto) < 40:
-            print(f"  {area}: resposta demasiado curta ({len(texto)} caracteres), ignorada")
-            print(f"     conteúdo: {texto!r}")
-            contas["curta"] += 1
-            continue
-        contas["escrita"] += 1
+        for chave_origem, rotulo in ORIGENS:
+            desta = [n for n in doDia if origem_da_fonte(n) == chave_origem]
+            if len(desta) < args.minimo:
+                if desta:
+                    print(f"     {rotulo}: {len(desta)} notícias, abaixo do mínimo "
+                          f"de {args.minimo} — sem parágrafo")
+                contas["poucas"] += 1
+                continue
 
-        resultado["areas"][area] = {
-            "texto": texto,
-            "noticias": len(doDia),
-            "titulos": titulos[:10],   # amostra, para verificação
-        }
-        print(f"  {area}: {len(doDia)} notícias → {len(texto)} caracteres "
-              f"em {time.monotonic() - inicio:.0f}s")
-        print(f"     {texto[:160]}{'…' if len(texto) > 160 else ''}")
+            titulos = [n["titulo"] for n in desta[: args.maximo]]
+            inicio = time.monotonic()
+            try:
+                texto = (perguntar_local(titulos, area, args.repo, args.ficheiro, rotulo)
+                         if args.local else
+                         perguntar(args.endereco, chave, titulos, area, rotulo))
+            except (urllib.error.URLError, KeyError, ValueError,
+                    TimeoutError, RuntimeError) as erro:
+                print(f"     {rotulo}: falhou ({type(erro).__name__}: {erro})")
+                contas["falhou"] += 1
+                continue
+
+            texto = texto.strip().strip("*_` ")
+            if len(texto) < 40:
+                print(f"     {rotulo}: resposta demasiado curta ({len(texto)}), ignorada")
+                contas["curta"] += 1
+                continue
+
+            por_origem[chave_origem] = {
+                "rotulo": rotulo,
+                "texto": texto,
+                "noticias": len(desta),
+            }
+            contas["escrita"] += 1
+            print(f"     {rotulo}: {len(desta)} notícias → {len(texto)} caracteres "
+                  f"em {time.monotonic() - inicio:.0f}s")
+            print(f"        {texto[:140]}{'…' if len(texto) > 140 else ''}")
+
+        if por_origem:
+            resultado["areas"][area] = {
+                "noticias": len(doDia),
+                "origens": por_origem,
+            }
 
     with open(args.saida, "w", encoding="utf-8") as destino:
         json.dump(resultado, destino, ensure_ascii=False, indent=1)

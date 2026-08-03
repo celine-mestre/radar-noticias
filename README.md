@@ -282,9 +282,19 @@ python relatorio_email.py --dados arquivo.json --todas --um-por-area \
 
 ## Síntese redigida pelo Amália
 
-Por cada área governativa, um parágrafo com o que foi notícia nas últimas 24 horas,
-no topo de cada relatório por email. Não aparece no painel: aí a leitura é feita sobre
-os dados, com filtros que a síntese não acompanharia.
+No topo de cada relatório por correio eletrónico, um parágrafo por **origem de
+imprensa** — Portugal, lusofonia e internacional —, com o que foi notícia na janela
+do relatório. Não aparece no painel: aí a leitura é feita sobre os dados, com filtros
+que a síntese não acompanharia.
+
+A separação por origem existe porque a mistura confundia: o orçamento português e o
+cabo-verdiano descritos no mesmo texto, como se fossem a mesma matéria. Cada parágrafo
+leva a etiqueta da origem e o número de notícias que resume.
+
+Uma origem só gera parágrafo se tiver pelo menos três notícias no período — abaixo
+disso, um resumo não acrescenta nada à leitura dos próprios títulos.
+
+### Como corre
 
 O **Amália** é o modelo de linguagem do Estado, desenvolvido por um consórcio de
 universidades portuguesas com coordenação da ARTE. Tem pesos abertos sob licença
@@ -295,19 +305,32 @@ placa gráfica.
 O fluxo `sintese-amalia.yml` corre às 08h10 UTC, entre a recolha da manhã e o envio do
 relatório, para que a síntese e a lista digam respeito ao mesmo momento. É
 deliberadamente separado da recolha: se falhar ou demorar, as notícias do dia já estão
-publicadas e o painel funciona na mesma. O modelo fica em cache entre execuções, e cada
-síntese traz a hora a que foi escrita.
+publicadas e o painel funciona na mesma. O modelo fica em cache entre execuções.
+
+Sem placa gráfica, cada parágrafo demora cerca de um minuto e meio. Com dezasseis áreas
+e até três origens em cada, o pior caso ronda a hora — na prática fica bem abaixo,
+porque poucas áreas têm volume nas três origens.
+
+### Ensaiar sem esperar
+
+O fluxo aceita o campo **"Ensaio: tratar só esta área"**. Preenchido, trata apenas essa
+área e não grava — o texto fica visível no registo, para se avaliar a qualidade em
+minutos em vez de uma hora.
+
+O registo mostra, por área e por origem, quantas notícias foram encontradas, quantos
+caracteres o modelo devolveu e quanto tempo demorou, e termina com um resumo das
+sínteses escritas, das que ficaram por falta de notícias e das que falharam.
 
 ### Salvaguardas
 
-O modelo recebe apenas os títulos já recolhidos. Não acede à internet, não é fonte de
-factos, e a síntese é sempre apresentada junto das notícias que a originaram — a
-verificação continua do lado de quem lê. As instruções estão à vista no `sintese_ia.py`,
-na constante `INSTRUCAO`, e proíbem juízos, recomendações e qualquer facto que não
-esteja nos títulos.
+O modelo recebe apenas os títulos já recolhidos, de uma origem de cada vez. Não acede à
+internet, não é fonte de factos, e cada parágrafo é apresentado junto das notícias que o
+originaram — a verificação continua do lado de quem lê. As instruções estão à vista no
+`sintese_ia.py`, na constante `INSTRUCAO`, e proíbem juízos, recomendações e qualquer
+facto que não esteja nos títulos.
 
-Áreas com menos de três notícias no período não geram síntese, e respostas com menos de
-sessenta caracteres são descartadas.
+O relatório recusa sínteses com mais de doze horas ou escritas sobre outra janela
+temporal: uma síntese desfasada descreveria notícias que não estão na lista.
 
 ### Alternativa: serviço já instalado
 
@@ -317,10 +340,11 @@ o mesmo.
 
 ```bash
 python sintese_ia.py --local --dados arquivo.json --periodo 24h
+python sintese_ia.py --local --dados arquivo.json --apenas "Finanças"   # ensaio
 ```
 
 Sem modo local nem ponto de acesso, o programa não faz nada e a aplicação funciona como
-antes, apenas sem o parágrafo.
+antes, apenas sem os parágrafos.
 
 ---
 
