@@ -128,28 +128,44 @@ um trimestre, para os fundamentar.
 
 ## Fontes subscritas
 
-**Portuguesas (25 feeds).** Público — geral, política, economia e sociedade —,
-Expresso, Observador, Jornal de Notícias, Diário de Notícias, Correio da Manhã,
-Jornal de Negócios, Jornal Económico, ECO, RTP Notícias, SIC Notícias, CNN Portugal,
-TSF, Renascença, Notícias ao Minuto, Diário de Notícias da Madeira, Sábado, Visão,
-Dinheiro Vivo, Executive Digest, Ambiente Magazine e Agroportal.
+**Portugal — 35 feeds de 31 publicações.**
+Agência: Lusa (geral e internacional).
+Diários e semanários: Público (geral, política, economia, sociedade e ciência), Expresso,
+Observador, Jornal de Notícias, Diário de Notícias, Correio da Manhã, Nascer do SOL,
+Jornal i, Sábado e Visão.
+Economia: Jornal de Negócios, Jornal Económico, ECO, Dinheiro Vivo, Vida Económica e
+Executive Digest.
+Rádio e televisão: RTP Notícias, SIC Notícias, CNN Portugal, TSF e Renascença.
+Digitais e regionais: Notícias ao Minuto, Diário de Notícias da Madeira, JM Madeira e
+Açoriano Oriental.
+Especializadas, por matéria de tutela: Agroportal (agricultura), Ambiente Magazine
+(ambiente), Construir (obras e habitação), Healthnews (saúde) e SAPO Tek (digital).
 
-**Lusofonia (11 feeds).** Jornal de Angola, Novo Jornal, Angop, O País, Carta de
-Moçambique, Expresso das Ilhas, Inforpress, Tatoli, STP-Press, Agência Brasil e Folha
-de S.Paulo. Matéria de CPLP, cooperação e diáspora é frequentemente tratada primeiro
-nestes títulos.
+**Lusofonia — 11 feeds de 11 publicações.**
+Angola: Jornal de Angola, Novo Jornal e Angop. Moçambique: O País e Carta de Moçambique.
+Cabo Verde: Expresso das Ilhas e Inforpress. São Tomé e Príncipe: STP-Press.
+Timor-Leste: Tatoli. Brasil: Agência Brasil e Folha de S.Paulo.
 
-**Internacionais (12 feeds).** Euronews em português, Politico Europe, EURACTIV,
-El País, Le Monde, BBC Mundo, Deutsche Welle, France 24, RFI, The Guardian (Europa) e
-Lusa Internacional.
+Matéria de CPLP, cooperação e diáspora é frequentemente tratada primeiro nestes títulos.
 
-São 73 feeds de 66 publicações. O seletor do painel tem três origens que não se sobrepõem —
-**Portugal**, **Lusofonia** e **Resto do mundo** — mais a posição **Todas**, que é a
-soma das três.
+**Internacionais — 27 feeds de 25 publicações.**
+Em português: Euronews, Deutsche Welle, France 24, RFI e Lusa Internacional.
+União Europeia: Politico Europe e EURACTIV.
+Espanha: El País (geral e internacional), El Mundo, La Vanguardia e ABC.
+Reino Unido: BBC News, BBC Mundo e The Guardian (Europa e mundo).
+França: Le Monde, Le Figaro e France Info.
+Itália: ANSA, Corriere della Sera e La Repubblica.
+Estados Unidos da América: Associated Press, The New York Times, The Washington Post e
+Politico.
+Alemanha: Der Spiegel.
 
-As listas estão no início do `extrair_noticias.py`, nas constantes `FONTES`,
-`FONTES_LUSOFONAS` e `FONTES_INTERNACIONAIS`. Acrescenta-se uma publicação escrevendo uma linha com o nome,
-o domínio e o endereço do feed. A recolha assinala as fontes que não respondem.
+**São 73 feeds de 66 publicações.** A diferença são sete publicações com mais do que um
+feed — o Público tem cinco, a Lusa, o El País e o The Guardian têm dois cada. O feed
+geral de um jornal tem teto de itens, e as secções trazem peças que ele já empurrou para
+fora; as repetições são descartadas na recolha.
+
+Só as publicações que escrevem em português são classificadas por área. As restantes
+entram no corpus da pesquisa por termo — ver a secção seguinte.
 
 ### Língua das fontes estrangeiras
 
@@ -265,28 +281,34 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
 
 ## Relatório diário por email
 
-Todas as manhãs, às 10h00 de Lisboa, é enviado **um relatório por área governativa**
+Todas as manhãs de dias úteis, às 10h17 de Lisboa, é enviado **um relatório por área governativa**
 para os destinatários dessa área. Cada mensagem traz as notícias das últimas 24 horas
 agrupadas por dia, com hora, título, resumo, publicação e ligação — e termina com um
 botão para abrir o painel, onde se pode refazer a pesquisa, alargar o período ou
 exportar para Excel.
 
-O dia corre assim, em hora UTC — mais uma hora em Lisboa no horário de verão:
+O dia corre assim. As horas estão na **hora de Lisboa**, que é a que o painel e os
+relatórios apresentam; entre parênteses fica a hora UTC, que é a que o GitHub usa nos
+agendamentos e a única que aparece nos registos das execuções.
 
-| Hora UTC | O quê | Dias |
-|---|---|---|
-| 06h07 às 18h07, de duas em duas horas | Recolha | Todos |
-| 08h22 | Síntese do Amália, sobre a recolha das 08h07 | Seg a sex |
-| 09h17 | Envio dos relatórios | Seg a sex |
+| Lisboa | UTC | O quê | Dias |
+|---|---|---|---|
+| 07h07 | 06h07 | 1.ª recolha | Todos |
+| 09h07 | 08h07 | 2.ª recolha — é sobre esta que o Amália trabalha | Todos |
+| 09h22 | 08h22 | Síntese do Amália | Seg a sex |
+| 10h17 | 09h17 | Envio dos relatórios | Seg a sex |
+| 11h07 · 13h07 · 15h07 · 17h07 · 19h07 | 10h07 · 12h07 · 14h07 · 16h07 · 18h07 | Recolhas do resto do dia | Todos |
 
-Em Lisboa, no horário de verão, as recolhas correm das 07h07 às 19h07. Quem
-consulta o painel a meio da tarde vê o que foi noticiado nessa tarde, e não a
-manhã. Cada recolha demora cerca de um minuto.
-| 10h07 · 12h07 · 14h07 · 16h07 · 18h07 | Recolhas ao longo do dia | Todos |
+São **sete recolhas por dia**, de duas em duas horas entre as 07h07 e as 19h07 de
+Lisboa. Cada uma demora cerca de um minuto.
 
-São sete recolhas diárias, de duas em duas horas entre as 07h07 e as 19h07 de Lisboa.
-Quem abrir o painel a meio da tarde vê o que foi noticiado nessa tarde, e não a manhã.
-O painel indica sempre a hora da recolha que está a mostrar.
+A sequência da manhã é encadeada de propósito: a recolha das 09h07 traz as notícias da
+manhã, o Amália escreve as sínteses às 09h22 sobre essa recolha, e os relatórios saem
+às 10h17 já com elas. As restantes recolhas não têm síntese nem envio — servem o painel.
+
+**O painel não é instantâneo.** Não vai buscar notícias enquanto o consulta: lê os
+ficheiros da última recolha. Quem o abrir às 16h vê o que foi recolhido às 15h07, e a
+hora dessa recolha está sempre indicada ao lado do título das áreas.
 
 Os minutos estão deslocados de propósito. Às horas certas o GitHub tem picos de
 procura e as execuções agendadas são atrasadas — por vezes saltadas. Um minuto
@@ -385,8 +407,8 @@ Apache 2.0, pelo que corre **no próprio fluxo de trabalho**, sem serviço, cred
 ou contrato. Usa-se a conversão quantizada de 4 bits, com cerca de 5,5 GB, que dispensa
 placa gráfica.
 
-O fluxo `sintese-amalia.yml` corre às 08h10 UTC, entre a recolha da manhã e o envio do
-relatório, para que a síntese e a lista digam respeito ao mesmo momento. É
+O fluxo `sintese-amalia.yml` corre às 09h22 de Lisboa, entre a recolha das 09h07 e o
+envio das 10h17, para que a síntese e a lista digam respeito ao mesmo momento. É
 deliberadamente separado da recolha: se falhar ou demorar, as notícias do dia já estão
 publicadas e o painel funciona na mesma. O modelo fica em cache entre execuções.
 
