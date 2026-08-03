@@ -35,7 +35,7 @@ anterior ao arquivo, não aparece — e alargar o âmbito é acrescentar feeds �
 
 ### O percurso de uma notícia, passo a passo
 
-1. **06h00 e 08h00, todos os dias.** O GitHub executa `extrair_noticias.py --fontes`.
+1. **06h07 e 08h07 UTC, todos os dias.** O GitHub executa `extrair_noticias.py --fontes`.
    O programa está no repositório e é legível: a lista de publicações está na
    constante `FONTES`, as áreas e palavras-chave na constante `AREAS`, e a marcação
    na função `marcar_por_areas()`.
@@ -235,12 +235,16 @@ exportar para Excel.
 
 O dia corre assim, em hora UTC — mais uma hora em Lisboa no horário de verão:
 
-| Hora | O quê | Dias |
+| Hora UTC | O quê | Dias |
 |---|---|---|
-| 06h00 | Recolha, para o painel estar pronto de manhã cedo | Todos |
-| 08h00 | Recolha da manhã | Todos |
-| 08h10 | Síntese do Amália, sobre essa recolha | Seg a sex |
-| 09h00 | Envio dos relatórios | Seg a sex |
+| 06h07 | Recolha, para o painel estar pronto de manhã cedo | Todos |
+| 08h07 | Recolha da manhã | Todos |
+| 08h22 | Síntese do Amália, sobre essa recolha | Seg a sex |
+| 09h17 | Envio dos relatórios | Seg a sex |
+
+Os minutos estão deslocados de propósito. Às horas certas o GitHub tem picos de
+procura e as execuções agendadas são atrasadas — por vezes saltadas. Um minuto
+qualquer a meio da hora é mais fiável.
 
 A recolha corre **todos os dias**, incluindo fim de semana: de outro modo o arquivo
 ficaria com um buraco de dois dias e o que fosse notícia ao sábado nunca chegaria ao

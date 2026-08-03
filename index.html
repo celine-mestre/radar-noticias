@@ -1826,15 +1826,16 @@ const MANUAL = [
     <p class="man-aviso">Áreas sem notícias no período não geram mensagem — não se enviam relatórios vazios. Para cancelar, responda a qualquer relatório a pedir o cancelamento.</p>` },
 
   { n:"9", titulo:"Recolha agendada", cor:"var(--teal)", icone:"engrenagem", corpo:`
-    <p>A rede da Secretaria-Geral impede o painel de ir buscar notícias diretamente. A solução é fazer essa recolha noutro sítio: um programa que corre nos servidores do GitHub, todas as manhãs de dias úteis, e deixa o resultado ao lado do painel.</p>
-    <p>Cada execução produz três coisas:</p>
+    <p>O painel não vai buscar notícias enquanto o consulta: lê ficheiros que uma recolha automática deixou ao lado dele. Essa recolha corre nos servidores do GitHub, <strong>todos os dias</strong>, duas vezes de manhã.</p>
     <dl>
+      <dt>arquivo.json</dt><dd>As notícias marcadas dos últimos sete dias, com as palavras-chave de cada uma. É o que responde às consultas e o que o radar conta.</dd>
+      <dt>corpus.json</dt><dd>Todos os artigos lidos dos feeds nos mesmos sete dias, marcados ou não. É onde a pesquisa por termo procura.</dd>
+      <dt>historico.json</dt><dd>Uma linha por dia e por área, com contagens, origens e palavras-chave. É o que permite ver a evolução, e nunca é apagado.</dd>
+      <dt>meses/</dt><dd>Um ficheiro comprimido por mês com todas as notícias desse mês. Não é lido pelo painel: existe para consulta futura.</dd>
       <dt>Excel do dia</dt><dd>Descarregável na página da execução, em <em>Artifacts</em>.</dd>
-      <dt><code>noticias.json</code></dt><dd>As notícias do dia. É o ficheiro que o botão <strong>Recolher notícias</strong> lê. Sem ele, o painel fica dependente de serviços externos que a rede costuma bloquear.</dd>
-      <dt><code>historico.json</code></dt><dd>Uma linha por dia e por área. É o que permite ver a evolução.</dd>
     </dl>
-    <p><strong>Executar fora de horas:</strong> no repositório, separador <strong>Actions</strong>, escolher <em>Radar de Notícias por Área Governativa</em> e clicar em <strong>Run workflow</strong>. Demora um a dois minutos.</p>
-    <p class="man-aviso">Se o painel disser que não encontrou o <code>noticias.json</code>, a recolha agendada ainda não correu com êxito. Confirme em <strong>Actions</strong> se a última execução está verde e, em <strong>Settings › Actions › General</strong>, se as permissões estão em <em>Read and write</em>.</p>` }
+    <p>Depois da recolha da manhã, um segundo trabalho pede ao Amália uma síntese por área e por origem, e um terceiro envia os relatórios por email, nos dias úteis.</p>
+    <p class="man-aviso">Executar fora de horas: no repositório, em <em>Actions</em>, escolher <em>Radar de Noticias</em> e carregar em <em>Run workflow</em>. Demora cerca de um minuto.</p>` }
 ];
 
 
