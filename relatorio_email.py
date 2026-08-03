@@ -166,10 +166,34 @@ def bloco_sintese(sintese, escrita_em="", origens=None):
     declara a hora: quem lê fica a saber que as notícias mais recentes da lista
     podem não estar refletidas nos parágrafos.
     """
-    if not sintese or not sintese.get("origens"):
+    if not sintese:
         return ""
 
     hora = f" · escrita às {escrita_em[11:16]}" if len(escrita_em) >= 16 else ""
+
+    # Ficheiros gerados antes da divisão por origem trazem um único texto.
+    # Continuam a ser apresentados, sem etiqueta, até serem substituídos.
+    if not sintese.get("origens"):
+        if not sintese.get("texto"):
+            return ""
+        corpo = f"""
+          <div style="font:400 14px Arial,sans-serif;color:{CINZA_TEXTO};line-height:1.6;
+                      padding-top:6px">{esc(sintese['texto'])}</div>"""
+        return f"""
+    <tr><td style="padding:14px 24px 6px">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+             style="border-left:3px solid {DOURADO};background:#fdfbf6">
+        <tr><td style="padding:12px 16px">
+          <div style="font:600 10px Arial,sans-serif;color:{DOURADO};letter-spacing:1.2px;
+                      text-transform:uppercase">Síntese redigida · Amália{hora}</div>
+          {corpo}
+          <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:10px;line-height:1.5">
+            Texto gerado automaticamente a partir dos títulos abaixo, sem acesso a outras
+            fontes. Serve de primeira leitura e não dispensa a consulta das notícias.
+          </div>
+        </td></tr>
+      </table>
+    </td></tr>"""
 
     partes = []
     for chave in ("nacionais", "lusofonas", "internacionais"):
@@ -509,7 +533,9 @@ def versao_texto(dados, areas, periodo, origens, painel, sinteses=None):
                    f"{len(noticias)} {'notícia' if len(noticias) == 1 else 'notícias'}", ""]
 
         sintese = (sinteses or {}).get(nome) or {}
-        if sintese.get("origens"):
+        if sintese.get("texto") and not sintese.get("origens"):
+            linhas += ["SÍNTESE REDIGIDA · AMÁLIA", sintese["texto"], ""]
+        elif sintese.get("origens"):
             linhas.append("SÍNTESE REDIGIDA · AMÁLIA")
             for chave in ("nacionais", "lusofonas", "internacionais"):
                 if origens and chave not in origens:
