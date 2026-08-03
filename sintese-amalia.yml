@@ -1,0 +1,119 @@
+name: Sintese pelo Amalia
+
+# Escreve, por cada área governativa e por cada origem de imprensa — Portugal,
+# lusofonia e internacional —, um parágrafo com o que foi notícia no período.
+# Corre o Amália no próprio servidor do fluxo de trabalho:
+# o modelo tem pesos abertos sob licença Apache 2.0 e não depende de qualquer
+# serviço, credencial ou contrato.
+#
+# CUSTO. Usa-se a conversão quantizada de 4 bits, com cerca de 5,5 GB. Sem placa
+# gráfica, a geração faz-se no processador e demora cerca de minuto e meio por
+# parágrafo. Com dezasseis áreas e até três origens em cada, o pior caso ronda a
+# hora — na prática fica bem abaixo, porque poucas áreas têm volume nas três.
+# Em repositórios públicos o tempo de execução não tem custo.
+#
+# O modelo fica em cache entre execuções, pelo que só é descarregado de novo
+# quando a cache expira, ao fim de sete dias sem uso.
+#
+# É deliberadamente um fluxo separado da recolha: se falhar ou demorar, as
+# notícias do dia já estão publicadas e o painel funciona na mesma.
+#
+# CALENDÁRIO. Corre às 08h10 UTC, depois da recolha das 08h00 e antes do relatório
+# das 09h00, para que a síntese e a lista de notícias digam respeito ao mesmo
+# momento. Demorando mais do que os cinquenta minutos disponíveis, o relatório
+# sai com a síntese da véspera — que traz a hora a que foi escrita.
+
+on:
+  workflow_dispatch:
+    inputs:
+      periodo:
+        description: "Janela a sintetizar"
+        type: choice
+        default: "auto"
+        options: ["auto", "24h", "48h", "72h"]
+      apenas:
+        description: "Ensaio: uma ou mais áreas, por vírgula (vazio = todas)"
+        type: string
+        required: false
+        default: ""
+  schedule:
+    - cron: "22 8 * * 1-5"     # depois da recolha das 08h07, antes do relatório
+
+permissions:
+  contents: write
+
+# Um de cada vez a gravar no repositório
+concurrency:
+  group: gravacao-repositorio
+  cancel-in-progress: false
+
+jobs:
+  sintetizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache do modelo
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: amalia-9b-q4km-v1
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          # Pacote já compilado para processador: compilar no servidor demoraria
+          # dez a quinze minutos e pode falhar por falta de dependências.
+          pip install llama-cpp-python \
+            --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+          pip install huggingface-hub
+
+      - name: Gerar as sinteses
+        run: |
+          PERIODO="${{ github.event.inputs.periodo }}"
+          if [ -z "$PERIODO" ]; then PERIODO="auto"; fi
+          APENAS="${{ inputs.apenas }}"
+          if [ -n "$APENAS" ]; then
+            # Ensaio: uma área só, para se confirmar em minutos que o modelo
+            # carrega e escreve como deve, sem esperar pelas dezasseis.
+            python sintese_ia.py --local --dados arquivo.json \
+              --periodo "$PERIODO" --apenas "$APENAS" --saida sinteses_ensaio.json
+          else
+            python sintese_ia.py --local --dados arquivo.json \
+              --periodo "$PERIODO" --saida sinteses.json
+          fi
+
+      # O ensaio de uma área não é gravado: serve para ver o texto no registo.
+      - name: Gravar no repositorio
+        if: inputs.apenas == ''
+        run: |
+          set -euo pipefail
+          if [ ! -f sinteses.json ]; then
+            echo "Sem sínteses a gravar."
+            exit 0
+          fi
+          git config user.name "Radar de Noticias"
+          git config user.email "actions@github.com"
+
+          # O ficheiro tem de ser acrescentado ANTES da comparação. Um ficheiro
+          # que ainda não existe no repositório não é visto por "git diff", que
+          # só olha para os já seguidos — a primeira gravação de sempre era
+          # tomada por "sem alterações" e nunca acontecia.
+          git add sinteses.json
+          if git diff --cached --quiet; then
+            echo "Sem alterações a gravar."
+            exit 0
+          fi
+
+          git commit -m "sínteses do Amália"
+          # Três fluxos gravam no mesmo repositório e podem cruzar-se: puxa-se
+          # primeiro o que houver, para o envio não ser recusado.
+          git pull --rebase --autostash
+          git push

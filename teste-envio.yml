@@ -1,0 +1,100 @@
+name: Teste de envio
+
+# Envia uma mensagem de ensaio para o endereço indicado, para confirmar que as
+# credenciais de correio estão bem configuradas. Não toca nas subscrições nem
+# nos dados: serve só para ver se a mensagem sai e como chega.
+#
+# Correr em Actions > Teste de envio > Run workflow, indicando o destinatário.
+
+on:
+  workflow_dispatch:
+    inputs:
+      destinatario:
+        description: "Endereço para onde enviar o ensaio"
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  ensaiar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar as credenciais
+        id: correio
+        run: |
+          em_falta=""
+          [ -z "${{ secrets.SMTP_SERVIDOR }}" ]   && em_falta="$em_falta SMTP_SERVIDOR"
+          [ -z "${{ secrets.SMTP_PORTA }}" ]      && em_falta="$em_falta SMTP_PORTA"
+          [ -z "${{ secrets.SMTP_UTILIZADOR }}" ] && em_falta="$em_falta SMTP_UTILIZADOR"
+          [ -z "${{ secrets.SMTP_SENHA }}" ]      && em_falta="$em_falta SMTP_SENHA"
+          if [ -n "$em_falta" ]; then
+            echo "::error::Faltam segredos:$em_falta"
+            exit 1
+          fi
+          echo "Credenciais presentes. Servidor: ${{ secrets.SMTP_SERVIDOR }}"
+
+      - name: Preparar a mensagem
+        run: |
+          cat > ensaio.html <<'HTML'
+          <!DOCTYPE html><html lang="pt-PT"><head><meta charset="UTF-8"></head>
+          <body style="margin:0;background:#f4f6f8">
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#f4f6f8">
+          <tr><td align="center" style="padding:24px 12px">
+          <table width="560" cellpadding="0" cellspacing="0" role="presentation"
+                 style="max-width:560px;background:#fff;border-radius:12px;overflow:hidden">
+            <tr><td style="background:#2B5683;padding:22px 24px">
+              <div style="font:600 10px Arial,sans-serif;color:#fff;opacity:.8;letter-spacing:1.4px;
+                          text-transform:uppercase">Secretaria-Geral do Governo</div>
+              <div style="font:600 20px Arial,sans-serif;color:#fff;padding-top:6px">Teste de envio</div>
+            </td></tr>
+            <tr><td style="padding:22px 24px">
+              <div style="font:400 14px Arial,sans-serif;color:#171715;line-height:1.6">
+                Se está a ler esta mensagem, as credenciais de correio do Radar de
+                Notícias estão bem configuradas e os relatórios diários vão chegar.
+              </div>
+              <div style="font:400 13px Arial,sans-serif;color:#5b6068;line-height:1.6;padding-top:14px">
+                Confirme três coisas: se a mensagem caiu na caixa de entrada ou na de
+                publicidade, se os acentos estão corretos — <b>ação, órgão, três</b> — e
+                se o remetente aparece como esperado.
+              </div>
+            </td></tr>
+            <tr><td style="padding:16px 24px;background:#171715">
+              <div style="font:400 11px Arial,sans-serif;color:#fff;opacity:.85;line-height:1.6">
+                Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas
+              </div>
+            </td></tr>
+          </table></td></tr></table></body></html>
+          HTML
+
+          cat > ensaio.txt <<'TXT'
+          SECRETARIA-GERAL DO GOVERNO
+          Radar de Notícias — teste de envio
+
+          Se está a ler esta mensagem, as credenciais de correio estão bem
+          configuradas e os relatórios diários vão chegar.
+
+          Confirme se a mensagem caiu na caixa de entrada ou na de publicidade,
+          se os acentos estão corretos (ação, órgão, três) e se o remetente
+          aparece como esperado.
+
+          --
+          Direção de Serviços de Suporte à Decisão
+          Unidade de Pesquisa e Estatísticas
+          TXT
+
+      - name: Enviar
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVIDOR }}
+          server_port: ${{ secrets.SMTP_PORTA }}
+          secure: false
+          username: ${{ secrets.SMTP_UTILIZADOR }}
+          password: ${{ secrets.SMTP_SENHA }}
+          subject: Radar de Notícias · teste de envio
+          to: ${{ inputs.destinatario }}
+          from: Radar de Noticias <${{ secrets.SMTP_UTILIZADOR }}>
+          html_body: file://ensaio.html
+          body: file://ensaio.txt
+          convert_markdown: false

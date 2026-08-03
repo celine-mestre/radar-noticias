@@ -1,0 +1,153 @@
+name: Relatorio diario por email
+
+# Envia, todas as manhãs, um relatório por área governativa, aos destinatários
+# do segredo SUBSCRITORES. Corre depois da recolha e da síntese, para que as
+# notícias incluam a manhã do próprio dia.
+#
+# HORA. O GitHub agenda em UTC. 09h17 UTC corresponde às 10h17 de Lisboa no
+# horário de verão. A recolha corre às 08h07 e a síntese às 08h22, no mesmo
+# fuso, para o relatório apanhar as notícias da manhã já sintetizadas.
+#
+# CREDENCIAIS, uma única vez, em Settings > Secrets and variables > Actions:
+#   SMTP_SERVIDOR    servidor de correio (ex.: smtp.office365.com)
+#   SMTP_PORTA       normalmente 587
+#   SMTP_UTILIZADOR  endereço que envia
+#   SMTP_SENHA       senha de aplicação, não a senha pessoal
+#   SUBSCRITORES     lista de destinatários em JSON, por área
+#
+# Os destinatários ficam no segredo SUBSCRITORES, e não no repositório: são
+# dados de contacto de terceiros e o repositório é público.
+
+on:
+  workflow_dispatch:
+    inputs:
+      periodo:
+        description: "Janela do relatório"
+        type: choice
+        default: "auto"
+        options: ["auto", "24h", "48h", "72h", "7d"]
+  schedule:
+    # Minuto deslocado: às horas certas as execuções agendadas são atrasadas.
+    - cron: "17 9 * * 1-5"
+
+permissions:
+  contents: read
+
+# Não grava no repositório, mas dois envios em paralelo duplicariam mensagens
+concurrency:
+  group: relatorio-diario
+  cancel-in-progress: false
+
+env:
+  PAINEL: "https://celine-mestre.github.io/radar-noticias/"
+  # Origens a incluir no relatório: nacionais, lusofonas, internacionais.
+  # Vazio inclui as três.
+  ORIGENS: ""
+
+jobs:
+  preparar:
+    runs-on: ubuntu-latest
+    outputs:
+      envios: ${{ steps.gerar.outputs.envios }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Sem o segredo neste passo. O GitHub recusa passar adiante um resultado
+      # produzido por um passo que teve acesso a segredos — foi o que aconteceu:
+      # "Skip output 'envios' since it may contain secret". Os destinatários são
+      # apurados no envio, onde o segredo é de facto preciso.
+      - name: Gerar os relatorios
+        id: gerar
+        run: |
+          set -euo pipefail
+          PERIODO="${{ github.event.inputs.periodo }}"
+          # Vazio (execução agendada) significa janela automática: 24 horas,
+          # ou 72 à segunda-feira, para cobrir o fim de semana.
+          if [ -z "$PERIODO" ]; then PERIODO="auto"; fi
+          python relatorio_email.py \
+            --dados arquivo.json \
+            --todas \
+            --periodo "$PERIODO" \
+            --um-por-area \
+            --subscritores subscritores.json \
+            --origens "$ORIGENS" \
+            --sinteses sinteses.json \
+            --pasta relatorios \
+            --painel "$PAINEL"
+          echo "envios=$(cat relatorios/manifesto.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Guardar os relatorios
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-diarios
+          path: relatorios/
+          retention-days: 14
+
+  enviar:
+    needs: preparar
+    if: needs.preparar.outputs.envios != '[]' && needs.preparar.outputs.envios != ''
+    runs-on: ubuntu-latest
+    # O nome do trabalho usa apenas a área: os valores da matriz aparecem no
+    # nome, e num repositório público seriam visíveis para qualquer pessoa.
+    name: Enviar ${{ matrix.envio.area }}
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        envio: ${{ fromJSON(needs.preparar.outputs.envios) }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Obter os relatorios
+        uses: actions/download-artifact@v4
+        with:
+          name: relatorios-diarios
+          path: relatorios
+
+      # Os endereços são apurados aqui, a partir do segredo, e nunca chegam a
+      # aparecer nos registos: seguem pelo ficheiro de saída do passo e são
+      # ocultados pelo GitHub.
+      - name: Apurar os destinatarios
+        id: dest
+        env:
+          SUBSCRITORES: ${{ secrets.SUBSCRITORES }}
+        run: python relatorio_email.py --destinatarios-de "${{ matrix.envio.area }}"
+
+      - name: Verificar as credenciais
+        id: correio
+        run: |
+          if [ -n "${{ secrets.SMTP_SERVIDOR }}" ]; then
+            echo "pronto=sim" >> "$GITHUB_OUTPUT"
+          else
+            echo "pronto=nao" >> "$GITHUB_OUTPUT"
+            echo "::notice::Sem credenciais de correio. Os relatórios ficam em Artifacts."
+          fi
+
+      - name: Enviar
+        if: steps.correio.outputs.pronto == 'sim' && steps.dest.outputs.para != ''
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVIDOR }}
+          server_port: ${{ secrets.SMTP_PORTA }}
+          secure: false
+          username: ${{ secrets.SMTP_UTILIZADOR }}
+          password: ${{ secrets.SMTP_SENHA }}
+          subject: ${{ matrix.envio.assunto }}
+          to: ${{ steps.dest.outputs.para }}
+          from: Radar de Noticias <${{ secrets.SMTP_UTILIZADOR }}>
+          # As duas versões seguem juntas: o cliente apresenta a que sabe ler.
+          html_body: file://${{ matrix.envio.ficheiro }}
+          body: file://${{ matrix.envio.texto }}
+          convert_markdown: false
