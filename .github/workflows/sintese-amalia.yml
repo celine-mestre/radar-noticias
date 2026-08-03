@@ -1,13 +1,15 @@
 name: Sintese pelo Amalia
 
-# Escreve, por cada área governativa, um parágrafo com o que foi notícia nas
-# últimas 24 horas. Corre o Amália no próprio servidor do fluxo de trabalho:
+# Escreve, por cada área governativa e por cada origem de imprensa — Portugal,
+# lusofonia e internacional —, um parágrafo com o que foi notícia no período.
+# Corre o Amália no próprio servidor do fluxo de trabalho:
 # o modelo tem pesos abertos sob licença Apache 2.0 e não depende de qualquer
 # serviço, credencial ou contrato.
 #
 # CUSTO. Usa-se a conversão quantizada de 4 bits, com cerca de 5,5 GB. Sem placa
-# gráfica, a geração faz-se no processador e demora cerca de um minuto por área —
-# uns vinte minutos ao todo, mais o descarregamento do modelo na primeira vez.
+# gráfica, a geração faz-se no processador e demora cerca de minuto e meio por
+# parágrafo. Com dezasseis áreas e até três origens em cada, o pior caso ronda a
+# hora — na prática fica bem abaixo, porque poucas áreas têm volume nas três.
 # Em repositórios públicos o tempo de execução não tem custo.
 #
 # O modelo fica em cache entre execuções, pelo que só é descarregado de novo
