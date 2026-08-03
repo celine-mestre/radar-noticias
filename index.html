@@ -644,6 +644,54 @@ main{padding:2.2rem 0 4rem}
   font-size:.85rem;color:var(--texto);cursor:pointer;transition:.14s}
 .sub-area:hover{background:var(--superficie-alt)}
 .sub-area input{accent-color:var(--cor);width:15px;height:15px;cursor:pointer;flex:none}
+/* ── RADAR ──────────────────────────────────────────────────────
+   As áreas dispostas em círculo, ordenadas por volume de notícias dos últimos
+   sete dias. A distância ao centro tem significado: quanto mais noticiada a
+   área, mais perto fica. Sem isso, o círculo seria decoração. */
+.radar{margin:1.6rem 0 .4rem}
+.radar-cab{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;margin-bottom:.2rem}
+.radar-cab h2{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--texto-ligeiro);font-weight:600}
+.radar-cab p{font-size:.78rem;color:var(--texto-ligeiro)}
+.palco{position:relative;width:100%;max-width:820px;margin:.6rem auto 0;aspect-ratio:1}
+.palco svg.grade{position:absolute;inset:0;width:100%;height:100%}
+.anel{fill:none;stroke:var(--borda-forte);stroke-width:1}
+.anel.tenue{stroke-dasharray:3 5;stroke-opacity:.7}
+.raio{stroke:var(--borda);stroke-width:1;stroke-opacity:.5}
+.varrer{transform-origin:50% 50%;animation:varredura 9s linear infinite}
+@keyframes varredura{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.varrer{animation:none;opacity:.28}}
+
+.centro{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;
+  width:136px;height:136px;border-radius:50%;background:var(--superficie);
+  border:1px solid var(--borda);box-shadow:var(--sombra);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem}
+.centro strong{font-size:1.8rem;font-weight:600;color:var(--azul);line-height:1;
+  font-variant-numeric:tabular-nums}
+.centro span{font-size:.68rem;color:var(--texto-ligeiro);line-height:1.35;max-width:100px}
+
+.no{position:absolute;transform:translate(-50%,-50%);width:122px;text-align:left;
+  background:var(--superficie);border:1px solid var(--borda);border-left:3px solid var(--cor);
+  border-radius:9px;box-shadow:var(--sombra);padding:.45rem .55rem;cursor:pointer;
+  font-family:inherit;color:inherit;
+  transition:transform .16s cubic-bezier(.2,.8,.3,1), box-shadow .16s}
+.no:hover,.no:focus-visible{transform:translate(-50%,-50%) scale(1.07);z-index:3;outline:none;
+  box-shadow:0 2px 6px rgba(23,23,21,.1), 0 14px 30px -16px rgba(23,23,21,.4)}
+.no-topo{display:flex;align-items:center;gap:.35rem;margin-bottom:.15rem}
+.no-topo svg{width:13px;height:13px;stroke:var(--cor);fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+.no-topo b{font-size:.95rem;font-weight:600;color:var(--cor);font-variant-numeric:tabular-nums;line-height:1}
+.no h3{font-size:.66rem;font-weight:400;color:var(--texto-suave);line-height:1.25;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.no.vazio{opacity:.5}
+
+/* Radar e grelha são a mesma navegação em duas formas: nunca aparecem juntos.
+   Em ecrã largo fica o radar, que mostra o volume de cada área; em ecrã estreito
+   fica a grelha, porque um círculo com dezasseis caixas seria ilegível. */
+@media(min-width:861px){#conteudo{display:none}}
+body.sem-radar #conteudo{display:block !important}
+@media(max-width:860px){.radar{display:none}}
+
 .marca-selecao{font-size:.78rem;color:var(--texto-ligeiro);margin:-.2rem 0 .55rem}
 .consulta-txt{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;line-height:1.6;
@@ -732,6 +780,12 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
         </div>
       </div>
       <div class="acoes">
+        <button class="btn-icone" id="btnEcra" title="Ocupar todo o ecrã" aria-pressed="false">
+          <svg viewBox="0 0 24 24" id="icoEcra">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/>
+            <path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+          </svg>
+        </button>
         <button class="btn-icone" id="btnTema" title="Alternar modo claro e escuro">
           <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         </button>
@@ -848,6 +902,34 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
 <!-- =================== CONTEÚDO =================== -->
 <main>
   <div class="wrap">
+    <!-- Vista de relance: as áreas em círculo, por volume de notícias -->
+    <section class="radar" id="radar" hidden>
+      <div class="radar-cab">
+        <h2>Áreas governativas</h2>
+        <p id="radarNota">A carregar o arquivo…</p>
+      </div>
+      <div class="palco" id="palco">
+        <svg class="grade" viewBox="0 0 100 100" aria-hidden="true">
+          <defs>
+            <radialGradient id="feixe">
+              <stop offset="0%" stop-color="#2B5683" stop-opacity=".16"/>
+              <stop offset="100%" stop-color="#2B5683" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <circle class="anel" cx="50" cy="50" r="17"/>
+          <circle class="anel tenue" cx="50" cy="50" r="27"/>
+          <circle class="anel" cx="50" cy="50" r="37"/>
+          <circle class="anel tenue" cx="50" cy="50" r="46"/>
+          <g id="raios"></g>
+          <g class="varrer"><path d="M50 50 L50 4 A46 46 0 0 1 82.5 17.5 Z" fill="url(#feixe)"/></g>
+        </svg>
+        <div class="centro">
+          <strong id="radarTotal">—</strong>
+          <span id="radarLegenda">notícias</span>
+        </div>
+      </div>
+    </section>
+
     <div id="conteudo"></div>
 
   </div>
@@ -1203,6 +1285,100 @@ function cartao(a){
   </article>`;
 }
 
+/* Contagens por área nos últimos sete dias, a partir do arquivo. É o mesmo
+   ficheiro que serve as consultas — o radar não faz pedidos próprios. */
+let contagens = null;
+
+async function apurarContagens(){
+  if(contagens) return contagens;
+  try{
+    const a = await carregarArquivo();
+    const c = {};
+    a.noticias.forEach(n => {
+      if(ehRedeSocial(n)) return;
+      if(!aceitaOrigem(n)) return;
+      c[n.area] = (c[n.area] || 0) + 1;
+    });
+    contagens = { por: c, dias: a.dias || 7 };
+  }catch(e){
+    contagens = { por: {}, dias: 0 };
+  }
+  return contagens;
+}
+
+/* Mudando a origem das fontes, as contagens deixam de servir e são refeitas */
+function limparContagens(){ contagens = null; }
+
+/* O filtro de origem do radar acompanha o da barra, para que o relance e a
+   consulta digam a mesma coisa. */
+function aceitaOrigem(n){
+  if(filtroFontes === "todas") return true;
+  return origemDaFonte(n) === filtroFontes;
+}
+
+async function desenharRadar(){
+  const alvo = $("#radar");
+  /* Abaixo de 860 píxeis o círculo não é legível e a folha de estilos esconde-o:
+     não vale a pena calcular posições que ninguém vê. */
+  const estreito = window.matchMedia
+    ? window.matchMedia("(max-width:860px)").matches
+    : window.innerWidth <= 860;
+  if(!alvo || estreito) return;
+
+  const { por, dias } = await apurarContagens();
+  const lista = areasVisiveis();
+  const total = lista.reduce((s, a) => s + (por[a.nome] || 0), 0);
+
+  /* Só se esconde quando não há arquivo nenhum para ler — aberto do disco sem
+     ligação, por exemplo. Havendo arquivo, mostra-se mesmo com zero notícias:
+     o círculo vazio é informação, e desaparecer sem explicação não é. */
+  /* Sem arquivo para ler — aberto do disco sem ligação, por exemplo — o radar
+     não teria o que mostrar: cede o lugar à grelha de cartões. */
+  if(!dias){
+    alvo.hidden = true;
+    document.body.classList.add("sem-radar");
+    return;
+  }
+  alvo.hidden = false;
+  document.body.classList.remove("sem-radar");
+
+  $("#radarTotal").textContent = total.toLocaleString("pt-PT");
+  $("#radarLegenda").textContent = total === 1 ? "notícia no arquivo" : "notícias no arquivo";
+  $("#radarNota").textContent = total
+    ? `${lista.length} ${lista.length === 1 ? "área" : "áreas"} · ` +
+      `${ROTULO_FONTES[filtroFontes].toLowerCase()} · ` +
+      `quanto mais noticiada, mais perto do centro`
+    : `Sem notícias no arquivo para estes critérios`;
+
+  const ordenadas = [...lista].sort((x, y) => (por[y.nome] || 0) - (por[x.nome] || 0));
+  const maximo = Math.max(1, ...ordenadas.map(a => por[a.nome] || 0));
+
+  const palco = $("#palco");
+  palco.querySelectorAll(".no").forEach(n => n.remove());
+  const raios = $("#raios");
+  raios.innerHTML = "";
+
+  ordenadas.forEach((a, i) => {
+    const n = por[a.nome] || 0;
+    const ang = (i / ordenadas.length) * 2 * Math.PI - Math.PI / 2;
+    const raio = 46 - (n / maximo) * 24;
+    const x = 50 + raio * Math.cos(ang);
+    const y = 50 + raio * Math.sin(ang);
+
+    raios.insertAdjacentHTML("beforeend",
+      `<line class="raio" x1="50" y1="50" x2="${(50 + 47 * Math.cos(ang)).toFixed(2)}"
+         y2="${(50 + 47 * Math.sin(ang)).toFixed(2)}"/>`);
+
+    palco.insertAdjacentHTML("beforeend", `
+      <button class="no ${n ? "" : "vazio"}" data-detalhe="${a.id}"
+              style="--cor:${cor(a.grupo)};left:${x.toFixed(2)}%;top:${y.toFixed(2)}%"
+              title="${esc(a.nome)} · ${n} ${n === 1 ? "notícia" : "notícias"}">
+        <span class="no-topo"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg><b>${n}</b></span>
+        <h3>${esc(a.nome)}</h3>
+      </button>`);
+  });
+}
+
 function desenhar(){
   const lista = areasVisiveis();
   const alvo = $("#conteudo");
@@ -1214,6 +1390,8 @@ function desenhar(){
 
   /* As áreas seguem a ordem do XXV Governo Constitucional, como no Portal do
      Governo. Os agrupamentos temáticos mantêm-se como filtro, não como secções. */
+  desenharRadar();
+
   alvo.innerHTML = `<section class="grupo">
     <div class="grupo-cab">
       <div class="risco" style="background:var(--azul)"></div>
@@ -1533,6 +1711,7 @@ const MANUAL = [
   { n:"2", titulo:"Navegar", cor:"var(--verde)", icone:"grelha", corpo:`
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
+      <dt>Radar</dt><dd>Acima da grelha, as áreas dispostas em círculo por volume de notícias no arquivo dos últimos sete dias. A distância ao centro tem significado: quanto mais noticiada a área, mais perto fica; ao centro está o total. Acompanha os filtros de origem e de agrupamento, e clicar numa área abre-a como na grelha. Em ecrãs estreitos não aparece, porque seria ilegível — a grelha faz o mesmo trabalho.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: 24 horas, até ao máximo de sete dias, que é o que o arquivo guarda.</dd>
       <dt>Imprensa</dt><dd>Três origens que não se sobrepõem e que, somadas, dão o corpus completo. <strong>Portugal</strong>, por predefinição. <strong>Lusofonia</strong>: Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacional</strong>: a restante imprensa estrangeira, já <em>sem</em> a lusofonia, que tem posição própria. <strong>Todas</strong> não filtra.</dd>
@@ -2926,6 +3105,29 @@ document.addEventListener("keydown", e => {
 
 $("#campoPesquisa").addEventListener("input", e => { termoPesquisa = e.target.value; desenhar(); });
 
+/* Ecrã inteiro — útil para apresentar o painel numa reunião. O navegador só
+   permite entrar por ação do utilizador, e sai com a tecla Escape. */
+const ICONE_ENTRAR = `<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/>
+  <path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>`;
+const ICONE_SAIR = `<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M16 3v3a2 2 0 0 0 2 2h3"/>
+  <path d="M8 21v-3a2 2 0 0 0-2-2H3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>`;
+
+function marcarEcra(){
+  const cheio = !!document.fullscreenElement;
+  const b = $("#btnEcra");
+  if(!b) return;
+  b.setAttribute("aria-pressed", cheio ? "true" : "false");
+  b.title = cheio ? "Sair do ecrã inteiro" : "Ocupar todo o ecrã";
+  $("#icoEcra").innerHTML = cheio ? ICONE_SAIR : ICONE_ENTRAR;
+}
+
+$("#btnEcra").addEventListener("click", () => {
+  if(document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() =>
+    mostrarAviso("O navegador não permitiu o ecrã inteiro"));
+});
+document.addEventListener("fullscreenchange", marcarEcra);
+
 $("#btnManual").addEventListener("click", () => abrirManual("1"));
 $("#btnSubscrever").addEventListener("click", abrirSubscricao);
 
@@ -2936,6 +3138,8 @@ $("#filtroFontes").addEventListener("click", e => {
   soNacionais = filtroFontes === "nacionais";
   document.querySelectorAll("#filtroFontes button").forEach(x => x.classList.toggle("ativo", x === b));
   recolha = []; assinaturaRecolha = "";
+  limparContagens();   // o radar conta por origem: mudando o filtro, reconta
+  desenharRadar();
   mostrarAviso(ROTULO_FONTES[filtroFontes]);
 });
 
