@@ -9,11 +9,19 @@ on:
   schedule:
     # Todos os dias, incluindo fim de semana: sem isso, o arquivo ficaria com um
     # buraco de dois dias e a segunda-feira perderia o que aconteceu ao sábado.
-    - cron: "0 6 * * *"       # cedo, para o painel estar pronto
-    - cron: "0 8 * * *"       # recolha da manhã, antes da síntese e do relatório
+    # Minutos deslocados de propósito: às horas certas o GitHub tem picos de
+    # procura e as execuções agendadas são atrasadas ou saltadas.
+    - cron: "7 6 * * *"       # cedo, para o painel estar pronto
+    - cron: "7 8 * * *"       # recolha da manhã, antes da síntese e do relatório
 
 permissions:
   contents: write
+
+# Três fluxos gravam no mesmo repositório. Sem isto, duas execuções simultâneas
+# podiam recusar-se mutuamente o envio.
+concurrency:
+  group: gravacao-repositorio
+  cancel-in-progress: false
 
 jobs:
   recolher:
@@ -43,7 +51,12 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add noticias.json historico.json arquivo.json corpus.json meses/
+          # Só se acrescenta o que existe: um ficheiro opcional em falta fazia
+          # o "git add" falhar e derrubava a recolha inteira.
+          for f in noticias.json historico.json arquivo.json corpus.json; do
+            [ -f "$f" ] && git add "$f"
+          done
+          [ -d meses ] && git add meses/
           git diff --cached --quiet || git commit -m "Recolha de noticias"
           # Três fluxos gravam no mesmo repositório e podem cruzar-se: puxa-se
           # primeiro o que houver, para o envio não ser recusado.

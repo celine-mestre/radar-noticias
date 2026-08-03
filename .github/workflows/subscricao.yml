@@ -45,6 +45,11 @@ on:
 permissions:
   contents: read
 
+# Um de cada vez a gravar no segredo dos subscritores
+concurrency:
+  group: gravacao-repositorio
+  cancel-in-progress: false
+
 env:
   PAINEL: "https://celine-mestre.github.io/radar-noticias/"
 

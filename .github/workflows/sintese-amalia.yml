@@ -37,10 +37,15 @@ on:
         required: false
         default: ""
   schedule:
-    - cron: "10 8 * * 1-5"     # depois da recolha das 08h00, antes do relatório das 09h00
+    - cron: "22 8 * * 1-5"     # depois da recolha das 08h07, antes do relatório
 
 permissions:
   contents: write
+
+# Um de cada vez a gravar no repositório
+concurrency:
+  group: gravacao-repositorio
+  cancel-in-progress: false
 
 jobs:
   sintetizar:

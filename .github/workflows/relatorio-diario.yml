@@ -1,12 +1,12 @@
 name: Relatorio diario por email
 
-# Envia, todas as manhãs, um relatório por área governativa, para os destinatários
-# indicados no ficheiro subscritores.json. Corre depois de uma recolha, para que
-# as notícias incluam a manhã do próprio dia.
+# Envia, todas as manhãs, um relatório por área governativa, aos destinatários
+# do segredo SUBSCRITORES. Corre depois da recolha e da síntese, para que as
+# notícias incluam a manhã do próprio dia.
 #
-# HORA. O GitHub agenda em UTC. 09h00 UTC corresponde às 10h00 de Lisboa no
-# horário de verão e às 9h00 no de inverno. A recolha corre às 08h40 UTC, no
-# fluxo radar-noticias.yml, para o relatório apanhar as notícias da manhã.
+# HORA. O GitHub agenda em UTC. 09h17 UTC corresponde às 10h17 de Lisboa no
+# horário de verão. A recolha corre às 08h07 e a síntese às 08h22, no mesmo
+# fuso, para o relatório apanhar as notícias da manhã já sintetizadas.
 #
 # CREDENCIAIS, uma única vez, em Settings > Secrets and variables > Actions:
 #   SMTP_SERVIDOR    servidor de correio (ex.: smtp.office365.com)
@@ -27,10 +27,16 @@ on:
         default: "auto"
         options: ["auto", "24h", "48h", "72h", "7d"]
   schedule:
-    - cron: "0 9 * * 1-5"
+    # Minuto deslocado: às horas certas as execuções agendadas são atrasadas.
+    - cron: "17 9 * * 1-5"
 
 permissions:
   contents: read
+
+# Não grava no repositório, mas dois envios em paralelo duplicariam mensagens
+concurrency:
+  group: relatorio-diario
+  cancel-in-progress: false
 
 env:
   PAINEL: "https://celine-mestre.github.io/radar-noticias/"
