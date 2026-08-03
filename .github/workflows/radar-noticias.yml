@@ -36,13 +36,14 @@ jobs:
           echo "NOME=$NOME" >> "$GITHUB_ENV"
           python extrair_noticias.py --periodo 24h --saida "$NOME" \
             --json noticias.json --historico historico.json \
-            --arquivo arquivo.json --dias-arquivo 7 --mensal meses --fontes
+            --arquivo arquivo.json --dias-arquivo 7 --mensal meses \
+            --corpus corpus.json --fontes
 
       - name: Gravar os ficheiros de dados
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add noticias.json historico.json arquivo.json meses/
+          git add noticias.json historico.json arquivo.json corpus.json meses/
           git diff --cached --quiet || git commit -m "Recolha de noticias"
           # Três fluxos gravam no mesmo repositório e podem cruzar-se: puxa-se
           # primeiro o que houver, para o envio não ser recusado.
