@@ -672,6 +672,13 @@ main{padding:2.2rem 0 4rem}
 .radar-cab h2{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
   color:var(--texto-ligeiro);font-weight:600}
 .radar-cab p{font-size:.78rem;color:var(--texto-ligeiro)}
+.radar-hora{margin-left:auto;display:inline-flex;align-items:center;gap:.35rem;
+  font-size:.72rem;color:var(--texto-ligeiro);white-space:nowrap}
+.radar-hora b{font-weight:500;color:var(--texto-suave)}
+.radar-hora .pulso{width:7px;height:7px;border-radius:50%;background:var(--verde);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--verde) 18%, transparent);flex:none}
+.radar-hora.velho .pulso{background:var(--dourado);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--dourado) 18%, transparent)}
 .palco{position:relative;width:100%;max-width:820px;margin:.6rem auto 0;aspect-ratio:1}
 .palco svg.grade{position:absolute;inset:0;width:100%;height:100%}
 .anel{fill:none;stroke:var(--borda-forte);stroke-width:1}
@@ -940,6 +947,7 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <div class="radar-cab">
         <h2>Áreas governativas</h2>
         <p id="radarNota">A carregar o arquivo…</p>
+        <p class="radar-hora" id="radarHora"></p>
       </div>
       <div class="palco" id="palco">
         <svg class="grade" viewBox="0 0 100 100" aria-hidden="true">
@@ -1318,7 +1326,7 @@ async function apurarContagens(){
       vistos.add(k);
       c[n.area] = (c[n.area] || 0) + 1;
     });
-    contagens = { por: c, dias: a.dias || 7 };
+    contagens = { por: c, dias: a.dias || 7, atualizado: a.atualizado || "" };
   }catch(e){
     contagens = { por: {}, dias: 0 };
   }
@@ -1335,6 +1343,33 @@ function aceitaOrigem(n){
   return origemDaFonte(n) === filtroFontes;
 }
 
+/* Quando os dados foram recolhidos. O painel lê ficheiros: sem esta indicação,
+   quem consulta não sabe se está a ver a manhã de hoje ou a de anteontem. */
+function mostrarUltimaRecolha(atualizado){
+  const alvo = $("#radarHora");
+  if(!alvo) return;
+  if(!atualizado){ alvo.innerHTML = ""; return; }
+
+  const d = new Date(atualizado.replace(" ", "T"));
+  if(isNaN(d)){ alvo.innerHTML = ""; return; }
+
+  const horas = (Date.now() - d.getTime()) / 3600000;
+  const quando = horas < 1
+    ? "há menos de uma hora"
+    : horas < 24
+      ? `há ${Math.round(horas)} ${Math.round(horas) === 1 ? "hora" : "horas"}`
+      : `há ${Math.round(horas / 24)} ${Math.round(horas / 24) === 1 ? "dia" : "dias"}`;
+
+  const hora = d.toLocaleString("pt-PT",
+    { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+
+  alvo.className = "radar-hora" + (horas > 26 ? " velho" : "");
+  alvo.innerHTML = `<span class="pulso"></span>Recolha de <b>${hora}</b> · ${quando}`;
+  alvo.title = horas > 26
+    ? "A última recolha tem mais de um dia: o agendamento pode não ter corrido."
+    : "Os dados são desta recolha. O painel não consulta nada em direto.";
+}
+
 async function desenharRadar(){
   const alvo = $("#radar");
   /* Abaixo de 860 píxeis o círculo não é legível e a folha de estilos esconde-o:
@@ -1344,7 +1379,7 @@ async function desenharRadar(){
     : window.innerWidth <= 860;
   if(!alvo || estreito) return;
 
-  const { por, dias } = await apurarContagens();
+  const { por, dias, atualizado } = await apurarContagens();
   const lista = areasVisiveis();
   const total = lista.reduce((s, a) => s + (por[a.nome] || 0), 0);
 
@@ -1367,6 +1402,8 @@ async function desenharRadar(){
                        todas:"todas as origens" }[filtroFontes];
   $("#radarLegenda").textContent =
     `${total === 1 ? "notícia" : "notícias"} · ${ROTULO_PERIODO[periodo]} · ${ondeOrigem}`;
+  mostrarUltimaRecolha(atualizado);
+
   $("#radarNota").textContent = total
     ? `${lista.length} ${lista.length === 1 ? "área" : "áreas"} · ` +
       `${ROTULO_FONTES[filtroFontes].toLowerCase()} · ` +
@@ -1763,6 +1800,7 @@ const MANUAL = [
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Abrir uma área</dt><dd>Clicar numa área abre diretamente a janela de resultados, com as notícias já recolhidas. As palavras-chave ficam à cabeça dessa janela: escolher uma ou várias refaz a consulta no momento, e <strong>Todas as palavras-chave</strong> repõe a área completa. A caixa ao lado procura um termo livre.</dd>
       <dt>Dentro da janela</dt><dd>Dois botões no canto superior direito: <strong>ampliar</strong>, que alarga a janela a quase todo o ecrã e volta a reduzi-la, útil para listas longas ou para mostrar numa reunião; e <strong>voltar ao radar</strong>. Para comparar áreas sem sair, o seletor <strong>Área</strong>, na barra de critérios, troca de área mantendo o período, a origem e a amplitude escolhidos.</dd>
+      <dt>Quando os dados foram recolhidos</dt><dd>À direita do título das áreas está a hora da última recolha. O painel lê ficheiros e não consulta nada em direto: o que vê é o retrato dessa recolha. Passando de um dia, a marca fica dourada, sinal de que o agendamento pode não ter corrido.</dd>
       <dt>Radar</dt><dd>As áreas dispostas em círculo por volume de notícias. A distância ao centro tem significado: quanto mais noticiada a área, mais perto fica; ao centro está o total. Acompanha os três seletores da barra — período, origem das fontes e agrupamento —, pelo que os números mudam com eles. Clicar numa área abre-a. Em ecrãs estreitos dá lugar à grelha de cartões, porque um círculo com dezasseis caixas seria ilegível.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: sete dias, que é tudo o que o arquivo guarda. Reduzindo-o, vê-se apenas o mais recente.</dd>
@@ -1826,7 +1864,7 @@ const MANUAL = [
     <p class="man-aviso">Áreas sem notícias no período não geram mensagem — não se enviam relatórios vazios. Para cancelar, responda a qualquer relatório a pedir o cancelamento.</p>` },
 
   { n:"9", titulo:"Recolha agendada", cor:"var(--teal)", icone:"engrenagem", corpo:`
-    <p>O painel não vai buscar notícias enquanto o consulta: lê ficheiros que uma recolha automática deixou ao lado dele. Essa recolha corre nos servidores do GitHub, <strong>todos os dias</strong>, duas vezes de manhã.</p>
+    <p>O painel não vai buscar notícias enquanto o consulta: lê ficheiros que uma recolha automática deixou ao lado dele. Essa recolha corre nos servidores do GitHub <strong>todos os dias, de duas em duas horas</strong>, entre as sete da manhã e as sete da tarde — daí a hora indicada ao lado do título das áreas.</p>
     <dl>
       <dt>arquivo.json</dt><dd>As notícias marcadas dos últimos sete dias, com as palavras-chave de cada uma. É o que responde às consultas e o que o radar conta.</dd>
       <dt>corpus.json</dt><dd>Todos os artigos lidos dos feeds nos mesmos sete dias, marcados ou não. É onde a pesquisa por termo procura.</dd>

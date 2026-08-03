@@ -261,11 +261,19 @@ def principal():
     areas = sorted({n.get("area") for n in noticias if n.get("area")})
 
     if args.apenas:
-        alvo = _sem_acentos(args.apenas)
-        areas = [a for a in areas if alvo in _sem_acentos(a)]
-        if not areas:
-            sys.exit(f"Área não encontrada: {args.apenas}")
-        print(f"Ensaio limitado a: {areas[0]}")
+        # Aceita várias áreas separadas por vírgula: "Finanças, Saúde, Justiça".
+        # Antes tomava a linha inteira por um só nome, não encontrava nada e
+        # terminava com erro — que foi o que sucedeu.
+        pedidas = [_sem_acentos(x.strip()) for x in args.apenas.split(",") if x.strip()]
+        escolhidas = [a for a in areas if any(p in _sem_acentos(a) for p in pedidas)]
+        desconhecidas = [p for p in pedidas
+                         if not any(p in _sem_acentos(a) for a in areas)]
+        if desconhecidas:
+            print(f"Não reconhecidas, ignoradas: {', '.join(desconhecidas)}")
+        if not escolhidas:
+            sys.exit(f"Nenhuma área corresponde a: {args.apenas}")
+        areas = escolhidas
+        print(f"Ensaio limitado a: {', '.join(areas)}")
 
     agora = datetime.now()
     resultado = {"gerado": agora.strftime("%Y-%m-%d %H:%M"),

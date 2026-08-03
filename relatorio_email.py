@@ -80,10 +80,10 @@ ETIQUETA_ORIGEM = {
     "internacionais": ("Internacional", "#266B73"),
 }
 
-# Uma síntese mais velha do que isto já não descreve o que a lista mostra.
-# Doze horas cobrem o intervalo entre a escrita da manhã e qualquer envio do
-# mesmo dia, incluindo os que atravessem a meia-noite.
-MAX_IDADE_SINTESE = 12
+# Uma síntese mais velha do que isto já não descreve o que a lista mostra. Oito
+# horas cobrem folgadamente o intervalo entre a escrita da manhã, às 08h22, e o
+# envio das 09h17 — e impedem que uma síntese da véspera à noite passe por atual.
+MAX_IDADE_SINTESE = 8
 
 ROTULO_ORIGENS = {
     frozenset({"nacionais"}): "imprensa de Portugal",

@@ -237,10 +237,18 @@ O dia corre assim, em hora UTC — mais uma hora em Lisboa no horário de verão
 
 | Hora UTC | O quê | Dias |
 |---|---|---|
-| 06h07 | Recolha, para o painel estar pronto de manhã cedo | Todos |
-| 08h07 | Recolha da manhã | Todos |
-| 08h22 | Síntese do Amália, sobre essa recolha | Seg a sex |
+| 06h07 às 18h07, de duas em duas horas | Recolha | Todos |
+| 08h22 | Síntese do Amália, sobre a recolha das 08h07 | Seg a sex |
 | 09h17 | Envio dos relatórios | Seg a sex |
+
+Em Lisboa, no horário de verão, as recolhas correm das 07h07 às 19h07. Quem
+consulta o painel a meio da tarde vê o que foi noticiado nessa tarde, e não a
+manhã. Cada recolha demora cerca de um minuto.
+| 10h07 · 12h07 · 14h07 · 16h07 · 18h07 | Recolhas ao longo do dia | Todos |
+
+São sete recolhas diárias, de duas em duas horas entre as 07h07 e as 19h07 de Lisboa.
+Quem abrir o painel a meio da tarde vê o que foi noticiado nessa tarde, e não a manhã.
+O painel indica sempre a hora da recolha que está a mostrar.
 
 Os minutos estão deslocados de propósito. Às horas certas o GitHub tem picos de
 procura e as execuções agendadas são atrasadas — por vezes saltadas. Um minuto
@@ -423,6 +431,23 @@ lusofonia, internacional) e a contagem de cada palavra-chave.
 São agregados, não notícias. Cerca de **2 KB por dia**, menos de 1 MB por ano. Chega
 para responder a perguntas de tendência: que áreas cresceram, que assuntos ganharam
 peso, como se distribuiu a atenção da imprensa ao longo de um semestre.
+
+### O que fica e o que passa
+
+| Ficheiro | Guarda | Por quanto tempo |
+|---|---|---|
+| `arquivo.json` | Notícias marcadas por área | 7 dias, sempre a deslizar |
+| `corpus.json` | Imprensa em bruto, marcada ou não | 7 dias, sempre a deslizar |
+| `historico.json` | Contagens por dia e por área | **Para sempre** |
+| `meses/AAAA-MM.jsonl.gz` | Notícias marcadas, com título e resumo | **Para sempre** |
+
+Para analisar o passado, o que conta são as duas últimas linhas. O `meses/` guarda
+todas as notícias de cada dia, uma a uma; o `historico.json` guarda as contagens. Os
+dois primeiros são de trabalho e não têm memória.
+
+O que **não** fica é a imprensa não marcada: o `corpus.json` só existe para a pesquisa
+por termo e não se acumula. Guardá-lo seria multiplicar por dez o espaço para conservar
+artigos que nenhuma área classificou.
 
 ### Arquivo permanente — `meses/AAAA-MM.jsonl.gz`
 
