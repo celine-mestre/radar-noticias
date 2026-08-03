@@ -818,6 +818,30 @@ def contem_expressao(texto, expressao, texto_original=None):
     return re.search(r"(^|\W)" + padrao + r"(\W|$)", texto) is not None
 
 
+# Domínios das publicações que escrevem em português. As restantes entram no
+# corpus da pesquisa por termo, mas não são classificadas por área: as nossas
+# palavras-chave são portuguesas e, aplicadas a outra língua, produzem
+# coincidências falsas — "bolsas" apanhava "la bolsa española".
+SUFIXOS_PORTUGUES = (".pt", ".ao", ".mz", ".cv", ".st", ".gw", ".tl", ".br")
+DOMINIOS_PORTUGUES = (
+    "noticiasaominuto.com", "cnnportugal.iol.pt", "eco.sapo.pt", "sapo.pt",
+    "impresa.pt", "medialivre.pt", "lusa.pt", "novojornal.co.ao", "cartamz.com",
+    "agenciabrasil.ebc.com.br", "folha.uol.com.br",
+    # Edições em português de publicações estrangeiras
+    "pt.euronews.com", "dw.com", "france24.com", "rfi.fr",
+)
+
+
+def escreve_em_portugues(dominio):
+    """Verdadeiro se a publicação escreve em português."""
+    d = (dominio or "").lower().replace("www.", "")
+    if not d:
+        return True                        # sem domínio conhecido, não se exclui
+    if any(d.endswith(sufixo) for sufixo in SUFIXOS_PORTUGUES):
+        return True
+    return any(d == x or d.endswith("." + x) for x in DOMINIOS_PORTUGUES)
+
+
 def marcar_por_areas(it, alvo):
     """Devolve as áreas e as palavras-chave que este artigo satisfaz.
 
@@ -881,6 +905,12 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
                     "ligacao": it["ligacao"],
                     "imagem": it.get("imagem", ""),
                 }
+
+            # Publicações noutra língua ficam pelo corpus da pesquisa: as
+            # palavras-chave portuguesas, aplicadas a outra língua, dariam
+            # coincidências falsas.
+            if not escreve_em_portugues(it["dominio"] or dominio):
+                continue
             for nome_area, grupo_nome, palavras in marcar_por_areas(it, alvo):
                 chave = (nome_area, it["titulo"].lower())
                 if chave in encontrados:
@@ -1226,7 +1256,11 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
     janelas de vários dias sem depender de serviços externos: em vez de
     interrogar o serviço, filtra este arquivo.
     """
-    campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "ligacao"]
+    # A ordem tem de ser a das linhas produzidas pela recolha. Faltava aqui o
+    # resumo, pelo que a sétima posição — que é o resumo — ia parar ao campo da
+    # ligação: no Excel, a coluna da ligação aparecia com o texto do resumo.
+    campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "resumo",
+              "ligacao", "palavras"]
     limite = (agora_lisboa() - timedelta(days=dias)).strftime("%Y-%m-%d")
 
     anteriores = []
@@ -1248,6 +1282,9 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
     def registo(l):
         r = dict(zip(campos, l))
         r["data"] = r["data"].strftime("%Y-%m-%d %H:%M") if r["data"] else ""
+        r["palavras"] = sorted(r["palavras"]) if r.get("palavras") else []
+        if not r.get("resumo"):
+            r.pop("resumo", None)
         return r
 
     novas = [registo(l) for l in linhas]

@@ -158,7 +158,10 @@ as publicações que escrevem em português: as nacionais, as lusófonas e as ed
 portuguesas da Euronews, da Deutsche Welle, da France 24 e da RFI.
 
 As restantes estrangeiras — britânicas, francesas, espanholas, italianas, norte-americanas
-e alemãs — entram sobretudo no corpus da **pesquisa por termo**. Escrevendo "Ceuta",
+e alemãs — **não são classificadas por área**, e entram apenas no corpus da **pesquisa por
+termo**. Aplicar palavras-chave portuguesas a outra língua produz coincidências falsas:
+"bolsas" apanhava "la bolsa española", que é a bolsa de valores, e punha notícias
+financeiras espanholas na Educação. Escrevendo "Ceuta",
 "NATO" ou o nome de uma pessoa, encontram-se; por palavras-chave portuguesas, não são
 classificadas. Foram acrescentadas por isso mesmo: para que a pesquisa livre alcance a
 imprensa de referência internacional, que é o que um serviço de *clipping* faz.

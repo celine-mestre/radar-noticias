@@ -108,9 +108,13 @@ INSTRUCAO = (
     "- Escreve em português de Portugal, em registo institucional e neutro.\n"
     "- Não emitas juízos, não recomendes nada, não uses adjetivos valorativos.\n"
     "- Não uses expressões como 'as notícias indicam' ou 'segundo os títulos'.\n"
-    "- Os títulos são todos da mesma origem de imprensa, indicada acima. Escreve "
-    "sobre eles como o que são: sendo imprensa estrangeira, não os apresentes "
-    "como factos nacionais.\n"
+    "- Cada título vem precedido da publicação que o difundiu, entre parênteses "
+    "retos.\n"
+    "- Tratando-se de imprensa da lusofonia ou internacional, NOMEIA SEMPRE o país "
+    "a que a notícia diz respeito: 'em Angola', 'no Brasil', 'em Espanha'. Sem "
+    "isso, quem lê não sabe de que país é o défice ou o hospital de que se fala. "
+    "Não juntes num mesmo período factos de países diferentes.\n"
+    "- Não trates imprensa estrangeira como se falasse de Portugal.\n"
     "- Devolve apenas o parágrafo, sem título nem marcas de formatação."
 )
 
@@ -153,7 +157,7 @@ def do_periodo(noticias, area, periodo):
 
 def perguntar(endereco, chave, titulos, area, rotulo="", tempo_limite=60):
     """Uma chamada ao Amália, pela interface compatível com OpenAI."""
-    lista = "\n".join(f"- {t}" for t in titulos)
+    lista = "\n".join(f"- [{f}] {t}" for f, t in titulos)
     corpo = {
         "model": MODELO,
         "messages": [
@@ -240,7 +244,7 @@ def extensao(n):
 def perguntar_local(titulos, area, repo, ficheiro, rotulo=""):
     """A mesma pergunta, respondida pelo modelo carregado neste computador."""
     modelo = carregar_modelo_local(repo, ficheiro)
-    lista = "\n".join(f"- {t}" for t in titulos)
+    lista = "\n".join(f"- [{f}] {t}" for f, t in titulos)
     resposta = modelo.create_chat_completion(
         messages=[
             {"role": "system", "content": INSTRUCAO},
@@ -335,7 +339,10 @@ def principal():
                 contas["poucas"] += 1
                 continue
 
-            titulos = [n["titulo"] for n in desta[: args.maximo]]
+            # A publicação segue com o título: é o que permite ao modelo dizer
+            # de que país fala cada notícia, em vez de as apresentar sem lugar.
+            titulos = [(n.get("fonte") or "publicação não identificada", n["titulo"])
+                       for n in desta[: args.maximo]]
             inicio = time.monotonic()
             try:
                 texto = (perguntar_local(titulos, area, args.repo, args.ficheiro, rotulo)
