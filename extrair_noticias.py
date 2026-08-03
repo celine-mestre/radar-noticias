@@ -903,6 +903,8 @@ def principal():
                     help="ficheiro JSON de série diária, atualizado a cada recolha")
     ap.add_argument("--arquivo", default=None,
                     help="ficheiro JSON com as notícias dos últimos dias, acumulado a cada recolha")
+    ap.add_argument("--mensal", default=None,
+                    help="pasta do arquivo permanente, um ficheiro comprimido por mês")
     ap.add_argument("--dias-arquivo", type=int, default=7,
                     help="dias a manter no arquivo (predefinição: 7)")
     ap.add_argument("--por-palavra", action="store_true",
@@ -984,6 +986,9 @@ def principal():
 
     if args.arquivo:
         atualizar_arquivo(args.arquivo, linhas, args.dias_arquivo, por_palavra)
+
+    if args.mensal:
+        guardar_mensal(args.mensal, linhas)
 
     if args.historico:
         atualizar_historico(args.historico, linhas, args.periodo, vistos_anteriores)
@@ -1074,6 +1079,92 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
     print(f"arquivo de {dias} dias: {len(mantidas)} notícias em {caminho}")
 
 
+# Publicações portuguesas cujo domínio não termina em .pt
+DOMINIOS_PT = ("noticiasaominuto.com", "cnnportugal.iol.pt", "eco.sapo.pt",
+               "sapo.pt", "impresa.pt", "medialivre.pt", "lusa.pt")
+DOMINIOS_LUSOFONOS = (".ao", ".mz", ".cv", ".st", ".gw", ".tl", ".br")
+
+
+def origem_da_fonte(dominio):
+    """Portugal, lusofonia ou internacional, a partir do domínio.
+
+    As mesmas três origens do painel e do relatório: sem isto, a série diária
+    contaria de maneira diferente da consulta.
+    """
+    d = (dominio or "").lower().replace("www.", "")
+    if not d:
+        return "nacionais"
+    if d.endswith(".pt") or any(d == x or d.endswith("." + x) for x in DOMINIOS_PT):
+        return "nacionais"
+    if any(d.endswith(t) for t in DOMINIOS_LUSOFONOS):
+        return "lusofonas"
+    return "internacionais"
+
+
+def guardar_mensal(pasta, linhas):
+    """Arquivo permanente, um ficheiro comprimido por mês.
+
+    O arquivo corrente guarda sete dias e é o que o painel consulta; este é o
+    depósito de longo prazo, que nada lê no dia a dia. Serve para, daqui a um
+    ano, se poder voltar atrás e produzir estatísticas sobre o que foi noticiado.
+
+    Cada linha é uma notícia em JSON — formato que se lê de forma incremental,
+    sem carregar o ficheiro todo em memória. Comprimido, ocupa cerca de um
+    décimo do que ocuparia em texto simples.
+    """
+    import gzip
+
+    os.makedirs(pasta, exist_ok=True)
+    por_mes = {}
+    for l in linhas:
+        data = l[2]
+        if not data:
+            continue
+        mes = data.strftime("%Y-%m")
+        por_mes.setdefault(mes, []).append({
+            "area": l[0], "grupo": l[1],
+            "data": data.strftime("%Y-%m-%d %H:%M"),
+            "fonte": l[3], "dominio": l[4], "titulo": l[5],
+            "resumo": l[6] or "", "ligacao": l[7],
+            "palavras": sorted(l[8]) if len(l) > 8 and l[8] else [],
+        })
+
+    total = 0
+    for mes, registos in sorted(por_mes.items()):
+        caminho = os.path.join(pasta, f"{mes}.jsonl.gz")
+
+        # Sem repetições: uma notícia recolhida em dois dias entra uma só vez
+        vistos = set()
+        anteriores = []
+        if os.path.exists(caminho):
+            with gzip.open(caminho, "rt", encoding="utf-8") as origem:
+                for linha in origem:
+                    try:
+                        r = json.loads(linha)
+                    except json.JSONDecodeError:
+                        continue
+                    anteriores.append(r)
+                    vistos.add((r.get("area", ""), (r.get("titulo") or "").lower()))
+
+        novas = [r for r in registos
+                 if (r["area"], (r["titulo"] or "").lower()) not in vistos]
+        if not novas:
+            print(f"arquivo mensal {mes}: sem notícias novas")
+            continue
+
+        juntas = anteriores + novas
+        juntas.sort(key=lambda r: r["data"], reverse=True)
+        with gzip.open(caminho, "wt", encoding="utf-8") as destino:
+            for r in juntas:
+                destino.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+        tamanho = os.path.getsize(caminho) / 1024
+        total += len(novas)
+        print(f"arquivo mensal {mes}: +{len(novas)} novas, "
+              f"{len(juntas)} ao todo ({tamanho:.0f} KB)")
+    return total
+
+
 def atualizar_historico(caminho, linhas, periodo, vistos=None):
     """Acrescenta à série diária o retrato de hoje, por área governativa.
 
@@ -1096,18 +1187,30 @@ def atualizar_historico(caminho, linhas, periodo, vistos=None):
 
     por_area = {}
     for l in linhas:
-        registo = por_area.setdefault(l[0], {"noticias": 0, "novas": 0, "fontes": set()})
+        registo = por_area.setdefault(l[0], {
+            "noticias": 0, "novas": 0, "fontes": set(),
+            "origens": {"nacionais": 0, "lusofonas": 0, "internacionais": 0},
+            "palavras": {},
+        })
         registo["noticias"] += 1
         if l[7] and l[7] not in vistos.get(l[0], set()):
             registo["novas"] += 1
         if l[3]:
             registo["fontes"].add(l[3])
+        registo["origens"][origem_da_fonte(l[4])] += 1
+        for pal in (l[8] if len(l) > 8 and l[8] else []):
+            registo["palavras"][pal] = registo["palavras"].get(pal, 0) + 1
 
     serie["dias"].append({
         "data": hoje,
         "periodo": periodo or "sem limite",
-        "areas": {nome: {"noticias": v["noticias"], "novas": v["novas"], "fontes": len(v["fontes"])}
-                  for nome, v in sorted(por_area.items())},
+        "areas": {nome: {
+            "noticias": v["noticias"],
+            "novas": v["novas"],
+            "fontes": len(v["fontes"]),
+            "origens": v["origens"],
+            "palavras": dict(sorted(v["palavras"].items(), key=lambda x: -x[1])),
+        } for nome, v in sorted(por_area.items())},
     })
     serie["dias"].sort(key=lambda d: d["data"])
 

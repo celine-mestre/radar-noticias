@@ -107,7 +107,8 @@ fora do período.
 | `.github/workflows/relatorio-diario.yml` | Tarefa agendada que envia um relatório por área. |
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
 | `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
-| `historico.json` | **Série diária.** Notícias, notícias novas e publicações distintas, por dia e por área. Não contém notícias, apenas contagens. |
+| `historico.json` | **Série diária.** Por dia e por área: notícias, notícias novas, publicações distintas, repartição por origem e contagem de cada palavra-chave. Agregados, não notícias. |
+| `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente.** Um ficheiro comprimido por mês, com todas as notícias desse mês. Nada o lê no dia a dia. |
 
 Os três ficheiros de dados são gerados pela recolha. Não devem ser editados à mão.
 
@@ -191,7 +192,8 @@ Pela linha de comandos, com Python e `openpyxl`:
 ```bash
 # leitura dos feeds das publicações (método principal)
 python extrair_noticias.py --fontes --json noticias.json \
-    --arquivo arquivo.json --dias-arquivo 7 --historico historico.json
+    --arquivo arquivo.json --dias-arquivo 7 --mensal meses \
+    --historico historico.json
 
 # apenas uma área
 python extrair_noticias.py --fontes --area saude --saida saude.xlsx
@@ -375,6 +377,53 @@ python sintese_ia.py --local --dados arquivo.json --apenas "Finanças"   # ensai
 
 Sem modo local nem ponto de acesso, o programa não faz nada e a aplicação funciona como
 antes, apenas sem os parágrafos.
+
+---
+
+## Memória de longo prazo
+
+O arquivo que o painel consulta guarda **sete dias** — é o que serve para trabalhar. A
+memória do que foi noticiado guarda-se em duas camadas separadas, ambas cumulativas e
+nunca apagadas.
+
+### Série diária — `historico.json`
+
+Escrita em cada recolha. Por dia e por área: quantas notícias, quantas eram novas face
+à recolha anterior, quantas publicações distintas, a repartição por origem (Portugal,
+lusofonia, internacional) e a contagem de cada palavra-chave.
+
+São agregados, não notícias. Cerca de **2 KB por dia**, menos de 1 MB por ano. Chega
+para responder a perguntas de tendência: que áreas cresceram, que assuntos ganharam
+peso, como se distribuiu a atenção da imprensa ao longo de um semestre.
+
+### Arquivo permanente — `meses/AAAA-MM.jsonl.gz`
+
+Um ficheiro comprimido por mês, com **as notícias todas** desse mês: área, data,
+publicação, título, resumo, ligação e palavras-chave que a marcaram. Sem repetições.
+
+Uma linha por notícia, o que permite lê-lo de forma incremental sem carregar tudo em
+memória. Com o volume atual, cerca de **110 KB por mês** — 1,3 MB por ano e menos de
+7 MB em cinco anos, irrelevante para o repositório.
+
+Nada o lê no dia a dia: existe para que daqui a um ano se possa voltar atrás e produzir
+um relatório sobre o que foi noticiado, com os títulos e não apenas com as contagens.
+
+```python
+import gzip, json
+with gzip.open("meses/2026-08.jsonl.gz", "rt", encoding="utf-8") as f:
+    noticias = [json.loads(linha) for linha in f]
+```
+
+### O que isto permite mais tarde
+
+Comparar semestres ou anos por área. Medir a concentração da cobertura em poucas
+publicações. Ver que palavras-chave deixaram de render e quais surgiram. Reconstituir a
+cobertura de um acontecimento passado com os títulos originais.
+
+Uma ressalva metodológica: as palavras-chave mudam com as remodelações governamentais,
+e as notícias ficam guardadas com a marcação do dia em que foram recolhidas. Comparar
+períodos longos exige saber isso — a marcação de agosto de 2026 não é a mesma de um
+Governo seguinte.
 
 ---
 
