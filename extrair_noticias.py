@@ -64,30 +64,33 @@ AREAS = [
     ("estrangeiros", "Negócios Estrangeiros", "soberania",
      [
       "Ministério dos Negócios Estrangeiros",
-      "política externa portuguesa",
+      "política externa",
+      "diplomacia",
       "assuntos europeus",
       "Conselho Europeu",
+      "União Europeia",
       "CPLP",
       "Nações Unidas",
       "comunidades portuguesas",
-      "diáspora portuguesa",
+      "emigrantes",
       "rede consular",
-      "cooperação para o desenvolvimento"
-     ],
+      "cooperação para o desenvolvimento"],
      []),
     ("financas", "Finanças", "economia",
      [
       "Ministério das Finanças",
       "Orçamento do Estado",
-      "défice orçamental",
+      "défice",
       "dívida pública",
+      "impostos",
       "IRS",
-      "tributação das empresas",
-      "execução orçamental",
+      "IRC",
+      "IVA",
+      "carga fiscal",
       "Autoridade Tributária",
       "Administração Pública",
-      "trabalhadores em funções públicas"
-     ],
+      "funcionários públicos",
+      "execução orçamental"],
      []),
     ("presidencia", "Presidência", "soberania",
      [
@@ -113,13 +116,13 @@ AREAS = [
       "reforma do Estado",
       "simplificação administrativa",
       "desburocratização",
-      "transformação digital do Estado",
+      "transformação digital",
       "serviços públicos digitais",
       "identificação digital",
-      "inteligência artificial na Administração Pública",
+      "inteligência artificial",
       "modernização administrativa",
-      "SIADAP"
-     ],
+      "SIADAP",
+      "avaliação de desempenho"],
      []),
     ("parlamentares", "Assuntos Parlamentares", "soberania",
      [
@@ -127,24 +130,24 @@ AREAS = [
       "debate parlamentar",
       "interpelação ao Governo",
       "audição parlamentar",
-      "comissão parlamentar de inquérito",
+      "comissão de inquérito",
       "iniciativa legislativa",
-      "regulação da comunicação social",
-      "Entidade Reguladora para a Comunicação Social"
-     ],
+      "moção de censura",
+      "regulação da comunicação social"],
      []),
     ("defesa", "Defesa Nacional", "soberania",
      [
       "Ministério da Defesa Nacional",
       "Forças Armadas",
+      "militares",
       "NATO",
-      "política de defesa nacional",
+      "política de defesa",
       "investimento em defesa",
       "indústria de defesa",
-      "missões militares internacionais",
-      "serviço militar"
-     ],
-     []),
+      "missões militares",
+      "serviço militar",
+      "Ucrânia"],
+     ["defesa do consumidor", "defesa pessoal", "linha de defesa", "defesa do título"]),
     ("interna", "Administração Interna", "soberania",
      [
       "Ministério da Administração Interna",
@@ -167,68 +170,73 @@ AREAS = [
       "Ministério da Justiça",
       "tribunais",
       "Ministério Público",
-      "pendências processuais",
+      "magistrados",
+      "processos pendentes",
       "sistema prisional",
+      "prisões",
       "registos e notariado",
       "reforma da justiça",
-      "apoio judiciário"
-     ],
-     []),
+      "apoio judiciário",
+      "corrupção"],
+     ["justiça poética", "fazer justiça a"]),
     ("economia", "Economia e Coesão Territorial", "economia",
      [
       "Ministério da Economia",
       "crescimento económico",
-      "exportações portuguesas",
-      "investimento empresarial",
+      "exportações",
+      "investimento",
+      "empresas",
       "turismo",
-      "comércio e serviços",
+      "comércio",
       "fundos europeus",
       "desenvolvimento regional",
       "coesão territorial",
       "administração local",
       "autarquias",
-      "ordenamento do território"
-     ],
-     []),
+      "ordenamento do território",
+      "interioridade"],
+     ["comércio eletrónico de dados", "ambiente de trabalho", "empresa familiar"]),
     ("infraestruturas", "Infraestruturas e Habitação", "economia",
      [
       "Ministério das Infraestruturas e Habitação",
       "habitação",
       "arrendamento",
+      "casas",
       "obras públicas",
       "ferrovia",
+      "comboios",
       "novo aeroporto",
       "transportes públicos",
       "mobilidade",
-      "licenciamento urbanístico"
-     ],
+      "licenciamento urbanístico"],
      []),
     ("educacao", "Educação, Ciência e Inovação", "social",
      [
       "Ministério da Educação",
       "escolas",
-      "administração escolar",
+      "alunos",
       "professores",
       "exames nacionais",
       "ensino superior",
-      "ciência e inovação",
+      "universidades",
+      "ciência",
       "investigação científica",
-      "bolsas de investigação",
-      "abandono escolar"
-     ],
+      "bolsas",
+      "abandono escolar",
+      "manuais escolares"],
      []),
     ("saude", "Saúde", "social",
      [
       "Ministério da Saúde",
       "Serviço Nacional de Saúde",
-      "urgências hospitalares",
+      "hospitais",
+      "urgências",
       "médicos de família",
       "listas de espera",
-      "gestão hospitalar",
       "cuidados continuados",
       "medicamentos",
-      "saúde mental"
-     ],
+      "saúde mental",
+      "enfermeiros"],
      []),
     ("trabalho", "Trabalho, Solidariedade e Segurança Social", "social",
      [
@@ -236,55 +244,57 @@ AREAS = [
       "emprego",
       "desemprego",
       "salário mínimo",
+      "salários",
       "pensões",
+      "reformados",
       "segurança social",
       "ação social",
-      "inclusão social",
+      "greve",
       "negociação coletiva",
-      "apoios sociais"
-     ],
+      "apoios sociais"],
      []),
     ("cultura", "Cultura, Juventude e Desporto", "social",
      [
       "Ministério da Cultura",
-      "património cultural",
+      "património",
       "museus",
-      "criação artística",
+      "artistas",
+      "teatros",
       "políticas de juventude",
+      "jovens",
       "igualdade de género",
       "desporto",
-      "alta competição",
-      "língua portuguesa"
-     ],
-     []),
+      "atletas",
+      "língua portuguesa"],
+     ["cultura organizacional", "cultura de empresa", "cultura do cancelamento"]),
     ("ambiente", "Ambiente e Energia", "ambiente",
      [
       "Ministério do Ambiente e Energia",
-      "preço da energia",
-      "mercado da eletricidade",
-      "energias renováveis",
+      "energia",
+      "eletricidade",
+      "renováveis",
       "alterações climáticas",
       "descarbonização",
-      "gestão de resíduos",
-      "situação de seca",
-      "qualidade da água"
-     ],
-     ["clima de negócios", "clima organizacional", "clima de confiança"]),
+      "resíduos",
+      "seca",
+      "água",
+      "poluição"],
+     ["ambiente de trabalho", "ambiente empresarial", "ambiente de negócios"]),
     ("agricultura", "Agricultura e Mar", "ambiente",
      [
       "Ministério da Agricultura e Mar",
       "política agrícola comum",
-      "produção agrícola",
+      "agricultura",
       "agricultores",
       "desenvolvimento rural",
       "florestas",
       "gestão florestal",
       "pescas",
+      "pescadores",
       "aquicultura",
       "economia do mar",
       "segurança alimentar",
-      "regadio"
-     ],
+      "regadio"],
      [])
 
 ]
@@ -325,6 +335,24 @@ FONTES = [
     ("Executive Digest", "executivedigest.sapo.pt", "https://executivedigest.sapo.pt/feed/"),
     ("Ambiente Magazine", "ambientemagazine.com", "https://www.ambientemagazine.com/feed/"),
     ("Agroportal", "agroportal.pt", "https://www.agroportal.pt/feed/"),
+
+    # Agência nacional
+    ("Lusa", "lusa.pt", "https://www.lusa.pt/rss"),
+
+    # Generalistas e semanários
+    ("Nascer do SOL", "sol.sapo.pt", "https://sol.sapo.pt/rss"),
+    ("Jornal i", "ionline.sapo.pt", "https://ionline.sapo.pt/feed/"),
+
+    # Regionais das regiões autónomas
+    ("Açoriano Oriental", "acorianooriental.pt", "https://www.acorianooriental.pt/rss"),
+    ("JM Madeira", "jm-madeira.pt", "https://www.jm-madeira.pt/rss"),
+
+    # Especializadas, por matéria de área governativa
+    ("Vida Económica", "vidaeconomica.pt", "https://www.vidaeconomica.pt/feed"),
+    ("SAPO Tek", "tek.sapo.pt", "https://tek.sapo.pt/rss"),
+    ("Healthnews", "healthnews.pt", "https://healthnews.pt/feed/"),
+    ("Construir", "construir.pt", "https://www.construir.pt/feed/"),
+    ("Público · Ciência", "publico.pt", "https://feeds.feedburner.com/publico-ciencia")
 ]
 
 # Imprensa dos restantes países de língua portuguesa. Matéria da CPLP, cooperação,
@@ -358,6 +386,33 @@ FONTES_INTERNACIONAIS = [
     ("RFI (português)", "rfi.fr", "https://www.rfi.fr/pt/rss"),
     ("The Guardian · Europe", "theguardian.com", "https://www.theguardian.com/world/europe-news/rss"),
     ("Agência Lusa · Internacional", "lusa.pt", "https://www.lusa.pt/rss/internacional"),
+
+    # Reino Unido
+    ("BBC News · Mundo", "bbc.co.uk", "https://feeds.bbci.co.uk/news/world/rss.xml"),
+    ("The Guardian · Mundo", "theguardian.com", "https://www.theguardian.com/world/rss"),
+
+    # França
+    ("Le Figaro", "lefigaro.fr", "https://www.lefigaro.fr/rss/figaro_actualites.xml"),
+    ("France Info", "francetvinfo.fr", "https://www.francetvinfo.fr/titres.rss"),
+
+    # Espanha
+    ("El Mundo", "elmundo.es", "https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml"),
+    ("La Vanguardia", "lavanguardia.com", "https://www.lavanguardia.com/rss/home.xml"),
+    ("ABC", "abc.es", "https://www.abc.es/rss/2.0/portada/"),
+
+    # Itália
+    ("ANSA", "ansa.it", "https://www.ansa.it/sito/ansait_rss.xml"),
+    ("Corriere della Sera", "corriere.it", "https://xml2.corriereobjects.it/rss/homepage.xml"),
+    ("La Repubblica", "repubblica.it", "https://www.repubblica.it/rss/homepage/rss2.0.xml"),
+
+    # Estados Unidos da América
+    ("The New York Times · Mundo", "nytimes.com", "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"),
+    ("The Washington Post · Mundo", "washingtonpost.com", "https://feeds.washingtonpost.com/rss/world"),
+    ("Politico", "politico.com", "https://rss.politico.com/politics-news.xml"),
+    ("Associated Press", "apnews.com", "https://apnews.com/index.rss"),
+
+    # Alemanha
+    ("Der Spiegel · Internacional", "spiegel.de", "https://www.spiegel.de/international/index.rss")
 ]
 
 

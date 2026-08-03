@@ -12,7 +12,7 @@ Unidade de Pesquisa e Estatísticas
 
 ## Como funciona
 
-A recolha lê todas as manhãs os **feeds de 48 publicações de imprensa** — portuguesas,
+A recolha lê, de duas em duas horas, **73 feeds de 66 publicações de imprensa** — portuguesas,
 lusófonas e internacionais — e marca cada artigo com as áreas governativas cujas
 palavras-chave ele satisfaz. Um artigo é recolhido por ser de uma fonte conhecida, não
 por corresponder a uma pesquisa.
@@ -143,13 +143,25 @@ nestes títulos.
 El País, Le Monde, BBC Mundo, Deutsche Welle, France 24, RFI, The Guardian (Europa) e
 Lusa Internacional.
 
-São 48 feeds ao todo. O seletor do painel tem três origens que não se sobrepõem —
+São 73 feeds de 66 publicações. O seletor do painel tem três origens que não se sobrepõem —
 **Portugal**, **Lusofonia** e **Resto do mundo** — mais a posição **Todas**, que é a
 soma das três.
 
 As listas estão no início do `extrair_noticias.py`, nas constantes `FONTES`,
 `FONTES_LUSOFONAS` e `FONTES_INTERNACIONAIS`. Acrescenta-se uma publicação escrevendo uma linha com o nome,
 o domínio e o endereço do feed. A recolha assinala as fontes que não respondem.
+
+### Língua das fontes estrangeiras
+
+As palavras-chave estão em português. A classificação por área funciona, portanto, sobre
+as publicações que escrevem em português: as nacionais, as lusófonas e as edições
+portuguesas da Euronews, da Deutsche Welle, da France 24 e da RFI.
+
+As restantes estrangeiras — britânicas, francesas, espanholas, italianas, norte-americanas
+e alemãs — entram sobretudo no corpus da **pesquisa por termo**. Escrevendo "Ceuta",
+"NATO" ou o nome de uma pessoa, encontram-se; por palavras-chave portuguesas, não são
+classificadas. Foram acrescentadas por isso mesmo: para que a pesquisa livre alcance a
+imprensa de referência internacional, que é o que um serviço de *clipping* faz.
 
 ### O que o corpus não cobre
 
@@ -204,7 +216,7 @@ python extrair_noticias.py --fontes --area saude --saida saude.xlsx
 
 ## Ressalvas metodológicas
 
-- **Cobertura.** O corpus são as 48 publicações subscritas e os últimos sete dias.
+- **Cobertura.** O corpus são as 66 publicações subscritas e os últimos sete dias.
   Uma notícia de um título não subscrito, ou anterior a esse período, não está no
   corpus. A janela do arquivo define-se com `--dias-arquivo` e pode ser alargada
   quando houver espaço para isso.
@@ -212,9 +224,11 @@ python extrair_noticias.py --fontes --area saude --saida saude.xlsx
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
 - **As expressões são curtas, como a imprensa escreve.** "política de imigração" quase
   nunca aparece num título; "imigração", "imigrantes" e "migrantes" aparecem sempre. Uma
-  expressão longa é precisa e não apanha nada. Onde a palavra curta é ambígua, usa-se a
-  lista `excluir` da área para afastar o uso figurado — "fronteira entre o público e o
-  privado" não é matéria da Administração Interna.
+  expressão longa é precisa e não apanha nada. São 185 expressões nas 16 áreas.
+- **A ambiguidade trata-se por exclusão, não por precisão.** Seis áreas têm uma lista
+  `excluir` que afasta o uso figurado: "ambiente de trabalho" não é Ambiente e Energia,
+  "defesa do consumidor" não é Defesa Nacional, "fronteira entre o público e o privado"
+  não é Administração Interna.
 - **As expressões seguem as tutelas.** Cada área tem as palavras-chave das matérias que
   o respetivo ministério tutela, incluindo as das secretarias de Estado — é por isso que
   a política de imigração está na Presidência, que tem o Secretário de Estado Adjunto da

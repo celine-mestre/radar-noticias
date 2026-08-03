@@ -995,7 +995,7 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <small>Suporte à Decisão · Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas</small>
     </div>
     <div class="fontes">
-      Fontes: feeds de 48 publicações de imprensa — portuguesas, lusófonas e internacionais.
+      Fontes: 73 feeds de 66 publicações de imprensa — portuguesas, lusófonas e internacionais.
       Recolha diária em dias úteis. Versão de <span id="rodapeVersao">—</span>.
     </div>
   </div>
@@ -1104,38 +1104,38 @@ const ICONES = {
    ========================================================================= */
 const AREAS = [
   { id:"estrangeiros", nome:"Negócios Estrangeiros", grupo:"soberania", icone:"estrangeiros",
-    palavras:["Ministério dos Negócios Estrangeiros","política externa portuguesa","assuntos europeus","Conselho Europeu","CPLP","Nações Unidas","comunidades portuguesas","diáspora portuguesa","rede consular","cooperação para o desenvolvimento"] },
+    palavras:["Ministério dos Negócios Estrangeiros","política externa","diplomacia","assuntos europeus","Conselho Europeu","União Europeia","CPLP","Nações Unidas","comunidades portuguesas","emigrantes","rede consular","cooperação para o desenvolvimento"] },
   { id:"financas", nome:"Finanças", grupo:"economia", icone:"financas",
-    palavras:["Ministério das Finanças","Orçamento do Estado","défice orçamental","dívida pública","IRS","tributação das empresas","execução orçamental","Autoridade Tributária","Administração Pública","trabalhadores em funções públicas"] },
+    palavras:["Ministério das Finanças","Orçamento do Estado","défice","dívida pública","impostos","IRS","IRC","IVA","carga fiscal","Autoridade Tributária","Administração Pública","funcionários públicos","execução orçamental"] },
   { id:"presidencia", nome:"Presidência", grupo:"soberania", icone:"presidencia",
     palavras:["Ministério da Presidência","Conselho de Ministros","Presidência do Conselho de Ministros","Programa do Governo","comunicação do Governo","dados abertos","imigração","imigrantes","migrantes","migratória","AIMA","autorização de residência","vistos de residência","nacionalidade portuguesa","regularização de estrangeiros"] },
   { id:"reforma", nome:"Reforma do Estado", grupo:"soberania", icone:"reforma",
-    palavras:["reforma do Estado","simplificação administrativa","desburocratização","transformação digital do Estado","serviços públicos digitais","identificação digital","inteligência artificial na Administração Pública","modernização administrativa","SIADAP"] },
+    palavras:["reforma do Estado","simplificação administrativa","desburocratização","transformação digital","serviços públicos digitais","identificação digital","inteligência artificial","modernização administrativa","SIADAP","avaliação de desempenho"] },
   { id:"parlamentares", nome:"Assuntos Parlamentares", grupo:"soberania", icone:"parlamento",
-    palavras:["Assembleia da República","debate parlamentar","interpelação ao Governo","audição parlamentar","comissão parlamentar de inquérito","iniciativa legislativa","regulação da comunicação social","Entidade Reguladora para a Comunicação Social"] },
+    palavras:["Assembleia da República","debate parlamentar","interpelação ao Governo","audição parlamentar","comissão de inquérito","iniciativa legislativa","moção de censura","regulação da comunicação social"] },
   { id:"defesa", nome:"Defesa Nacional", grupo:"soberania", icone:"defesa",
-    palavras:["Ministério da Defesa Nacional","Forças Armadas","NATO","política de defesa nacional","investimento em defesa","indústria de defesa","missões militares internacionais","serviço militar"] },
+    palavras:["Ministério da Defesa Nacional","Forças Armadas","militares","NATO","política de defesa","investimento em defesa","indústria de defesa","missões militares","serviço militar","Ucrânia"], excluir:["defesa do consumidor","defesa pessoal","linha de defesa","defesa do título"] },
   { id:"interna", nome:"Administração Interna", grupo:"soberania", icone:"interna",
     palavras:["Ministério da Administração Interna","segurança interna","forças de segurança","PSP","GNR","fronteiras","asilo","refugiados","deportação","expulsão do território","proteção civil","incêndios florestais","sinistralidade rodoviária"], excluir:["fronteira entre","fronteiras do conhecimento","últimas fronteiras"] },
   { id:"justica", nome:"Justiça", grupo:"soberania", icone:"justica",
-    palavras:["Ministério da Justiça","tribunais","Ministério Público","pendências processuais","sistema prisional","registos e notariado","reforma da justiça","apoio judiciário"] },
+    palavras:["Ministério da Justiça","tribunais","Ministério Público","magistrados","processos pendentes","sistema prisional","prisões","registos e notariado","reforma da justiça","apoio judiciário","corrupção"], excluir:["justiça poética","fazer justiça a"] },
   { id:"economia", nome:"Economia e Coesão Territorial", grupo:"economia", icone:"economia",
-    palavras:["Ministério da Economia","crescimento económico","exportações portuguesas","investimento empresarial","turismo","comércio e serviços","fundos europeus","desenvolvimento regional","coesão territorial","administração local","autarquias","ordenamento do território"] },
+    palavras:["Ministério da Economia","crescimento económico","exportações","investimento","empresas","turismo","comércio","fundos europeus","desenvolvimento regional","coesão territorial","administração local","autarquias","ordenamento do território","interioridade"], excluir:["comércio eletrónico de dados","ambiente de trabalho","empresa familiar"] },
   { id:"infraestruturas", nome:"Infraestruturas e Habitação", grupo:"economia", icone:"infraestruturas",
-    palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","obras públicas","ferrovia","novo aeroporto","transportes públicos","mobilidade","licenciamento urbanístico"] },
+    palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","casas","obras públicas","ferrovia","comboios","novo aeroporto","transportes públicos","mobilidade","licenciamento urbanístico"] },
   { id:"educacao", nome:"Educação, Ciência e Inovação", grupo:"social", icone:"educacao",
-    palavras:["Ministério da Educação","escolas","administração escolar","professores","exames nacionais","ensino superior","ciência e inovação","investigação científica","bolsas de investigação","abandono escolar"] },
+    palavras:["Ministério da Educação","escolas","alunos","professores","exames nacionais","ensino superior","universidades","ciência","investigação científica","bolsas","abandono escolar","manuais escolares"] },
   { id:"saude", nome:"Saúde", grupo:"social", icone:"saude",
-    palavras:["Ministério da Saúde","Serviço Nacional de Saúde","urgências hospitalares","médicos de família","listas de espera","gestão hospitalar","cuidados continuados","medicamentos","saúde mental"] },
+    palavras:["Ministério da Saúde","Serviço Nacional de Saúde","hospitais","urgências","médicos de família","listas de espera","cuidados continuados","medicamentos","saúde mental","enfermeiros"] },
   { id:"trabalho", nome:"Trabalho, Solidariedade e Segurança Social", grupo:"social", icone:"trabalho",
-    palavras:["Ministério do Trabalho","emprego","desemprego","salário mínimo","pensões","segurança social","ação social","inclusão social","negociação coletiva","apoios sociais"] },
+    palavras:["Ministério do Trabalho","emprego","desemprego","salário mínimo","salários","pensões","reformados","segurança social","ação social","greve","negociação coletiva","apoios sociais"] },
   { id:"cultura", nome:"Cultura, Juventude e Desporto", grupo:"social", icone:"cultura",
-    palavras:["Ministério da Cultura","património cultural","museus","criação artística","políticas de juventude","igualdade de género","desporto","alta competição","língua portuguesa"] },
+    palavras:["Ministério da Cultura","património","museus","artistas","teatros","políticas de juventude","jovens","igualdade de género","desporto","atletas","língua portuguesa"], excluir:["cultura organizacional","cultura de empresa","cultura do cancelamento"] },
   { id:"ambiente", nome:"Ambiente e Energia", grupo:"ambiente", icone:"ambiente",
-    palavras:["Ministério do Ambiente e Energia","preço da energia","mercado da eletricidade","energias renováveis","alterações climáticas","descarbonização","gestão de resíduos","situação de seca","qualidade da água"],
+    palavras:["Ministério do Ambiente e Energia","energia","eletricidade","renováveis","alterações climáticas","descarbonização","resíduos","seca","água","poluição"],
     excluir:["clima de negócios","clima organizacional","clima de confiança"] },
   { id:"agricultura", nome:"Agricultura e Mar", grupo:"ambiente", icone:"agricultura",
-    palavras:["Ministério da Agricultura e Mar","política agrícola comum","produção agrícola","agricultores","desenvolvimento rural","florestas","gestão florestal","pescas","aquicultura","economia do mar","segurança alimentar","regadio"] }
+    palavras:["Ministério da Agricultura e Mar","política agrícola comum","agricultura","agricultores","desenvolvimento rural","florestas","gestão florestal","pescas","pescadores","aquicultura","economia do mar","segurança alimentar","regadio"], excluir:["ambiente de trabalho","ambiente empresarial","ambiente de negócios"] }
 
 ];
 
@@ -1845,7 +1845,7 @@ const MANUAL = [
     <p>Tudo é contagem, calculada no painel. Nada é enviado para fora.</p>` },
 
   { n:"6", titulo:"Como o radar pesquisa", cor:"var(--azul)", icone:"chave", corpo:`
-    <p>A recolha agendada lê todas as manhãs os feeds de <strong>48 publicações</strong> — 25 portuguesas, 11 dos restantes países de língua portuguesa e 12 internacionais — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado no próprio repositório: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
+    <p>A recolha lê, de duas em duas horas, <strong>73 feeds de 66 publicações</strong> — 35 portuguesas, 11 dos restantes países de língua portuguesa e 27 internacionais — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado no próprio repositório: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
     <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. Onde o ruído persiste, a área declara termos a excluir.</p>
     <p><strong>Âmbito.</strong> Imprensa: jornais, rádios, televisões, agências e imprensa especializada. As plataformas sociais não publicam feeds e ficam de fora.</p>
     <p class="man-aviso">Tudo o que o painel mostra vem deste corpus. Não há consultas a serviços externos: o que não estiver nas publicações subscritas, ou for anterior ao arquivo, não aparece.</p>`  },
@@ -1853,7 +1853,9 @@ const MANUAL = [
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>
     <dl>
-      <dt>Cobertura do corpus</dt><dd>Quarenta e oito publicações — 25 portuguesas, 11 lusófonas e 12 internacionais — e sete dias de arquivo. Uma notícia de um título não subscrito, ou anterior a esse período, não está no corpus. Alargar a janela do arquivo é mudar um número na recolha, quando houver espaço para isso.</dd>
+      <dt>Escolha das expressões</dt><dd>São curtas, como a imprensa escreve: "imigração" e não "política de imigração", "habitação" e não "política de habitação". Uma expressão longa é precisa e não apanha nada. Onde a palavra curta é ambígua, cada área tem uma lista de exclusões que afasta o uso figurado — "ambiente de trabalho" não é matéria de Ambiente e Energia, nem "defesa do consumidor" de Defesa Nacional.</dd>
+      <dt>Língua das fontes estrangeiras</dt><dd>As palavras-chave estão em português, pelo que a classificação por área funciona sobre as publicações que escrevem em português — as nacionais, as lusófonas e as edições portuguesas da Euronews, da Deutsche Welle, da France 24 e da RFI. As restantes estrangeiras entram sobretudo no corpus da pesquisa por termo: escrevendo "Ceuta" ou "NATO" encontra-as, mas não são classificadas por palavras-chave portuguesas.</dd>
+      <dt>Cobertura do corpus</dt><dd>66 publicações — 35 portuguesas, 11 lusófonas e 27 internacionais — e sete dias de arquivo. Uma notícia de um título não subscrito, ou anterior a esse período, não está no corpus. Alargar a janela do arquivo é mudar um número na recolha, quando houver espaço para isso.</dd>
       <dt>Imprensa apenas</dt><dd>As plataformas sociais não publicam feeds e estão fora do âmbito da aplicação. Páginas dessas plataformas que entrem no arquivo são descartadas.</dd>
       <dt>Marcação literal</dt><dd>Um artigo entra numa área por conter a expressão no título ou no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.</dd>
       <dt>Contagens</dt><dd>Medem o que as publicações subscritas noticiaram, não o total do que foi noticiado. Como nenhuma área é truncada e o método é o mesmo para todas, a comparação entre áreas é legítima dentro do corpus.</dd>
@@ -3086,7 +3088,7 @@ function descarregarXLSX(){
       todas: "imprensa de todas as origens"
     }[filtroFontes]],
     ["Tipo de fonte", "imprensa — jornais, rádios, televisões e agências"],
-    ["Origem", "Feeds de 48 publicações de imprensa — Portugal, lusofonia e internacional — recolhidos diariamente"],
+    ["Origem", "Feeds de 66 publicações de imprensa — Portugal, lusofonia e internacional"],
     ["Notícias exportadas", String(recolha.length)],
     ["Data da exportação", new Date().toLocaleString("pt-PT")],
     ["Versão do painel", CONFIG.versao],
