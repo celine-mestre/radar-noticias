@@ -1358,12 +1358,17 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
             continue
         chave = (n.get("area", ""), n.get("titulo", "").lower(), n.get("fonte", "").lower())
         if chave in vistos:
-            # já existe: junta-se apenas as palavras-chave que a trouxeram
+            # Já existe: em vez de descartar a repetição, aproveita-se dela o que
+            # faltar ao registo guardado. É o que permite acrescentar imagem,
+            # resumo ou ligação a notícias recolhidas antes de esses campos
+            # passarem a ser gravados — sem isso, o registo antigo, incompleto,
+            # continuaria a impedir a entrada do novo.
             anterior = vistos[chave]
             if n.get("palavras"):
                 anterior["palavras"] = sorted(set(anterior.get("palavras", [])) | set(n["palavras"]))
-            if n.get("resumo") and not anterior.get("resumo"):
-                anterior["resumo"] = n["resumo"]
+            for campo in ("resumo", "imagem", "ligacao", "dominio", "grupo"):
+                if n.get(campo) and not anterior.get(campo):
+                    anterior[campo] = n[campo]
             continue
         vistos[chave] = n
         mantidas.append(n)
@@ -1497,14 +1502,18 @@ def gravar_corpus(caminho, lidos, dias=7):
             "ligacao": n["ligacao"], "imagem": n.get("imagem", ""),
         })
 
-    vistos, mantidos = set(), []
+    vistos, mantidos = {}, []
     for n in novos + anteriores:
         if not n.get("data") or n["data"][:10] < limite:
             continue
         chave = (n.get("titulo") or "").lower()
         if chave in vistos:
+            anterior = vistos[chave]
+            for campo in ("resumo", "imagem", "ligacao", "dominio"):
+                if n.get(campo) and not anterior.get(campo):
+                    anterior[campo] = n[campo]
             continue
-        vistos.add(chave)
+        vistos[chave] = n
         mantidos.append(n)
 
     mantidos.sort(key=lambda n: n["data"], reverse=True)
