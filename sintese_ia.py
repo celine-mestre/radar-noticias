@@ -89,6 +89,48 @@ ORIGENS = [
     ("internacionais", "Internacional"),
 ]
 
+# País de cada publicação, pelo domínio. Pedir ao modelo que o deduza do nome do
+# jornal é pedir de mais: ou não sabe, ou inventa. Dando-lho, a exigência passa a
+# ser só a de o usar.
+PAISES = {
+    ".pt": "Portugal", ".ao": "Angola", ".mz": "Moçambique", ".cv": "Cabo Verde",
+    ".st": "São Tomé e Príncipe", ".gw": "Guiné-Bissau", ".tl": "Timor-Leste",
+    ".br": "Brasil", ".es": "Espanha", ".fr": "França", ".it": "Itália",
+    ".de": "Alemanha", ".uk": "Reino Unido", ".co.uk": "Reino Unido",
+    ".eu": "União Europeia",
+}
+PAISES_POR_DOMINIO = {
+    "agenciabrasil.ebc.com.br": "Brasil", "folha.uol.com.br": "Brasil",
+    "novojornal.co.ao": "Angola", "cartamz.com": "Moçambique",
+    "elpais.com": "Espanha", "elmundo.es": "Espanha", "abc.es": "Espanha",
+    "lavanguardia.com": "Espanha", "lemonde.fr": "França", "lefigaro.fr": "França",
+    "francetvinfo.fr": "França", "france24.com": "França", "rfi.fr": "França",
+    "ansa.it": "Itália", "corriere.it": "Itália", "repubblica.it": "Itália",
+    "spiegel.de": "Alemanha", "dw.com": "Alemanha",
+    "bbc.com": "Reino Unido", "bbc.co.uk": "Reino Unido",
+    "theguardian.com": "Reino Unido",
+    "nytimes.com": "Estados Unidos da América",
+    "washingtonpost.com": "Estados Unidos da América",
+    "apnews.com": "Estados Unidos da América",
+    "politico.com": "Estados Unidos da América",
+    "politico.eu": "União Europeia", "euractiv.com": "União Europeia",
+    "pt.euronews.com": "União Europeia",
+}
+
+
+def pais_da_fonte(dominio):
+    """País da publicação, para o modelo o poder nomear."""
+    d = (dominio or "").lower().replace("www.", "")
+    if not d:
+        return ""
+    if d in PAISES_POR_DOMINIO:
+        return PAISES_POR_DOMINIO[d]
+    for sufixo, pais in PAISES.items():
+        if d.endswith(sufixo):
+            return pais
+    return ""
+
+
 PLATAFORMAS = (
     "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
     "youtube.com", "youtu.be", "linkedin.com", "reddit.com", "threads.net",
@@ -108,12 +150,14 @@ INSTRUCAO = (
     "- Escreve em português de Portugal, em registo institucional e neutro.\n"
     "- Não emitas juízos, não recomendes nada, não uses adjetivos valorativos.\n"
     "- Não uses expressões como 'as notícias indicam' ou 'segundo os títulos'.\n"
-    "- Cada título vem precedido da publicação que o difundiu, entre parênteses "
-    "retos.\n"
-    "- Tratando-se de imprensa da lusofonia ou internacional, NOMEIA SEMPRE o país "
-    "a que a notícia diz respeito: 'em Angola', 'no Brasil', 'em Espanha'. Sem "
-    "isso, quem lê não sabe de que país é o défice ou o hospital de que se fala. "
-    "Não juntes num mesmo período factos de países diferentes.\n"
+    "- Cada título vem precedido, entre parênteses retos, da publicação que o "
+    "difundiu e do país dessa publicação.\n"
+    "- OBRIGATÓRIO, quando a origem não é Portugal: cada facto tem de vir "
+    "acompanhado do país, com as palavras 'em Angola', 'no Brasil', 'em Espanha', "
+    "consoante o caso. Uma frase sobre a dívida pública sem dizer de que país é "
+    "uma frase inútil. Agrupa por país: primeiro tudo o que é de um país, depois "
+    "o do seguinte. NUNCA juntes factos de países diferentes na mesma frase.\n"
+    "- Começa cada bloco pelo país: 'Em Angola, …'.\n"
     "- Não trates imprensa estrangeira como se falasse de Portugal.\n"
     "- Devolve apenas o parágrafo, sem título nem marcas de formatação."
 )
@@ -341,8 +385,12 @@ def principal():
 
             # A publicação segue com o título: é o que permite ao modelo dizer
             # de que país fala cada notícia, em vez de as apresentar sem lugar.
-            titulos = [(n.get("fonte") or "publicação não identificada", n["titulo"])
-                       for n in desta[: args.maximo]]
+            # Publicação e país seguem com o título
+            titulos = []
+            for n in desta[: args.maximo]:
+                fonte = n.get("fonte") or "publicação não identificada"
+                pais = pais_da_fonte(n.get("dominio"))
+                titulos.append((f"{fonte} · {pais}" if pais else fonte, n["titulo"]))
             inicio = time.monotonic()
             try:
                 texto = (perguntar_local(titulos, area, args.repo, args.ficheiro, rotulo)
