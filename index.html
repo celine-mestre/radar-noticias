@@ -1399,7 +1399,7 @@ async function desenharRadar(){
   $("#radarTotal").textContent = total.toLocaleString("pt-PT");
   const ondeOrigem = { nacionais:"imprensa de Portugal", lusofonas:"imprensa da lusofonia",
                        internacionais:"imprensa internacional",
-                       todas:"todas as origens" }[filtroFontes];
+                       todas:"imprensa de todas as origens" }[filtroFontes];
   $("#radarLegenda").textContent =
     `${total === 1 ? "notícia" : "notícias"} · ${ROTULO_PERIODO[periodo]} · ${ondeOrigem}`;
   mostrarUltimaRecolha(atualizado);
@@ -2680,9 +2680,10 @@ function dentroDoPeriodo(it){
   if(!horas || !it.data) return true;                 // sem limite, ou sem data conhecida
 
   /* Algumas publicações datam artigos no futuro, por fuso horário mal declarado
-     no feed. Sem isto, uma janela de sete dias mostrava oito dias distintos. */
-  const d0 = new Date(it.data.replace(" ", "T"));
-  if(!isNaN(d0) && d0.getTime() > Date.now() + 6 * 3600 * 1000) return false;
+     no feed. Basta um datado de amanhã para uma janela de sete dias mostrar oito
+     dias distintos, pelo que nada posterior a hoje é aceite. */
+  const hojeStr = new Date().toISOString().slice(0, 10);
+  if(it.data.slice(0, 10) > hojeStr) return false;
 
   /* Janelas de dias inteiros contam-se por data, não à hora certa. A recolha
      guarda o arquivo por dia; contar 168 horas exatas deixava de fora notícias

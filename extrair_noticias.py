@@ -597,13 +597,52 @@ def preparar_xml(bruto):
     return re.sub(r"&([a-zA-Z][a-zA-Z0-9]{1,31});", trocar, texto)
 
 
+def endereco_do_item(item):
+    """Endereço do artigo, seja qual for a forma que o feed usa.
+
+    Em RSS o endereço vem no texto de <link>; em Atom vem no atributo href de
+    <link>, e o texto fica vazio. Algumas publicações põem-no no <guid> ou num
+    <origLink>. Ler apenas o texto de <link> deixava a coluna da ligação vazia
+    nesses feeds — e no Excel o resumo, sendo longo, transbordava para o lugar
+    dela, o que parecia uma repetição.
+    """
+    def limpo(v):
+        v = (v or "").strip()
+        return v if v.startswith("http") else ""
+
+    # RSS: <link>https://…</link>
+    achado = limpo(item.findtext("link"))
+    if achado:
+        return achado
+
+    # Atom: <link rel="alternate" href="https://…"/>
+    for no in item.iter():
+        if not no.tag.endswith("link"):
+            continue
+        achado = limpo(no.get("href"))
+        if achado and no.get("rel", "alternate") == "alternate":
+            return achado
+
+    # Alternativas frequentes
+    for etiqueta in ("guid", "origLink", "id"):
+        achado = limpo(item.findtext(etiqueta))
+        if achado:
+            return achado
+
+    return ""
+
+
 def extrair_itens(xml_bruto):
-    """Devolve a lista de notícias de um feed RSS."""
+    """Devolve a lista de notícias de um feed RSS ou Atom."""
     raiz = ElementTree.fromstring(preparar_xml(xml_bruto))
     itens = []
-    for item in raiz.iter("item"):
+    nos = list(raiz.iter("item"))
+    if not nos:
+        # Atom: os artigos vêm em <entry>, não em <item>
+        nos = [n for n in raiz.iter() if n.tag.endswith("}entry") or n.tag == "entry"]
+    for item in nos:
         titulo = limpar(item.findtext("title"))
-        ligacao = (item.findtext("link") or "").strip()
+        ligacao = endereco_do_item(item)
 
         fonte_no = item.find("source")
         fonte = limpar(fonte_no.text) if fonte_no is not None else ""
@@ -620,14 +659,15 @@ def extrair_itens(xml_bruto):
                 titulo = cabeca
 
         data = None
-        bruta = item.findtext("pubDate")
+        bruta = item.findtext("pubDate") or item.findtext("published") or item.findtext("updated")
         if bruta:
             try:
                 data = parsedate_to_datetime(bruta).replace(tzinfo=None)
             except (TypeError, ValueError):
                 data = None
 
-        resumo = limpar(item.findtext("description"))
+        resumo = limpar(item.findtext("description") or item.findtext("summary")
+                        or item.findtext("content"))
         # O Google devolve, na descrição, uma repetição do título seguida do nome da
         # publicação, ou uma lista de artigos relacionados. Nesses casos não há resumo.
         simplificar = lambda t: re.sub(r"[^a-z0-9áàâãéêíóôõúç ]", "", t.lower()).strip()  # noqa: E731
