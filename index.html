@@ -1088,42 +1088,46 @@ const ICONES = {
 
 /* =========================================================================
    ÁREAS GOVERNATIVAS — 16 ministérios do XXV Governo Constitucional
-   Cada área tem um conjunto de palavras-chave que marca as notícias do corpus
+   Cada área tem um conjunto de palavras-chave que marca as notícias do corpus.
+   As expressões seguem as matérias tuteladas por cada ministério, incluindo as
+   das respetivas secretarias de Estado — daí a política de imigração estar na
+   Presidência, que tem o Secretário de Estado Adjunto da Presidência e Imigração,
+   e o controlo de fronteiras na Administração Interna
    ========================================================================= */
 const AREAS = [
   { id:"estrangeiros", nome:"Negócios Estrangeiros", grupo:"soberania", icone:"estrangeiros",
-    palavras:["Ministério dos Negócios Estrangeiros","política externa portuguesa","Conselho Europeu","CPLP","Nações Unidas","diáspora portuguesa","cooperação para o desenvolvimento","rede consular"] },
+    palavras:["Ministério dos Negócios Estrangeiros","política externa portuguesa","assuntos europeus","Conselho Europeu","CPLP","Nações Unidas","comunidades portuguesas","diáspora portuguesa","rede consular","cooperação para o desenvolvimento"] },
   { id:"financas", nome:"Finanças", grupo:"economia", icone:"financas",
-    palavras:["Ministério das Finanças","Orçamento do Estado","défice orçamental","dívida pública","IRS","tributação das empresas","execução orçamental","Autoridade Tributária"] },
+    palavras:["Ministério das Finanças","Orçamento do Estado","défice orçamental","dívida pública","IRS","tributação das empresas","execução orçamental","Autoridade Tributária","Administração Pública","trabalhadores em funções públicas"] },
   { id:"presidencia", nome:"Presidência", grupo:"soberania", icone:"presidencia",
-    palavras:["Conselho de Ministros","Presidência do Conselho de Ministros","Programa do Governo","comunicação do Governo","modernização administrativa","dados abertos","transparência administrativa"] },
+    palavras:["Ministério da Presidência","Conselho de Ministros","Presidência do Conselho de Ministros","Programa do Governo","política de imigração","AIMA","autorizações de residência","nacionalidade portuguesa","comunicação do Governo","dados abertos"] },
   { id:"reforma", nome:"Reforma do Estado", grupo:"soberania", icone:"reforma",
-    palavras:["reforma do Estado","Administração Pública","desburocratização","simplificação administrativa","trabalhadores da Administração Pública","inteligência artificial na Administração Pública","SIADAP"] },
+    palavras:["reforma do Estado","simplificação administrativa","desburocratização","transformação digital do Estado","serviços públicos digitais","identificação digital","inteligência artificial na Administração Pública","modernização administrativa","SIADAP"] },
   { id:"parlamentares", nome:"Assuntos Parlamentares", grupo:"soberania", icone:"parlamento",
-    palavras:["Assembleia da República","debate parlamentar","interpelação ao Governo","audição parlamentar","comissão parlamentar de inquérito","regulação da comunicação social","Entidade Reguladora para a Comunicação Social"] },
+    palavras:["Assembleia da República","debate parlamentar","interpelação ao Governo","audição parlamentar","comissão parlamentar de inquérito","iniciativa legislativa","regulação da comunicação social","Entidade Reguladora para a Comunicação Social"] },
   { id:"defesa", nome:"Defesa Nacional", grupo:"soberania", icone:"defesa",
-    palavras:["Ministério da Defesa Nacional","Forças Armadas","NATO","investimento em defesa","indústria de defesa","missões militares internacionais","serviço militar"] },
+    palavras:["Ministério da Defesa Nacional","Forças Armadas","NATO","política de defesa nacional","investimento em defesa","indústria de defesa","missões militares internacionais","serviço militar"] },
   { id:"interna", nome:"Administração Interna", grupo:"soberania", icone:"interna",
-    palavras:["Ministério da Administração Interna","imigração","pedidos de asilo","controlo de fronteiras","AIMA","proteção civil","segurança interna","sinistralidade rodoviária"] },
+    palavras:["Ministério da Administração Interna","segurança interna","forças de segurança","PSP","GNR","controlo de fronteiras","pedidos de asilo","proteção civil","incêndios florestais","sinistralidade rodoviária"] },
   { id:"justica", nome:"Justiça", grupo:"soberania", icone:"justica",
-    palavras:["Ministério da Justiça","tribunais","Ministério Público","pendências processuais","sistema prisional","registos e notariado","reforma da justiça"] },
+    palavras:["Ministério da Justiça","tribunais","Ministério Público","pendências processuais","sistema prisional","registos e notariado","reforma da justiça","apoio judiciário"] },
   { id:"economia", nome:"Economia e Coesão Territorial", grupo:"economia", icone:"economia",
-    palavras:["Ministério da Economia","crescimento económico","exportações portuguesas","investimento empresarial","turismo","fundos europeus","coesão territorial","interioridade"] },
+    palavras:["Ministério da Economia","crescimento económico","exportações portuguesas","investimento empresarial","turismo","comércio e serviços","fundos europeus","desenvolvimento regional","coesão territorial","administração local","autarquias","ordenamento do território"] },
   { id:"infraestruturas", nome:"Infraestruturas e Habitação", grupo:"economia", icone:"infraestruturas",
-    palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","obras públicas","ferrovia","novo aeroporto","transportes públicos","licenciamento urbanístico"] },
+    palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","obras públicas","ferrovia","novo aeroporto","transportes públicos","mobilidade","licenciamento urbanístico"] },
   { id:"educacao", nome:"Educação, Ciência e Inovação", grupo:"social", icone:"educacao",
-    palavras:["Ministério da Educação","escolas","professores","exames nacionais","ensino superior","investigação científica","bolsas de investigação","abandono escolar"] },
+    palavras:["Ministério da Educação","escolas","administração escolar","professores","exames nacionais","ensino superior","ciência e inovação","investigação científica","bolsas de investigação","abandono escolar"] },
   { id:"saude", nome:"Saúde", grupo:"social", icone:"saude",
-    palavras:["Ministério da Saúde","Serviço Nacional de Saúde","urgências hospitalares","médicos de família","listas de espera","cuidados continuados","medicamentos","saúde mental"] },
+    palavras:["Ministério da Saúde","Serviço Nacional de Saúde","urgências hospitalares","médicos de família","listas de espera","gestão hospitalar","cuidados continuados","medicamentos","saúde mental"] },
   { id:"trabalho", nome:"Trabalho, Solidariedade e Segurança Social", grupo:"social", icone:"trabalho",
-    palavras:["Ministério do Trabalho","emprego","desemprego","salário mínimo","pensões","segurança social","solidariedade social","negociação coletiva","apoios sociais"] },
+    palavras:["Ministério do Trabalho","emprego","desemprego","salário mínimo","pensões","segurança social","ação social","inclusão social","negociação coletiva","apoios sociais"] },
   { id:"cultura", nome:"Cultura, Juventude e Desporto", grupo:"social", icone:"cultura",
-    palavras:["Ministério da Cultura","património cultural","museus","criação artística","políticas de juventude","desporto","alta competição","língua portuguesa"] },
+    palavras:["Ministério da Cultura","património cultural","museus","criação artística","políticas de juventude","igualdade de género","desporto","alta competição","língua portuguesa"] },
   { id:"ambiente", nome:"Ambiente e Energia", grupo:"ambiente", icone:"ambiente",
-    palavras:["Ministério do Ambiente e Energia","preço da energia","mercado da eletricidade","energias renováveis","alterações climáticas","descarbonização","gestão de resíduos","situação de seca","incêndios florestais"],
+    palavras:["Ministério do Ambiente e Energia","preço da energia","mercado da eletricidade","energias renováveis","alterações climáticas","descarbonização","gestão de resíduos","situação de seca","qualidade da água"],
     excluir:["clima de negócios","clima organizacional","clima de confiança"] },
   { id:"agricultura", nome:"Agricultura e Mar", grupo:"ambiente", icone:"agricultura",
-    palavras:["Ministério da Agricultura e Mar","política agrícola comum","produção agrícola","agricultores","desenvolvimento rural","gestão florestal","pescas","aquicultura","economia do mar","segurança alimentar","regadio"] }
+    palavras:["Ministério da Agricultura e Mar","política agrícola comum","produção agrícola","agricultores","desenvolvimento rural","florestas","gestão florestal","pescas","aquicultura","economia do mar","segurança alimentar","regadio"] }
 
 ];
 

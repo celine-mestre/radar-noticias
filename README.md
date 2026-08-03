@@ -207,6 +207,11 @@ python extrair_noticias.py --fontes --area saude --saida saude.xlsx
   quando houver espaço para isso.
 - **Marcação literal.** Um artigo entra numa área por conter a expressão no título ou
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
+- **As expressões seguem as tutelas.** Cada área tem as palavras-chave das matérias que
+  o respetivo ministério tutela, incluindo as das secretarias de Estado — é por isso que
+  a política de imigração está na Presidência, que tem o Secretário de Estado Adjunto da
+  Presidência e Imigração, e não na Administração Interna, a quem cabe o controlo de
+  fronteiras. Uma remodelação governamental obriga a rever a lista, na constante `AREAS`.
 - **Comparação entre áreas.** Legítima dentro do corpus: nenhuma área é truncada e o
   método é o mesmo para todas. As contagens medem o que as publicações subscritas
   noticiaram, não o total do que foi noticiado.
