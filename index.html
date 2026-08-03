@@ -1281,10 +1281,17 @@ async function apurarContagens(){
   try{
     const a = await carregarArquivo();
     const c = {};
+    /* Os duplicados são descartados aqui pela mesma regra da lista — mesmo
+       título na mesma publicação. Sem isto, o radar contava artigos repetidos
+       e anunciava mais notícias do que a área depois mostrava. */
+    const vistos = new Set();
     a.noticias.forEach(n => {
       if(ehRedeSocial(n)) return;
       if(!aceitaOrigem(n)) return;
       if(!dentroDoPeriodo(n)) return;
+      const k = (n.area || "") + "|" + chaveNoticia(n);
+      if(vistos.has(k)) return;
+      vistos.add(k);
       c[n.area] = (c[n.area] || 0) + 1;
     });
     contagens = { por: c, dias: a.dias || 7 };
