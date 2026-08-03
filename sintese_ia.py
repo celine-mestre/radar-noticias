@@ -66,8 +66,8 @@ PLATAFORMAS = (
 
 INSTRUCAO = (
     "És um analista da Secretaria-Geral do Governo. Recebes os títulos das notícias "
-    "de hoje sobre uma área governativa e escreves um parágrafo único, de quatro a "
-    "seis frases, que dê conta do que foi notícia.\n\n"
+    "de hoje sobre uma área governativa e escreves um parágrafo único que dê conta "
+    "do que foi notícia.\n\n"
     "Regras:\n"
     "- Usa apenas o que está nos títulos. Não acrescentes factos, números, causas "
     "ou consequências que não estejam lá.\n"
@@ -128,11 +128,12 @@ def perguntar(endereco, chave, titulos, area, rotulo="", tempo_limite=60):
         "messages": [
             {"role": "system", "content": INSTRUCAO},
             {"role": "user", "content": (f"Área governativa: {area}\n"
-                                        f"Origem da imprensa: {rotulo or 'não especificada'}\n\n"
+                                        f"Origem da imprensa: {rotulo or 'não especificada'}\n"
+                                        f"Extensão pedida: um parágrafo {extensao(len(titulos))}.\n\n"
                                         f"Títulos:\n{lista}")},
         ],
         "temperature": 0.3,
-        "max_tokens": 400,
+        "max_tokens": 520,
     }
 
     pedido = urllib.request.Request(
@@ -150,7 +151,7 @@ def perguntar(endereco, chave, titulos, area, rotulo="", tempo_limite=60):
 _modelo_local = None
 
 
-def carregar_modelo_local(repo, ficheiro, contexto=4096, fios=0):
+def carregar_modelo_local(repo, ficheiro, contexto=8192, fios=0):
     """Carrega o Amália em memória, a partir da conversão quantizada.
 
     O ficheiro é descarregado uma vez e fica em cache. Sem placa gráfica, a
@@ -180,6 +181,19 @@ def carregar_modelo_local(repo, ficheiro, contexto=4096, fios=0):
     return _modelo_local
 
 
+def extensao(n):
+    """Quantas frases pedir, conforme o material disponível.
+
+    Resumir cento e trinta títulos em duas frases não é síntese, é omissão; e
+    pedir oito frases sobre três notícias obrigaria o modelo a encher.
+    """
+    if n >= 40:
+        return "de sete a dez frases"
+    if n >= 15:
+        return "de cinco a sete frases"
+    return "de três a cinco frases"
+
+
 def perguntar_local(titulos, area, repo, ficheiro, rotulo=""):
     """A mesma pergunta, respondida pelo modelo carregado neste computador."""
     modelo = carregar_modelo_local(repo, ficheiro)
@@ -188,11 +202,12 @@ def perguntar_local(titulos, area, repo, ficheiro, rotulo=""):
         messages=[
             {"role": "system", "content": INSTRUCAO},
             {"role": "user", "content": (f"Área governativa: {area}\n"
-                                        f"Origem da imprensa: {rotulo or 'não especificada'}\n\n"
+                                        f"Origem da imprensa: {rotulo or 'não especificada'}\n"
+                                        f"Extensão pedida: um parágrafo {extensao(len(titulos))}.\n\n"
                                         f"Títulos:\n{lista}")},
         ],
         temperature=0.3,
-        max_tokens=400,
+        max_tokens=520,
     )
     return resposta["choices"][0]["message"]["content"].strip()
 
@@ -213,7 +228,7 @@ def principal():
                     help="tratar apenas esta área — útil para um primeiro ensaio")
     ap.add_argument("--minimo", type=int, default=3,
                     help="notícias mínimas para valer a pena sintetizar")
-    ap.add_argument("--maximo", type=int, default=40,
+    ap.add_argument("--maximo", type=int, default=70,
                     help="títulos a enviar por área, dos mais recentes")
     args = ap.parse_args()
 

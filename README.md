@@ -294,6 +294,10 @@ leva a etiqueta da origem e o número de notícias que resume.
 Uma origem só gera parágrafo se tiver pelo menos três notícias no período — abaixo
 disso, um resumo não acrescenta nada à leitura dos próprios títulos.
 
+A extensão acompanha o volume: até quinze notícias pedem-se três a cinco frases; até
+quarenta, cinco a sete; acima disso, sete a dez. Resumir cento e trinta títulos em duas
+frases não é síntese, é omissão.
+
 ### Como corre
 
 O **Amália** é o modelo de linguagem do Estado, desenvolvido por um consórcio de
