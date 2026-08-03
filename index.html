@@ -1582,7 +1582,7 @@ function abrirExportacao(id){
 
     <div class="modal-rodape">
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
-      <button class="btn" id="btnLimparChaves" style="margin-left:auto">Todas as palavras-chave</button>
+
     </div>`;
   $("#veu").classList.add("aberto");
 
@@ -1606,7 +1606,18 @@ function abrirExportacao(id){
   };
   $("#critPeriodo").addEventListener("change", e => { periodo = e.target.value; aplicar(); });
   $("#critFontes").addEventListener("change", e => { filtroFontes = e.target.value; aplicar(); });
-  $("#critRepor").addEventListener("click", () => { periodo = "7d"; filtroFontes = "todas"; aplicar(); });
+  /* Repor devolve tudo ao estado inicial da janela: período, origem e também as
+     palavras-chave. Havendo isto, um segundo botão só para as palavras-chave era
+     repetição. */
+  $("#critRepor").addEventListener("click", () => {
+    periodo = "7d";
+    filtroFontes = "todas";
+    document.querySelectorAll("#modal .chip[data-termo]").forEach(c => c.classList.remove("sel"));
+    const campo = $("#campoLivre");
+    if(campo) campo.value = "";
+    definirConsulta(a, consulta(a), a.palavras.join("; "));
+    aplicar();
+  });
 
   /* Mudar de área sem fechar a janela: poupa o percurso de voltar ao radar e
      tornar a clicar, que era o caminho para comparar duas áreas. */
@@ -1630,15 +1641,6 @@ function abrirExportacao(id){
       : `<path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3 14 10"/><path d="M3 21l7-7"/>`;
   });
 
-  const limpar = $("#btnLimparChaves");
-  if(limpar) limpar.addEventListener("click", () => {
-    document.querySelectorAll("#modal .chip[data-termo]").forEach(c => c.classList.remove("sel"));
-    const campo = $("#campoLivre");
-    if(campo) campo.value = "";
-    definirConsulta(a, consulta(a), a.palavras.join("; "));
-    anunciarConsulta();
-    recolha = []; recolherConsulta();
-  });
   $("#btnAtualizar").addEventListener("click", () => { recolha = []; recolherConsulta(); });
   $("#vistaRes").addEventListener("click", e => {
     const b = e.target.closest("[data-vista]");

@@ -873,6 +873,7 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
     """
     limite = agora_lisboa() - timedelta(days=dias)
     encontrados, lidos, falhas = {}, 0, []
+    sem_ligacao_por_fonte = {}
     # Todos os artigos lidos, marcados ou não: é este o corpus que a pesquisa
     # por termo livre percorre. Sem ele, procurar "Ceuta" só encontraria o que
     # já tivesse sido marcado por uma palavra-chave de área.
@@ -894,9 +895,13 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
 
         lidos += len(itens)
         marcados = 0
+        sem_endereco = 0
         for it in itens:
             if it["data"] and it["data"] < limite:
                 continue
+
+            if not it["ligacao"]:
+                sem_endereco += 1
 
             chave_geral = (it["titulo"] or "").lower()
             if chave_geral and chave_geral not in todos:
@@ -928,12 +933,24 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
                     "palavras": set(palavras),
                 }
                 marcados += 1
-        print(f"{len(itens)} artigos, {marcados} marcados")
+        # As publicações que não indicam o endereço no feed ficam identificadas:
+        # sem isto, só se via o efeito — notícias sem ligação — e não a causa.
+        aviso = f", {sem_endereco} SEM ENDEREÇO" if sem_endereco else ""
+        print(f"{len(itens)} artigos, {marcados} marcados{aviso}")
+        if sem_endereco:
+            sem_ligacao_por_fonte[nome_fonte] = sem_endereco
         if i < len(lista):
             time.sleep(pausa)
 
     print(f"\n{lidos} artigos lidos · {len(todos)} distintos · "
           f"{len(encontrados)} marcados por área")
+
+    if sem_ligacao_por_fonte:
+        total = sum(sem_ligacao_por_fonte.values())
+        print(f"\n{total} artigos sem endereço no feed, nestas publicações:")
+        for nome, quantos in sorted(sem_ligacao_por_fonte.items(), key=lambda x: -x[1]):
+            print(f"   {nome}: {quantos}")
+        print("Estas notícias entram na mesma, mas sem ligação para o artigo.")
     return list(encontrados.values()), falhas, list(todos.values())
 
 
