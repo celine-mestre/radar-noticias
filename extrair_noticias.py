@@ -232,7 +232,8 @@ AREAS = [
       "Ministério das Infraestruturas e Habitação",
       "habitação",
       "arrendamento",
-      "casas",
+      "preço das casas",
+      "compra de casa",
       "obras públicas",
       "ferrovia",
       "comboios",
@@ -252,10 +253,11 @@ AREAS = [
       "universidades",
       "ciência",
       "investigação científica",
-      "bolsas",
+      "bolsas de estudo",
+      "bolsas de investigação",
       "abandono escolar",
       "manuais escolares"],
-     []),
+     ["bolsa de valores", "bolsa espanhola", "bolsa de Lisboa"]),
     ("saude", "Saúde", "social",
      [
       "Ministério da Saúde",
@@ -308,7 +310,9 @@ AREAS = [
       "descarbonização",
       "resíduos",
       "seca",
-      "água",
+      "abastecimento de água",
+      "qualidade da água",
+      "escassez de água",
       "poluição"],
      ["ambiente de trabalho", "ambiente empresarial", "ambiente de negócios"]),
     ("agricultura", "Agricultura e Mar", "ambiente",
@@ -1244,9 +1248,23 @@ SUBSTITUTO = "\ufffd"
 
 
 def texto_estragado(registo):
-    """Verdadeiro se o registo traz caracteres que não puderam ser lidos."""
-    return any(SUBSTITUTO in (registo.get(campo) or "")
-               for campo in ("titulo", "resumo", "fonte"))
+    """Verdadeiro se o registo está inutilizável e deve voltar a ser recolhido.
+
+    Dois casos. O primeiro são os caracteres que não puderam ser lidos, de
+    quando a leitura não respeitava a codificação de cada feed. O segundo são as
+    ligações que não são endereços: durante algum tempo, um desalinhamento de
+    campos gravou o resumo no lugar da ligação.
+
+    Descartá-los é o que permite substituí-los, porque a desduplicação mantém o
+    registo mais antigo — sem isto, o defeituoso continuaria a impedir a entrada
+    do correto.
+    """
+    if any(SUBSTITUTO in (registo.get(campo) or "")
+           for campo in ("titulo", "resumo", "fonte")):
+        return True
+
+    ligacao = (registo.get("ligacao") or "").strip()
+    return bool(ligacao) and not ligacao.startswith("http")
 
 
 def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):

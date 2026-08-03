@@ -312,6 +312,11 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .ler-txt strong{display:block;font-size:.88rem;font-weight:400;color:var(--texto);line-height:1.4}
 .ler-txt em{font-style:normal;font-size:.75rem;color:var(--texto-ligeiro)}
 .ler-fonte{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top:.1rem}
+/* Notícia sem endereço: continua a ler-se, mas não finge ser clicável */
+.ler-item.sem-ligacao{cursor:default}
+.ler-item.sem-ligacao:hover{background:transparent;transform:none}
+.ler-item .ico-sem{opacity:.3}
+
 .etiqueta-origem{
   font-size:.63rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
   color:var(--cor);border:1px solid color-mix(in srgb, var(--cor) 42%, transparent);
@@ -1122,9 +1127,9 @@ const AREAS = [
   { id:"economia", nome:"Economia e Coesão Territorial", grupo:"economia", icone:"economia",
     palavras:["Ministério da Economia","crescimento económico","exportações","investimento","empresas","turismo","comércio","fundos europeus","desenvolvimento regional","coesão territorial","administração local","autarquias","ordenamento do território","interioridade"], excluir:["comércio eletrónico de dados","ambiente de trabalho","empresa familiar"] },
   { id:"infraestruturas", nome:"Infraestruturas e Habitação", grupo:"economia", icone:"infraestruturas",
-    palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","casas","obras públicas","ferrovia","comboios","novo aeroporto","transportes públicos","mobilidade","licenciamento urbanístico"] },
+    palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","preço das casas","compra de casa","obras públicas","ferrovia","comboios","novo aeroporto","transportes públicos","mobilidade","licenciamento urbanístico"] },
   { id:"educacao", nome:"Educação, Ciência e Inovação", grupo:"social", icone:"educacao",
-    palavras:["Ministério da Educação","escolas","alunos","professores","exames nacionais","ensino superior","universidades","ciência","investigação científica","bolsas","abandono escolar","manuais escolares"] },
+    palavras:["Ministério da Educação","escolas","alunos","professores","exames nacionais","ensino superior","universidades","ciência","investigação científica","bolsas de estudo","bolsas de investigação","abandono escolar","manuais escolares"], excluir:["bolsa de valores","bolsa espanhola","bolsa de Lisboa"] },
   { id:"saude", nome:"Saúde", grupo:"social", icone:"saude",
     palavras:["Ministério da Saúde","Serviço Nacional de Saúde","hospitais","urgências","médicos de família","listas de espera","cuidados continuados","medicamentos","saúde mental","enfermeiros"] },
   { id:"trabalho", nome:"Trabalho, Solidariedade e Segurança Social", grupo:"social", icone:"trabalho",
@@ -1132,7 +1137,7 @@ const AREAS = [
   { id:"cultura", nome:"Cultura, Juventude e Desporto", grupo:"social", icone:"cultura",
     palavras:["Ministério da Cultura","património","museus","artistas","teatros","políticas de juventude","jovens","igualdade de género","desporto","atletas","língua portuguesa"], excluir:["cultura organizacional","cultura de empresa","cultura do cancelamento"] },
   { id:"ambiente", nome:"Ambiente e Energia", grupo:"ambiente", icone:"ambiente",
-    palavras:["Ministério do Ambiente e Energia","energia","eletricidade","renováveis","alterações climáticas","descarbonização","resíduos","seca","água","poluição"],
+    palavras:["Ministério do Ambiente e Energia","energia","eletricidade","renováveis","alterações climáticas","descarbonização","resíduos","seca","abastecimento de água","qualidade da água","escassez de água","poluição"],
     excluir:["clima de negócios","clima organizacional","clima de confiança"] },
   { id:"agricultura", nome:"Agricultura e Mar", grupo:"ambiente", icone:"agricultura",
     palavras:["Ministério da Agricultura e Mar","política agrícola comum","agricultura","agricultores","desenvolvimento rural","florestas","gestão florestal","pescas","pescadores","aquicultura","economia do mar","segurança alimentar","regadio"], excluir:["ambiente de trabalho","ambiente empresarial","ambiente de negócios"] }
@@ -2062,8 +2067,15 @@ function corpoLista(){
 
   /* A imagem, quando o feed a declara. Falhando o carregamento — endereço morto,
      acesso restrito — a moldura desaparece em vez de deixar um vazio. */
-  const artigo = n => `
-    <a class="ler-item" href="${esc(enderecoSeguro(n.ligacao)) || "#"}" target="_blank" rel="noopener noreferrer">
+  /* Sem endereço conhecido, a notícia não se apresenta como ligação: um cartão
+     que parece clicável e leva de volta à mesma página é pior do que um cartão
+     que declara não ter ligação. Acontece quando o feed não a publica. */
+  const artigo = n => {
+    const url = enderecoSeguro(n.ligacao);
+    const abertura = url
+      ? `<a class="ler-item" href="${esc(url)}" target="_blank" rel="noopener noreferrer">`
+      : `<div class="ler-item sem-ligacao" title="A publicação não indicou o endereço do artigo">`;
+    return `${abertura}
       <span class="ler-hora">${hora(n) || "—"}</span>
       ${enderecoSeguro(n.imagem) ? `<span class="ler-img"><img src="${esc(enderecoSeguro(n.imagem))}" alt="" loading="lazy"
          referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>` : ""}
@@ -2075,8 +2087,11 @@ function corpoLista(){
           <span class="etiqueta-origem" style="--cor:${ETIQUETA_ORIGEM[origemDaFonte(n)].cor}">${ETIQUETA_ORIGEM[origemDaFonte(n)].rotulo}</span>
         </span>
       </span>
-      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
-    </a>`;
+      ${url
+        ? `<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>`
+        : `<svg viewBox="0 0 24 24" class="ico-sem"><path d="M9 12h6"/><circle cx="12" cy="12" r="9"/></svg>`}
+    ${url ? "</a>" : "</div>"}`;
+  };
 
   return `<div class="ler-lista">
     ${dias.map(d => `
