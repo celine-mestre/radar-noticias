@@ -587,12 +587,28 @@ main{padding:2.2rem 0 4rem}
 .modal{
   background:var(--superficie);border-radius:var(--raio);width:min(820px,100%);max-height:88vh;
   display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--sombra-forte);
+  transition:width .2s cubic-bezier(.2,.8,.3,1), max-height .2s cubic-bezier(.2,.8,.3,1);
 }
+/* Ampliada: ocupa praticamente todo o ecrã, para listas longas e para mostrar
+   o painel numa reunião sem ter de percorrer tanto. */
+.modal.amplo{width:min(1500px,98vw);max-height:96vh}
+.modal.amplo .barra-chaves,
+.modal.amplo .barra-criterios,
+.modal.amplo .modal-cab{padding-left:2rem;padding-right:2rem}
+.modal.amplo .ler-lista{padding-left:2rem;padding-right:2rem}
 .modal-cab{padding:1.4rem 1.5rem;border-bottom:1px solid var(--borda);display:flex;align-items:flex-start;gap:1rem}
 .modal-cab .icone{width:46px;height:46px;border-radius:12px;background:var(--cor);flex:none;display:flex;align-items:center;justify-content:center}
 .modal-cab .icone span{display:flex;align-items:center;justify-content:center}
 .modal-cab .icone svg{width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .modal-cab h3{font-size:1.15rem;font-weight:600}
+.cab-accoes{margin-left:auto;display:flex;gap:.4rem;align-self:center}
+.btn-cab{width:34px;height:34px;border-radius:9px;border:1px solid var(--borda);
+  background:var(--superficie-alt);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:.15s;flex:none;padding:0}
+.btn-cab:hover{border-color:var(--cor);background:var(--superficie)}
+.btn-cab svg{width:17px;height:17px;stroke:var(--texto-suave);fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+.btn-cab:hover svg{stroke:var(--cor)}
 .modal-cab p{font-size:.8rem;color:var(--texto-ligeiro);margin-top:.2rem}
 .modal-cab button{margin-left:auto;background:none;border:none;cursor:pointer;color:var(--texto-ligeiro);font-size:1.5rem;line-height:1}
 #corpoRes{padding:0 1.6rem 1.2rem}
@@ -1412,7 +1428,15 @@ function abrirExportacao(id){
         <h3>${a.nome}</h3>
         <p>${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave da área"}</p>
       </div>
-      <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
+      <div class="cab-accoes">
+        <button class="btn-cab" id="btnAmpliar" title="Ampliar a janela" aria-pressed="false">
+          <svg viewBox="0 0 24 24" id="icoAmpliar"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/>
+            <path d="M21 3 14 10"/><path d="M3 21l7-7"/></svg>
+        </button>
+        <button class="btn-cab" onclick="fecharModal()" title="Voltar ao radar" aria-label="Voltar ao radar">
+          <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </button>
+      </div>
     </div>
 
     <div class="barra-chaves">
@@ -1440,6 +1464,12 @@ function abrirExportacao(id){
         <select id="critFontes">
           ${Object.entries(ROTULO_FONTES).map(([v, r]) =>
             `<option value="${v}"${v === filtroFontes ? " selected" : ""}>${r}</option>`).join("")}
+        </select>
+      </label>
+      <label class="crit-campo">
+        <span>Área</span>
+        <select id="critArea">
+          ${AREAS.map(x => `<option value="${x.id}"${x.id === a.id ? " selected" : ""}>${esc(x.nome)}</option>`).join("")}
         </select>
       </label>
       <button class="btn-atalho" id="critRepor">Repor predefinições</button>
@@ -1495,6 +1525,28 @@ function abrirExportacao(id){
   $("#critPeriodo").addEventListener("change", e => { periodo = e.target.value; aplicar(); });
   $("#critFontes").addEventListener("change", e => { filtroFontes = e.target.value; aplicar(); });
   $("#critRepor").addEventListener("click", () => { periodo = "7d"; filtroFontes = "todas"; aplicar(); });
+
+  /* Mudar de área sem fechar a janela: poupa o percurso de voltar ao radar e
+     tornar a clicar, que era o caminho para comparar duas áreas. */
+  $("#critArea").addEventListener("change", e => {
+    const amplo = $("#modal").classList.contains("amplo");
+    recolha = []; assinaturaRecolha = "";
+    abrirExportacao(e.target.value);
+    if(amplo) $("#modal").classList.add("amplo");   // a amplitude mantém-se
+  });
+
+  /* A janela ampliada é preferência do momento, não predefinição: repõe-se
+     ao tamanho normal quando se fecha. */
+  const ampliar = $("#btnAmpliar");
+  if(ampliar) ampliar.addEventListener("click", () => {
+    const m = $("#modal");
+    const agora = m.classList.toggle("amplo");
+    ampliar.setAttribute("aria-pressed", agora ? "true" : "false");
+    ampliar.title = agora ? "Reduzir a janela" : "Ampliar a janela";
+    $("#icoAmpliar").innerHTML = agora
+      ? `<path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10 21 3"/><path d="M3 21l7-7"/>`
+      : `<path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3 14 10"/><path d="M3 21l7-7"/>`;
+  });
 
   const limpar = $("#btnLimparChaves");
   if(limpar) limpar.addEventListener("click", () => {
@@ -1668,6 +1720,7 @@ const MANUAL = [
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
       <dt>Abrir uma área</dt><dd>Clicar numa área abre diretamente a janela de resultados, com as notícias já recolhidas. As palavras-chave ficam à cabeça dessa janela: escolher uma ou várias refaz a consulta no momento, e <strong>Todas as palavras-chave</strong> repõe a área completa. A caixa ao lado procura um termo livre.</dd>
+      <dt>Dentro da janela</dt><dd>Dois botões no canto superior direito: <strong>ampliar</strong>, que alarga a janela a quase todo o ecrã e volta a reduzi-la, útil para listas longas ou para mostrar numa reunião; e <strong>voltar ao radar</strong>. Para comparar áreas sem sair, o seletor <strong>Área</strong>, na barra de critérios, troca de área mantendo o período, a origem e a amplitude escolhidos.</dd>
       <dt>Radar</dt><dd>As áreas dispostas em círculo por volume de notícias. A distância ao centro tem significado: quanto mais noticiada a área, mais perto fica; ao centro está o total. Acompanha os três seletores da barra — período, origem das fontes e agrupamento —, pelo que os números mudam com eles. Clicar numa área abre-a. Em ecrãs estreitos dá lugar à grelha de cartões, porque um círculo com dezasseis caixas seria ilegível.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: sete dias, que é tudo o que o arquivo guarda. Reduzindo-o, vê-se apenas o mais recente.</dd>
