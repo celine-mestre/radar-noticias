@@ -26,8 +26,8 @@ from datetime import datetime, timedelta
 VERDE, AZUL, DOURADO, TEAL, VERMELHO = "#0E7433", "#2B5683", "#BE9C54", "#266B73", "#D02117"
 
 # Sem imagem no cabeçalho: em correio, as imagens são bloqueadas por
-# predefinição na maioria dos clientes. A identidade é feita com tipografia e
-# com a barra de cor nacional, que qualquer cliente apresenta sempre.
+# predefinição na maioria dos clientes. A identidade faz-se com tipografia e
+# com o azul institucional, que qualquer cliente apresenta sempre.
 CINZA_TEXTO, CINZA_SUAVE, BORDA = "#171715", "#5b6068", "#e2e8f0"
 
 MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho",
@@ -79,6 +79,11 @@ ETIQUETA_ORIGEM = {
     "lusofonas": ("Lusofonia", "#BE9C54"),
     "internacionais": ("Internacional", "#266B73"),
 }
+
+# Uma síntese mais velha do que isto já não descreve o que a lista mostra.
+# Doze horas cobrem o intervalo entre a escrita da manhã e qualquer envio do
+# mesmo dia, incluindo os que atravessem a meia-noite.
+MAX_IDADE_SINTESE = 12
 
 ROTULO_ORIGENS = {
     frozenset({"nacionais"}): "imprensa de Portugal",
@@ -150,34 +155,65 @@ def contar(noticias, chave):
     return sorted(contagem.items(), key=lambda x: -x[1])
 
 
-def bloco_sintese(texto, escrita_em=""):
-    """Síntese redigida pelo Amália, quando existe para esta área.
+def bloco_sintese(sintese, escrita_em="", origens=None):
+    """Síntese redigida pelo Amália: um parágrafo por origem de imprensa.
+
+    Separar Portugal, lusofonia e imprensa internacional evita o efeito que se
+    notava antes — o orçamento português e o cabo-verdiano descritos no mesmo
+    texto, como se fossem a mesma matéria.
 
     A síntese é escrita mais cedo do que o relatório é enviado, pelo que se
     declara a hora: quem lê fica a saber que as notícias mais recentes da lista
-    podem não estar refletidas no parágrafo.
+    podem não estar refletidas nos parágrafos.
     """
-    if not texto:
+    if not sintese or not sintese.get("origens"):
         return ""
+
     hora = f" · escrita às {escrita_em[11:16]}" if len(escrita_em) >= 16 else ""
+
+    partes = []
+    for chave in ("nacionais", "lusofonas", "internacionais"):
+        if origens and chave not in origens:
+            continue
+        x = sintese["origens"].get(chave)
+        if not x:
+            continue
+        rotulo, cor_o = ETIQUETA_ORIGEM[chave]
+        partes.append(f"""
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+                 style="margin-top:10px"><tr>
+            <td>
+              <span style="font:600 9px Arial,sans-serif;color:{cor_o};letter-spacing:.6px;
+                           text-transform:uppercase;border:1px solid {cor_o};border-radius:3px;
+                           padding:1px 5px">{rotulo}</span>
+              <span style="font:400 11px Arial,sans-serif;color:#8a9098;padding-left:6px">{x['noticias']} notícias</span>
+              <div style="font:400 14px Arial,sans-serif;color:{CINZA_TEXTO};line-height:1.6;
+                          padding-top:5px">{esc(x['texto'])}</div>
+            </td>
+          </tr></table>""")
+
+    if not partes:
+        return ""
+    corpo = "".join(partes)
     return f"""
     <tr><td style="padding:14px 24px 6px">
       <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
              style="border-left:3px solid {DOURADO};background:#fdfbf6">
         <tr><td style="padding:12px 16px">
           <div style="font:600 10px Arial,sans-serif;color:{DOURADO};letter-spacing:1.2px;
-                      text-transform:uppercase;padding-bottom:6px">Síntese redigida · Amália{hora}</div>
-          <div style="font:400 14px Arial,sans-serif;color:{CINZA_TEXTO};line-height:1.6">{esc(texto)}</div>
-          <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:8px;line-height:1.5">
-            Texto gerado automaticamente a partir dos títulos abaixo, sem acesso a outras
-            fontes. Serve de primeira leitura e não dispensa a consulta das notícias.
+                      text-transform:uppercase">Síntese redigida · Amália{hora}</div>
+          {corpo}
+          <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:10px;line-height:1.5">
+            Textos gerados automaticamente a partir dos títulos abaixo, sem acesso a outras
+            fontes, e separados pela origem da imprensa. Servem de primeira leitura e não
+            dispensam a consulta das notícias.
           </div>
         </td></tr>
       </table>
     </td></tr>"""
 
 
-def bloco_area(nome, noticias, cor, sintese="", escrita_em=""):
+def bloco_area(nome, noticias, cor, sintese=None, escrita_em="", origens=None):
     """Uma secção por área governativa, com as notícias agrupadas por dia."""
     if not noticias:
         return f"""
@@ -212,7 +248,7 @@ def bloco_area(nome, noticias, cor, sintese="", escrita_em=""):
           {len(noticias)} {'notícia' if len(noticias) == 1 else 'notícias'} ·
           {len(contar(noticias, 'fonte'))} {'publicação' if len(contar(noticias, 'fonte')) == 1 else 'publicações'}</div>
       </div>
-    </td></tr>""", bloco_sintese(sintese, escrita_em)]
+    </td></tr>""", bloco_sintese(sintese, escrita_em, origens)]
 
     for dia in sorted(por_dia, reverse=True):
         partes.append(f"""
@@ -280,22 +316,40 @@ def carregar_sinteses(caminho="sinteses.json", periodo=""):
     se contradiz. Nesses casos é preferível não a apresentar.
     """
     if not os.path.exists(caminho):
+        print(f"Síntese: ficheiro {caminho} não existe — relatório sai sem parágrafo.")
         return {}, ""
     try:
         with open(caminho, encoding="utf-8") as origem:
             d = json.load(origem)
-    except (json.JSONDecodeError, OSError):
+    except (json.JSONDecodeError, OSError) as erro:
+        print(f"Síntese: {caminho} ilegível ({erro}).")
         return {}, ""
+
+    print(f"Síntese: ficheiro de {d.get('gerado', '?')}, janela {d.get('periodo', '?')}, "
+          f"{len(d.get('areas', {}))} área(s).")
 
     gerado = d.get("gerado", "")
     if periodo and d.get("periodo") and d["periodo"] != periodo:
         print(f"Síntese ignorada: foi escrita sobre {d['periodo']}, o relatório é de {periodo}.")
         return {}, ""
 
-    if gerado[:10] != datetime.now().strftime("%Y-%m-%d"):
-        print(f"Síntese ignorada: é de {gerado[:10] or 'data desconhecida'}, não de hoje.")
+    # A idade conta-se em horas, não em dias de calendário: uma síntese escrita
+    # às 23h e um relatório enviado à 01h estão a duas horas de distância, mas
+    # em dias diferentes — e a regra anterior descartava-a por isso.
+    try:
+        idade = (datetime.now() - datetime.strptime(gerado[:16], "%Y-%m-%d %H:%M"))
+        horas = idade.total_seconds() / 3600
+    except (ValueError, TypeError):
+        print("Síntese ignorada: data de geração ilegível.")
         return {}, ""
 
+    if horas > MAX_IDADE_SINTESE:
+        print(f"Síntese ignorada: foi escrita há {horas:.0f} horas, "
+              f"acima do limite de {MAX_IDADE_SINTESE}.")
+        return {}, ""
+
+    print(f"Síntese aceite: escrita há {horas:.0f} hora(s), "
+          f"{len(d.get('areas', {}))} área(s) com parágrafo.")
     return d.get("areas", {}), gerado
 
 
@@ -308,8 +362,9 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
         noticias = filtrar(dados, nome, periodo, origens)
         total += len(noticias)
         grupo = next((n.get("grupo") for n in dados if n.get("area") == nome), "")
-        texto = (sinteses or {}).get(nome, {}).get("texto", "")
-        seccoes.append(bloco_area(nome, noticias, COR_GRUPO.get(grupo, AZUL), texto, escrita_em))
+        sintese = (sinteses or {}).get(nome)
+        seccoes.append(bloco_area(nome, noticias, COR_GRUPO.get(grupo, AZUL),
+                                  sintese, escrita_em, origens))
 
     criterios = f"{ROTULO_PERIODO.get(periodo, periodo)} · " + (
         ROTULO_ORIGENS.get(frozenset(origens), "imprensa selecionada")
@@ -325,13 +380,6 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
 <table width="640" cellpadding="0" cellspacing="0" role="presentation"
        style="max-width:640px;background:#ffffff;border-radius:12px;overflow:hidden;
               box-shadow:0 1px 3px rgba(23,23,21,.08)">
-
-  <tr><td style="padding:0">
-    <table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr>
-      <td width="50%" height="5" style="background:#0E7433;font-size:0;line-height:0">&nbsp;</td>
-      <td width="50%" height="5" style="background:#D02117;font-size:0;line-height:0">&nbsp;</td>
-    </tr></table>
-  </td></tr>
 
   <tr><td style="background:{AZUL};padding:20px 24px">
     <table cellpadding="0" cellspacing="0" role="presentation"><tr>
@@ -460,9 +508,16 @@ def versao_texto(dados, areas, periodo, origens, painel, sinteses=None):
         linhas += ["=" * 62, nome.upper(),
                    f"{len(noticias)} {'notícia' if len(noticias) == 1 else 'notícias'}", ""]
 
-        texto = (sinteses or {}).get(nome, {}).get("texto", "")
-        if texto:
-            linhas += ["SÍNTESE REDIGIDA · AMÁLIA", texto, ""]
+        sintese = (sinteses or {}).get(nome) or {}
+        if sintese.get("origens"):
+            linhas.append("SÍNTESE REDIGIDA · AMÁLIA")
+            for chave in ("nacionais", "lusofonas", "internacionais"):
+                if origens and chave not in origens:
+                    continue
+                x = sintese["origens"].get(chave)
+                if x:
+                    linhas += [f"[{x['rotulo'].upper()}] {x['noticias']} notícias",
+                               x["texto"], ""]
 
         if not noticias:
             linhas += ["Sem notícias no período.", ""]
