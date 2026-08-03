@@ -692,6 +692,14 @@ main{padding:2.2rem 0 4rem}
 body.sem-radar #conteudo{display:block !important}
 @media(max-width:860px){.radar{display:none}}
 
+/* Palavras-chave dentro da janela de resultados: escolher uma refaz a consulta
+   sem sair do sítio, que era o que a etapa intermédia obrigava a fazer. */
+.barra-chaves{padding:.85rem 1.4rem .7rem;border-bottom:1px solid var(--borda);
+  background:var(--superficie-alt)}
+.chaves-topo{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.6rem}
+.chaves-topo .campo-livre{flex:1;min-width:180px;max-width:340px;margin-left:auto}
+.barra-chaves .chips{display:flex;flex-wrap:wrap;gap:.35rem}
+
 .marca-selecao{font-size:.78rem;color:var(--texto-ligeiro);margin:-.2rem 0 .55rem}
 .consulta-txt{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;line-height:1.6;
@@ -868,17 +876,17 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       <span class="rot">Período</span>
       <select id="campoPeriodo" aria-label="Período das notícias">
-        <option value="24h" selected>Últimas 24 horas</option>
+        <option value="24h">Últimas 24 horas</option>
         <option value="48h">Últimas 48 horas</option>
         <option value="72h">Últimas 72 horas</option>
-        <option value="7d">Últimos 7 dias</option>
+        <option value="7d" selected>Últimos 7 dias</option>
       </select>
     </label>
     <div class="segmentado" id="filtroFontes" role="group" aria-label="Origem das fontes">
-      <button data-fonte="nacionais" class="ativo">Portugal</button>
+      <button data-fonte="nacionais">Portugal</button>
       <button data-fonte="lusofonas">Lusofonia</button>
       <button data-fonte="internacionais">Internacional</button>
-      <button data-fonte="todas">Todas</button>
+      <button data-fonte="todas" class="ativo">Todas</button>
     </div>
     <button class="btn" id="btnSubscrever">
       <svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path d="m22 7-10 6L2 7"/></svg>
@@ -989,20 +997,6 @@ const CONFIG = {
   /* Plataformas que não são publicações noticiosas. Não têm feeds subscritos e
      estão fora do âmbito da aplicação; se algo delas entrar no arquivo, é
      descartado em silêncio. */
-  /* Edição portuguesa do serviço de pesquisa aberta */
-  edicao: { hl:"pt-PT", gl:"PT", ceid:"PT:pt-150" },
-
-  /* Publicações estrangeiras de língua portuguesa com maior presença nos
-     resultados. Usadas nas exclusões da pesquisa aberta, que é o único sítio
-     onde o filtro de origem do painel não se aplica. */
-  publicacoesEstrangeiras: [
-    "globo.com", "g1.globo.com", "uol.com.br", "r7.com", "metropoles.com", "abril.com",
-    "conjur.com.br", "migalhas.com.br", "jota.info", "exame.com", "terra.com.br",
-    "jornaldeangola.ao", "novojornal.co.ao", "verangola.net", "angop.ao",
-    "opais.co.mz", "idolo.co.mz", "verdade.co.mz", "carta.co.mz",
-    "expressodasilhas.cv", "asemana.publ.cv", "inforpress.cv", "vozdoarquipelago.com",
-    "tatoli.tl", "timorpost.com", "stp-press.st", "odemocratagb.com"
-  ],
 
   redesSociais: [
     "instagram.com", "facebook.com", "fb.com", "x.com", "twitter.com", "tiktok.com",
@@ -1112,13 +1106,13 @@ const AREAS = [
    ESTADO DA APLICAÇÃO
    ========================================================================= */
 let filtroAtual = "todas";
-let periodo = "24h";      // janela temporal da consulta
-let filtroFontes = "nacionais";   // nacionais · internacionais · todas
+let periodo = "7d";       // janela temporal da consulta — o arquivo cobre 7 dias
+let filtroFontes = "todas";       // nacionais · lusofonas · internacionais · todas
 /* O corpus é composto por feeds de publicações noticiosas. As plataformas sociais
    não publicam feeds e ficam por isso fora do âmbito da aplicação; a filtragem
    mantém-se para excluir páginas dessas plataformas que apareçam pela pesquisa. */
 const filtroRedes = "sem";   // o corpus é de imprensa; plataformas sociais ficam fora
-let soNacionais = true;           // atalho para o caso mais frequente
+let soNacionais = false;          // acompanha filtroFontes
 const DOMINIOS_LUSOFONOS = [".ao", ".mz", ".cv", ".st", ".gw", ".tl", ".br"];
 const PUBLICACOES_LUSOFONAS = [
   "jornaldeangola", "novojornal", "angop", "opais", "cartamz", "verangola",
@@ -1173,29 +1167,6 @@ const nomeGrupo = idGrupo => (GRUPOS.find(g => g.id === idGrupo) || {}).nome || 
 function sufixo(){
   const excl = "";   // a restrição de fontes é aplicada às notícias recolhidas
   return excl + (periodo ? ` when:${periodo}` : "");
-}
-
-/* PESQUISA ABERTA — a única ligação a um serviço externo que resta.
-   Não traz dados para o painel: abre uma consulta em janela nova. */
-function parametros(){
-  const e = CONFIG.edicao;
-  return `hl=${e.hl}&gl=${e.gl}&ceid=${encodeURIComponent(e.ceid)}`;
-}
-
-/* O operador de exclusão do serviço não funciona sobre domínios de topo, apenas
-   sobre publicações nomeadas: excluem-se as que mais aparecem, o que reduz o
-   ruído sem o eliminar. */
-function exclusoesPesquisaAberta(){
-  const fora = [...CONFIG.redesSociais.slice(0, 12)];
-  if(filtroFontes === "nacionais") fora.push(...CONFIG.publicacoesEstrangeiras);
-  return fora.length ? " " + fora.map(d => `-site:${d}`).join(" ") : "";
-}
-
-function abrirPesquisaAberta(q){
-  const consultaFinal = q + exclusoesPesquisaAberta();
-  window.open(
-    `https://news.google.com/search?q=${encodeURIComponent(consultaFinal)}&${parametros()}`,
-    "PesquisaAberta", "width=1000,height=780,scrollbars=yes,resizable=yes");
 }
 
 function consulta(a){
@@ -1413,47 +1384,10 @@ function atualizarKPI(){
 /* =========================================================================
    JANELA DE DETALHE DA ÁREA
    ========================================================================= */
+/* O cartão abre diretamente a janela de resultados: a etapa intermédia só
+   servia para escolher palavras-chave, e essa escolha passou para dentro dela. */
 function abrirDetalhe(id){
-  const a = AREAS.find(x => x.id === id);
-  $("#modal").style.setProperty("--cor", cor(a.grupo));
-  $("#modal").innerHTML = `
-    <div class="modal-cab" style="--cor:${cor(a.grupo)}">
-      <div class="icone"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
-      <div>
-        <h3>${a.nome}</h3>
-        <p>${nomeGrupo(a.grupo)} · ${ROTULO_PERIODO[periodo]} · ${ROTULO_FONTES[filtroFontes]}</p>
-      </div>
-      <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
-    </div>
-    <div class="modal-corpo">
-      <div class="bloco">
-        <h4>Palavras-chave · clique para selecionar, pode escolher várias</h4>
-        <p id="marcaSelecao" class="marca-selecao">Nenhuma selecionada — pesquisa a área completa</p>
-        <div class="chips">${a.palavras.map(p =>
-          `<span class="chip" data-termo="${p}" style="--cor:${cor(a.grupo)}">${p}</span>`).join("")}</div>
-      </div>
-      <div class="bloco">
-        <h4>Pesquisa específica</h4>
-        <input class="campo campo-livre" id="campoLivre" placeholder="Termo ou expressão · prima Enter">
-      </div>
-
-    </div>
-    <div class="modal-rodape vias">
-      <button class="via-cartao destaque" data-exportar="${a.id}">
-        <span class="via-ic" style="--cor:var(--verde)">
-          <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/></svg>
-        </span>
-        <span class="via-txt"><strong>Visualizar no painel</strong><em>Lista por data, síntese, impressão e Excel</em></span>
-      </button>
-      <button class="via-cartao" data-aberta="${a.id}">
-        <span class="via-ic" style="--cor:var(--azul)">
-          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
-        </span>
-        <span class="via-txt"><strong>Pesquisa aberta</strong><em>Google Notícias, em janela nova</em></span>
-      </button>
-    </div>`;
-  $("#veu").classList.add("aberto");
-  definirConsulta(a, consulta(a), a.palavras.join("; "));
+  abrirExportacao(id);
 }
 
 /* Janela única: abre, recolhe e mostra as notícias. A síntese e a exportação
@@ -1479,6 +1413,18 @@ function abrirExportacao(id){
         <p>${consultaAtiva.termos ? consultaAtiva.rotulo : "todas as palavras-chave da área"}</p>
       </div>
       <button onclick="fecharModal()" aria-label="Fechar">&times;</button>
+    </div>
+
+    <div class="barra-chaves">
+      <div class="chaves-topo">
+        <span id="marcaSelecao" class="marca-selecao">${consultaAtiva.termos
+          ? consultaAtiva.rotulo : "Todas as palavras-chave da área"}</span>
+        <input class="campo campo-livre" id="campoLivre"
+               placeholder="Ou pesquise um termo · prima Enter">
+      </div>
+      <div class="chips">${a.palavras.map(p =>
+        `<span class="chip${(consultaAtiva.termos || []).includes(p) ? " sel" : ""}"
+               data-termo="${esc(p)}" style="--cor:${cor(a.grupo)}">${esc(p)}</span>`).join("")}</div>
     </div>
 
     <div class="barra-criterios">
@@ -1530,7 +1476,7 @@ function abrirExportacao(id){
 
     <div class="modal-rodape">
       <span style="font-size:.72rem;color:var(--texto-ligeiro);align-self:center">v. ${CONFIG.versao}</span>
-      <button class="btn" data-detalhe="${a.id}" style="margin-left:auto">Voltar às palavras-chave</button>
+      <button class="btn" id="btnLimparChaves" style="margin-left:auto">Todas as palavras-chave</button>
     </div>`;
   $("#veu").classList.add("aberto");
 
@@ -1548,7 +1494,15 @@ function abrirExportacao(id){
   };
   $("#critPeriodo").addEventListener("change", e => { periodo = e.target.value; aplicar(); });
   $("#critFontes").addEventListener("change", e => { filtroFontes = e.target.value; aplicar(); });
-  $("#critRepor").addEventListener("click", () => { periodo = "24h"; filtroFontes = "nacionais"; aplicar(); });
+  $("#critRepor").addEventListener("click", () => { periodo = "7d"; filtroFontes = "todas"; aplicar(); });
+
+  const limpar = $("#btnLimparChaves");
+  if(limpar) limpar.addEventListener("click", () => {
+    document.querySelectorAll("#modal .chip[data-termo]").forEach(c => c.classList.remove("sel"));
+    definirConsulta(a, consulta(a), a.palavras.join("; "));
+    $("#marcaSelecao").textContent = "Todas as palavras-chave da área";
+    recolha = []; recolherConsulta();
+  });
   $("#btnAtualizar").addEventListener("click", () => { recolha = []; recolherConsulta(); });
   $("#vistaRes").addEventListener("click", e => {
     const b = e.target.closest("[data-vista]");
@@ -1713,10 +1667,11 @@ const MANUAL = [
   { n:"2", titulo:"Navegar", cor:"var(--verde)", icone:"grelha", corpo:`
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
+      <dt>Abrir uma área</dt><dd>Clicar numa área abre diretamente a janela de resultados, com as notícias já recolhidas. As palavras-chave ficam à cabeça dessa janela: escolher uma ou várias refaz a consulta no momento, e <strong>Todas as palavras-chave</strong> repõe a área completa. A caixa ao lado procura um termo livre.</dd>
       <dt>Radar</dt><dd>As áreas dispostas em círculo por volume de notícias. A distância ao centro tem significado: quanto mais noticiada a área, mais perto fica; ao centro está o total. Acompanha os três seletores da barra — período, origem das fontes e agrupamento —, pelo que os números mudam com eles. Clicar numa área abre-a. Em ecrãs estreitos dá lugar à grelha de cartões, porque um círculo com dezasseis caixas seria ilegível.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
-      <dt>Período</dt><dd>Predefinição: 24 horas, até ao máximo de sete dias, que é o que o arquivo guarda.</dd>
-      <dt>Imprensa</dt><dd>Três origens que não se sobrepõem e que, somadas, dão o corpus completo. <strong>Portugal</strong>, por predefinição. <strong>Lusofonia</strong>: Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacional</strong>: a restante imprensa estrangeira, já <em>sem</em> a lusofonia, que tem posição própria. <strong>Todas</strong> não filtra.</dd>
+      <dt>Período</dt><dd>Predefinição: sete dias, que é tudo o que o arquivo guarda. Reduzindo-o, vê-se apenas o mais recente.</dd>
+      <dt>Imprensa</dt><dd>Predefinição: todas. Três origens que não se sobrepõem e que, somadas, dão o corpus completo. <strong>Portugal</strong>, por predefinição. <strong>Lusofonia</strong>: Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacional</strong>: a restante imprensa estrangeira, já <em>sem</em> a lusofonia, que tem posição própria. <strong>Todas</strong> não filtra.</dd>
       <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida, e não por operadores de pesquisa — o que a torna exata e verificável.</dd>
     </dl>` },
 
@@ -1755,18 +1710,17 @@ const MANUAL = [
     <p>A recolha agendada lê todas as manhãs os feeds de <strong>48 publicações</strong> — 25 portuguesas, 11 dos restantes países de língua portuguesa e 12 internacionais — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado no próprio repositório: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
     <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. Onde o ruído persiste, a área declara termos a excluir.</p>
     <p><strong>Âmbito.</strong> Imprensa: jornais, rádios, televisões, agências e imprensa especializada. As plataformas sociais não publicam feeds e ficam de fora.</p>
-    <p class="man-aviso">Tudo o que o painel mostra vem deste corpus: nenhuma listagem, síntese ou exportação depende de serviços externos. A <strong>pesquisa aberta</strong> abre uma consulta ao Google Notícias em janela nova, sem trazer dados para cá.</p>`  },
+    <p class="man-aviso">Tudo o que o painel mostra vem deste corpus. Não há consultas a serviços externos: o que não estiver nas publicações subscritas, ou for anterior ao arquivo, não aparece.</p>`  },
 
   { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>
     <dl>
       <dt>Cobertura do corpus</dt><dd>Quarenta e oito publicações — 25 portuguesas, 11 lusófonas e 12 internacionais — e sete dias de arquivo. Uma notícia de um título não subscrito, ou anterior a esse período, não está no corpus. Alargar a janela do arquivo é mudar um número na recolha, quando houver espaço para isso.</dd>
-      <dt>Imprensa apenas</dt><dd>As plataformas sociais não publicam feeds e estão fora do âmbito da aplicação. Páginas dessas plataformas que apareçam por via da pesquisa aberta são descartadas.</dd>
+      <dt>Imprensa apenas</dt><dd>As plataformas sociais não publicam feeds e estão fora do âmbito da aplicação. Páginas dessas plataformas que entrem no arquivo são descartadas.</dd>
       <dt>Marcação literal</dt><dd>Um artigo entra numa área por conter a expressão no título ou no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.</dd>
       <dt>Contagens</dt><dd>Medem o que as publicações subscritas noticiaram, não o total do que foi noticiado. Como nenhuma área é truncada e o método é o mesmo para todas, a comparação entre áreas é legítima dentro do corpus.</dd>
 
       <dt>Ligações</dt><dd>Endereço direto do artigo, dado pelo próprio feed.</dd>
-      <dt>Pesquisa aberta</dt><dd>Abre um serviço externo em janela nova e segue as regras dele: cerca de 100 artigos, ordenação por relevância e datas de indexação. <strong>O filtro de origem não se aplica lá</strong> — a edição portuguesa desse serviço indexa tudo o que está escrito em português, e o operador de exclusão só funciona sobre publicações nomeadas, não sobre domínios de topo. Excluem-se as mais frequentes, mas escapam sempre algumas. No painel isso não sucede: a origem é apurada pelo domínio de cada notícia, com exatidão.</dd>
     </dl>` },
 
   { n:"8", titulo:"Receber por email", cor:"var(--dourado)", icone:"descarregar", corpo:`
@@ -1931,8 +1885,8 @@ function blocoEvolucao(area){
           <span class="evo-dia">${i % passo === 0 || i === recentes.length - 1 ? etiqueta(d.data) : ""}</span>
         </div>`).join("")}</div>
       <p class="sin-nota">${temNovas
-        ? "A série conta <strong>notícias novas</strong>: as que não constavam já da recolha da véspera. As janelas de 24 horas não são perfeitamente disjuntas — o operador de tempo do Google atua sobre a data de indexação e um artigo reindexado reaparece —, pelo que contar apenas o que é novo evita somar repetições."
-        : "A série conta as notícias devolvidas em cada recolha. Pode incluir repetições entre dias consecutivos, porque o operador de tempo do Google atua sobre a data de indexação."}
+        ? "A série conta <strong>notícias novas</strong>: as que não constavam já da recolha da véspera. As janelas de 24 horas não são perfeitamente disjuntas — um artigo republicado pela publicação reaparece —, pelo que contar apenas o que é novo evita somar repetições."
+        : "A série conta as notícias devolvidas em cada recolha. Pode incluir repetições entre dias consecutivos, quando uma publicação volta a difundir o mesmo artigo."}
         Todas as recolhas usam a mesma janela e o mesmo método, pelo que a comparação é legítima. ${serie.length} dias registados.</p>
     </div>`;
 }
@@ -2016,7 +1970,7 @@ function corpoSintese(){
 
       <div class="sin-teto">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p><strong>O que estes números medem.</strong> As notícias vêm dos feeds das publicações subscritas, marcadas pelas palavras-chave da área. Medem o que essas publicações noticiaram no período, não o total do que foi noticiado. Como nenhuma área é truncada e o método é igual para todas, a comparação entre áreas é legítima — ao contrário do que sucede com resultados vindos de pesquisa aberta.</p>
+        <p><strong>O que estes números medem.</strong> As notícias vêm dos feeds das publicações subscritas, marcadas pelas palavras-chave da área. Medem o que essas publicações noticiaram no período, não o total do que foi noticiado. Como nenhuma área é truncada e o método é igual para todas, a comparação entre áreas é legítima.</p>
       </div>
 
       <div class="sin-kpis">
@@ -2435,8 +2389,8 @@ function paraConsulta(lista){
   const daArea = consultaAtiva.area.palavras;
   return itens.map(n => {
     const texto = n._b || simplificar((n.titulo || "") + " " + (n.resumo || ""));
-    /* Nem todas as notícias trazem as palavras-chave gravadas: as vindas da
-       pesquisa aberta, e as de recolhas anteriores à marcação, não trazem. Nesse
+    /* Nem todas as notícias trazem as palavras-chave gravadas: as de recolhas
+       anteriores à marcação não trazem. Nesse
        caso apuram-se aqui, para a coluna nunca sair vazia. */
     let marcas = (n.palavras && n.palavras.length)
       ? n.palavras
@@ -3017,7 +2971,7 @@ function mostrarEstadoRecolha(origem, retiradas){
   const horasPedidas = HORAS_PERIODO[periodo];
   if(diasArquivo && horasPedidas && horasPedidas > diasArquivo * 24){
     const meses = Math.round(diasArquivo / 30);
-    notas.push(`O arquivo cobre ${meses >= 2 ? meses + " meses" : diasArquivo + " dias"} — um período maior não traz mais notícias. Para procurar mais atrás, use a pesquisa aberta.`);
+    notas.push(`O arquivo cobre ${meses >= 2 ? meses + " meses" : diasArquivo + " dias"} — é tudo o que o arquivo guarda.`);
   }
   if(foraDaJanela) notas.push(`<span style="color:var(--dourado)">Publicadas antes de ${ROTULO_PERIODO[periodo]} — datadas pela indexação do serviço. Apresentadas mesmo assim.</span>`);
   if(fora) notas.push(`Foram retiradas ${fora}: ${partes.join(", ")}.`);
@@ -3038,13 +2992,7 @@ function mostrarEstadoRecolha(origem, retiradas){
    EVENTOS
    ========================================================================= */
 document.addEventListener("click", e => {
-  const ab = e.target.closest("[data-aberta]");
-  if(ab){
-    const a = AREAS.find(x => x.id === ab.dataset.aberta);
-    abrirPesquisaAberta(consultaAtiva && consultaAtiva.area.id === a.id
-      ? consultaAtiva.q : consulta(a));
-    return;
-  }
+
 
   const chip = e.target.closest(".chip[data-termo]");
   if(chip){
@@ -3055,8 +3003,11 @@ document.addEventListener("click", e => {
       const n = document.querySelectorAll(".chip.sel[data-termo]").length;
       marca.textContent = n
         ? `${n} ${n === 1 ? "palavra-chave selecionada" : "palavras-chave selecionadas"}`
-        : "Nenhuma selecionada — pesquisa a área completa";
+        : "Todas as palavras-chave da área";
     }
+    /* As palavras-chave passaram a viver dentro da janela de resultados:
+       escolher uma tem de refazer a consulta ali mesmo. */
+    if($("#barraRes")){ recolha = []; recolherConsulta(); }
     return;
   }
 
