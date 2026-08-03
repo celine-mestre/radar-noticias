@@ -151,7 +151,7 @@ def perguntar(endereco, chave, titulos, area, rotulo="", tempo_limite=60):
 _modelo_local = None
 
 
-def carregar_modelo_local(repo, ficheiro, contexto=8192, fios=0):
+def carregar_modelo_local(repo, ficheiro, contexto=4096, fios=0):
     """Carrega o Amália em memória, a partir da conversão quantizada.
 
     O ficheiro é descarregado uma vez e fica em cache. Sem placa gráfica, a
@@ -164,21 +164,33 @@ def carregar_modelo_local(repo, ficheiro, contexto=8192, fios=0):
     try:
         from huggingface_hub import hf_hub_download
         from llama_cpp import Llama
-    except ImportError:
-        sys.exit("Faltam bibliotecas. Instale com:\n"
+    except ImportError as erro:
+        sys.exit(f"Faltam bibliotecas ({erro}). Instale com:\n"
                  "  pip install llama-cpp-python huggingface-hub")
 
-    print(f"A obter {ficheiro} de {repo}…")
-    caminho = hf_hub_download(repo_id=repo, filename=ficheiro)
-    print(f"A carregar o modelo ({os.path.getsize(caminho) / 1e9:.1f} GB)…")
+    print(f"A obter {ficheiro} de {repo}…", flush=True)
+    try:
+        caminho = hf_hub_download(repo_id=repo, filename=ficheiro)
+    except Exception as erro:                                  # noqa: BLE001
+        sys.exit(f"Não foi possível obter o modelo: {type(erro).__name__}: {erro}")
+    print(f"A carregar o modelo ({os.path.getsize(caminho) / 1e9:.1f} GB)…", flush=True)
 
-    _modelo_local = Llama(
-        model_path=caminho,
-        n_ctx=contexto,
-        n_threads=fios or (os.cpu_count() or 4),
-        verbose=False,
-    )
-    return _modelo_local
+    # A memória do servidor é limitada: o modelo ocupa cerca de 5,6 GB e a
+    # janela de contexto acresce a isso. Uma janela grande demais faz o sistema
+    # interromper o processo sem explicação. Falhando, tenta-se com metade.
+    for janela in (contexto, contexto // 2):
+        try:
+            _modelo_local = Llama(
+                model_path=caminho,
+                n_ctx=janela,
+                n_threads=fios or (os.cpu_count() or 4),
+                verbose=False,
+            )
+            print(f"Modelo carregado com janela de {janela} tokens.")
+            return _modelo_local
+        except Exception as erro:                              # noqa: BLE001
+            print(f"Falhou com janela de {janela}: {type(erro).__name__}: {erro}")
+    sys.exit("Não foi possível carregar o modelo.")
 
 
 def extensao(n):
@@ -228,7 +240,7 @@ def principal():
                     help="tratar apenas esta área — útil para um primeiro ensaio")
     ap.add_argument("--minimo", type=int, default=3,
                     help="notícias mínimas para valer a pena sintetizar")
-    ap.add_argument("--maximo", type=int, default=70,
+    ap.add_argument("--maximo", type=int, default=50,
                     help="títulos a enviar por área, dos mais recentes")
     args = ap.parse_args()
 
