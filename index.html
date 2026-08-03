@@ -303,10 +303,15 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
   background:var(--superficie-alt);border:1px solid var(--borda);border-radius:999px;
   padding:.05rem .45rem;font-size:.66rem;letter-spacing:0;color:var(--texto-suave);
 }
+/* Hora · texto · seta. Havendo imagem, entra uma quarta coluna de largura fixa:
+   sem a declarar, o elemento da imagem ocupava a coluna do texto e empurrava o
+   texto para a coluna da seta, com 16 píxeis — o título ficava ilegível. */
 .ler-item{
   display:grid;grid-template-columns:44px 1fr 16px;gap:.7rem;align-items:start;
   padding:.6rem .5rem;border-radius:var(--raio-s);text-decoration:none;transition:.14s;
 }
+.ler-item.com-imagem{grid-template-columns:44px 76px 1fr 16px}
+@media(max-width:560px){.ler-item.com-imagem{grid-template-columns:38px 56px 1fr 14px}}
 .ler-item:hover{background:var(--superficie-alt)}
 .ler-hora{font-size:.74rem;color:var(--texto-ligeiro);font-variant-numeric:tabular-nums;padding-top:.1rem}
 .ler-txt strong{display:block;font-size:.88rem;font-weight:400;color:var(--texto);line-height:1.4}
@@ -2101,13 +2106,16 @@ function corpoLista(){
      que declara não ter ligação. Acontece quando o feed não a publica. */
   const artigo = n => {
     const url = enderecoSeguro(n.ligacao);
+    const imagem = enderecoSeguro(n.imagem);
+    const classe = "ler-item" + (imagem ? " com-imagem" : "");
     const abertura = url
-      ? `<a class="ler-item" href="${esc(url)}" target="_blank" rel="noopener noreferrer">`
-      : `<div class="ler-item sem-ligacao" title="A publicação não indicou o endereço do artigo">`;
+      ? `<a class="${classe}" href="${esc(url)}" target="_blank" rel="noopener noreferrer">`
+      : `<div class="${classe} sem-ligacao" title="A publicação não indicou o endereço do artigo">`;
     return `${abertura}
       <span class="ler-hora">${hora(n) || "—"}</span>
-      ${enderecoSeguro(n.imagem) ? `<span class="ler-img"><img src="${esc(enderecoSeguro(n.imagem))}" alt="" loading="lazy"
-         referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></span>` : ""}
+      ${imagem ? `<span class="ler-img"><img src="${esc(imagem)}" alt="" loading="lazy"
+         referrerpolicy="no-referrer"
+         onerror="this.closest('.ler-item').classList.remove('com-imagem');this.parentNode.remove()"></span>` : ""}
       <span class="ler-txt">
         <strong>${esc(n.titulo)}</strong>
         ${n.resumo ? `<span class="ler-resumo">${esc(n.resumo)}</span>` : ""}

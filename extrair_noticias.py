@@ -1057,8 +1057,10 @@ def gravar(linhas, falhas, caminho, periodo, so_nacionais):
         c.alignment = Alignment(vertical="center", wrap_text=True)
     ws.row_dimensions[1].height = 28
 
+    # A folha tem as colunas do cabeçalho e mais nenhuma: as linhas trazem também
+    # as palavras-chave e a imagem, que servem ao arquivo mas não à folha.
     for i, l in enumerate(linhas, 2):
-        for j, v in enumerate(l, 1):
+        for j, v in enumerate(l[:len(cabecalhos)], 1):
             c = ws.cell(row=i, column=j, value=v)
             c.font = fonte(size=10)
             c.border = borda
@@ -1175,8 +1177,13 @@ def principal():
             internacionais=not args.sem_internacionais,
             lusofonas=not args.sem_internacionais)
         campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "resumo", "ligacao"]
+        # As palavras-chave e a imagem seguem com a linha: sem elas, o arquivo
+        # ficava sem imagem nas notícias marcadas por área, e só as mostrava nos
+        # resultados da pesquisa por termo.
         linhas = [[n["area"], n["grupo"], n["data"], n["fonte"], n["dominio"],
-                   n["titulo"], n["resumo"], n["ligacao"]] for n in das_fontes]
+                   n["titulo"], n["resumo"], n["ligacao"],
+                   sorted(n.get("palavras") or []), n.get("imagem", "")]
+                  for n in das_fontes]
         linhas.sort(key=lambda l: (l[2] is None, l[2]), reverse=True)
     else:
         todos_lidos = []
@@ -1300,7 +1307,7 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
     # resumo, pelo que a sétima posição — que é o resumo — ia parar ao campo da
     # ligação: no Excel, a coluna da ligação aparecia com o texto do resumo.
     campos = ["area", "grupo", "data", "fonte", "dominio", "titulo", "resumo",
-              "ligacao", "palavras"]
+              "ligacao", "palavras", "imagem"]
     limite = (agora_lisboa() - timedelta(days=dias)).strftime("%Y-%m-%d")
 
     anteriores = []
@@ -1325,6 +1332,8 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
         r["palavras"] = sorted(r["palavras"]) if r.get("palavras") else []
         if not r.get("resumo"):
             r.pop("resumo", None)
+        if not r.get("imagem"):
+            r.pop("imagem", None)
         return r
 
     novas = [registo(l) for l in linhas]
