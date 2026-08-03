@@ -1297,6 +1297,7 @@ async function apurarContagens(){
     a.noticias.forEach(n => {
       if(ehRedeSocial(n)) return;
       if(!aceitaOrigem(n)) return;
+      if(!dentroDoPeriodo(n)) return;
       c[n.area] = (c[n.area] || 0) + 1;
     });
     contagens = { por: c, dias: a.dias || 7 };
@@ -1343,12 +1344,13 @@ async function desenharRadar(){
   document.body.classList.remove("sem-radar");
 
   $("#radarTotal").textContent = total.toLocaleString("pt-PT");
-  $("#radarLegenda").textContent = total === 1 ? "notícia no arquivo" : "notícias no arquivo";
+  $("#radarLegenda").textContent =
+    `${total === 1 ? "notícia" : "notícias"} · ${ROTULO_PERIODO[periodo]}`;
   $("#radarNota").textContent = total
     ? `${lista.length} ${lista.length === 1 ? "área" : "áreas"} · ` +
       `${ROTULO_FONTES[filtroFontes].toLowerCase()} · ` +
       `quanto mais noticiada, mais perto do centro`
-    : `Sem notícias no arquivo para estes critérios`;
+    : `Sem notícias para ${ROTULO_PERIODO[periodo]} nesta origem`;
 
   const ordenadas = [...lista].sort((x, y) => (por[y.nome] || 0) - (por[x.nome] || 0));
   const maximo = Math.max(1, ...ordenadas.map(a => por[a.nome] || 0));
@@ -1711,7 +1713,7 @@ const MANUAL = [
   { n:"2", titulo:"Navegar", cor:"var(--verde)", icone:"grelha", corpo:`
     <dl>
       <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
-      <dt>Radar</dt><dd>Acima da grelha, as áreas dispostas em círculo por volume de notícias no arquivo dos últimos sete dias. A distância ao centro tem significado: quanto mais noticiada a área, mais perto fica; ao centro está o total. Acompanha os filtros de origem e de agrupamento, e clicar numa área abre-a como na grelha. Em ecrãs estreitos não aparece, porque seria ilegível — a grelha faz o mesmo trabalho.</dd>
+      <dt>Radar</dt><dd>As áreas dispostas em círculo por volume de notícias. A distância ao centro tem significado: quanto mais noticiada a área, mais perto fica; ao centro está o total. Acompanha os três seletores da barra — período, origem das fontes e agrupamento —, pelo que os números mudam com eles. Clicar numa área abre-a. Em ecrãs estreitos dá lugar à grelha de cartões, porque um círculo com dezasseis caixas seria ilegível.</dd>
       <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
       <dt>Período</dt><dd>Predefinição: 24 horas, até ao máximo de sete dias, que é o que o arquivo guarda.</dd>
       <dt>Imprensa</dt><dd>Três origens que não se sobrepõem e que, somadas, dão o corpus completo. <strong>Portugal</strong>, por predefinição. <strong>Lusofonia</strong>: Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacional</strong>: a restante imprensa estrangeira, já <em>sem</em> a lusofonia, que tem posição própria. <strong>Todas</strong> não filtra.</dd>
@@ -3146,6 +3148,8 @@ $("#filtroFontes").addEventListener("click", e => {
 $("#campoPeriodo").addEventListener("change", e => {
   periodo = e.target.value;
   recolha = []; assinaturaRecolha = "";
+  limparContagens();   // o radar conta dentro do período: mudando-o, reconta
+  desenharRadar();
   mostrarAviso(`Período: ${ROTULO_PERIODO[periodo]}`);
 });
 
