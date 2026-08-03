@@ -1,256 +1,48 @@
 {
- "gerado": "2026-08-02 23:39",
+ "gerado": "2026-08-03 14:54",
  "periodo": "72h",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "modo": "local",
  "areas": {
-  "Administração Interna": {
-   "texto": "A situação em Ceuta motivou uma resposta política e operacional da União Europeia, com a realização de uma reunião de emergência e a defesa do reforço do controlo de fronteiras. Paralelamente, Portugal intensificou a vigilância no Algarve e em outras zonas de entrada, face à crise migratória. A Proteção Civil confirmou o controlo do incêndio em Valpaços, após um esforço considerável de meios aéreos e terrestres.",
-   "noticias": 119,
-   "titulos": [
-    "Caos em Ceuta. Todas as escolhas políticas têm consequências",
-    "Crise migratória em Ceuta é um sinal de \"fraqueza da política europeia de imigração\"",
-    "AIMA diz que restam 30 mil de quase 1 milhão de processos: casos complexos",
-    "8h. Incêndio Valpaços. Operacionais continuam no terreno",
-    "5h. Ceuta: PM apoia reunião de emergência da UE",
-    "Von der Leyen defende reforço do sistema de controlo de fronteiras após crise de Ceuta",
-    "Migrações: Von der Leyen defende reforço do sistema de controlo de fronteiras após crise de Ceuta",
-    "Ceuta. Von der Leyen defende reforço de controlo de fronteiras",
-    "Portugal: incêndio de Valpaços controlado, segundo a Proteção Civil",
-    "10h A Proteção Civil já acionou os meios aéreos em Valpaços para os trabalhos de rescaldo"
-   ]
-  },
-  "Agricultura e Mar": {
-   "texto": "A economia do mar contribuiu com 20,1% para o PIB nacional em 2023, evidenciando a sua relevância para a atividade económica. A segurança alimentar enfrenta desafios na região de Moçambique, com a recuperação lenta após cheias a ameaçar a insegurança alimentar. A legislação florestal carece de regionalização, e a preservação florestal é promovida através de iniciativas comunitárias e tecnológicas.",
-   "noticias": 96,
-   "titulos": [
-    "Economia do Mar representou 20,1% do PIB nacional em 2023",
-    "PR felicita Tarrafal de São Nicolau e apela ao diálogo para enfrentar desafios do concelho",
-    "Recuperação lenta após cheias ameaça insegurança alimentar em Moçambique",
-    "Empresários definem prioridades para novo ciclo político",
-    "O mundo paradoxal do nosso rural tardio e remoto",
-    "Abel Álvarez (Güeyu Mar): “Voy a hacer que hasta el embajador de Japón venga a Playa de Vega a probar mis nigiris”",
-    "Jorge Sousa: \"falta regionalizar a legislação florestal\"",
-    "Antes de Angkor, uma antiga capital do Camboja ergueu 186 templos de tijolos em uma floresta e criou as bases da arquitetura Khmer",
-    "Floresta tem quatro decisões pela frente em briga por classificação na Série C",
-    "Os agricultores da comuna de Phu Khe estão intensificando a transformação digital na produção agrícola."
-   ]
-  },
-  "Ambiente e Energia": {
-   "texto": "A Grécia, França e Espanha enfrentam incêndios florestais, com reforço de meios aéreos e alertas máximos. Incêndios diminuem em França e Espanha, enquanto Creta e a ilha de Rodes são afetadas. A NASA regista impacto de fumos na luz solar e a OMS emite alerta global.",
-   "noticias": 57,
-   "titulos": [
-    "Grécia: helicópteros e bombeiros combatem fogo perto de Atenas",
-    "Grécia ainda combate incêndios e Espanha regista novos focos",
-    "França mantém alerta máximo devido a incêndio em Bordéus e Itália enfrenta nova vaga de calor extremo",
-    "Helicópteros colidem durante combate aos incêndios na Grécia",
-    "Fundo para a Mobilidade e Transportes com primeiros avisos",
-    "Prioridades ditam reforço de mais de oito milhões de contos",
-    "Grécia, Turquia, França e Espanha enfrentam grandes incêndios",
-    "Incêndio em Mesão Frio combatido por 140 bombeiros e 11 aeronaves",
-    "\"Na segunda-feira, quando os mercados bolsistas abrirem, o preço da energia vai disparar muito rapidamente\"",
-    "Mais de 150 pessoas participaram de um treinamento de combate a incêndios florestais na comuna de Hoa Tien."
-   ]
-  },
-  "Assuntos Parlamentares": {
-   "texto": "A Assembleia da República aprovou voto de saudação pelo centenário das Irmãs Oblatas do Divino Coração e convocou Comissão Permanente para tratar falhas nos exames nacionais. A Comissão permanente rejeitou a ida de Luís Neves à Assembleia da República e a AD inviabilizou audições parlamentares de membros do Governo.",
-   "noticias": 6,
-   "titulos": [
-    "Assembleia da República aprova voto de saudação pelo centenário das Irmãs Oblatas do Divino Coração",
-    "\"É um problema que a Assembleia da República deve resolver\", diz Montenegro sobre possível audição parlamentar do MAI",
-    "Comissão permanente. Rejeitada ida de Luís Neves à Assembleia da República",
-    "Angola: ciberataque à Unitel envolve alegado resgate de 288 milhões de euros",
-    "Assembleia da República Convoca Comissão Permanente para Tratar Falhas nos Exames Nacionais",
-    "AD inviabiliza audição parlamentar de Luís Neves e Rita Alarcão Júdice"
-   ]
-  },
-  "Cultura, Juventude e Desporto": {
-   "texto": "Museus registaram quase 1,7 milhões de entradas gratuitas, 306 mil de estrangeiros, e a economia do Mar representou 20,1% do PIB nacional em 2023.",
-   "noticias": 145,
-   "titulos": [
-    "Subidas e descidas de divisão a caminho do futebol norte-americano (mas não da MLS)",
-    "Portugal em 6.º no dueto técnico misto de natação artística",
-    "Museus registaram quase 1,7 milhões de entradas gratuitas, 306 mil de estrangeiros",
-    "Economia do Mar representou 20,1% do PIB nacional em 2023",
-    "Macau quer ligar China e mercados hsipânicos onde é \"largamente desconhecido\"",
-    "Tarrafal recebeu futebolista Diney Borges em clima de festa e orgulho após participação no Mundial2026",
-    "Projeto Vídeo nas Aldeias alerta para risco de perder acervo",
-    "Portugal reina na Europa com geração do futuro",
-    "Marco Silva: inverter o ciclo negativo",
-    "FIFA recua na abertura a investidores privados após ameaça de boicote liderada pela UEFA"
-   ]
-  },
-  "Defesa Nacional": {
-   "texto": "Foram noticiadas missões de defesa aérea no Iraque e nos Bálticos, com atuação de militares portugueses e de outros países na proteção de espaços aéreos. A atividade de patrulhamento e combate a incêndios rurais, bem como a participação em operações da NATO, foram temas de destaque.",
-   "noticias": 95,
-   "titulos": [
-    "Lula da Silva defende mulheres e pede mais investimento em Defesa no Brasil",
-    "F-16 com cores nacionais protegem os céus do Báltico em missão NATO",
-    "587 jovens de Paços de Ferreira participaram no Dia da Defesa Nacional",
-    "EUA cedem liderança no comando NATO da ajuda militar à Ucrânia",
-    "Militares portugueses foram a \"primeira linha de defesa\" face à Rússia na Estónia",
-    "Pentágono abdica de liderança de comando da NATO para ajuda a Kiev",
-    "Milei inaugura uma nova era militar nas fronteiras da Argentina, prepara o envio de tropas para as divisas com Brasil, Paraguai e Bolívia e avança com decretos que rompem uma barreira mantida desde a redemocratização ao aproximar as Forças Armadas",
-    "Zelensky pede ajuda a Trump para obter acesso aos satélites Starlink",
-    "Iraque reforça defesa aérea e vigilância após ataques americano-sauditas",
-    "Crise migratória em Ceuta leva Espanha a reforçar fronteira com apoio das Forças Armadas"
-   ]
-  },
-  "Economia e Coesão Territorial": {
-   "texto": "A economia do mar contribuiu com 20,1% do PIB nacional em 2023, enquanto o setor turístico registou aumento de visitantes dos EUA e do Canadá e crescimento no Brasil. Empresários definiram prioridades para reforço de mais de oito milhões de contos, visando a competitividade e sustentabilidade, incluindo iniciativas de turismo regenerativo e rural.",
-   "noticias": 83,
-   "titulos": [
-    "Portugal precisa de pensar grande, para executar!",
-    "Economia do Mar representou 20,1% do PIB nacional em 2023",
-    "A ilha onde os sabores, a hospitalidade e a tradição se transformam em atracções turísticas",
-    "Negócios atingem cerca de 437 milhões de contos e empresas empregam mais de 94 mil pessoas",
-    "Sustentabilidade: Grupo RIU aposta no turismo regenerativo para gerar impacto positivo nas comunidades",
-    "PR felicita Tarrafal de São Nicolau e apela ao diálogo para enfrentar desafios do concelho",
-    "Empresários definem prioridades para novo ciclo político",
-    "Prioridades ditam reforço de mais de oito milhões de contos",
-    "Turismo em Portugal. Há mais visitantes dos EUA e do Canadá",
-    "14h. FEM. Autarquias já podem candidatar-se"
-   ]
-  },
-  "Educação, Ciência e Inovação": {
-   "texto": "Foram registados mais de 20 mil pedidos de reapreciação de exames nacionais, suscitando questões sobre a avaliação. Professores de Física e Química contestaram erros no exame, enquanto docentes e estudantes promoveram iniciativas de formação e intercâmbio. O Ministério da Educação anunciou a atribuição de bolsas de estudo aos 30% melhores candidatos para a matrícula.",
-   "noticias": 197,
-   "titulos": [
-    "O Exame",
-    "Exames nacionais. Houve mais de 20 mil pedidos de reapreciação",
-    "Os telemóveis, de novo",
-    "Culturas do Brasil e da China se juntam em mostra de filmes no Rio",
-    "Mulheres vão às ruas pela votação do PL da Misoginia",
-    "FNE considera positivo adiamento do arranque do ano letivo para o secundário",
-    "Física e Química. Professores insistem que exame tem erro",
-    "Estudantes de todo o país participam da Jornada de Foguetes 2026",
-    "Fundo para a Mobilidade e Transportes com primeiros avisos",
-    "Prioridades ditam reforço de mais de oito milhões de contos"
-   ]
-  },
   "Finanças": {
-   "texto": "A área das finanças registou um aumento da dívida pública para 81,9% do PIB, atingindo o maior nível em mais de cinco anos. O Governo aprovou alterações nas regras de desembaraço aduaneiro e na tabela de taxas.",
-   "noticias": 132,
-   "titulos": [
-    "Negócios atingem cerca de 437 milhões de contos e empresas empregam mais de 94 mil pessoas",
-    "Prioridades ditam reforço de mais de oito milhões de contos",
-    "Guerra no Irão. Trump diz ter perdido confiança nas negociações",
-    "Crise em Ceuta. RTP assiste ao regresso de milhares de jovens",
-    "\"A guerra do Irão mostrou a Donald Trump os limites do poder internacional norte-americano\"",
-    "Múltiples ciberataques en el sistema de aguas inquietan a EE UU por la posible participación de Irán",
-    "El Madrid se desinfla ante la Fiorentina en su primer partido de la pretemporada",
-    "Arábia Saudita quer mostrar ao Irão que não é \"presa fácil\"",
-    "Doblete de plata para España en natación sincronizada: Iris Tió suma dos medallas en un solo día en el Europeo",
-    "Em São Paulo, rua é renomeada em homenagem à história do samba"
-   ]
-  },
-  "Infraestruturas e Habitação": {
-   "texto": "As regras para a taxa de esforço no crédito à habitação entraram em vigor, alterando os critérios de aprovação de financiamentos. Adicionalmente, a ANA entregou o Estudo de Impacto Ambiental do novo aeroporto de Lisboa, enquanto decorre a obra e a sua arquitetura são objeto de análise.",
-   "noticias": 131,
-   "titulos": [
-    "Juro médio do crédito da casa sobe para 3,10% e quase metade da prestação já é só juros",
-    "PR felicita Tarrafal de São Nicolau e apela ao diálogo para enfrentar desafios do concelho",
-    "Arquitetura do novo aeroporto de Lisboa: uma obra a recordar",
-    "Incêndio em Valpaços dominado, mas centenas de bombeiros continuam no local",
-    "Os fabricantes na corrida para pôr a CP a circular a 300 km/h",
-    "ANA entregou Estudo de Impacte Ambiental do novo aeroporto",
-    "ANA entrega Estudo de Impacte Ambiental do novo aeroporto à APA",
-    "Aeroporto. ANA entrega Estudo de Impacte Ambiental à APA",
-    "Novas regras para taxa de esforço no crédito à habitação entram em vigor",
-    "Terramoto em Itália faz 26 feridos e obriga à evacuação de habitações danificadas"
-   ]
-  },
-  "Justiça": {
-   "texto": "O Governo de Fernández qualificou de \"golpe de Estado\" a atuação do Poder Judicial na Costa Rica. O Tribunal Constitucional angolano aceitou providência contra o MPLA. O TC peruano anulou a condenação do ex-presidente Humala.",
-   "noticias": 85,
-   "titulos": [
-    "Soudan : une ONG accuse l’armée d’avoir tué 35 personnes dans une frappe de drone sur un tribunal du Darfour",
-    "Ceuta. Marrocos quebra o silêncio e admite 11 mortos do seu lado da fronteira",
-    "Tribunal de Contas recebido em Belém, após pedido de audiência a Seguro",
-    "Socialistas e Democratas europeus pedem esclarecimento sobre Schengen",
-    "Argentina, Suecia y cambios de nombre: los caminos de Bernarda Vera, dada por desaparecida en la dictadura de Pinochet y hallada con vida tras 53 años",
-    "La trama Kitchen, vista para sentencia: audios, mensajes y una confesión",
-    "El Gobierno de Fernández escala la tensión en Costa Rica y acusa de “golpe de Estado” al Poder Judicial",
-    "Perderam-lhe folhas do exame. Tribunal dá 48 horas ao Ministério da Educação para resolver a questão",
-    "El Gobierno despliega una barrera flotante en la frontera de Ceuta para cumplir la sentencia del Supremo",
-    "TC angolano aceita providência de Higino e notifica MPLA para apresentar contestação"
-   ]
-  },
-  "Negócios Estrangeiros": {
-   "texto": "Irão anunciou um possível acordo com Omã em Ormuz, enquanto a Organização Meteorológica Mundial alerta para o fortalecimento do El Niño e a CPLP promove o património turístico de Timor-Leste. O Conselho de Segurança das Nações Unidas iniciou o processo de eleição para o novo Secretário-Geral.",
-   "noticias": 16,
-   "titulos": [
-    "Irão anuncia possível acordo com Omã em Ormuz",
-    "Sustentabilidade: Grupo RIU aposta no turismo regenerativo para gerar impacto positivo nas comunidades",
-    "Venezuela. Sobe para 136 o número de portugueses e lusodescendentes mortos",
-    "Venezuela: Sobe para 136 o número de portugueses e lusodescendentes mortos no duplo sismo",
-    "Espanha: Sánchez critica UE em carta enviada a Von der Leyen sobre Ceuta",
-    "Ceuta. Sánchez escreve carta à UE e critica \"reação egoísta e ilegal\"",
-    "Bombeira de Barcelos que vai às Nações Unidas alerta para a \"pobreza menstrual\"",
-    "A Organização Meteorológica Mundial alerta para o rápido fortalecimento do El Niño, e as Nações Unidas instam a uma ação urgente.",
-    "Timor-Leste: Ministros do Turismo da CPLP reúnem-se em Díli para valorizar natureza, oceano e cultura como património turístico",
-    "Começou a busca por um candidato para Secretário-Geral das Nações Unidas."
-   ]
-  },
-  "Presidência": {
-   "texto": "O Conselho de Ministros aprovou o decreto-lei que cria a Prestação Social Única e um conjunto de medidas para reforçar a preparação para emergências. Adicionalmente, foi aprovado um decreto-lei que altera o regime jurídico de matérias relevantes.",
-   "noticias": 6,
-   "titulos": [
-    "2h. Irão promete responder a possíveis ataques dos EUA",
-    "Município adere a programa do Governo Federal para regularização de embarcações de pesca de forma gratuita",
-    "O Conselho de Ministros aprovou o decreto-lei que cria a Prestação Social Única …",
-    "CFC é destacado como referência nacional em governança, transparência e integração de dados",
-    "O Conselho de Ministros aprovou um conjunto de medidas que reforçam a preparação…",
-    "O Conselho de Ministros aprovou uma proposta de lei que altera o regime jurídic…"
-   ]
-  },
-  "Reforma do Estado": {
-   "texto": "Foram noticiadas iniciativas de formação avançada para a Administração Pública, promovidas por universidades, visando a qualificação de trabalhadores e dirigentes, e a discussão sobre a Administração Pública em período eleitoral. Adicionalmente, foi referenciada uma reforma do Estado em Cuba, com redução de cargos e ministérios, e um plano de reforma abrangente proposto por Renan Santos.",
-   "noticias": 11,
-   "titulos": [
-    "Empresários definem prioridades para novo ciclo político",
-    "UMa promove “Programa de Formação Avançada” para a administração pública",
-    "Administração Pública em Período Eleitoral é tema de debate na CMJP",
-    "Novo livro analisa o impacto das Organizações Sociais nos serviços públicos e as parcerias com a Administração Pública",
-    "UMa lança programa de formação avançada para qualificar trabalhadores da Administração Pública regional",
-    "UMa promove formação avançada para qualificar trabalhadores e dirigentes da Administração Pública da RAM",
-    "Cuba aprova maior reforma do Estado em décadas, com redução de cargos e Ministérios",
-    "De Vargas a Milei, plano de Renan Santos propõe ampla reforma do Estado",
-    "Nead UEM abre inscrições para pós gratuita de IA na Administração Pública",
-    "Vagas abertas para bolsistas da especialização EaD em Administração Pública"
-   ]
+   "noticias": 87,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A evolução da dívida pública para 92,9% do PIB no segundo trimestre foi objeto de divulgação governamental, reiterando a previsão de descida para 87,5% em 2026. A justificação da subida da dívida pública recaiu sobre a existência de depósitos, enquanto a gestão empresarial e a inteligência artificial foram temas de destaque para a administração pública. O Ministério das Finanças indicou desconhecimento quanto à indemnização de famílias afetadas em exames, e a execução orçamental da Madeira registou défice no primeiro semestre de 2026. A receita fiscal do Estado registou aumento de 1,9% até junho, atingindo 29.089 milhões de euros, e o défice do Estado reduziu-se para 212,6 milhões de euros.",
+     "noticias": 42
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A conjuntura financeira nacional é marcada pelo aumento da dívida pública, atingindo 81,9% do Produto Interno Bruto, um patamar não observado há mais de cinco anos, e pelo consequente incremento do custo da dívida pública, que alcança o maior nível em quase uma década. A Autoridade Tributária procedeu a alterações nas regras de desembaraço aduaneiro e na tabela de taxas, enquanto a economia do Mar contribuiu com 20,1% para o Produto Interno Bruto em 2023. A gestão do vencimento de um quinto da dívida pública com juros flutuantes em 40% da conta representa um desafio acrescido para as contas do Governo.",
+     "noticias": 29
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "A área governativa das finanças foi marcada por um aumento significativo da dívida pública, atingindo 81,9% do PIB em Julho, um patamar não observado desde 2021. Adicionalmente, a relação entre a dívida pública e a dimensão da economia brasileira registou o maior nível desde a pandemia de Covid-19. O Governo brasileiro reportou um incremento da dívida pública superior a 10 pontos percentuais no período governativo de Lula. Em Moçambique, foi evidenciado um dispêndio anual de 700 milhões de dólares na importação de cereais.",
+     "noticias": 16
+    }
+   }
   },
   "Saúde": {
-   "texto": "O Ministério da Saúde procedeu à atualização de recomendações de atividade física para diversas faixas etárias e estabeleceu novas normas para segurança e backup de dados. Foram igualmente oficializadas aposentadorias de servidores em diferentes regiões.",
-   "noticias": 138,
-   "titulos": [
-    "Prioridades ditam reforço de mais de oito milhões de contos",
-    "Cresce o número de estabelecimentos na cadeia produtiva da cachaça",
-    "Governo adia entrada em vigor do novo sistema de gestão de cirurgias",
-    "Procon-RJ orienta sobre danos em aparelhos por falta de luz",
-    "Uni-CV inaugura sala de apoio à amamentação na abertura da Semana Mundial do Aleitamento Materno",
-    "Projeto Pode Falar chega ao Meu SUS Digital e amplia acesso de jovens ao cuidado em saúde mental",
-    "Travão a fundo nas cirurgias do SNS e as toneladas de droga na “praia dos ricos”",
-    "Portugal: Partido Socialista questiona Governo sobre exclusão de emigrantes das listas de médicos de família",
-    "Em Pauta: Plataforma oferece escuta em saúde mental para jovens no SUS Digital - - Blog Dellas",
-    "Reino Unido também vai tratar depressões resistentes com cetamina e psicoterapia"
-   ]
-  },
-  "Trabalho, Solidariedade e Segurança Social": {
-   "texto": "Foram formalizadas candidaturas presidenciais, com destaque para a candidatura de Lula da Silva, e debatidas prioridades orçamentais no reforço de mais de oito milhões de contos. O emprego, através de negócios e ofertas de emprego, e a economia do mar, com um peso de 20,1% no PIB, foram temas de análise.",
-   "noticias": 230,
-   "titulos": [
-    "Formalizada candidatura de Lula da Silva a quarto mandato como Presidente do Brasil",
-    "Economia do Mar representou 20,1% do PIB nacional em 2023",
-    "Negócios atingem cerca de 437 milhões de contos e empresas empregam mais de 94 mil pessoas",
-    "\"Vi nas redes sociais pessoas a tentarem vir para cá. Despedi-me e vim. Esperava arranjar um emprego melhor\"",
-    "PR felicita Tarrafal de São Nicolau e apela ao diálogo para enfrentar desafios do concelho",
-    "Mulheres são maioria no setor de seguros, mas minoria na liderança",
-    "Prioridades ditam reforço de mais de oito milhões de contos",
-    "\"Falam de dar o próximo passo... FC Porto é um clube enorme\"",
-    "Cresce o número de estabelecimentos na cadeia produtiva da cachaça",
-    "Justiça do Rio revoga prisão preventiva do rapper Oruam"
-   ]
+   "noticias": 124,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A área governativa da saúde registou a abertura de uma unidade local de saúde com gestão privada no serviço nacional de saúde, em Torres Vedras, e o início de um curso pioneiro para técnicos de emergência pré-hospitalar, com arranque previsto para 2027. Adicionalmente, os Açores procederam ao investimento em dois novos robôs cirúrgicos para o Faial e a Terceira, enquanto o Governo adiou a entrada em vigor do novo sistema de gestão de cirurgias.",
+     "noticias": 20
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A área da saúde registou diversas iniciativas e desenvolvimentos, incluindo a oficialização de aposentações de servidores, a habilitação de unidades de saúde mental e a disponibilização de plataformas de apoio à saúde mental para jovens no âmbito do Meu SUS Digital. O Ministério da Saúde promoveu a segurança e o backup de dados, enquanto a Anvisa suspendeu medicamentos e dispositivos médicos por irregularidades. Foram noticiados aumentos de casos de sarampo e de afastamentos por saúde mental, com recomendações de vacinação e reforço de medidas preventivas. Adicionalmente, foram realizadas operações de fiscalização e apreensões de medicamentos ilegais, incluindo apreensões de valor significativo em diversas localidades.",
+     "noticias": 65
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "O Ministério da Saúde divulgou recomendações atualizadas de exercícios físicos para diversas faixas etárias e estabeleceu o tempo semanal recomendado para a prática de atividade física em adultos. Adicionalmente, foi publicado um manual com orientações sobre atividade física para a comunidade. As autoridades alertam para os riscos associados ao uso de medicamentos emagrecedores sem procedência e promovem a segurança alimentar. O Ministério da Saúde, em colaboração com a OMS, promove a cooperação em cuidados primários de saúde e prevenção de doenças.",
+     "noticias": 39
+    }
+   }
   }
  }
 }
