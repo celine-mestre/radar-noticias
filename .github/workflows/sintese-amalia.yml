@@ -32,10 +32,15 @@ on:
         default: "auto"
         options: ["auto", "24h", "48h", "72h"]
       apenas:
-        description: "Ensaio: tratar só esta área (vazio = todas)"
+        description: "Ensaio: uma ou mais áreas, por vírgula (vazio = todas)"
         type: string
         required: false
         default: ""
+      gravar:
+        description: "Gravar o ensaio, para o relatório o poder usar"
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: "22 8 * * 1-5"     # depois da recolha das 08h07, antes do relatório
 
@@ -80,19 +85,28 @@ jobs:
           PERIODO="${{ github.event.inputs.periodo }}"
           if [ -z "$PERIODO" ]; then PERIODO="auto"; fi
           APENAS="${{ inputs.apenas }}"
-          if [ -n "$APENAS" ]; then
-            # Ensaio: uma área só, para se confirmar em minutos que o modelo
-            # carrega e escreve como deve, sem esperar pelas dezasseis.
-            python sintese_ia.py --local --dados arquivo.json \
-              --periodo "$PERIODO" --apenas "$APENAS" --saida sinteses_ensaio.json
-          else
+          GRAVAR="${{ inputs.gravar }}"
+
+          # Sem áreas indicadas, trata as dezasseis e grava.
+          # Com áreas indicadas, é ensaio: por predefinição não grava, para não
+          # substituir as sínteses do dia por um punhado de áreas. Marcando
+          # "gravar", grava na mesma — é o caminho para experimentar a cadeia
+          # inteira, até ao email, em minutos em vez de uma hora.
+          if [ -z "$APENAS" ]; then
             python sintese_ia.py --local --dados arquivo.json \
               --periodo "$PERIODO" --saida sinteses.json
+          elif [ "$GRAVAR" = "true" ]; then
+            echo "::notice::Ensaio de $APENAS, com gravação: o sinteses.json passa a ter só estas áreas."
+            python sintese_ia.py --local --dados arquivo.json \
+              --periodo "$PERIODO" --apenas "$APENAS" --saida sinteses.json
+          else
+            python sintese_ia.py --local --dados arquivo.json \
+              --periodo "$PERIODO" --apenas "$APENAS" --saida sinteses_ensaio.json
           fi
 
-      # O ensaio de uma área não é gravado: serve para ver o texto no registo.
+      # O ensaio só é gravado quando isso for pedido expressamente.
       - name: Gravar no repositorio
-        if: inputs.apenas == ''
+        if: inputs.apenas == '' || inputs.gravar
         run: |
           set -euo pipefail
           if [ ! -f sinteses.json ]; then
