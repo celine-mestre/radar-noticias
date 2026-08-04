@@ -304,11 +304,14 @@ quando o anterior termina.
 
 | Lisboa | O quê | Como arranca |
 |---|---|---|
-| 07h07 · 09h07 · 11h07 · 13h07 · 15h07 · 17h07 · 19h07 | Recolha | Agendada, todos os dias |
+| 07h07 · 09h07 · 11h07 · 13h07 · 15h07 · 17h07 · 19h07 · 23h07 | Recolha | Agendada, todos os dias |
 | a seguir à recolha das 09h07 | Síntese do Amália | Quando a recolha termina, em dias úteis |
 | a seguir à síntese | Envio dos relatórios | Quando a síntese termina, em dias úteis |
 
-São sete recolhas por dia, de duas em duas horas. Cada uma demora cerca de um minuto.
+São **oito recolhas por dia**: de duas em duas horas entre as 07h07 e as 19h07, mais uma
+às 23h07 que fecha o dia — sem ela, o que a imprensa publica ao serão ficaria de fora da
+série, porque a linha do dia já não é reescrita no dia seguinte. Cada recolha demora
+cerca de um minuto.
 
 **Porque é encadeado e não agendado.** Com três horários independentes, bastava a
 recolha atrasar-se dez minutos para a síntese trabalhar sobre as notícias da véspera, e
@@ -542,8 +545,9 @@ recolhida"** em vez de "arquivo de 7 dias".
 - Volume por área governativa, trajetória das oito mais noticiadas, e a expressão que
   mais rendeu em cada área — com a contagem das que ficaram a zero, que são candidatas
   a revisão.
-- Seletores de janela (30 dias, 90, um ano, tudo), de agregação (dia, semana, mês) e de
-  origem (Portugal, lusofonia, internacional, todas).
+- Seletores de janela (30 dias, 90, um ano, tudo), de agregação (dia, semana, mês), de
+  origem (Portugal, lusofonia, internacional, todas) e de **área governativa**, que reduz
+  todos os quadros a uma só área.
 - Modo claro e escuro, ecrã inteiro, impressão em PDF, exportação para Excel com quatro
   folhas, e manual de leitura embutido.
 

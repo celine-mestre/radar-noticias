@@ -34,7 +34,8 @@ body{font-family:var(--fonte);font-weight:300;background:var(--fundo);color:var(
 
 header{background:linear-gradient(115deg,var(--azul) 0%, #23506f 45%, var(--verde) 100%);
   color:#fff;padding:1.6rem 0 1.4rem}
-.marca{display:flex;align-items:center;gap:.85rem;margin-bottom:1.1rem}
+.topo-linha{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.1rem}
+.marca{display:flex;align-items:center;gap:.85rem}
 .marca .pastilha{width:56px;height:56px;border-radius:50%;background:#fff;flex:none;
   display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(0,0,0,.2)}
 .marca .pastilha img{width:54px;height:54px;object-fit:contain;display:block}
@@ -55,15 +56,24 @@ header .voltar:hover{background:#fff;color:var(--azul)}
 .seg button{border:0;background:none;font-family:var(--fonte);font-size:.8rem;
   color:var(--texto-suave);padding:.4rem .9rem;border-radius:999px;cursor:pointer;white-space:nowrap}
 .seg button.ativo{background:var(--azul);color:#fff;font-weight:500}
-.barra .accoes{margin-left:auto;display:flex;gap:.4rem}
-.btn-i{width:34px;height:34px;border-radius:9px;border:1px solid var(--borda);
-  background:var(--superficie-alt);cursor:pointer;display:flex;align-items:center;
+/* No cabeçalho, sobre a cor institucional */
+header .accoes{margin-left:auto;display:flex;gap:.45rem;flex-wrap:wrap;justify-content:flex-end}
+.btn-i{width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.12);cursor:pointer;display:flex;align-items:center;
   justify-content:center;transition:.15s;padding:0}
-.btn-i:hover{border-color:var(--azul);background:var(--superficie)}
-.btn-i svg{width:16px;height:16px;stroke:var(--texto-suave);fill:none;stroke-width:1.9;
+.btn-i:hover{background:#fff;border-color:#fff}
+.btn-i svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:1.9;
   stroke-linecap:round;stroke-linejoin:round}
 .btn-i:hover svg{stroke:var(--azul)}
-.barra .info{width:100%;font-size:.76rem;color:var(--texto-ligeiro)}
+.sel-area{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--texto-suave)}
+.sel-area select{font-family:var(--fonte);font-size:.8rem;color:var(--texto);
+  background:var(--superficie-alt);border:1px solid var(--borda);border-radius:999px;
+  padding:.38rem .8rem;max-width:230px;cursor:pointer}
+.barra .info{margin-left:auto;font-size:.76rem;color:var(--texto-ligeiro)}
+@media(max-width:560px){
+  .topo-linha{flex-direction:column}
+  header .accoes{margin-left:0;justify-content:flex-start}
+}
 
 /* Subir ao topo */
 /* Ajuda */
@@ -192,13 +202,33 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
 
 <header>
   <div class="wrap">
+    <div class="topo-linha">
     <div class="marca">
       <span class="pastilha"><img src="data:image/png;base64,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" alt="Secretaria-Geral do Governo"></span>
       <div class="txt">
         <strong>Secretaria-Geral do Governo</strong>
-        <small>Unidade de Pesquisa e Estatísticas</small>
+        <small>Suporte à Decisão · Unidade de Pesquisa e Estatísticas</small>
       </div>
     </div>
+    <div class="accoes">
+      <button class="btn-i" id="btnPDF" title="Imprimir ou guardar em PDF">
+        <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+      </button>
+      <button class="btn-i" id="btnXLSX" title="Exportar a série para Excel">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+      </button>
+      <button class="btn-i" id="btnEcra" title="Ocupar todo o ecrã" aria-pressed="false">
+        <svg viewBox="0 0 24 24" id="icoEcra"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+      </button>
+      <button class="btn-i" id="btnManual" title="Como ler este painel">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+      </button>
+      <button class="btn-i" id="btnTema" title="Alternar modo claro e escuro">
+        <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+    </div>
+
     <h1>Evolução da cobertura noticiosa</h1>
     <p>Série longitudinal do Radar de Notícias, construída a partir do retrato que cada
        recolha deixa registado. Cresce um dia por dia e nunca é apagada.</p>
@@ -223,27 +253,14 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
       <button data-o="lusofonas">Lusofonia</button>
       <button data-o="internacionais">Internacional</button>
     </div>
+    <label class="sel-area">
+      <span>Área</span>
+      <select id="area"><option value="">Todas as áreas</option></select>
+    </label>
     <div class="seg" id="agregacao">
       <button data-a="dia" class="ativo">Por dia</button>
       <button data-a="semana">Por semana</button>
       <button data-a="mes">Por mês</button>
-    </div>
-    <div class="accoes">
-      <button class="btn-i" id="btnPDF" title="Imprimir ou guardar em PDF">
-        <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
-      </button>
-      <button class="btn-i" id="btnXLSX" title="Exportar a série para Excel">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
-      </button>
-      <button class="btn-i" id="btnEcra" title="Ocupar todo o ecrã" aria-pressed="false">
-        <svg viewBox="0 0 24 24" id="icoEcra"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
-      </button>
-      <button class="btn-i" id="btnManual" title="Como ler este painel">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-      </button>
-      <button class="btn-i" id="btnTema" title="Alternar modo claro e escuro">
-        <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-      </button>
     </div>
     <div class="info" id="cobertura">A carregar…</div>
   </div>
@@ -271,6 +288,9 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
         agrupamento temático, como no radar.</dd>
         <dt>Trajetória</dt><dd>A linha de cada uma das oito áreas mais noticiadas. Percorre
         sempre o período todo, mesmo com um dia escolhido acima.</dd>
+        <dt>Filtros</dt><dd>Os seletores do topo — janela, área, agregação e origem —
+        valem para todos os quadros ao mesmo tempo. Escolhida uma área, tudo passa a ser
+        dela.</dd>
         <dt>Expressões</dt><dd>A palavra-chave que mais rendeu em cada área, e quantas
         ficaram a zero — essas são candidatas a revisão.</dd>
       </dl>
@@ -281,7 +301,8 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
       <p class="aj-nota">Escolhendo uma origem, os valores das expressões são estimados
       pela proporção dessa origem na área: a série guarda as palavras-chave por área, não
       repartidas por origem.</p>
-      <p class="aj-nota">A série começa no dia da primeira recolha e cresce um ponto por
+      <p class="aj-nota">O dia fecha na recolha das 23h07 e não volta a ser alterado. A
+      série começa no dia da primeira recolha e cresce um ponto por
       dia. Com menos de três ou quatro semanas, uma variação diz mais sobre o dia do que
       sobre a área.</p>
     </div>
@@ -294,7 +315,7 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
 
 <footer>
   <div class="wrap">
-    <p>Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas<br>
+    <p>Suporte à Decisão · Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas<br>
        Síntese diária do Radar de Notícias · SGGov</p>
   </div>
 </footer>
@@ -349,7 +370,15 @@ const grupoDaArea = nome => (AREAS.find(a => a.nome === nome) || {}).grupo || "s
 const num = n => n.toLocaleString("pt-PT");
 
 let SERIE = [];        // [{data, areas:{nome:{noticias, novas, fontes, origens, palavras}}}]
-let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas";
+let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas", areaEscolhida = "";
+
+/* Escolhida uma área, tudo passa a ser dela: o gráfico deixa de somar as
+   dezasseis e mostra só a sua, e as expressões ficam só as suas. */
+function areasDe(d){
+  const todas = d.areas || {};
+  if(!areaEscolhida) return todas;
+  return todas[areaEscolhida] ? { [areaEscolhida]: todas[areaEscolhida] } : {};
+}
 
 /* Quantas notícias conta uma área, conforme a origem escolhida. Escolhida uma,
    tudo passa a ser dessa origem: o gráfico, o ranking, as trajetórias e as
@@ -429,7 +458,7 @@ function linhasEmFoco(linhas, pares){
 
 function totaisPorArea(linhas){
   const t = {};
-  linhas.forEach(d => Object.entries(d.areas || {}).forEach(([nome, v]) => {
+  linhas.forEach(d => Object.entries(areasDe(d)).forEach(([nome, v]) => {
     t[nome] = (t[nome] || 0) + contar(v);
   }));
   return Object.entries(t).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
@@ -437,7 +466,7 @@ function totaisPorArea(linhas){
 
 function totaisPorOrigem(linhas){
   const t = { nacionais:0, lusofonas:0, internacionais:0 };
-  linhas.forEach(d => Object.values(d.areas || {}).forEach(v =>
+  linhas.forEach(d => Object.values(areasDe(d)).forEach(v =>
     Object.entries(v.origens || {}).forEach(([k, n]) => t[k] += n)));
   return t;
 }
@@ -447,7 +476,7 @@ function totaisPorOrigem(linhas){
    cobertura dentro de cada área, que é o que serve para as rever. */
 function expressoesPorArea(linhas, quantas = 1){
   const t = {};
-  linhas.forEach(d => Object.entries(d.areas || {}).forEach(([area, v]) => {
+  linhas.forEach(d => Object.entries(areasDe(d)).forEach(([area, v]) => {
     const f = fatorOrigem(v);
     if(!f) return;
     const alvo = t[area] || (t[area] = {});
@@ -552,7 +581,7 @@ function desenhar(){
   const pontos = pares.map(([chave, d]) => {
     const origens = { nacionais:0, lusofonas:0, internacionais:0 };
     let total = 0;
-    Object.values(d.areas || {}).forEach(v => {
+    Object.values(areasDe(d)).forEach(v => {
       total += contar(v);
       Object.entries(v.origens || {}).forEach(([k, n]) => {
         if(origem === "todas" || origem === k) origens[k] += n;
@@ -609,7 +638,7 @@ function desenhar(){
     </div>
 
     <div class="bloco">
-      <h2>Volume por área governativa ${rotuloFoco}</h2>
+      <h2>${areaEscolhida ? "Volume da área" : "Volume por área governativa"} ${rotuloFoco}</h2>
       <div class="ranking">
         ${areas.map(([nome, n]) => `
           <div class="rk" style="--cor:${cor(grupoDaArea(nome))}">
@@ -621,9 +650,9 @@ function desenhar(){
     </div>
 
     <div class="bloco">
-      <h2>Trajetória de cada área</h2>
+      <h2>${areaEscolhida ? "Trajetória da área" : "Trajetória de cada área"}</h2>
       <div class="mini">
-        ${areas.slice(0, 8).map(([nome]) => {
+        ${(areaEscolhida ? areas : areas.slice(0, 8)).map(([nome]) => {
           const g = grupoDaArea(nome);
           const vals = pares.map(([, d]) => contar(d.areas[nome]));
           return `<div class="mini-cx" style="--cor:${cor(g)}">
@@ -633,8 +662,8 @@ function desenhar(){
           </div>`;
         }).join("")}
       </div>
-      <p class="nota">As oito áreas mais noticiadas. A linha percorre o período todo,
-        mesmo com um ${agregacao} escolhido acima.</p>
+      <p class="nota">${areaEscolhida ? "A linha percorre" : "As oito áreas mais noticiadas. A linha percorre"}
+        o período todo, mesmo com um ${agregacao} escolhido acima.</p>
     </div>
 
     <div class="bloco">
@@ -746,7 +775,7 @@ function descarregarXLSX(){
   pares.forEach(([chave, d]) => {
     const o = { nacionais:0, lusofonas:0, internacionais:0 };
     let total = 0;
-    Object.values(d.areas || {}).forEach(v => {
+    Object.values(areasDe(d)).forEach(v => {
       total += contar(v);
       Object.entries(v.origens || {}).forEach(([k, n]) => o[k] += n);
     });
@@ -864,6 +893,22 @@ $("#periodo").addEventListener("click", e => {
   dias = +b.dataset.p; desenhar();
 });
 
+/* O seletor só oferece áreas que existem na série: com dois dias de registo,
+   listar as dezasseis daria a entender que faltavam dados. */
+function encherAreas(){
+  const vistas = new Set();
+  SERIE.forEach(d => Object.keys(d.areas || {}).forEach(n => vistas.add(n)));
+  const sel = $("#area");
+  const ordenadas = AREAS.map(a => a.nome).filter(n => vistas.has(n));
+  sel.innerHTML = `<option value="">Todas as áreas</option>` +
+    ordenadas.map(n => `<option value="${n}">${n}</option>`).join("");
+}
+
+$("#area").addEventListener("change", e => {
+  areaEscolhida = e.target.value;
+  desenhar();
+});
+
 $("#origem").addEventListener("click", e => {
   const b = e.target.closest("button"); if(!b) return;
   document.querySelectorAll("#origem button").forEach(x => x.classList.toggle("ativo", x === b));
@@ -878,6 +923,7 @@ $("#agregacao").addEventListener("click", e => {
 
 (async () => {
   SERIE = (await carregar()).filter(d => d && d.data).sort((a, b) => a.data.localeCompare(b.data));
+  encherAreas();
   $("#cobertura").textContent = SERIE.length
     ? `${SERIE.length} ${SERIE.length === 1 ? "dia" : "dias"} · de ${SERIE[0].data} a ${SERIE[SERIE.length - 1].data}`
     : "sem série registada";
