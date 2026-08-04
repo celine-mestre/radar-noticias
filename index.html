@@ -435,6 +435,23 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .man-txt strong{color:var(--texto);font-weight:500}
 .man-txt dl{display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:.4rem 1rem;margin:.5rem 0}
 .man-txt dt{font-weight:500;color:var(--texto)}
+/* Passos numerados: a sequência que se segue no ecrã, e não prosa a descrevê-la */
+.man-passos{list-style:none;counter-reset:passo;margin:.6rem 0 0;padding:0}
+.man-passos li{counter-increment:passo;position:relative;padding:.35rem 0 .35rem 2.1rem;
+  font-size:.87rem;line-height:1.55}
+.man-passos li::before{content:counter(passo);position:absolute;left:0;top:.35rem;
+  width:1.5rem;height:1.5rem;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:.72rem;font-weight:600;color:#fff;background:var(--cor)}
+
+/* Fichas curtas, para o que é lista e não texto corrido */
+.man-fichas{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:.5rem;margin:.6rem 0 0}
+.man-ficha{padding:.55rem .7rem;border-radius:var(--raio-s);
+  background:color-mix(in srgb, var(--cor) 6%, transparent);
+  border:1px solid color-mix(in srgb, var(--cor) 16%, transparent)}
+.man-ficha b{display:block;font-size:.8rem;font-weight:600;color:var(--texto);margin-bottom:.1rem}
+.man-ficha span{font-size:.78rem;color:var(--texto-ligeiro);line-height:1.45}
+
 .man-aviso{margin-top:.7rem;padding:.55rem .8rem;border-radius:0 var(--raio-s) var(--raio-s) 0;
   border-left:3px solid color-mix(in srgb, var(--cor) 55%, transparent);
   background:color-mix(in srgb, var(--cor) 5%, transparent);font-size:.83rem}
@@ -1833,94 +1850,112 @@ function fecharModal(){ $("#veu").classList.remove("aberto"); }
    MANUAL DE UTILIZAÇÃO — embutido no painel
    ========================================================================= */
 const MANUAL = [
-  { n:"1", titulo:"O que é o radar", cor:"var(--azul)", icone:"bussola", corpo:`
-    <p>Acesso rápido à comunicação social, organizado pelas 16 áreas governativas do XXV Governo Constitucional. Serve para saber, em segundos, o que está a ser noticiado numa área e levar essa recolha para uma folha de cálculo.</p>
-    <p>As notícias são recolhidas todas as manhãs a partir dos feeds das publicações portuguesas e marcadas pelas palavras-chave de cada área. O ficheiro Excel é gerado no seu computador.</p>` },
+  { n:"1", titulo:"O que é", cor:"var(--azul)", icone:"bussola", corpo:`
+    <p>Um painel que reúne o que a imprensa noticiou sobre cada uma das <strong>16 áreas
+    governativas</strong>, com sete dias de arquivo.</p>
+    <div class="man-fichas">
+      <div class="man-ficha"><b>66 publicações</b><span>portuguesas, lusófonas e internacionais</span></div>
+      <div class="man-ficha"><b>206 expressões</b><span>é o que classifica cada notícia por área</span></div>
+      <div class="man-ficha"><b>7 dias</b><span>o que o painel consulta</span></div>
+      <div class="man-ficha"><b>De 2 em 2 horas</b><span>ritmo da recolha, das 07h07 às 19h07</span></div>
+    </div>
+    <p class="man-aviso">Não é instantâneo: mostra o retrato da última recolha, cuja hora
+    está indicada ao lado do título das áreas.</p>` },
 
-  { n:"2", titulo:"Navegar", cor:"var(--verde)", icone:"grelha", corpo:`
-    <dl>
-      <dt>Agrupamentos</dt><dd>Os quatro filtros coloridos mostram só as áreas de um agrupamento temático. Clicar de novo repõe todas.</dd>
-      <dt>Abrir uma área</dt><dd>Clicar numa área abre diretamente a janela de resultados, com as notícias já recolhidas. As palavras-chave ficam à cabeça dessa janela: escolher uma ou várias refaz a consulta no momento, e <strong>Todas as palavras-chave</strong> repõe a área completa. A caixa ao lado procura um termo livre.</dd>
-      <dt>Dentro da janela</dt><dd>Dois botões no canto superior direito: <strong>ampliar</strong>, que alarga a janela a quase todo o ecrã e volta a reduzi-la, útil para listas longas ou para mostrar numa reunião; e <strong>voltar ao radar</strong>. Para comparar áreas sem sair, o seletor <strong>Área</strong>, na barra de critérios, troca de área mantendo o período, a origem e a amplitude escolhidos.</dd>
-      <dt>Quando os dados foram recolhidos</dt><dd>À direita do título das áreas está a hora da última recolha, na hora de Lisboa — tal como as horas de todas as notícias, que são convertidas do fuso de cada publicação. O painel lê ficheiros e não consulta nada em direto: o que vê é o retrato dessa recolha. Passando de um dia, a marca fica dourada, sinal de que o agendamento pode não ter corrido.</dd>
-      <dt>Radar</dt><dd>As áreas dispostas em círculo por volume de notícias. A distância ao centro tem significado: quanto mais noticiada a área, mais perto fica; ao centro está o total. Acompanha os três seletores da barra — período, origem das fontes e agrupamento —, pelo que os números mudam com eles. Clicar numa área abre-a. Em ecrãs estreitos dá lugar à grelha de cartões, porque um círculo com dezasseis caixas seria ilegível.</dd>
-      <dt>Pesquisa</dt><dd>Filtra os cartões pelo nome da área ou pelas palavras-chave. É pesquisa no painel, não nas notícias.</dd>
-      <dt>Período</dt><dd>Predefinição: sete dias, que é tudo o que o arquivo guarda. Reduzindo-o, vê-se apenas o mais recente.</dd>
-      <dt>Imprensa</dt><dd>Predefinição: todas. Três origens que não se sobrepõem e que, somadas, dão o corpus completo. <strong>Portugal</strong>, por predefinição. <strong>Lusofonia</strong>: Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil — importante em matérias de CPLP, cooperação e diáspora. <strong>Internacional</strong>: a restante imprensa estrangeira, já <em>sem</em> a lusofonia, que tem posição própria. <strong>Todas</strong> não filtra.</dd>
-      <dt>Como é feita a triagem</dt><dd>Pelo domínio de cada notícia, já depois de recolhida, e não por operadores de pesquisa — o que a torna exata e verificável.</dd>
-    </dl>` },
+  { n:"2", titulo:"Encontrar uma área", cor:"var(--verde)", icone:"grelha", corpo:`
+    <ol class="man-passos">
+      <li>No <strong>radar</strong>, as áreas dispõem-se em círculo por volume de notícias:
+        quanto mais noticiada, mais perto do centro. Ao centro, o total.</li>
+      <li>A <strong>pesquisa</strong> e as pastilhas dos agrupamentos temáticos reduzem o
+        que se vê.</li>
+      <li>Os seletores de <strong>período</strong> e <strong>imprensa</strong> valem para
+        tudo: radar e consultas.</li>
+      <li>Clicar numa área abre-a.</li>
+    </ol>
+    <p class="man-aviso">Em ecrã estreito o círculo dá lugar a uma grelha de cartões, que
+    faz o mesmo.</p>` },
 
-  { n:"3", titulo:"Escolher o que ver", cor:"var(--dourado)", icone:"lupa", corpo:`
-    <p>Aberta uma área, três controlos decidem o que a lista mostra. Todos podem ser combinados e qualquer alteração refaz a recolha no momento.</p>
+  { n:"3", titulo:"Dentro de uma área", cor:"var(--dourado)", icone:"lupa", corpo:`
+    <p>A janela abre já com as notícias. Três formas de a estreitar, combináveis:</p>
     <dl>
-      <dt>Palavras-chave</dt><dd>À cabeça da janela, todas as expressões da área. Clicar numa restringe a lista a essa; clicar em várias soma-as, e uma notícia entra se satisfizer qualquer uma delas. <strong>Todas as palavras-chave</strong>, no rodapé, repõe a área completa.</dd>
-      <dt>Pesquisa por termo</dt><dd>A caixa à direita, para o que as palavras-chave não cobrem: uma entidade, um acontecimento, um nome próprio. Prima Enter. <strong>Procura em toda a imprensa recolhida</strong>, e não apenas nas notícias que as palavras-chave da área apanharam — é por isso que encontra matéria que a área não classificou. A etiqueta ao lado da contagem passa a dizer “imprensa recolhida”. À primeira pesquisa demora alguns segundos, enquanto carrega esse corpus.</dd>
-      <dt>Período, imprensa e área</dt><dd>Na barra por baixo. O período vai das 24 horas aos sete dias que o arquivo guarda; a imprensa escolhe entre Portugal, lusofonia, internacional ou todas; e o seletor de área troca de área sem fechar a janela, mantendo tudo o resto. <strong>Repor predefinições</strong> volta a sete dias e todas as origens.</dd>
+      <dt>Palavras-chave</dt><dd>À cabeça. Clicar numa restringe a lista; várias somam-se.</dd>
+      <dt>Pesquisa por termo</dt><dd>Para o que as palavras-chave não cobrem — um nome, um
+        acontecimento. Procura em <strong>toda a imprensa recolhida</strong>, e não só nas
+        notícias já classificadas.</dd>
+      <dt>Período, imprensa e área</dt><dd>Na barra abaixo. O seletor de área troca de área
+        sem fechar a janela.</dd>
     </dl>
-    <p class="man-aviso">Quando alguma coisa fica de fora, o painel di-lo por baixo da contagem e diz quanto: quantas notícias da área têm outras palavras-chave, quantas são de outra origem, e quantas existem no arquivo fora do período escolhido. Nunca reduz sem explicar.</p>` },
+    <p><strong>Repor predefinições</strong> devolve tudo ao início. Os botões no canto
+    superior direito ampliam a janela e voltam ao radar.</p>
+    <p class="man-aviso">Ficando notícias de fora, o painel diz quantas e porquê. Nunca
+    reduz sem explicar.</p>` },
 
+  { n:"4", titulo:"Ler e exportar", cor:"var(--teal)", icone:"descarregar", corpo:`
+    <p>As notícias saem por ordem cronológica, agrupadas por dia, com hora, imagem quando a
+    publicação a fornece, resumo, publicação e etiqueta de origem.</p>
+    <div class="man-fichas">
+      <div class="man-ficha"><b>Imprimir / PDF</b><span>com cabeçalho institucional</span></div>
+      <div class="man-ficha"><b>Excel</b><span>notícias, especificações e síntese</span></div>
+      <div class="man-ficha"><b>Receber por email</b><span>subscrição por área</span></div>
+    </div>
+    <p class="man-aviso">Algumas publicações não indicam o endereço do artigo no seu feed.
+    Nesses casos a notícia aparece, mas sem ligação.</p>` },
 
-  { n:"4", titulo:"Recolher e exportar", cor:"var(--verde)", icone:"descarregar", corpo:`
-    <p>Aberta a área, as notícias são apresentadas por ordem cronológica, com hora, imagem quando a publicação a fornece, resumo, publicação e etiqueta de origem. Em cima, o separador alterna entre <strong>Notícias</strong> e <strong>Síntese</strong>, e há três ações: recolher de novo, <strong>Imprimir</strong> e <strong>Excel</strong>.</p>
-    <p>A recolha procura por esta ordem:</p>
+  { n:"5", titulo:"Síntese e evolução", cor:"var(--verde)", icone:"grafico", corpo:`
+    <p>O separador <em>Síntese</em> mostra o mesmo conjunto de notícias por outro ângulo:</p>
+    <div class="man-fichas">
+      <div class="man-ficha"><b>Publicações</b><span>quem noticiou, e quanto</span></div>
+      <div class="man-ficha"><b>Assuntos</b><span>expressões que se repetem</span></div>
+      <div class="man-ficha"><b>Cobertura</b><span>o que cada palavra-chave rende</span></div>
+      <div class="man-ficha"><b>Evolução</b><span>notícias publicadas em cada dia</span></div>
+    </div>
+    <p>A evolução conta as notícias <strong>publicadas nesse dia</strong>, pela data que a
+    publicação lhes deu — e não o que a recolha trouxe, que inclui dias anteriores.</p>` },
+
+  { n:"6", titulo:"Como classifica", cor:"var(--teal)", icone:"lupa", corpo:`
+    <p>Cada área tem expressões próprias, tiradas das matérias que o respetivo ministério
+    tutela. Uma notícia entra numa área por conter a expressão <strong>no título ou no
+    resumo</strong>.</p>
+    <div class="man-fichas">
+      <div class="man-ficha"><b>Curtas</b><span>“imigração”, não “política de imigração”</span></div>
+      <div class="man-ficha"><b>Com exclusões</b><span>afastam o uso figurado</span></div>
+      <div class="man-ficha"><b>Em português</b><span>só a imprensa lusófona é classificada</span></div>
+      <div class="man-ficha"><b>Literais</b><span>tratar do tema sem a expressão não basta</span></div>
+    </div>
+    <p class="man-aviso">As publicações estrangeiras são recolhidas e encontram-se pela
+    pesquisa por termo, mas não entram na classificação por área.</p>` },
+
+  { n:"7", titulo:"O que fica de fora", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <dl>
-      <dt>Arquivo de sete dias</dt><dd>O corpus próprio, construído todas as manhãs a partir dos feeds das publicações. É onde quase todas as consultas são respondidas, em milissegundos e sem depender da rede.</dd>
-      <dt>Retrato do dia</dt><dd>O que a última recolha trouxe, usado quando o arquivo não está disponível.</dd>
-
+      <dt>O que não foi publicado nestas 66 fontes</dt><dd>E o que for anterior a sete dias.</dd>
+      <dt>Redes sociais</dt><dd>Não publicam feeds. Isto é imprensa.</dd>
+      <dt>O que não usa a expressão</dt><dd>Um artigo pode tratar do tema sem a conter.</dd>
     </dl>
-    <p class="man-aviso">A etiqueta ao lado da contagem diz <em>onde</em> as notícias foram procuradas — “arquivo de 7 dias” ou “recolha agendada”. O período indicado antes é o filtro que lhes foi <em>aplicado</em>. São coisas distintas: o arquivo cobre sete dias, e dele extraem-se as das últimas 24 horas quando é essa a janela escolhida.</p>
-    <p><strong>Imprimir</strong> gera uma folha com cabeçalho institucional, os critérios da consulta e a lista em tabela — pronta para anexar a uma nota.</p>
-    <p><strong>Ler notícias</strong> apresenta a lista por ordem cronológica, da mais recente para a mais antiga — a ordenação que o serviço não dá.</p>
-    <p>O ficheiro Excel tem duas folhas: <em>Notícias</em>, com área, agrupamento, data, fonte, domínio, título, ligação e palavras-chave da consulta; e <em>Especificações</em>, com o período, a origem das fontes, as palavras-chave da consulta e a versão do painel — é ela que dá rasto ao ficheiro.</p>` },
-
-  { n:"5", titulo:"Síntese e evolução", cor:"var(--teal)", icone:"grafico", corpo:`
-    <dl>
-      <dt>Números de topo</dt><dd>Notícias recolhidas, publicações distintas, dias com notícias e média diária.</dd>
-      <dt>Publicações</dt><dd>Anel de proporções com as seis maiores e as restantes agregadas.</dd>
-      <dt>Assuntos recorrentes</dt><dd>Expressões que ocorrem em mais do que uma notícia, com tamanho proporcional à frequência.</dd>
-      <dt>Cobertura</dt><dd>Quantas notícias contêm cada palavra-chave da área. As que estão a zero não estão a puxar cobertura.</dd>
-      <dt>Evolução</dt><dd>A partir de três dias de recolhas agendadas, a série diária de notícias novas e a variação face à média. Vem do ficheiro de histórico, que guarda apenas contagens por dia e por área e nunca é apagado. </dd>
-    </dl>
-    <p>Tudo é contagem, calculada no painel. Nada é enviado para fora.</p>` },
-
-  { n:"6", titulo:"Como o radar pesquisa", cor:"var(--azul)", icone:"chave", corpo:`
-    <p>A recolha lê, de duas em duas horas, <strong>73 feeds de 66 publicações</strong> — 35 portuguesas, 11 dos restantes países de língua portuguesa e 27 internacionais — e marca cada artigo com as áreas cujas palavras-chave ele satisfaz. É o método de um agregador de feeds, executado no próprio repositório: sem teto de resultados, com datas de publicação, ligações diretas e o resumo escrito pela redação.</p>
-    <p><strong>Palavras-chave são expressões, não palavras soltas.</strong> Termos como “clima” ou “energia” têm sentidos alheios à área — clima de negócios, falta de energia — pelo que se usa “alterações climáticas”, “preço da energia”, “mercado da eletricidade”. Onde o ruído persiste, a área declara termos a excluir.</p>
-    <p><strong>Âmbito.</strong> Imprensa: jornais, rádios, televisões, agências e imprensa especializada. As plataformas sociais não publicam feeds e ficam de fora.</p>
-    <p class="man-aviso">Tudo o que o painel mostra vem deste corpus. Não há consultas a serviços externos: o que não estiver nas publicações subscritas, ou for anterior ao arquivo, não aparece.</p>`  },
-
-  { n:"7", titulo:"Limites a conhecer", cor:"var(--vermelho)", icone:"aviso", corpo:`
-    <p>O corpus não tem teto de resultados, ordena por data de publicação e traz ligações diretas e resumos das redações. Os limites que restam são estes:</p>
-    <dl>
-      <dt>Síntese por origem</dt><dd>No topo de cada relatório por email, um parágrafo por origem de imprensa. Uma origem só gera parágrafo se tiver <strong>pelo menos três notícias</strong> no período: abaixo disso, resumir não acrescenta nada a ler os títulos. Uma área pode assim ter parágrafo de Portugal e não ter de internacional, sem que haja falha.</dd>
-      <dt>Escolha das expressões</dt><dd>São curtas, como a imprensa escreve: "imigração" e não "política de imigração", "habitação" e não "política de habitação". Uma expressão longa é precisa e não apanha nada. Onde a palavra curta é ambígua, cada área tem uma lista de exclusões que afasta o uso figurado — "ambiente de trabalho" não é matéria de Ambiente e Energia, nem "defesa do consumidor" de Defesa Nacional.</dd>
-      <dt>Língua das fontes estrangeiras</dt><dd>As palavras-chave estão em português, e aplicá-las a outra língua produz coincidências falsas — "bolsas" apanhava "la bolsa española", que é a bolsa de valores. Por isso, só as publicações que escrevem em português são classificadas por área: as nacionais, as lusófonas e as edições portuguesas da Euronews, da Deutsche Welle, da France 24 e da RFI. As restantes entram no corpus da pesquisa por termo, e encontram-se escrevendo "Ceuta" ou o nome de uma pessoa.</dd>
-      <dt>Cobertura do corpus</dt><dd>66 publicações — 35 portuguesas, 11 lusófonas e 27 internacionais — e sete dias de arquivo. Uma notícia de um título não subscrito, ou anterior a esse período, não está no corpus. Alargar a janela do arquivo é mudar um número na recolha, quando houver espaço para isso.</dd>
-      <dt>Imprensa apenas</dt><dd>As plataformas sociais não publicam feeds e estão fora do âmbito da aplicação. Páginas dessas plataformas que entrem no arquivo são descartadas.</dd>
-      <dt>Marcação literal</dt><dd>Um artigo entra numa área por conter a expressão no título ou no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.</dd>
-      <dt>Contagens</dt><dd>Medem o que as publicações subscritas noticiaram, não o total do que foi noticiado. Como nenhuma área é truncada e o método é o mesmo para todas, a comparação entre áreas é legítima dentro do corpus.</dd>
-
-      <dt>Ligações</dt><dd>Endereço direto do artigo, dado pelo próprio feed.</dd>
-    </dl>` },
+    <p class="man-aviso"><strong>Comparar entre áreas é legítimo</strong> — nenhuma é
+    truncada e o método é igual para todas. Comparar com o total do que foi noticiado no
+    país, não: isto mede o que estas publicações noticiaram.</p>` },
 
   { n:"8", titulo:"Receber por email", cor:"var(--dourado)", icone:"descarregar", corpo:`
-    <p>Todas as manhãs, às 10h00, é enviado um relatório por área governativa a quem o subscreve: as notícias das últimas 24 horas, com título, resumo, publicação e ligação, e um botão para abrir este painel.</p>
-    <p>Para subscrever, use o botão <strong>Receber por email</strong> na barra: indique o endereço, escolha as áreas e confirme. Abre-se uma mensagem já preenchida no seu programa de correio, que basta enviar. O primeiro relatório chega na manhã seguinte.</p>
-    <p class="man-aviso">Áreas sem notícias no período não geram mensagem — não se enviam relatórios vazios. Para cancelar, responda a qualquer relatório a pedir o cancelamento.</p>` },
+    <p>Um email por área subscrita, nas manhãs de dias úteis. À segunda-feira a janela
+    alarga para cobrir o fim de semana.</p>
+    <p>No topo, um parágrafo redigido pelo <strong>Amália</strong>, o modelo de linguagem
+    do Estado, por área e por origem da imprensa. Uma origem só gera parágrafo com pelo
+    menos três notícias no período — daí uma área poder ter parágrafo de Portugal e não
+    ter de internacional.</p>
+    <p class="man-aviso">A subscrição faz-se em <strong>Receber por email</strong>, no topo
+    do painel. Áreas sem notícias no período não geram mensagem.</p>` },
 
-  { n:"9", titulo:"Recolha agendada", cor:"var(--teal)", icone:"engrenagem", corpo:`
-    <p>O painel não vai buscar notícias enquanto o consulta: lê ficheiros que uma recolha automática deixou ao lado dele. Essa recolha corre nos servidores do GitHub <strong>todos os dias, de duas em duas horas</strong>, entre as sete da manhã e as sete da tarde — daí a hora indicada ao lado do título das áreas.</p>
-    <dl>
-      <dt>arquivo.json</dt><dd>As notícias marcadas dos últimos sete dias, com as palavras-chave de cada uma. É o que responde às consultas e o que o radar conta.</dd>
-      <dt>corpus.json</dt><dd>Todos os artigos lidos dos feeds nos mesmos sete dias, marcados ou não. É onde a pesquisa por termo procura.</dd>
-      <dt>historico.json</dt><dd>Uma linha por dia e por área, com contagens, origens e palavras-chave. É o que permite ver a evolução, e nunca é apagado.</dd>
-      <dt>meses/</dt><dd>Um ficheiro comprimido por mês com todas as notícias desse mês. Não é lido pelo painel: existe para consulta futura.</dd>
-      <dt>Excel do dia</dt><dd>Descarregável na página da execução, em <em>Artifacts</em>.</dd>
-    </dl>
-    <p>São sete recolhas por dia, de duas em duas horas entre as 07h07 e as 19h07. A das 09h07 tem seguimento: às 09h22 o Amália escreve as sínteses sobre ela, e às 10h17 saem os relatórios por email, nos dias úteis.</p>
-    <p>O painel não é instantâneo — lê os ficheiros da última recolha. Quem o abrir às 16h vê o que foi recolhido às 15h07.</p>
-    <p class="man-aviso">Executar fora de horas: no repositório, em <em>Actions</em>, escolher <em>Radar de Noticias</em> e carregar em <em>Run workflow</em>. Demora cerca de um minuto.</p>` }
+  { n:"9", titulo:"De onde vêm os dados", cor:"var(--teal)", icone:"engrenagem", corpo:`
+    <p>O painel não vai buscar notícias enquanto o consulta: lê o resultado de uma recolha
+    automática, que corre <strong>de duas em duas horas, todos os dias</strong>, das 07h07
+    às 19h07.</p>
+    <p>A recolha lê os feeds das publicações subscritas, marca cada artigo com as áreas cujas
+    expressões ele satisfaz, e deixa o resultado ao lado do painel. Depois da recolha da
+    manhã, escreve-se a síntese e enviam-se os relatórios.</p>
+    <p class="man-aviso">Abrindo o painel às 16h, vê o que foi recolhido às 15h07. A hora da
+    recolha está sempre à vista, ao lado do título das áreas.</p>` }
 ];
+
 
 
 const ICONES_MANUAL = {
