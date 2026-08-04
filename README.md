@@ -259,8 +259,20 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
 - **As expressões são curtas, como a imprensa escreve.** "política de imigração" quase
   nunca aparece num título; "imigração", "imigrantes" e "migrantes" aparecem sempre. Uma
-  expressão longa é precisa e não apanha nada. São 185 expressões nas 16 áreas.
-- **A ambiguidade trata-se por exclusão, não por precisão.** Seis áreas têm uma lista
+  expressão longa é precisa e não apanha nada. São 206 expressões nas 16 áreas.
+- **Áreas vizinhas separam-se pela tutela, não pelo tema.** Três áreas tratam de pessoas
+  que atravessam fronteiras, e a fronteira entre elas é a das secretarias de Estado. A
+  **Presidência** tem a política de imigração, a AIMA, as autorizações de residência, a
+  nacionalidade e o acolhimento — é quem tem o Secretário de Estado Adjunto da
+  Presidência e Imigração. A **Administração Interna** tem o controlo de fronteiras, os
+  pedidos de asilo e os refugiados, que são matéria de segurança. Os **Negócios
+  Estrangeiros** tratam do movimento inverso: emigrantes, comunidades portuguesas, rede
+  consular e diplomacia.
+- **A Administração Pública está nas Finanças**, e não na Reforma do Estado, porque é lá
+  que está a respetiva Secretária de Estado. À Reforma do Estado cabem a digitalização e
+  a simplificação: automatização de processos, interoperabilidade, identificação digital
+  e dados abertos.
+- **A ambiguidade trata-se por exclusão, não por precisão.** Sete áreas têm uma lista
   `excluir` que afasta o uso figurado: "ambiente de trabalho" não é Ambiente e Energia,
   "defesa do consumidor" não é Defesa Nacional, "fronteira entre o público e o privado"
   não é Administração Interna.
