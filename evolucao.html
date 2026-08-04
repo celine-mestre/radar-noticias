@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evolução · Radar de Notícias · SGGov</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --verde:#0E7433; --azul:#2B5683; --dourado:#BE9C54; --vermelho:#D02117;
+  --amarelo:#FFD200; --teal:#266B73;
+  --texto:#171715; --texto-suave:#5b6068; --texto-ligeiro:#8a9098;
+  --fundo:#f4f6f8; --superficie:#fff; --superficie-alt:#fbfcfd;
+  --borda:#e2e8f0; --borda-forte:#cfd8e3;
+  --sombra:0 1px 2px rgba(23,23,21,.04), 0 8px 24px rgba(23,23,21,.06);
+  --raio:16px; --raio-s:10px;
+  --fonte:'Lexend', Arial, Helvetica, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+img,svg{max-width:100%}
+body{font-family:var(--fonte);font-weight:300;background:var(--fundo);color:var(--texto);
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+
+header{background:linear-gradient(115deg,var(--azul) 0%, #23506f 45%, var(--verde) 100%);
+  color:#fff;padding:1.6rem 0 1.4rem}
+header .org{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+header h1{font-size:1.6rem;font-weight:600;letter-spacing:-.02em;margin-top:.35rem}
+header p{font-size:.88rem;opacity:.9;margin-top:.4rem;max-width:70ch;line-height:1.55}
+header .voltar{display:inline-flex;align-items:center;gap:.4rem;margin-top:1rem;
+  padding:.5rem 1rem;border-radius:999px;border:1px solid rgba(255,255,255,.45);
+  background:rgba(255,255,255,.12);color:#fff;text-decoration:none;font-size:.82rem}
+header .voltar:hover{background:#fff;color:var(--azul)}
+
+.barra{background:var(--superficie);border-bottom:1px solid var(--borda);padding:.85rem 0;
+  position:sticky;top:0;z-index:5}
+.barra .wrap{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap}
+.seg{display:flex;background:var(--superficie-alt);border:1px solid var(--borda);
+  border-radius:999px;padding:2px;overflow-x:auto}
+.seg button{border:0;background:none;font-family:var(--fonte);font-size:.8rem;
+  color:var(--texto-suave);padding:.4rem .9rem;border-radius:999px;cursor:pointer;white-space:nowrap}
+.seg button.ativo{background:var(--azul);color:#fff;font-weight:500}
+.barra .info{margin-left:auto;font-size:.76rem;color:var(--texto-ligeiro)}
+
+main{padding:1.6rem 0 3rem}
+.aviso{background:#fdfbf6;border:1px solid #efe4cd;border-radius:var(--raio-s);
+  padding:.85rem 1.1rem;font-size:.83rem;color:var(--texto-suave);line-height:1.55;margin-bottom:1.4rem}
+.aviso strong{color:var(--dourado)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.6rem}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--superficie);border:1px solid var(--borda);border-radius:var(--raio);
+  padding:1rem 1.1rem;box-shadow:var(--sombra)}
+.kpi b{display:block;font-size:1.8rem;font-weight:600;color:var(--azul);line-height:1;
+  font-variant-numeric:tabular-nums}
+.kpi span{display:block;font-size:.74rem;color:var(--texto-ligeiro);margin-top:.4rem;line-height:1.4}
+
+.bloco{background:var(--superficie);border:1px solid var(--borda);border-radius:var(--raio);
+  padding:1.3rem 1.4rem;box-shadow:var(--sombra);margin-bottom:1.3rem}
+.bloco h2{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--texto-ligeiro);font-weight:600;margin-bottom:.2rem}
+.bloco p.nota{font-size:.78rem;color:var(--texto-ligeiro);line-height:1.55;margin-top:.9rem}
+
+.grafico{width:100%;height:220px;margin-top:1rem}
+.eixo{stroke:var(--borda);stroke-width:1}
+.rot{font-size:9px;fill:var(--texto-ligeiro);font-family:var(--fonte)}
+.barra-dia{transition:opacity .15s}
+.barra-dia:hover{opacity:.75}
+
+.legenda{display:flex;gap:1.1rem;flex-wrap:wrap;margin-top:.8rem}
+.legenda span{display:inline-flex;align-items:center;gap:.4rem;font-size:.76rem;color:var(--texto-suave)}
+.legenda i{width:10px;height:10px;border-radius:3px;background:var(--cor);display:block}
+
+.ranking{display:grid;gap:.45rem;margin-top:1rem}
+.rk{display:grid;grid-template-columns:190px 1fr 54px;gap:.7rem;align-items:center;font-size:.82rem}
+@media(max-width:620px){.rk{grid-template-columns:120px 1fr 44px;font-size:.76rem}}
+.rk-nome{color:var(--texto-suave);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rk-barra{height:16px;border-radius:4px;background:var(--superficie-alt);overflow:hidden}
+.rk-barra i{display:block;height:100%;background:var(--cor);border-radius:4px}
+.rk-n{text-align:right;font-variant-numeric:tabular-nums;color:var(--texto);font-weight:500}
+
+.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-top:1rem}
+@media(max-width:900px){.mini{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.mini{grid-template-columns:1fr}}
+.mini-cx{border:1px solid var(--borda);border-radius:var(--raio-s);padding:.7rem .8rem}
+.mini-cx h3{font-size:.72rem;font-weight:500;color:var(--texto-suave);line-height:1.3;
+  height:2.2em;overflow:hidden}
+.mini-cx b{font-size:1.15rem;font-weight:600;color:var(--cor);font-variant-numeric:tabular-nums}
+.mini-cx svg{width:100%;height:34px;margin-top:.3rem}
+
+table{width:100%;border-collapse:collapse;margin-top:1rem;font-size:.82rem}
+th{text-align:left;font-weight:500;color:var(--texto-ligeiro);font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.08em;padding:.5rem .6rem;border-bottom:1px solid var(--borda)}
+td{padding:.5rem .6rem;border-bottom:1px solid var(--borda);color:var(--texto-suave)}
+td.n{text-align:right;font-variant-numeric:tabular-nums;color:var(--texto)}
+tr:hover td{background:var(--superficie-alt)}
+
+.vazio{padding:2.4rem 1rem;text-align:center;color:var(--texto-ligeiro);font-size:.9rem;line-height:1.7}
+footer{background:var(--texto);color:#fff;padding:1.4rem 0;margin-top:2rem}
+footer p{font-size:.75rem;opacity:.82;line-height:1.7}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="org">Secretaria-Geral do Governo · Unidade de Pesquisa e Estatísticas</div>
+    <h1>Evolução da cobertura noticiosa</h1>
+    <p>Série longitudinal do Radar de Notícias, construída a partir do retrato que cada
+       recolha deixa registado. Cresce um dia por dia e nunca é apagada.</p>
+    <a class="voltar" href="index.html">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      Voltar ao radar
+    </a>
+  </div>
+</header>
+
+<div class="barra">
+  <div class="wrap">
+    <div class="seg" id="periodo">
+      <button data-p="30" class="ativo">Últimos 30 dias</button>
+      <button data-p="90">90 dias</button>
+      <button data-p="365">Um ano</button>
+      <button data-p="0">Tudo</button>
+    </div>
+    <div class="seg" id="agregacao">
+      <button data-a="dia" class="ativo">Por dia</button>
+      <button data-a="semana">Por semana</button>
+      <button data-a="mes">Por mês</button>
+    </div>
+    <div class="info" id="cobertura">A carregar…</div>
+  </div>
+</div>
+
+<main class="wrap" id="corpo">
+  <div class="vazio">A ler a série…</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas<br>
+       Fonte: <code>historico.json</code>, escrito por cada recolha do Radar de Notícias.</p>
+  </div>
+</footer>
+
+<script>
+const GRUPOS = [
+  { id:"soberania", nome:"Estado e soberania", cor:"#2B5683" },
+  { id:"economia",  nome:"Economia, finanças e território", cor:"#BE9C54" },
+  { id:"social",    nome:"Sociedade e bem-estar", cor:"#0E7433" },
+  { id:"ambiente",  nome:"Ambiente, energia e recursos naturais", cor:"#266B73" }
+];
+const AREAS = [
+  { id:"estrangeiros", nome:"Negócios Estrangeiros", grupo:"soberania", icone:"estrangeiros",
+    palavras:["Ministério dos Negócios Estrangeiros","política externa","diplomacia","assuntos europeus","Conselho Europeu","União Europeia","CPLP","Nações Unidas","comunidades portuguesas","emigrantes","rede consular","cooperação para o desenvolvimento"] },
+  { id:"financas", nome:"Finanças", grupo:"economia", icone:"financas",
+    palavras:["Ministério das Finanças","Orçamento do Estado","défice","dívida pública","impostos","IRS","IRC","IVA","carga fiscal","Autoridade Tributária","Administração Pública","funcionários públicos","execução orçamental"] },
+  { id:"presidencia", nome:"Presidência", grupo:"soberania", icone:"presidencia",
+    palavras:["Ministério da Presidência","Conselho de Ministros","Presidência do Conselho de Ministros","Programa do Governo","comunicação do Governo","imigração","imigrantes","migrantes","migratória","AIMA","autorização de residência","vistos de residência","nacionalidade portuguesa","regularização de estrangeiros","acolhimento e integração"] },
+  { id:"reforma", nome:"Reforma do Estado", grupo:"soberania", icone:"reforma",
+    palavras:["reforma do Estado","simplificação administrativa","desburocratização","transformação digital","serviços públicos digitais","automatização de processos","interoperabilidade","identificação digital","dados abertos","inteligência artificial","modernização administrativa","SIADAP","avaliação de desempenho"], excluir:["inteligência artificial generativa em contexto militar"] },
+  { id:"parlamentares", nome:"Assuntos Parlamentares", grupo:"soberania", icone:"parlamento",
+    palavras:["Assembleia da República","debate parlamentar","interpelação ao Governo","audição parlamentar","comissão de inquérito","iniciativa legislativa","moção de censura","regulação da comunicação social"] },
+  { id:"defesa", nome:"Defesa Nacional", grupo:"soberania", icone:"defesa",
+    palavras:["Ministério da Defesa Nacional","Forças Armadas","militares","NATO","política de defesa","investimento em defesa","indústria de defesa","missões militares","serviço militar","Ucrânia"], excluir:["defesa do consumidor","defesa pessoal","linha de defesa","defesa do título"] },
+  { id:"interna", nome:"Administração Interna", grupo:"soberania", icone:"interna",
+    palavras:["Ministério da Administração Interna","segurança interna","forças de segurança","PSP","GNR","fronteiras","asilo","refugiados","deportação","expulsão do território","proteção civil","incêndios florestais","sinistralidade rodoviária"], excluir:["fronteira entre","fronteiras do conhecimento","últimas fronteiras"] },
+  { id:"justica", nome:"Justiça", grupo:"soberania", icone:"justica",
+    palavras:["Ministério da Justiça","tribunais","Ministério Público","magistrados","processos pendentes","sistema prisional","prisões","registos e notariado","reforma da justiça","apoio judiciário","corrupção"], excluir:["justiça poética","fazer justiça a"] },
+  { id:"economia", nome:"Economia e Coesão Territorial", grupo:"economia", icone:"economia",
+    palavras:["Ministério da Economia","crescimento económico","exportações","investimento","empresas","turismo","comércio","fundos europeus","desenvolvimento regional","coesão territorial","administração local","autarquias","ordenamento do território","interioridade"], excluir:["comércio eletrónico de dados","ambiente de trabalho","empresa familiar"] },
+  { id:"infraestruturas", nome:"Infraestruturas e Habitação", grupo:"economia", icone:"infraestruturas",
+    palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","preço das casas","compra de casa","obras públicas","ferrovia","comboios","novo aeroporto","transportes públicos","mobilidade","licenciamento urbanístico"] },
+  { id:"educacao", nome:"Educação, Ciência e Inovação", grupo:"social", icone:"educacao",
+    palavras:["Ministério da Educação","educação pré-escolar","creches","ensino básico","ensino secundário","ensino profissional","escolas","alunos","professores","exames nacionais","manuais escolares","abandono escolar","ensino superior","universidades","ciência e inovação","investigação científica","investigação e desenvolvimento","bolsas de estudo","bolsas de investigação"], excluir:["bolsa de valores","bolsa espanhola","bolsa de Lisboa"] },
+  { id:"saude", nome:"Saúde", grupo:"social", icone:"saude",
+    palavras:["Ministério da Saúde","Serviço Nacional de Saúde","hospitais","urgências","médicos de família","listas de espera","cuidados continuados","medicamentos","saúde mental","enfermeiros"] },
+  { id:"trabalho", nome:"Trabalho, Solidariedade e Segurança Social", grupo:"social", icone:"trabalho",
+    palavras:["Ministério do Trabalho","emprego","desemprego","salário mínimo","salários","pensões","reformados","segurança social","ação social","greve","negociação coletiva","apoios sociais"] },
+  { id:"cultura", nome:"Cultura, Juventude e Desporto", grupo:"social", icone:"cultura",
+    palavras:["Ministério da Cultura","património cultural","museus","bibliotecas","artes performativas","espetáculos","cinema","programação cultural","artistas","políticas de juventude","associativismo juvenil","jovens","igualdade de género","desporto","prática desportiva","federações desportivas","alta competição","atletas","língua portuguesa"], excluir:["cultura organizacional","cultura de empresa","cultura do cancelamento","desporto-rei","património genético","património imobiliário"] },
+  { id:"ambiente", nome:"Ambiente e Energia", grupo:"ambiente", icone:"ambiente",
+    palavras:["Ministério do Ambiente e Energia","energia","eletricidade","renováveis","alterações climáticas","descarbonização","resíduos","seca","abastecimento de água","qualidade da água","escassez de água","poluição"],
+    excluir:["clima de negócios","clima organizacional","clima de confiança"] },
+  { id:"agricultura", nome:"Agricultura e Mar", grupo:"ambiente", icone:"agricultura",
+    palavras:["Ministério da Agricultura e Mar","política agrícola comum","agricultura","agricultores","desenvolvimento rural","florestas","gestão florestal","pescas","pescadores","aquicultura","economia do mar","segurança alimentar","regadio"], excluir:["ambiente de trabalho","ambiente empresarial","ambiente de negócios"] }
+
+];
+
+const $ = s => document.querySelector(s);
+const cor = g => (GRUPOS.find(x => x.id === g) || {}).cor || "#2B5683";
+const grupoDaArea = nome => (AREAS.find(a => a.nome === nome) || {}).grupo || "soberania";
+const num = n => n.toLocaleString("pt-PT");
+
+let SERIE = [];        // [{data, areas:{nome:{noticias, novas, fontes, origens, palavras}}}]
+let dias = 30, agregacao = "dia";
+
+async function carregar(){
+  for(const caminho of ["historico.json", "./historico.json"]){
+    try{
+      const r = await fetch(caminho, { cache: "no-store" });
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(Array.isArray(d.dias)) return d.dias;
+    }catch(e){ /* segue */ }
+  }
+  return [];
+}
+
+/* Só os dias dentro da janela escolhida */
+function janela(){
+  if(!dias) return SERIE;
+  const limite = new Date();
+  limite.setDate(limite.getDate() - dias);
+  const chave = limite.toISOString().slice(0, 10);
+  return SERIE.filter(d => (d.data || "") >= chave);
+}
+
+/* Agrega por dia, semana ou mês. A chave devolvida é a etiqueta do período. */
+function agregar(linhas){
+  if(agregacao === "dia") return linhas.map(d => [d.data, d]);
+
+  const grupos = new Map();
+  linhas.forEach(d => {
+    const data = new Date(d.data + "T00:00:00");
+    let chave;
+    if(agregacao === "mes"){
+      chave = d.data.slice(0, 7);
+    }else{
+      const seg = new Date(data);
+      seg.setDate(data.getDate() - ((data.getDay() + 6) % 7));
+      chave = seg.toISOString().slice(0, 10);
+    }
+    if(!grupos.has(chave)) grupos.set(chave, { data: chave, areas: {} });
+    const alvo = grupos.get(chave).areas;
+    Object.entries(d.areas || {}).forEach(([nome, v]) => {
+      const a = alvo[nome] || (alvo[nome] = { noticias:0, novas:0, fontes:0,
+        origens:{nacionais:0, lusofonas:0, internacionais:0}, palavras:{} });
+      a.noticias += v.noticias || 0;
+      a.novas += v.novas || 0;
+      a.fontes = Math.max(a.fontes, v.fontes || 0);
+      Object.entries(v.origens || {}).forEach(([k, n]) => a.origens[k] += n);
+      Object.entries(v.palavras || {}).forEach(([p, n]) => a.palavras[p] = (a.palavras[p] || 0) + n);
+    });
+  });
+  return [...grupos.entries()].sort((x, y) => x[0].localeCompare(y[0]));
+}
+
+function totaisPorArea(linhas){
+  const t = {};
+  linhas.forEach(d => Object.entries(d.areas || {}).forEach(([nome, v]) => {
+    t[nome] = (t[nome] || 0) + (v.noticias || 0);
+  }));
+  return Object.entries(t).sort((a, b) => b[1] - a[1]);
+}
+
+function totaisPorOrigem(linhas){
+  const t = { nacionais:0, lusofonas:0, internacionais:0 };
+  linhas.forEach(d => Object.values(d.areas || {}).forEach(v =>
+    Object.entries(v.origens || {}).forEach(([k, n]) => t[k] += n)));
+  return t;
+}
+
+function palavrasQueRendem(linhas, quantas = 12){
+  const t = {};
+  linhas.forEach(d => Object.entries(d.areas || {}).forEach(([area, v]) =>
+    Object.entries(v.palavras || {}).forEach(([p, n]) => {
+      const k = area + " · " + p;
+      t[k] = (t[k] || 0) + n;
+    })));
+  return Object.entries(t).sort((a, b) => b[1] - a[1]).slice(0, quantas);
+}
+
+/* ── DESENHO ─────────────────────────────────────────────────────────────── */
+
+function barrasEmpilhadas(pontos){
+  const L = 780, A = 200, base = A - 26, esq = 34;
+  const largura = (L - esq) / Math.max(pontos.length, 1);
+  const alto = Math.max(1, ...pontos.map(p => p.total));
+  const cores = { nacionais:"var(--verde)", lusofonas:"var(--dourado)", internacionais:"var(--teal)" };
+
+  const barras = pontos.map((p, i) => {
+    const x = esq + i * largura + largura * .12;
+    const w = largura * .76;
+    let y = base;
+    const partes = ["nacionais", "lusofonas", "internacionais"].map(k => {
+      const h = (p.origens[k] / alto) * (base - 12);
+      y -= h;
+      return h > .4
+        ? `<rect class="barra-dia" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}"
+             height="${h.toFixed(1)}" fill="${cores[k]}"><title>${p.rotulo} · ${k}: ${num(p.origens[k])}</title></rect>`
+        : "";
+    }).join("");
+    return partes;
+  }).join("");
+
+  const passo = Math.ceil(pontos.length / 8);
+  const etiquetas = pontos.map((p, i) => i % passo === 0
+    ? `<text class="rot" x="${(esq + i * largura + largura / 2).toFixed(1)}" y="${A - 8}"
+         text-anchor="middle">${p.curto}</text>` : "").join("");
+
+  return `<svg class="grafico" viewBox="0 0 ${L} ${A}" preserveAspectRatio="none">
+    <line class="eixo" x1="${esq}" y1="${base}" x2="${L}" y2="${base}"/>
+    <text class="rot" x="4" y="16">${num(alto)}</text>
+    <text class="rot" x="4" y="${base}">0</text>
+    ${barras}${etiquetas}
+  </svg>`;
+}
+
+function faisca(valores, corLinha){
+  if(valores.length < 2) return "";
+  const alto = Math.max(...valores), baixo = Math.min(...valores);
+  const esc = v => 30 - ((v - baixo) / ((alto - baixo) || 1)) * 26;
+  const passo = 100 / (valores.length - 1);
+  const d = valores.map((v, i) => `${i ? "L" : "M"}${(i * passo).toFixed(1)},${esc(v).toFixed(1)}`).join(" ");
+  return `<svg viewBox="0 0 100 34" preserveAspectRatio="none">
+    <path d="${d} L100,34 L0,34 Z" fill="${corLinha}" opacity=".10"/>
+    <path d="${d}" fill="none" stroke="${corLinha}" stroke-width="1.6"
+          vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+function desenhar(){
+  const linhas = janela();
+  const corpo = $("#corpo");
+
+  if(!linhas.length){
+    corpo.innerHTML = `<div class="vazio">
+      Ainda não há dias registados nesta janela.<br>
+      A série começa no dia em que a recolha correu pela primeira vez e cresce um ponto por dia.
+    </div>`;
+    return;
+  }
+
+  const pares = agregar(linhas);
+  const pontos = pares.map(([chave, d]) => {
+    const origens = { nacionais:0, lusofonas:0, internacionais:0 };
+    let total = 0;
+    Object.values(d.areas || {}).forEach(v => {
+      total += v.noticias || 0;
+      Object.entries(v.origens || {}).forEach(([k, n]) => origens[k] += n);
+    });
+    const curto = agregacao === "mes"
+      ? chave.slice(5) + "/" + chave.slice(2, 4)
+      : chave.slice(8) + "/" + chave.slice(5, 7);
+    return { rotulo: chave, curto, total, origens };
+  });
+
+  const total = pontos.reduce((s, p) => s + p.total, 0);
+  const media = total / pontos.length;
+  const areas = totaisPorArea(linhas);
+  const origens = totaisPorOrigem(linhas);
+  const soma = Object.values(origens).reduce((a, b) => a + b, 0) || 1;
+
+  const poucos = linhas.length < 10;
+
+  corpo.innerHTML = `
+    ${poucos ? `<div class="aviso"><strong>Série ainda curta.</strong> ${linhas.length}
+      ${linhas.length === 1 ? "dia registado" : "dias registados"}. Os quadros já funcionam,
+      mas só com três ou quatro semanas as tendências ganham sentido — antes disso, uma
+      variação diz mais sobre o dia do que sobre a área.</div>` : ""}
+
+    <div class="kpis">
+      <div class="kpi"><b>${num(total)}</b><span>notícias no período</span></div>
+      <div class="kpi"><b>${num(Math.round(media))}</b><span>média por ${agregacao}</span></div>
+      <div class="kpi"><b>${linhas.length}</b><span>${linhas.length === 1 ? "dia registado" : "dias registados"}</span></div>
+      <div class="kpi"><b>${areas.length}</b><span>áreas com notícias</span></div>
+    </div>
+
+    <div class="bloco">
+      <h2>Volume ao longo do tempo</h2>
+      ${barrasEmpilhadas(pontos)}
+      <div class="legenda">
+        <span style="--cor:var(--verde)"><i></i>Portugal · ${num(origens.nacionais)} (${(origens.nacionais / soma * 100).toFixed(0)}%)</span>
+        <span style="--cor:var(--dourado)"><i></i>Lusofonia · ${num(origens.lusofonas)} (${(origens.lusofonas / soma * 100).toFixed(0)}%)</span>
+        <span style="--cor:var(--teal)"><i></i>Internacional · ${num(origens.internacionais)} (${(origens.internacionais / soma * 100).toFixed(0)}%)</span>
+      </div>
+      <p class="nota">Cada barra é um ${agregacao}, repartido pela origem da imprensa.
+        Como todas as recolhas usam o mesmo método e a mesma janela, a comparação entre
+        períodos é legítima.</p>
+    </div>
+
+    <div class="bloco">
+      <h2>Volume por área governativa</h2>
+      <div class="ranking">
+        ${areas.map(([nome, n]) => `
+          <div class="rk" style="--cor:${cor(grupoDaArea(nome))}">
+            <span class="rk-nome" title="${nome}">${nome}</span>
+            <span class="rk-barra"><i style="width:${(n / areas[0][1] * 100).toFixed(1)}%"></i></span>
+            <span class="rk-n">${num(n)}</span>
+          </div>`).join("")}
+      </div>
+    </div>
+
+    <div class="bloco">
+      <h2>Trajetória de cada área</h2>
+      <div class="mini">
+        ${areas.slice(0, 8).map(([nome]) => {
+          const g = grupoDaArea(nome);
+          const vals = pares.map(([, d]) => (d.areas[nome] || {}).noticias || 0);
+          return `<div class="mini-cx" style="--cor:${cor(g)}">
+            <h3>${nome}</h3>
+            <b>${num(vals[vals.length - 1] || 0)}</b>
+            ${faisca(vals, cor(g))}
+          </div>`;
+        }).join("")}
+      </div>
+      <p class="nota">As oito áreas mais noticiadas do período. O número é o último
+        ${agregacao} da série.</p>
+    </div>
+
+    <div class="bloco">
+      <h2>Expressões que mais renderam</h2>
+      <table>
+        <tr><th>Área e expressão</th><th style="text-align:right">Notícias</th></tr>
+        ${palavrasQueRendem(linhas).map(([k, n]) =>
+          `<tr><td>${k}</td><td class="n">${num(n)}</td></tr>`).join("")}
+      </table>
+      <p class="nota">Quantas notícias cada palavra-chave trouxe no período. Expressões
+        sistematicamente a zero são candidatas a revisão.</p>
+    </div>`;
+}
+
+/* ── ARRANQUE ────────────────────────────────────────────────────────────── */
+
+$("#periodo").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#periodo button").forEach(x => x.classList.toggle("ativo", x === b));
+  dias = +b.dataset.p; desenhar();
+});
+
+$("#agregacao").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#agregacao button").forEach(x => x.classList.toggle("ativo", x === b));
+  agregacao = b.dataset.a; desenhar();
+});
+
+(async () => {
+  SERIE = (await carregar()).filter(d => d && d.data).sort((a, b) => a.data.localeCompare(b.data));
+  $("#cobertura").textContent = SERIE.length
+    ? `${SERIE.length} ${SERIE.length === 1 ? "dia" : "dias"} · de ${SERIE[0].data} a ${SERIE[SERIE.length - 1].data}`
+    : "sem série registada";
+  desenhar();
+})();
+</script>
+</body>
+</html>
