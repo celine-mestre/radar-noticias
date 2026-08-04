@@ -9,10 +9,13 @@ on:
   schedule:
     # Todos os dias, incluindo fim de semana: sem isso, o arquivo ficaria com um
     # buraco de dois dias e a segunda-feira perderia o que aconteceu ao sábado.
-    # Minutos deslocados de propósito: às horas certas o GitHub tem picos de
-    # procura e as execuções agendadas são atrasadas ou saltadas.
-    - cron: "7 6 * * *"       # cedo, para o painel estar pronto
-    - cron: "7 8 * * *"       # recolha da manhã, antes da síntese e do relatório
+    # De duas em duas horas, das 06h07 às 18h07 UTC — 07h07 às 19h07 em Lisboa,
+    # no horário de verão. Assim quem consulta o painel a meio da tarde vê o que
+    # foi noticiado nessa tarde, e não a manhã.
+    #
+    # Os minutos estão deslocados de propósito: às horas certas o GitHub tem
+    # picos de procura e as execuções agendadas são atrasadas ou saltadas.
+    - cron: "7 6-18/2 * * *"
 
 permissions:
   contents: write
@@ -69,3 +72,29 @@ jobs:
           name: radar-noticias
           path: ${{ env.NOME }}
           retention-days: 30
+
+  # ── O CIRCUITO ─────────────────────────────────────────────────────────────
+  # A síntese e o relatório são chamados aqui, dentro desta mesma execução, e
+  # não por um gatilho entre fluxos. Assim não dependem de o GitHub registar um
+  # agendamento nem um evento: terminando a recolha, correm de certeza.
+  #
+  # Cada um verifica, ao arrancar, se é a recolha certa do dia — salta a das
+  # 07h07 e desiste se o trabalho já estiver feito.
+  sintese:
+    needs: recolher
+    uses: ./.github/workflows/sintese-amalia.yml
+    with:
+      periodo: "auto"
+      encadeado: true
+    secrets: inherit
+
+  # Corre mesmo que a síntese falhe: o relatório sai sem o parágrafo, que é
+  # acessório. As notícias é que não podem faltar.
+  relatorio:
+    needs: [recolher, sintese]
+    if: always() && needs.recolher.result == 'success'
+    uses: ./.github/workflows/relatorio-diario.yml
+    with:
+      periodo: "auto"
+      encadeado: true
+    secrets: inherit
