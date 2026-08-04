@@ -487,6 +487,13 @@ function totaisPorOrigem(linhas){
    cobertura dentro de cada área, que é o que serve para as rever. */
 function expressoesPorArea(linhas, quantas = 1){
   const t = {};
+  /* Uma área sem notícias nenhumas não aparece no histórico, mas as suas
+     expressões continuam em uso e a render zero. Entram na contagem. */
+  const presentes = new Set();
+  linhas.forEach(d => Object.keys(areasDe(d)).forEach(a => presentes.add(a)));
+  AREAS.forEach(a => {
+    if(!areaEscolhida || a.nome === areaEscolhida) t[a.nome] = t[a.nome] || {};
+  });
   linhas.forEach(d => Object.entries(areasDe(d)).forEach(([area, v]) => {
     const f = fatorOrigem(v);
     if(!f) return;
@@ -497,14 +504,23 @@ function expressoesPorArea(linhas, quantas = 1){
   return Object.entries(t).map(([area, palavras]) => {
     const lista = Object.entries(palavras)
       .map(([p, n]) => [p, Math.round(n)])
+      .filter(x => x[1] > 0)
       .sort((a, b) => b[1] - a[1]);
+
+    /* O histórico só regista as expressões que apanharam alguma coisa: as que
+       não renderam nada nunca lá aparecem. Para saber quantas ficaram a zero é
+       preciso confrontar com a lista da área, que é o que define o universo. */
+    const daArea = (AREAS.find(a => a.nome === area) || {}).palavras || [];
+    const renderam = new Set(lista.map(x => x[0]));
+
     return {
       area,
       total: lista.reduce((soma, x) => soma + x[1], 0),
-      topo: lista.slice(0, quantas).filter(x => x[1] > 0),
-      resto: lista.slice(quantas).filter(x => x[1] > 0),
-      mudas: lista.filter(x => !x[1]).length,
-      quantas: lista.length,
+      topo: lista.slice(0, quantas),
+      resto: lista.slice(quantas),
+      mudas: daArea.filter(p => !renderam.has(p)).length,
+      quantas: daArea.length || lista.length,
+      semRender: daArea.filter(p => !renderam.has(p)),
     };
   }).sort((a, b) => b.total - a.total);
 }
@@ -722,9 +738,10 @@ function desenhar(){
       <h2>${areaEscolhida ? "Palavras da área" : "Palavras do período"} ${rotuloFoco}</h2>
       ${nuvem(expressoes)}
       <p class="nota">O tamanho de cada palavra é o número de notícias que trouxe; a cor é
-        a do agrupamento da área a que pertence. Ficaram de fora ${mudasTotal(expressoes)}
-        das ${totalExpressoes(expressoes)} expressões em uso, por não terem rendido nada
-        no período — essas são as candidatas a revisão.${origem !== "todas"
+        a do agrupamento da área a que pertence. Das ${totalExpressoes(expressoes)}
+        expressões em uso, ${mudasTotal(expressoes)} não renderam nada no período e por
+        isso não aparecem aqui — são as candidatas a revisão${mudasTotal(expressoes) && mudasTotal(expressoes) <= 12
+        ? ": " + expressoes.flatMap(e => e.semRender || []).join(", ") : ""}.${origem !== "todas"
         ? " Com uma origem escolhida, os valores são estimados pela proporção dessa origem na área."
         : ""}</p>
     </div>`;
