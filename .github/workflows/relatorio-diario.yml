@@ -31,6 +31,16 @@ on:
         type: choice
         default: "auto"
         options: ["auto", "24h", "48h", "72h", "7d"]
+      destinatario:
+        description: "Enviar só para este endereço (vazio = aos subscritores)"
+        type: string
+        required: false
+        default: ""
+      areas:
+        description: "Áreas a enviar, por vírgula (vazio = todas com notícias)"
+        type: string
+        required: false
+        default: ""
   # Chamado pelo fluxo da recolha, a seguir à síntese. Corre dentro da mesma
   # execução, pelo que não depende de gatilhos entre fluxos.
   workflow_call:
@@ -93,7 +103,14 @@ jobs:
           # A mesma guarda da síntese: a recolha das 07h07 é cedo de mais, e o
           # fluxo da síntese também é dado por terminado quando desiste — sem
           # isto, o relatório sairia a essa hora com as notícias da véspera.
+          # A janela é a da manhã. A recolha das 07h07 é cedo de mais, e a das
+          # 23h07 — que existe para fechar o dia — não deve gerar relatórios a
+          # meio da noite.
           HORA=$(date -u +%H)
+          if [ "$HORA" -gt 12 ]; then
+            echo "Recolha do fim do dia: não gera síntese nem relatório."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
+          fi
           if [ "$HORA" -lt 8 ]; then
             echo "Cedo de mais: o relatório do dia sai depois da recolha das 09h07."
             echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
@@ -143,12 +160,25 @@ jobs:
           # Vazio (execução agendada) significa janela automática: 24 horas,
           # ou 72 à segunda-feira, para cobrir o fim de semana.
           if [ -z "$PERIODO" ]; then PERIODO="auto"; fi
+          # Com um endereço indicado, não se consulta a lista de subscritores:
+          # geram-se as áreas pedidas, ou todas as que tiverem notícias.
+          AREAS="${{ inputs.areas }}"
+          UNICO="${{ inputs.destinatario }}"
+
+          # --todas e --areas excluem-se: indicadas áreas, é só essas.
+          if [ -n "$AREAS" ]; then
+            ALVO="--areas $AREAS"
+          else
+            ALVO="--todas"
+          fi
+          if [ -n "$UNICO" ]; then LISTA=""; else LISTA="--subscritores subscritores.json"; fi
+
           python relatorio_email.py \
             --dados arquivo.json \
-            --todas \
+            $ALVO \
             --periodo "$PERIODO" \
             --um-por-area \
-            --subscritores subscritores.json \
+            $LISTA \
             --origens "$ORIGENS" \
             --sinteses sinteses.json \
             --pasta relatorios \
@@ -211,11 +241,22 @@ jobs:
       # Os endereços são apurados aqui, a partir do segredo, e nunca chegam a
       # aparecer nos registos: seguem pelo ficheiro de saída do passo e são
       # ocultados pelo GitHub.
+      # Indicado um endereço na execução manual, é para lá que vai — e só para
+      # lá. Serve para ensaiar ou para mostrar a alguém sem mexer na lista de
+      # subscritores. Vazio, seguem os subscritores da área.
       - name: Apurar os destinatarios
         id: dest
         env:
           SUBSCRITORES: ${{ secrets.SUBSCRITORES }}
-        run: python relatorio_email.py --destinatarios-de "${{ matrix.envio.area }}"
+        run: |
+          UNICO="${{ inputs.destinatario }}"
+          if [ -n "$UNICO" ]; then
+            echo "::add-mask::$UNICO"
+            echo "para=$UNICO" >> "$GITHUB_OUTPUT"
+            echo "Envio dirigido a um único endereço."
+          else
+            python relatorio_email.py --destinatarios-de "${{ matrix.envio.area }}"
+          fi
 
       - name: Verificar as credenciais
         id: correio
