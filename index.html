@@ -2609,7 +2609,7 @@ async function carregarHistorico(){
   if(historico !== null) return historico;
   for(const base of enderecosDados()){
     try{
-      const r = await fetch(base.replace("noticias.json", "historico.json"));
+      const r = await fetch(base.replace("noticias.json", "historico.json"), { cache:"no-store" });
       if(!r.ok) continue;
       const d = await r.json();
       if(d && Array.isArray(d.dias)){ historico = d; return historico; }
@@ -2649,7 +2649,7 @@ async function carregarCorpus(){
   if(corpusLivre !== null) return corpusLivre;
   for(const base of enderecosDados()){
     try{
-      const r = await fetch(base.replace("noticias.json", "corpus.json"));
+      const r = await fetch(base.replace("noticias.json", "corpus.json"), { cache:"no-store" });
       if(!r.ok) continue;
       const d = await r.json();
       if(d && Array.isArray(d.noticias)){
@@ -2702,7 +2702,7 @@ async function lerFicheiroDados(nome){
   let dados = null, ultimo = "";
   for(const endereco of enderecosDados()){
     try{
-      const r = await fetch(endereco.replace("noticias.json", nome));
+      const r = await fetch(endereco.replace("noticias.json", nome), { cache:"no-store" });
       if(!r.ok) throw new Error("estado " + r.status);
       dados = await r.json();
       break;
@@ -3530,11 +3530,19 @@ $("#btnTema").addEventListener("click", () => {
   document.documentElement.setAttribute("data-tema", atual === "escuro" ? "claro" : "escuro");
 });
 
-/* Capa de abertura */
-document.body.classList.add("capa-aberta");
+/* Capa de abertura. Quem chega do painel de evolução — ou de qualquer ligação
+   com #radar — entra diretamente, sem ter de carregar outra vez no botão. */
+const semCapa = location.hash === "#radar";
+if(!semCapa) document.body.classList.add("capa-aberta");
+
 function fecharCapa(){
   $("#capa").classList.add("saiu");
   document.body.classList.remove("capa-aberta");
+}
+if(semCapa){
+  $("#capa").classList.add("saiu");
+  $("#capa").style.transition = "none";
+  history.replaceState(null, "", location.pathname);   // o endereço fica limpo
 }
 $("#btnEntrar").addEventListener("click", fecharCapa);
 $("#capa").addEventListener("click", e => { if(e.target.id === "capa") fecharCapa(); });

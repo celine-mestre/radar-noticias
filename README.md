@@ -542,9 +542,9 @@ recolhida"** em vez de "arquivo de 7 dias".
 
 - Volume por período, repartido por origem da imprensa. Clicar numa barra passa os
   quadros seguintes a mostrar apenas esse período.
-- Volume por área governativa, trajetória das oito mais noticiadas, e a expressão que
-  mais rendeu em cada área — com a contagem das que ficaram a zero, que são candidatas
-  a revisão.
+- Volume por área governativa, trajetória das oito mais noticiadas, e uma nuvem com as
+  expressões que trouxeram notícias no período — o tamanho vale pela quantidade, e as
+  que não aparecem ficaram a zero, sendo candidatas a revisão.
 - Seletores de janela (30 dias, 90, um ano, tudo), de agregação (dia, semana, mês), de
   origem (Portugal, lusofonia, internacional, todas) e de **área governativa**, que reduz
   todos os quadros a uma só área.

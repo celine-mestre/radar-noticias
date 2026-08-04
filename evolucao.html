@@ -162,6 +162,13 @@ main{padding:1.6rem 0 3rem}
 .mini-cx svg{width:100%;height:34px;margin-top:.3rem}
 
 /* Expressões por área */
+/* Nuvem de palavras */
+.nuvem{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;
+  gap:.3rem 1rem;padding:1.3rem .6rem .7rem;line-height:1.55}
+.nv{color:var(--cor);cursor:default;transition:transform .14s}
+.nv:hover{transform:scale(1.08)}
+.nuvem-vazia{padding:1.8rem;text-align:center;color:var(--texto-ligeiro);font-size:.86rem}
+
 .expr{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem;margin-top:1rem}
 @media(max-width:760px){.expr{grid-template-columns:1fr}}
 .expr-cx{border:1px solid var(--borda);border-left:3px solid var(--cor);
@@ -231,8 +238,9 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
 
     <h1>Evolução da cobertura noticiosa</h1>
     <p>Série longitudinal do Radar de Notícias, construída a partir do retrato que cada
-       recolha deixa registado. Cresce um dia por dia e nunca é apagada.</p>
-    <a class="voltar" href="index.html">
+       recolha deixa registado. Conta, em cada dia, as notícias <strong>publicadas nesse
+       dia</strong>. Cresce um ponto por dia e nunca é apagada.</p>
+    <a class="voltar" href="index.html#radar">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
       Voltar ao radar
     </a>
@@ -291,12 +299,15 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
         <dt>Filtros</dt><dd>Os seletores do topo — janela, área, agregação e origem —
         valem para todos os quadros ao mesmo tempo. Escolhida uma área, tudo passa a ser
         dela.</dd>
-        <dt>Expressões</dt><dd>A palavra-chave que mais rendeu em cada área, e quantas
-        ficaram a zero — essas são candidatas a revisão.</dd>
+        <dt>Palavras</dt><dd>Uma nuvem com as expressões que trouxeram notícias no
+        período: o tamanho vale pela quantidade, a cor pelo agrupamento da área. As que
+        não aparecem ficaram a zero e são candidatas a revisão. Escolhida uma área, a
+        nuvem passa a ser só dela.</dd>
       </dl>
-      <p class="aj-nota"><strong>O que os números contam.</strong> Cada dia regista as
-      notícias <em>publicadas nesse dia</em>, e não o que a recolha trouxe — que inclui
-      dias anteriores. Como o método é o mesmo em todas as recolhas, a comparação entre
+      <p class="aj-nota"><strong>Porque os números diferem dos do radar.</strong> O radar
+      mostra uma janela móvel — as últimas 24 horas, ou 7 dias — e inclui o que foi
+      publicado ontem à noite. Aqui cada dia conta apenas o que foi <em>publicado nesse
+      dia de calendário</em>. São medidas diferentes e ambas corretas. Como o método é o mesmo em todas as recolhas, a comparação entre
       períodos e entre áreas é legítima.</p>
       <p class="aj-nota">Escolhendo uma origem, os valores das expressões são estimados
       pela proporção dessa origem na área: a série guarda as palavras-chave por área, não
@@ -491,11 +502,46 @@ function expressoesPorArea(linhas, quantas = 1){
       area,
       total: lista.reduce((soma, x) => soma + x[1], 0),
       topo: lista.slice(0, quantas).filter(x => x[1] > 0),
+      resto: lista.slice(quantas).filter(x => x[1] > 0),
       mudas: lista.filter(x => !x[1]).length,
       quantas: lista.length,
     };
   }).sort((a, b) => b.total - a.total);
 }
+
+/* Nuvem de palavras. Não é um gráfico exato — é um relance: mostra de uma vez o
+   que puxou cobertura no período, com o tamanho a valer pela quantidade. Lê-se
+   melhor do que uma tabela quando o que se quer é ver, num olhar, se as
+   expressões que temos estão a render. */
+function nuvem(expressoes){
+  const palavras = [];
+  expressoes.forEach(e => (e.topo || []).concat(e.resto || []).forEach(([p, n]) => {
+    if(n > 0) palavras.push({ palavra:p, n, area:e.area });
+  }));
+
+  if(!palavras.length){
+    return `<p class="nuvem-vazia">Nenhuma expressão rendeu notícias neste período.</p>`;
+  }
+
+  const alto = Math.max(...palavras.map(p => p.n));
+  const baixo = Math.min(...palavras.map(p => p.n));
+
+  /* Ordem alfabética: por tamanho, as maiores ficariam todas juntas e a nuvem
+     deixaria de se ler como um conjunto. */
+  palavras.sort((a, b) => a.palavra.localeCompare(b.palavra, "pt"));
+
+  return `<div class="nuvem">${palavras.map(p => {
+    const f = (p.n - baixo) / ((alto - baixo) || 1);
+    return `<span class="nv" style="--cor:${cor(grupoDaArea(p.area))};
+      font-size:${(0.82 + f * 1.5).toFixed(2)}rem;
+      font-weight:${f > .6 ? 600 : f > .3 ? 500 : 400};
+      opacity:${(0.62 + f * 0.38).toFixed(2)}"
+      title="${p.area} · ${num(p.n)} ${p.n === 1 ? "notícia" : "notícias"}">${p.palavra}</span>`;
+  }).join("")}</div>`;
+}
+
+const mudasTotal = e => e.reduce((s, x) => s + x.mudas, 0);
+const totalExpressoes = e => e.reduce((s, x) => s + x.quantas, 0);
 
 /* ── DESENHO ─────────────────────────────────────────────────────────────── */
 
@@ -603,12 +649,18 @@ function desenhar(){
   const soma = Object.values(origens).reduce((a, b) => a + b, 0) || 1;
   const expressoes = expressoesPorArea(foco);
   const poucos = linhas.length < 10;
+  const hojeEmCurso = linhas.length &&
+    linhas[linhas.length - 1].data === new Date().toISOString().slice(0, 10);
 
   const rotuloFoco = diaEscolhido
     ? `<button class="limpar" id="limparDia">${diaEscolhido} · ver o período inteiro ✕</button>`
     : "";
 
   corpo.innerHTML = `
+    ${hojeEmCurso ? `<div class="aviso"><strong>O dia de hoje ainda está a decorrer.</strong>
+      O valor de hoje cresce a cada recolha e fica fixado na das 23h07. E conta apenas o
+      que foi <em>publicado hoje</em> — ao contrário do radar, cujo círculo mostra as
+      últimas 24 horas e inclui, por isso, o serão de ontem.</div>` : ""}
     ${poucos ? `<div class="aviso"><strong>Série ainda curta.</strong> ${linhas.length}
       ${linhas.length === 1 ? "dia registado" : "dias registados"}, a começar em
       ${linhas[0].data}. Os quadros já funcionam, mas só com três ou quatro semanas as
@@ -616,7 +668,7 @@ function desenhar(){
       sobre a área.</div>` : ""}
 
     <div class="kpis">
-      <div class="kpi"><b>${num(total)}</b><span>notícias no período</span></div>
+      <div class="kpi"><b>${num(total)}</b><span>notícias publicadas no período</span></div>
       <div class="kpi"><b>${num(Math.round(media))}</b><span>média por ${agregacao}</span></div>
       <div class="kpi"><b>${linhas.length}</b><span>${linhas.length === 1 ? "dia registado" : "dias registados"}</span></div>
       <div class="kpi"><b>${areas.length}</b><span>áreas com notícias</span></div>
@@ -667,21 +719,13 @@ function desenhar(){
     </div>
 
     <div class="bloco">
-      <h2>Expressões que mais rendem, por área ${rotuloFoco}</h2>
-      <div class="expr">
-        ${expressoes.map(e => `
-          <div class="expr-cx" style="--cor:${cor(grupoDaArea(e.area))}">
-            <h3>${e.area}<span>${num(e.total)}</span></h3>
-            ${e.topo.length
-              ? `<div class="expr-topo"><b>${e.topo[0][0]}</b><span>${num(e.topo[0][1])}</span></div>`
-              : `<p class="expr-nada">Nenhuma expressão rendeu no período.</p>`}
-            ${e.mudas ? `<p class="expr-nada">${e.mudas} de ${e.quantas}
-              ${e.mudas === 1 ? "expressão ficou" : "expressões ficaram"} a zero.</p>` : ""}
-          </div>`).join("")}
-      </div>
-      <p class="nota">A expressão que mais trouxe em cada área, e quantas ficaram a zero —
-        essas são candidatas a revisão.${origem !== "todas"
-        ? " Com uma origem escolhida, os valores são estimados pela proporção dessa origem na área: a série não guarda as expressões repartidas por origem."
+      <h2>${areaEscolhida ? "Palavras da área" : "Palavras do período"} ${rotuloFoco}</h2>
+      ${nuvem(expressoes)}
+      <p class="nota">O tamanho de cada palavra é o número de notícias que trouxe; a cor é
+        a do agrupamento da área a que pertence. Ficaram de fora ${mudasTotal(expressoes)}
+        das ${totalExpressoes(expressoes)} expressões em uso, por não terem rendido nada
+        no período — essas são as candidatas a revisão.${origem !== "todas"
+        ? " Com uma origem escolhida, os valores são estimados pela proporção dessa origem na área."
         : ""}</p>
     </div>`;
 
