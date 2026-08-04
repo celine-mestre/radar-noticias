@@ -169,6 +169,20 @@ main{padding:1.6rem 0 3rem}
 .nv:hover{transform:scale(1.08)}
 .nuvem-vazia{padding:1.8rem;text-align:center;color:var(--texto-ligeiro);font-size:.86rem}
 
+/* Expressões sem notícias, escondidas até se pedirem */
+.sem-render{margin-top:.6rem;border-top:1px solid var(--borda);padding-top:.7rem}
+.sem-render summary{font-size:.78rem;color:var(--texto-ligeiro);cursor:pointer;
+  list-style:none;display:inline-flex;align-items:center;gap:.4rem}
+.sem-render summary::-webkit-details-marker{display:none}
+.sem-render summary::before{content:"▸";font-size:.7rem;transition:transform .15s}
+.sem-render[open] summary::before{transform:rotate(90deg)}
+.sem-render summary:hover{color:var(--azul)}
+.sr-lista{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-top:.8rem}
+@media(max-width:760px){.sr-lista{grid-template-columns:1fr}}
+.sr-area{border-left:3px solid var(--cor);padding-left:.7rem}
+.sr-area h4{font-size:.76rem;font-weight:500;color:var(--texto)}
+.sr-area p{font-size:.74rem;color:var(--texto-ligeiro);line-height:1.55;margin-top:.15rem}
+
 .expr{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem;margin-top:1rem}
 @media(max-width:760px){.expr{grid-template-columns:1fr}}
 .expr-cx{border:1px solid var(--borda);border-left:3px solid var(--cor);
@@ -301,7 +315,7 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
         dela.</dd>
         <dt>Palavras</dt><dd>Uma nuvem com as expressões que trouxeram notícias no
         período: o tamanho vale pela quantidade, a cor pelo agrupamento da área. As que
-        não aparecem ficaram a zero e são candidatas a revisão. Escolhida uma área, a
+        não trouxeram nada ficam listadas por baixo, para consulta. Escolhida uma área, a
         nuvem passa a ser só dela.</dd>
       </dl>
       <p class="aj-nota"><strong>Porque os números diferem dos do radar.</strong> O radar
@@ -312,6 +326,9 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
       <p class="aj-nota">Escolhendo uma origem, os valores das expressões são estimados
       pela proporção dessa origem na área: a série guarda as palavras-chave por área, não
       repartidas por origem.</p>
+      <p class="aj-nota">Numa janela curta, é natural que muitas expressões não tragam
+      nada — um dia calmo numa matéria não diz nada sobre a expressão em si.</p>
+
       <p class="aj-nota">O dia fecha na recolha das 23h07 e não volta a ser alterado. A
       série começa no dia da primeira recolha e cresce um ponto por
       dia. Com menos de três ou quatro semanas, uma variação diz mais sobre o dia do que
@@ -556,6 +573,25 @@ function nuvem(expressoes){
   }).join("")}</div>`;
 }
 
+/* As expressões que não renderam, recolhidas por área e escondidas até se
+   pedirem. Num só dia é natural que sejam quase todas — só ao fim de semanas é
+   que a ausência significa alguma coisa, e por isso não se impõem à vista. */
+function semRender(expressoes){
+  const areas = expressoes.filter(e => (e.semRender || []).length);
+  if(!areas.length) return "";
+
+  const quantas = areas.reduce((s, e) => s + e.semRender.length, 0);
+  return `<details class="sem-render">
+    <summary>Ver as ${num(quantas)} expressões que não trouxeram notícias</summary>
+    <div class="sr-lista">
+      ${areas.map(e => `<div class="sr-area" style="--cor:${cor(grupoDaArea(e.area))}">
+        <h4>${e.area}</h4>
+        <p>${e.semRender.join(" · ")}</p>
+      </div>`).join("")}
+    </div>
+  </details>`;
+}
+
 const mudasTotal = e => e.reduce((s, x) => s + x.mudas, 0);
 const totalExpressoes = e => e.reduce((s, x) => s + x.quantas, 0);
 
@@ -737,11 +773,11 @@ function desenhar(){
     <div class="bloco">
       <h2>${areaEscolhida ? "Palavras da área" : "Palavras do período"} ${rotuloFoco}</h2>
       ${nuvem(expressoes)}
+      ${semRender(expressoes)}
       <p class="nota">O tamanho de cada palavra é o número de notícias que trouxe; a cor é
-        a do agrupamento da área a que pertence. Das ${totalExpressoes(expressoes)}
-        expressões em uso, ${mudasTotal(expressoes)} não renderam nada no período e por
-        isso não aparecem aqui — são as candidatas a revisão${mudasTotal(expressoes) && mudasTotal(expressoes) <= 12
-        ? ": " + expressoes.flatMap(e => e.semRender || []).join(", ") : ""}.${origem !== "todas"
+        a do agrupamento da área a que pertence.${mudasTotal(expressoes)
+        ? ` Das ${totalExpressoes(expressoes)} expressões em uso, ${mudasTotal(expressoes)}
+            não trouxeram notícias neste período.` : ""}${origem !== "todas"
         ? " Com uma origem escolhida, os valores são estimados pela proporção dessa origem na área."
         : ""}</p>
     </div>`;
