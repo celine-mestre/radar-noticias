@@ -70,6 +70,11 @@ jobs:
     steps:
       - name: Obter o repositorio
         uses: actions/checkout@v4
+        # A execução está presa ao commit que a iniciou. Sem pedir o ramo, este
+        # passo receberia o repositório como estava ANTES de a recolha gravar o
+        # arquivo — e a síntese e o relatório trabalhariam sobre a véspera.
+        with:
+          ref: main
 
       - name: Verificar se ja houve envio hoje
         id: v
@@ -115,6 +120,11 @@ jobs:
     steps:
       - name: Obter o repositorio
         uses: actions/checkout@v4
+        # A execução está presa ao commit que a iniciou. Sem pedir o ramo, este
+        # passo receberia o repositório como estava ANTES de a recolha gravar o
+        # arquivo — e a síntese e o relatório trabalhariam sobre a véspera.
+        with:
+          ref: main
 
       - name: Preparar o Python
         uses: actions/setup-python@v5
@@ -181,6 +191,11 @@ jobs:
     steps:
       - name: Obter o repositorio
         uses: actions/checkout@v4
+        # A execução está presa ao commit que a iniciou. Sem pedir o ramo, este
+        # passo receberia o repositório como estava ANTES de a recolha gravar o
+        # arquivo — e a síntese e o relatório trabalhariam sobre a véspera.
+        with:
+          ref: main
 
       - name: Preparar o Python
         uses: actions/setup-python@v5
