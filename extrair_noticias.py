@@ -703,6 +703,12 @@ def extrair_itens(xml_bruto):
         if bruta:
             try:
                 data = para_lisboa(parsedate_to_datetime(bruta))
+                # Algumas publicações datam artigos alguns minutos à frente do
+                # relógio. Sem isto, o painel mostrava notícias com hora
+                # posterior à atual, o que faz duvidar de tudo o resto.
+                agora_ = agora_lisboa()
+                if data and data > agora_:
+                    data = agora_
             except (TypeError, ValueError):
                 data = None
 
