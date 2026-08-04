@@ -86,6 +86,10 @@ jobs:
     with:
       periodo: "auto"
       encadeado: true
+      # Origens a sintetizar. Vazio inclui Portugal, lusofonia e internacional.
+      # Escrever "nacionais" limita a síntese à imprensa portuguesa — é a saída
+      # se os parágrafos das outras origens não convencerem.
+      origens: ""
     secrets: inherit
 
   # Corre mesmo que a síntese falhe: o relatório sai sem o parágrafo, que é

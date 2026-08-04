@@ -43,6 +43,12 @@ on:
         type: boolean
         required: false
         default: false
+      origens:
+        description: "Origens a sintetizar (vazio = as três)"
+        type: choice
+        required: false
+        default: ""
+        options: ["", "nacionais", "nacionais,lusofonas"]
   # Chamado pelo fluxo da recolha, logo a seguir a ela. Não se usa workflow_run:
   # esse gatilho depende de o GitHub o registar e não disparou de forma fiável.
   # Sendo chamado, corre dentro da mesma execução e não pode deixar de correr.
@@ -60,6 +66,11 @@ on:
         type: boolean
         required: false
         default: true
+      origens:
+        description: "Origens a sintetizar. Vazio inclui Portugal, lusofonia e internacional"
+        type: string
+        required: false
+        default: ""
       encadeado:
         description: "Chamado pela recolha: aplica as verificações do dia"
         type: boolean
@@ -210,6 +221,7 @@ jobs:
           NOME=$(echo '${{ matrix.area }}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]')
           python sintese_ia.py --local --dados arquivo.json \
             --periodo "$PERIODO" --apenas "${{ matrix.area }}" \
+            --origens "${{ inputs.origens }}" \
             --saida "partes/$NOME.json"
 
       - name: Guardar a parte
