@@ -29,6 +29,10 @@
   --sombra-forte:0 12px 40px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;margin:0;padding:0}
+/* Nada empurra a página para o lado. Num telemóvel, um único elemento largo
+   demais obriga a arrastar o ecrã à procura do que devia estar à vista. */
+html,body{max-width:100%;overflow-x:hidden}
+img,svg,table,pre{max-width:100%}
 html{scroll-behavior:smooth}
 body{
   font-family:var(--fonte); background:var(--fundo); color:var(--texto);
@@ -40,12 +44,17 @@ body{
 .capa{
   position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
   background:linear-gradient(120deg,var(--azul) 0%, #23506f 45%, var(--verde) 100%);
-  color:#fff;text-align:center;overflow:hidden;
+  color:#fff;text-align:center;
+  /* Vertical, nunca horizontal: num telemóvel o conteúdo pode não caber em
+     altura, e é preciso poder chegar ao botão. Para o lado nunca deve haver
+     nada por onde andar. */
+  overflow-y:auto;overflow-x:hidden;
   transition:opacity .55s ease, visibility .55s;
 }
 .capa.saiu{opacity:0;visibility:hidden}
 .capa .deco{position:absolute;inset:0;opacity:.3;pointer-events:none}
-.capa-conteudo{position:relative;z-index:2;max-width:640px;padding:2rem;
+.capa-conteudo{position:relative;z-index:2;max-width:min(640px, 100%);padding:2rem;
+  margin:auto;box-sizing:border-box;
   animation:subir .7s cubic-bezier(.2,.8,.3,1) both}
 @keyframes subir{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .capa .pastilha{margin:0 auto 1.6rem}
@@ -63,6 +72,17 @@ body{
 .capa-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .capa-rodape{margin-top:2.6rem;font-size:.74rem;opacity:.7;line-height:1.7}
 body.capa-aberta{overflow:hidden}
+
+@media(max-width:560px){
+  .capa-conteudo{padding:1.6rem 1.1rem}
+  .capa .pastilha{width:84px;height:84px;margin-bottom:1.1rem}
+  .capa .pastilha img{width:80px;height:80px}
+  .capa h1{font-size:1.72rem;margin:.5rem 0 .8rem}
+  .capa-sub{font-size:.92rem}
+  .capa-org{font-size:.68rem;letter-spacing:.12em}
+  .capa-btn{margin-top:1.6rem;width:100%;justify-content:center;padding:.9rem 1.2rem}
+  .capa-rodape{margin-top:1.8rem;font-size:.7rem}
+}
 
 header.topo{
   position:relative; overflow:hidden; color:#fff;
@@ -312,6 +332,33 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 }
 .ler-item.com-imagem{grid-template-columns:44px 76px 1fr 16px}
 @media(max-width:560px){.ler-item.com-imagem{grid-template-columns:38px 56px 1fr 14px}}
+
+/* Telemóvel: tudo o que era lado a lado passa a empilhar-se. Antes, a barra de
+   filtros e o cabeçalho das janelas eram mais largos do que o ecrã. */
+@media(max-width:620px){
+  .wrap{padding-left:1rem;padding-right:1rem}
+  .ferramentas .wrap{flex-direction:column;align-items:stretch;gap:.6rem}
+  .ferramentas .wrap > *{width:100%}
+  .pesquisa{width:100%}
+  .pesquisa input{min-width:0}
+  .periodo{justify-content:space-between}
+  .periodo select{flex:1;min-width:0}
+  .segmentado{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .segmentado button{white-space:nowrap}
+  .filtros{overflow-x:auto;flex-wrap:nowrap;padding-bottom:.3rem}
+  .filtros button{white-space:nowrap;flex:none}
+  .modal{width:100%;max-height:94vh;border-radius:12px}
+  .modal-cab{padding:1rem 1.1rem;gap:.7rem}
+  .modal-cab h3{font-size:1rem}
+  .barra-chaves,.barra-criterios{padding-left:1.1rem;padding-right:1.1rem}
+  .chaves-topo{flex-direction:column;align-items:stretch}
+  .chaves-topo .campo-livre{max-width:none;margin-left:0}
+  .barra-criterios{flex-direction:column;align-items:stretch;gap:.6rem}
+  .barra-criterios .crit-campo{width:100%}
+  .barra-criterios select{width:100%}
+  .barra-res{flex-wrap:wrap;gap:.5rem}
+  .hero h1{font-size:1.7rem}
+}
 .ler-item:hover{background:var(--superficie-alt)}
 .ler-hora{font-size:.74rem;color:var(--texto-ligeiro);font-variant-numeric:tabular-nums;padding-top:.1rem}
 .ler-txt strong{display:block;font-size:.88rem;font-weight:400;color:var(--texto);line-height:1.4}
