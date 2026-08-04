@@ -1567,16 +1567,22 @@ def atualizar_historico(caminho, linhas, periodo, vistos=None):
         except (json.JSONDecodeError, OSError):
             pass                                   # série ilegível: recomeça-se
 
+    # SÓ O QUE FOI PUBLICADO NESTE DIA. A recolha traz sempre a janela inteira do
+    # arquivo — sete dias —, pelo que contar tudo fazia cada dia registar o que
+    # os sete anteriores já tinham registado. Somando os dias, o total vinha
+    # multiplicado por sete.
+    do_dia = [l for l in linhas if l[2] and l[2].strftime("%Y-%m-%d") == hoje]
+    print(f"série diária: {len(do_dia)} de {len(linhas)} notícias foram publicadas hoje")
+
     por_area = {}
-    for l in linhas:
+    for l in do_dia:
         registo = por_area.setdefault(l[0], {
             "noticias": 0, "novas": 0, "fontes": set(),
             "origens": {"nacionais": 0, "lusofonas": 0, "internacionais": 0},
             "palavras": {},
         })
         registo["noticias"] += 1
-        if l[2] and l[2].strftime("%Y-%m-%d") == hoje:
-            registo["novas"] += 1
+        registo["novas"] += 1          # mantido por compatibilidade: é o mesmo
         if l[3]:
             registo["fontes"].add(l[3])
         registo["origens"][origem_da_fonte(l[4])] += 1

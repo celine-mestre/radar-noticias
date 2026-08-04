@@ -532,6 +532,25 @@ recolhida"** em vez de "arquivo de 7 dias".
 
 ---
 
+## Painel de evolução
+
+`evolucao.html`, ao lado do painel principal e ligado a ele pelo ícone de gráfico. Lê o
+`historico.json` e mostra a série ao longo do tempo:
+
+- Volume por período, repartido por origem da imprensa. Clicar numa barra passa os
+  quadros seguintes a mostrar apenas esse período.
+- Volume por área governativa, trajetória das oito mais noticiadas, e a expressão que
+  mais rendeu em cada área — com a contagem das que ficaram a zero, que são candidatas
+  a revisão.
+- Seletores de janela (30 dias, 90, um ano, tudo), de agregação (dia, semana, mês) e de
+  origem (Portugal, lusofonia, internacional, todas).
+- Modo claro e escuro, ecrã inteiro, impressão em PDF, exportação para Excel com quatro
+  folhas, e manual de leitura embutido.
+
+Não precisa de servidor: é um ficheiro estático no mesmo GitHub Pages.
+
+---
+
 ## Memória de longo prazo
 
 O arquivo que o painel consulta guarda **sete dias** — é o que serve para trabalhar. A
@@ -540,9 +559,13 @@ nunca apagadas.
 
 ### Série diária — `historico.json`
 
-Escrita em cada recolha. Por dia e por área: quantas notícias, quantas eram novas face
-à recolha anterior, quantas publicações distintas, a repartição por origem (Portugal,
+Escrita em cada recolha. Por dia e por área: quantas notícias foram **publicadas nesse
+dia**, quantas publicações distintas as trouxeram, a repartição por origem (Portugal,
 lusofonia, internacional) e a contagem de cada palavra-chave.
+
+Conta-se pela data de publicação, e não pelo que a recolha trouxe: a recolha traz sempre
+a janela inteira do arquivo — sete dias —, pelo que contar tudo faria cada dia registar
+o que os sete anteriores já tinham registado, e o total viria multiplicado por sete.
 
 São agregados, não notícias. Cerca de **2 KB por dia**, menos de 1 MB por ano. Chega
 para responder a perguntas de tendência: que áreas cresceram, que assuntos ganharam

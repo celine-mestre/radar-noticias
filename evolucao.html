@@ -16,6 +16,15 @@
   --raio:16px; --raio-s:10px;
   --fonte:'Lexend', Arial, Helvetica, sans-serif;
 }
+/* Modo escuro: as mesmas variáveis com outros valores, como no radar */
+html[data-tema="escuro"]{
+  --texto:#eef1f4; --texto-suave:#b7bfc8; --texto-ligeiro:#8d97a1;
+  --fundo:#12161b; --superficie:#191f26; --superficie-alt:#151a20;
+  --borda:#2a323b; --borda-forte:#3a444f;
+  --sombra:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+}
+html[data-tema="escuro"] .kpi b{color:#7fb0e0}
+html[data-tema="escuro"] .aviso{background:#241f13;border-color:#4a3d1e}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{max-width:100%;overflow-x:hidden}
 img,svg{max-width:100%}
@@ -46,7 +55,51 @@ header .voltar:hover{background:#fff;color:var(--azul)}
 .seg button{border:0;background:none;font-family:var(--fonte);font-size:.8rem;
   color:var(--texto-suave);padding:.4rem .9rem;border-radius:999px;cursor:pointer;white-space:nowrap}
 .seg button.ativo{background:var(--azul);color:#fff;font-weight:500}
-.barra .info{margin-left:auto;font-size:.76rem;color:var(--texto-ligeiro)}
+.barra .accoes{margin-left:auto;display:flex;gap:.4rem}
+.btn-i{width:34px;height:34px;border-radius:9px;border:1px solid var(--borda);
+  background:var(--superficie-alt);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;transition:.15s;padding:0}
+.btn-i:hover{border-color:var(--azul);background:var(--superficie)}
+.btn-i svg{width:16px;height:16px;stroke:var(--texto-suave);fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+.btn-i:hover svg{stroke:var(--azul)}
+.barra .info{width:100%;font-size:.76rem;color:var(--texto-ligeiro)}
+
+/* Subir ao topo */
+/* Ajuda */
+#veu{position:fixed;inset:0;background:rgba(23,23,21,.5);z-index:30;
+  display:flex;align-items:center;justify-content:center;padding:1.2rem}
+#veu[hidden]{display:none}
+#ajuda{background:var(--superficie);border-radius:var(--raio);max-width:640px;width:100%;
+  max-height:88vh;display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 12px 40px rgba(23,23,21,.28)}
+.aj-cab{display:flex;align-items:center;padding:1.1rem 1.3rem;border-bottom:1px solid var(--borda)}
+.aj-cab h2{font-size:1rem;font-weight:600;color:var(--texto)}
+.aj-cab button{margin-left:auto;width:32px;height:32px;border-radius:8px;border:1px solid var(--borda);
+  background:var(--superficie-alt);color:var(--texto-suave);font-size:1.1rem;cursor:pointer;line-height:1}
+.aj-corpo{padding:1.2rem 1.3rem;overflow-y:auto}
+.aj-corpo p{font-size:.86rem;line-height:1.65;color:var(--texto-suave)}
+.aj-corpo dl{margin:1rem 0}
+.aj-corpo dt{font-size:.82rem;font-weight:500;color:var(--texto);margin-top:.8rem}
+.aj-corpo dd{font-size:.82rem;line-height:1.6;color:var(--texto-suave);margin-top:.15rem}
+.aj-nota{background:var(--superficie-alt);border-left:3px solid var(--dourado);
+  padding:.7rem .9rem;border-radius:0 var(--raio-s) var(--raio-s) 0;margin-top:.9rem;
+  font-size:.8rem !important}
+
+#subir{position:fixed;right:1.2rem;bottom:1.2rem;width:44px;height:44px;border-radius:50%;
+  border:0;background:var(--azul);color:#fff;cursor:pointer;display:none;
+  align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(23,23,21,.28);z-index:20}
+#subir.visivel{display:flex}
+#subir svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+
+@media print{
+  .barra, #subir, #veu, header .voltar{display:none !important}
+  body{background:#fff}
+  .bloco,.kpi{break-inside:avoid;box-shadow:none;border-color:#ccc}
+  header{background:#2B5683 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .expr-b i,.rk-barra i,rect{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 
 main{padding:1.6rem 0 3rem}
 .aviso{background:#fdfbf6;border:1px solid #efe4cd;border-radius:var(--raio-s);
@@ -107,6 +160,10 @@ main{padding:1.6rem 0 3rem}
   display:flex;align-items:baseline;gap:.5rem}
 .expr-cx h3 span{margin-left:auto;font-size:.76rem;font-weight:600;color:var(--cor);
   font-variant-numeric:tabular-nums}
+.expr-topo{display:flex;align-items:baseline;gap:.6rem;padding:.2rem 0}
+.expr-topo b{font-size:.92rem;font-weight:500;color:var(--texto)}
+.expr-topo span{margin-left:auto;font-size:1.05rem;font-weight:600;color:var(--cor);
+  font-variant-numeric:tabular-nums}
 .expr-l{display:grid;grid-template-columns:1fr 76px 34px;gap:.5rem;align-items:center;
   font-size:.76rem;color:var(--texto-suave);padding:.14rem 0}
 .expr-b{height:7px;border-radius:3px;background:var(--superficie-alt);overflow:hidden}
@@ -160,10 +217,33 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
       <button data-p="365">Um ano</button>
       <button data-p="0">Tudo</button>
     </div>
+    <div class="seg" id="origem">
+      <button data-o="todas" class="ativo">Todas</button>
+      <button data-o="nacionais">Portugal</button>
+      <button data-o="lusofonas">Lusofonia</button>
+      <button data-o="internacionais">Internacional</button>
+    </div>
     <div class="seg" id="agregacao">
       <button data-a="dia" class="ativo">Por dia</button>
       <button data-a="semana">Por semana</button>
       <button data-a="mes">Por mês</button>
+    </div>
+    <div class="accoes">
+      <button class="btn-i" id="btnPDF" title="Imprimir ou guardar em PDF">
+        <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+      </button>
+      <button class="btn-i" id="btnXLSX" title="Exportar a série para Excel">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+      </button>
+      <button class="btn-i" id="btnEcra" title="Ocupar todo o ecrã" aria-pressed="false">
+        <svg viewBox="0 0 24 24" id="icoEcra"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+      </button>
+      <button class="btn-i" id="btnManual" title="Como ler este painel">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+      </button>
+      <button class="btn-i" id="btnTema" title="Alternar modo claro e escuro">
+        <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
     </div>
     <div class="info" id="cobertura">A carregar…</div>
   </div>
@@ -172,6 +252,45 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
 <main class="wrap" id="corpo">
   <div class="vazio">A ler a série…</div>
 </main>
+
+<div id="veu" hidden>
+  <div id="ajuda">
+    <div class="aj-cab">
+      <h2>Como ler este painel</h2>
+      <button id="fecharAjuda" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="aj-corpo">
+      <p>Cada recolha deixa registado o retrato do dia: quantas notícias houve em cada
+      área, de que origens vieram e que expressões as trouxeram. Este painel lê essa
+      série e mostra-a ao longo do tempo.</p>
+      <dl>
+        <dt>Volume ao longo do tempo</dt><dd>Uma barra por período, repartida pela origem
+        da imprensa. <strong>Clicar numa barra</strong> passa os quadros seguintes a
+        mostrar apenas esse período; clicar outra vez desfaz.</dd>
+        <dt>Volume por área</dt><dd>Quanto cada área foi noticiada. A cor é a do
+        agrupamento temático, como no radar.</dd>
+        <dt>Trajetória</dt><dd>A linha de cada uma das oito áreas mais noticiadas. Percorre
+        sempre o período todo, mesmo com um dia escolhido acima.</dd>
+        <dt>Expressões</dt><dd>A palavra-chave que mais rendeu em cada área, e quantas
+        ficaram a zero — essas são candidatas a revisão.</dd>
+      </dl>
+      <p class="aj-nota"><strong>O que os números contam.</strong> Cada dia regista as
+      notícias <em>publicadas nesse dia</em>, e não o que a recolha trouxe — que inclui
+      dias anteriores. Como o método é o mesmo em todas as recolhas, a comparação entre
+      períodos e entre áreas é legítima.</p>
+      <p class="aj-nota">Escolhendo uma origem, os valores das expressões são estimados
+      pela proporção dessa origem na área: a série guarda as palavras-chave por área, não
+      repartidas por origem.</p>
+      <p class="aj-nota">A série começa no dia da primeira recolha e cresce um ponto por
+      dia. Com menos de três ou quatro semanas, uma variação diz mais sobre o dia do que
+      sobre a área.</p>
+    </div>
+  </div>
+</div>
+
+<button id="subir" aria-label="Voltar ao topo">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+</button>
 
 <footer>
   <div class="wrap">
@@ -230,7 +349,24 @@ const grupoDaArea = nome => (AREAS.find(a => a.nome === nome) || {}).grupo || "s
 const num = n => n.toLocaleString("pt-PT");
 
 let SERIE = [];        // [{data, areas:{nome:{noticias, novas, fontes, origens, palavras}}}]
-let dias = 30, agregacao = "dia", diaEscolhido = null;
+let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas";
+
+/* Quantas notícias conta uma área, conforme a origem escolhida. Escolhida uma,
+   tudo passa a ser dessa origem: o gráfico, o ranking, as trajetórias e as
+   expressões — de outro modo os quadros contradiziam-se entre si. */
+function contar(v){
+  if(!v) return 0;
+  if(origem === "todas") return v.noticias || 0;
+  return (v.origens || {})[origem] || 0;
+}
+
+/* Nas expressões não há repartição por origem: a proporção da área serve de
+   aproximação, e diz-se isso a quem lê. */
+function fatorOrigem(v){
+  const total = v.noticias || 0;
+  if(origem === "todas" || !total) return 1;
+  return ((v.origens || {})[origem] || 0) / total;
+}
 
 async function carregar(){
   for(const caminho of ["historico.json", "./historico.json"]){
@@ -294,9 +430,9 @@ function linhasEmFoco(linhas, pares){
 function totaisPorArea(linhas){
   const t = {};
   linhas.forEach(d => Object.entries(d.areas || {}).forEach(([nome, v]) => {
-    t[nome] = (t[nome] || 0) + (v.noticias || 0);
+    t[nome] = (t[nome] || 0) + contar(v);
   }));
-  return Object.entries(t).sort((a, b) => b[1] - a[1]);
+  return Object.entries(t).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
 }
 
 function totaisPorOrigem(linhas){
@@ -309,20 +445,25 @@ function totaisPorOrigem(linhas){
 /* Por área, as expressões que mais renderam. Uma lista única misturava áreas
    grandes com pequenas e só mostrava as primeiras; assim vê-se o que puxa
    cobertura dentro de cada área, que é o que serve para as rever. */
-function expressoesPorArea(linhas, quantas = 5){
+function expressoesPorArea(linhas, quantas = 1){
   const t = {};
   linhas.forEach(d => Object.entries(d.areas || {}).forEach(([area, v]) => {
+    const f = fatorOrigem(v);
+    if(!f) return;
     const alvo = t[area] || (t[area] = {});
-    Object.entries(v.palavras || {}).forEach(([p, n]) => alvo[p] = (alvo[p] || 0) + n);
+    Object.entries(v.palavras || {}).forEach(([p, n]) => alvo[p] = (alvo[p] || 0) + n * f);
   }));
 
   return Object.entries(t).map(([area, palavras]) => {
-    const lista = Object.entries(palavras).sort((a, b) => b[1] - a[1]);
+    const lista = Object.entries(palavras)
+      .map(([p, n]) => [p, Math.round(n)])
+      .sort((a, b) => b[1] - a[1]);
     return {
       area,
       total: lista.reduce((soma, x) => soma + x[1], 0),
-      topo: lista.slice(0, quantas),
+      topo: lista.slice(0, quantas).filter(x => x[1] > 0),
       mudas: lista.filter(x => !x[1]).length,
+      quantas: lista.length,
     };
   }).sort((a, b) => b.total - a.total);
 }
@@ -412,8 +553,10 @@ function desenhar(){
     const origens = { nacionais:0, lusofonas:0, internacionais:0 };
     let total = 0;
     Object.values(d.areas || {}).forEach(v => {
-      total += v.noticias || 0;
-      Object.entries(v.origens || {}).forEach(([k, n]) => origens[k] += n);
+      total += contar(v);
+      Object.entries(v.origens || {}).forEach(([k, n]) => {
+        if(origem === "todas" || origem === k) origens[k] += n;
+      });
     });
     const curto = agregacao === "mes"
       ? chave.slice(5) + "/" + chave.slice(2, 4)
@@ -454,9 +597,11 @@ function desenhar(){
       <h2>Volume ao longo do tempo</h2>
       ${barrasEmpilhadas(pontos)}
       <div class="legenda">
-        <span style="--cor:var(--verde)"><i></i>Portugal · ${num(origens.nacionais)} (${(origens.nacionais / soma * 100).toFixed(0)}%)</span>
-        <span style="--cor:var(--dourado)"><i></i>Lusofonia · ${num(origens.lusofonas)} (${(origens.lusofonas / soma * 100).toFixed(0)}%)</span>
-        <span style="--cor:var(--teal)"><i></i>Internacional · ${num(origens.internacionais)} (${(origens.internacionais / soma * 100).toFixed(0)}%)</span>
+        ${[["nacionais","Portugal","var(--verde)"],["lusofonas","Lusofonia","var(--dourado)"],
+           ["internacionais","Internacional","var(--teal)"]]
+          .filter(([k]) => origem === "todas" || origem === k)
+          .map(([k, rot, c]) => `<span style="--cor:${c}"><i></i>${rot} · ${num(origens[k])}
+            (${(origens[k] / soma * 100).toFixed(0)}%)</span>`).join("")}
       </div>
       <p class="nota">Cada barra é um ${agregacao}, repartido pela origem da imprensa.
         <strong>Clicar numa barra</strong> passa os quadros seguintes a mostrar apenas
@@ -480,7 +625,7 @@ function desenhar(){
       <div class="mini">
         ${areas.slice(0, 8).map(([nome]) => {
           const g = grupoDaArea(nome);
-          const vals = pares.map(([, d]) => (d.areas[nome] || {}).noticias || 0);
+          const vals = pares.map(([, d]) => contar(d.areas[nome]));
           return `<div class="mini-cx" style="--cor:${cor(g)}">
             <h3>${nome}</h3>
             <b>${num(vals[vals.length - 1] || 0)}</b>
@@ -498,17 +643,17 @@ function desenhar(){
         ${expressoes.map(e => `
           <div class="expr-cx" style="--cor:${cor(grupoDaArea(e.area))}">
             <h3>${e.area}<span>${num(e.total)}</span></h3>
-            ${e.topo.length ? e.topo.map(([p, n]) => `
-              <div class="expr-l">
-                <span>${p}</span>
-                <span class="expr-b"><i style="width:${(n / (e.topo[0][1] || 1) * 100).toFixed(0)}%"></i></span>
-                <b>${num(n)}</b>
-              </div>`).join("") : `<p class="expr-nada">Sem correspondências no período.</p>`}
-            ${e.mudas ? `<p class="expr-nada">${e.mudas} ${e.mudas === 1 ? "expressão" : "expressões"} a zero.</p>` : ""}
+            ${e.topo.length
+              ? `<div class="expr-topo"><b>${e.topo[0][0]}</b><span>${num(e.topo[0][1])}</span></div>`
+              : `<p class="expr-nada">Nenhuma expressão rendeu no período.</p>`}
+            ${e.mudas ? `<p class="expr-nada">${e.mudas} de ${e.quantas}
+              ${e.mudas === 1 ? "expressão ficou" : "expressões ficaram"} a zero.</p>` : ""}
           </div>`).join("")}
       </div>
-      <p class="nota">As cinco expressões que mais trouxeram em cada área. As que ficam
-        sistematicamente a zero são candidatas a revisão.</p>
+      <p class="nota">A expressão que mais trouxe em cada área, e quantas ficaram a zero —
+        essas são candidatas a revisão.${origem !== "todas"
+        ? " Com uma origem escolhida, os valores são estimados pela proporção dessa origem na área: a série não guarda as expressões repartidas por origem."
+        : ""}</p>
     </div>`;
 
   /* Clicar numa barra escolhe o período; clicar outra vez desfaz */
@@ -523,12 +668,206 @@ function desenhar(){
   if(limpar) limpar.addEventListener("click", () => { diaEscolhido = null; desenhar(); });
 }
 
+
+/* ── EXPORTAÇÃO E COMANDOS ────────────────────────────────────────────────── */
+
+const TABELA_CRC = (() => {
+  const t = new Uint32Array(256);
+  for(let n = 0; n < 256; n++){
+    let c = n;
+    for(let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+
+function crc32(dados){
+  let c = 0xFFFFFFFF;
+  for(let i = 0; i < dados.length; i++) c = TABELA_CRC[(c ^ dados[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+
+function zipSemCompressao(ficheiros){
+  const cod = new TextEncoder();
+  const partes = [], centro = [];
+  let posicao = 0;
+  const u16 = v => new Uint8Array([v & 255, (v >> 8) & 255]);
+  const u32 = v => new Uint8Array([v & 255, (v >> 8) & 255, (v >> 16) & 255, (v >> 24) & 255]);
+
+  for(const [nome, conteudo] of ficheiros){
+    const nomeB = cod.encode(nome);
+    const dados = typeof conteudo === "string" ? cod.encode(conteudo) : conteudo;
+    const crc = crc32(dados);
+    const cab = [u32(0x04034b50), u16(20), u16(0x0800), u16(0), u16(0), u16(0),
+                 u32(crc), u32(dados.length), u32(dados.length), u16(nomeB.length), u16(0)];
+    centro.push({ nomeB, crc, tamanho: dados.length, posicao });
+    for(const p of cab) partes.push(p);
+    partes.push(nomeB, dados);
+    posicao += 30 + nomeB.length + dados.length;
+  }
+
+  let tamanhoCentro = 0;
+  const inicioCentro = posicao;
+  for(const f of centro){
+    const cab = [u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0),
+                 u32(f.crc), u32(f.tamanho), u32(f.tamanho), u16(f.nomeB.length),
+                 u16(0), u16(0), u16(0), u16(0), u32(0), u32(f.posicao)];
+    for(const p of cab) partes.push(p);
+    partes.push(f.nomeB);
+    tamanhoCentro += 46 + f.nomeB.length;
+  }
+  partes.push(u32(0x06054b50), u16(0), u16(0), u16(centro.length), u16(centro.length),
+              u32(tamanhoCentro), u32(inicioCentro), u16(0));
+  return new Blob(partes, { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+}
+
+function escXML(v){
+  return String(v == null ? "" : v)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
+}
+
+function descarregar(conteudo, tipo, nome){
+  const b = new Blob([conteudo], { type:tipo });
+  const l = document.createElement("a");
+  l.href = URL.createObjectURL(b); l.download = nome; l.click();
+  URL.revokeObjectURL(l.href);
+}
+
+/* Uma folha por quadro: a série, o total por área e as expressões. É a mesma
+   informação que está no ecrã, num formato que se pode cruzar com outros dados. */
+function descarregarXLSX(){
+  const linhas = janela();
+  if(!linhas.length) return;
+  const pares = agregar(linhas);
+  const foco = linhasEmFoco(linhas, pares);
+
+  const serie = [["Período", "Notícias", "Portugal", "Lusofonia", "Internacional"]];
+  pares.forEach(([chave, d]) => {
+    const o = { nacionais:0, lusofonas:0, internacionais:0 };
+    let total = 0;
+    Object.values(d.areas || {}).forEach(v => {
+      total += contar(v);
+      Object.entries(v.origens || {}).forEach(([k, n]) => o[k] += n);
+    });
+    serie.push([chave, total, o.nacionais, o.lusofonas, o.internacionais]);
+  });
+
+  const areas = [["Área governativa", "Notícias"]];
+  totaisPorArea(foco).forEach(([nome, n]) => areas.push([nome, n]));
+
+  const expr = [["Área governativa", "Expressão", "Notícias"]];
+  expressoesPorArea(foco, 30).forEach(e =>
+    e.topo.forEach(([p, n]) => expr.push([e.area, p, n])));
+
+  const espec = [
+    ["Radar de Notícias · evolução", ""],
+    ["Gerado em", new Date().toLocaleString("pt-PT")],
+    ["Janela", dias ? `últimos ${dias} dias` : "toda a série"],
+    ["Agregação", agregacao],
+    ["Origem", origem === "todas" ? "todas" : origem],
+    ["Período escolhido", diaEscolhido || "—"],
+    ["Dias registados", linhas.length],
+    ["Fonte", "Síntese diária do Radar de Notícias · SGGov"],
+  ];
+
+  const folhas = [
+    { nome:"Série", linhas:serie },
+    { nome:"Por área", linhas:areas },
+    { nome:"Expressões", linhas:expr },
+    { nome:"Especificações", linhas:espec },
+  ];
+
+  const letra = i => String.fromCharCode(65 + i);
+  const folhaXML = f => `<?xml version="1.0" encoding="UTF-8"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>
+${f.linhas.map((l, i) => `<row r="${i + 1}">${l.map((v, j) =>
+  typeof v === "number"
+    ? `<c r="${letra(j)}${i + 1}"><v>${v}</v></c>`
+    : `<c r="${letra(j)}${i + 1}" t="inlineStr"><is><t>${escXML(String(v ?? ""))}</t></is></c>`
+).join("")}</row>`).join("")}
+</sheetData></worksheet>`;
+
+  const ficheiros = [
+    ["[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+${folhas.map((f, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}
+</Types>`],
+    ["_rels/.rels", `<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`],
+    ["xl/workbook.xml", `<?xml version="1.0" encoding="UTF-8"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+ xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>
+${folhas.map((f, i) => `<sheet name="${escXML(f.nome)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join("")}
+</sheets></workbook>`],
+    ["xl/_rels/workbook.xml.rels", `<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+${folhas.map((f, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join("")}
+</Relationships>`],
+    ...folhas.map((f, i) => [`xl/worksheets/sheet${i + 1}.xml`, folhaXML(f)]),
+  ];
+
+  const hoje = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  descarregar(zipSemCompressao(ficheiros),
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    `radar_evolucao_${hoje}.xlsx`);
+}
+
+/* Modo escuro, ecrã inteiro e subir ao topo — os mesmos comandos do radar */
+const TEMA = "radar-tema";
+function aplicarTema(t){
+  document.documentElement.setAttribute("data-tema", t);
+  try{ localStorage.setItem(TEMA, t); }catch(e){}
+}
+try{ aplicarTema(localStorage.getItem(TEMA) === "escuro" ? "escuro" : "claro"); }
+catch(e){ aplicarTema("claro"); }
+
+$("#btnTema").addEventListener("click", () =>
+  aplicarTema(document.documentElement.getAttribute("data-tema") === "escuro" ? "claro" : "escuro"));
+
+$("#btnPDF").addEventListener("click", () => window.print());
+
+$("#btnManual").addEventListener("click", () => $("#veu").hidden = false);
+$("#fecharAjuda").addEventListener("click", () => $("#veu").hidden = true);
+$("#veu").addEventListener("click", e => { if(e.target.id === "veu") $("#veu").hidden = true; });
+document.addEventListener("keydown", e => { if(e.key === "Escape") $("#veu").hidden = true; });
+$("#btnXLSX").addEventListener("click", descarregarXLSX);
+
+const ICO_ENTRAR = `<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>`;
+const ICO_SAIR = `<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M16 3v3a2 2 0 0 0 2 2h3"/><path d="M8 21v-3a2 2 0 0 0-2-2H3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>`;
+$("#btnEcra").addEventListener("click", () => {
+  if(document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(() => {});
+});
+document.addEventListener("fullscreenchange", () => {
+  const cheio = !!document.fullscreenElement;
+  $("#btnEcra").setAttribute("aria-pressed", cheio ? "true" : "false");
+  $("#btnEcra").title = cheio ? "Sair do ecrã inteiro" : "Ocupar todo o ecrã";
+  $("#icoEcra").innerHTML = cheio ? ICO_SAIR : ICO_ENTRAR;
+});
+
+const subir = $("#subir");
+subir.addEventListener("click", () => window.scrollTo({ top:0, behavior:"smooth" }));
+window.addEventListener("scroll", () =>
+  subir.classList.toggle("visivel", window.scrollY > 420));
+
 /* ── ARRANQUE ────────────────────────────────────────────────────────────── */
 
 $("#periodo").addEventListener("click", e => {
   const b = e.target.closest("button"); if(!b) return;
   document.querySelectorAll("#periodo button").forEach(x => x.classList.toggle("ativo", x === b));
   dias = +b.dataset.p; desenhar();
+});
+
+$("#origem").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#origem button").forEach(x => x.classList.toggle("ativo", x === b));
+  origem = b.dataset.o; desenhar();
 });
 
 $("#agregacao").addEventListener("click", e => {
