@@ -356,6 +356,18 @@ Os relatórios são enviados apenas em dias úteis, mas **à segunda-feira a jan
 automaticamente para 72 horas**, cobrindo sábado e domingo. É o que faz o valor `auto`
 do período, que é a predefinição das execuções agendadas.
 
+### Enviar a um só endereço
+
+Na execução manual do fluxo, o campo **destinatário** dirige o envio a um único endereço,
+sem tocar na lista de subscritores. Serve para ensaiar, ou para mostrar a ferramenta a
+alguém antes de a subscrever.
+
+O campo **áreas** limita quais são enviadas — por vírgula, ou vazio para todas as que
+tiverem notícias. Sem destinatário indicado, ambos os campos são ignorados e seguem os
+subscritores de cada área, como sempre.
+
+O endereço é ocultado nos registos da execução, como os restantes.
+
 ### Subscrever e cancelar
 
 **No painel.** O botão *Receber por email* abre uma janela onde a pessoa indica o
