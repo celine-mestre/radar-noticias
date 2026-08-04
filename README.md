@@ -304,8 +304,13 @@ o relatório sair sem as da manhã. Pior: as execuções agendadas do GitHub sã
 em períodos de muita procura e, por vezes, saltadas — foi o que sucedeu nos primeiros
 dias, em que nem a síntese nem o relatório chegaram a disparar.
 
-Encadeando-os, há um só agendamento que pode falhar, e falhando ele nada corre — o que
-é preferível a correr pela metade.
+**Como está feito.** A síntese e o relatório são *fluxos chamáveis*: o
+`radar-noticias.yml` chama-os como trabalhos seus, com `uses:`, logo a seguir à
+recolha. Correm dentro da mesma execução — vê-se tudo numa página só — e não dependem
+de qualquer gatilho entre fluxos. Experimentámos antes o `workflow_run`, que dispara um
+fluxo quando outro termina, e não se mostrou fiável.
+
+Há assim **um só agendamento** em toda a aplicação: o da recolha.
 
 **Uma vez por dia, e na recolha certa.** A síntese e o relatório saltam a recolha das
 07h07 — a essa hora a imprensa ainda mal publicou e o relatório sairia com as notícias
