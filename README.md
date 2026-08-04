@@ -411,8 +411,27 @@ A separação por origem existe porque a mistura confundia: o orçamento portugu
 cabo-verdiano descritos no mesmo texto, como se fossem a mesma matéria. Cada parágrafo
 leva a etiqueta da origem e o número de notícias que resume.
 
-Uma origem só gera parágrafo se tiver pelo menos três notícias no período — abaixo
-disso, um resumo não acrescenta nada à leitura dos próprios títulos.
+**Uma origem só gera parágrafo se tiver pelo menos três notícias no período.** Abaixo
+disso, um resumo não acrescenta nada à leitura dos próprios títulos — e é por isso que
+uma área pode ter parágrafo de Portugal e não ter de internacional, sem que haja falha
+nenhuma. O mínimo altera-se com `--minimo`.
+
+### Os dois países
+
+Há dois países em jogo e o modelo confunde-os com facilidade. O de **quem publica** é
+sempre conhecido: vem do domínio da publicação. O de **que a notícia trata** só se sabe
+se o nome estiver escrito no título.
+
+A instrução exige, por isso, que o parágrafo abra declarando a proveniência — "a
+imprensa de Cabo Verde noticiou" — e que nenhum lugar seja nomeado sem constar do
+título. Um jornal angolano noticia o mundo inteiro; escrever "Em Angola" por a fonte ser
+angolana é o erro a evitar.
+
+Sendo um modelo de 9 mil milhões de parâmetros a correr num processador, a distinção
+nem sempre lhe sai bem. Não convencendo, há uma saída conservadora: limitar a síntese à
+imprensa portuguesa, com `--origens nacionais` — ou, no fluxo, escrevendo `nacionais` no
+campo das origens do `radar-noticias.yml`. Um parágrafo certo sobre Portugal vale mais
+do que três parágrafos com países trocados.
 
 A extensão acompanha o volume: até quinze notícias pedem-se três a cinco frases; até
 quarenta, cinco a sete; acima disso, sete a dez. Resumir cento e trinta títulos em duas

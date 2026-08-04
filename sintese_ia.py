@@ -153,16 +153,20 @@ INSTRUCAO = (
     "- Escreve em português de Portugal, em registo institucional e neutro.\n"
     "- Não emitas juízos, não recomendes nada, não uses adjetivos valorativos.\n"
     "- Não uses expressões como 'as notícias indicam' ou 'segundo os títulos'.\n"
-    "- Cada título vem precedido, entre parênteses retos, da publicação que o "
-    "difundiu e do país onde essa publicação se edita.\n"
-    "- ATENÇÃO: o país entre parênteses é o da PUBLICAÇÃO, não o do "
-    "acontecimento. Um jornal angolano noticia factos do mundo inteiro. NUNCA "
-    "escrevas 'Em Angola' só porque o título veio de um jornal angolano.\n"
-    "- Só nomeias um país, uma cidade ou uma região se o nome constar do próprio "
-    "título. Não estando lá, não digas onde foi. Inventar o lugar é o pior erro "
-    "que podes cometer.\n"
-    "- Querendo situar a proveniência, atribui-a à imprensa e não ao facto: "
-    "'a imprensa angolana noticiou', 'segundo a imprensa espanhola'.\n"
+    "\nHÁ DOIS PAÍSES EM JOGO E NÃO PODEM SER CONFUNDIDOS:\n"
+    "  (a) O país de QUEM PUBLICA. Vem entre parênteses retos antes de cada "
+    "título, e é sempre conhecido.\n"
+    "  (b) O país DE QUE A NOTÍCIA TRATA. Só o sabes se o nome estiver escrito "
+    "no título.\n\n"
+    "- Abre o parágrafo declarando quem publica: 'A imprensa de Cabo Verde "
+    "noticiou…', 'Segundo a imprensa angolana…'. Vindo os títulos de vários "
+    "países, nomeia-os: 'A imprensa de Angola e de Moçambique…'.\n"
+    "- Depois, ao contar cada facto, só nomeias o país, a cidade ou a região se "
+    "o nome constar do título. Não estando lá, contas o facto sem dizer onde. "
+    "Inventar o lugar é o pior erro que podes cometer.\n"
+    "- Um jornal angolano noticia o mundo inteiro: NUNCA escrevas 'Em Angola' "
+    "só porque o título veio de um jornal angolano. Impostos como o CBS e o IBS "
+    "são brasileiros, ainda que noticiados em Lisboa ou na Praia.\n"
     "- Não trates imprensa estrangeira como se falasse de Portugal.\n"
     "- Devolve apenas o parágrafo, sem título nem marcas de formatação."
 )
@@ -352,6 +356,9 @@ def principal():
                     help="ponto de acesso a um serviço já instalado (alternativa a --local)")
     ap.add_argument("--apenas", default=None,
                     help="tratar apenas esta área — útil para um primeiro ensaio")
+    ap.add_argument("--origens", default="",
+                    help="origens a sintetizar, por vírgula: nacionais, lusofonas, "
+                         "internacionais. Vazio inclui as três")
     ap.add_argument("--juntar", default=None,
                     help="pasta com sínteses parciais, a juntar num só ficheiro")
     ap.add_argument("--minimo", type=int, default=3,
@@ -415,7 +422,10 @@ def principal():
         print(f"  {area}: {len(doDia)} notícias no período")
         por_origem = {}
 
+        pedidas = [x.strip().lower() for x in args.origens.split(",") if x.strip()]
         for chave_origem, rotulo in ORIGENS:
+            if pedidas and chave_origem not in pedidas:
+                continue
             desta = [n for n in doDia if origem_da_fonte(n) == chave_origem]
             if len(desta) < args.minimo:
                 if desta:
