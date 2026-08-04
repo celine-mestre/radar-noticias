@@ -1,26 +1,251 @@
 {
- "gerado": "2026-08-03 19:14",
- "periodo": "72h",
+ "gerado": "2026-08-04 11:14",
+ "periodo": "24h",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "modo": "local",
  "areas": {
-  "Finanças": {
-   "noticias": 32,
+  "Administração Interna": {
+   "noticias": 39,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "Em Portugal, o Governo divulgou informação sobre a evolução da dívida pública, indicando um aumento para 92,9% do PIB no segundo trimestre, mantendo a meta de redução para 87,5% em 2026. O Executivo justificou a subida da dívida com depósitos, enquanto o Governo justificou a variação do número de candidatos ao ensino superior face ao ano anterior. Adicionalmente, foi noticiado que a reforma das Finanças Locais responde a exigências de um Estado de proximidade.",
+     "texto": "Em Angola, as autoridades timorenses procederam ao desmantelamento de uma rede de fraudes `online`, enquanto em Espanha, as autoridades registaram a destruição de 700 casas devido a um incêndio no estado de Washington, e a Grécia enfrenta combates contra incêndios florestais perto de Atenas pelo quarto dia consecutivo. Em Portugal, a GNR reforçou a fiscalização de velocidade nas estradas e lançou uma operação especial para travar o excesso de velocidade, tendo também retomado a circulação na EN2 em Ferreira do Alentejo. O custo dos incêndios florestais na Europa ultrapassou os três mil milhões de euros, com Espanha a reportar a destruição de propriedades e a Grécia a enfrentar dificuldades no combate aos incêndios. Em Ceuta, as autoridades acusam Marrocos de incentivar travessias em massa na fronteira, e em Espanha, as autoridades ponderam a contribuição dos bisontes para a prevenção de incêndios florestais.",
+     "noticias": 25
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, a crise migratória em Ceuta suscitou um debate político na Espanha, sendo associada a um discurso anti-imigração. Em Espanha, a crise migratória desafiou a imagem do premiê como defensor de fronteiras abertas, gerando uma tempestade política alimentada pelas redes sociais. No Brasil, a crise migratória da Espanha foi analisada num podcast, evidenciando o seu impacto no discurso político internacional. Em Moçambique, pilotos moçambicanos alcançaram um resultado notável na terceira prova do Campeonato Regional de Karting.",
+     "noticias": 5
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "Em Ceuta, a situação migratória reacendeu divergências na União Europeia, com Marrocos e Espanha a confrontarem-se face a relatos de travessias em lanchas e motos de água, acompanhados de protestos e tensão. Em França, mega incêndios florestais suscitam preocupações sobre a sua frequência crescente, enquanto um incêndio na região de Landes revelou a presença de engenhos explosivos da Segunda Guerra Mundial. No Sudão, combates no Tigray provocaram vítimas em campos de refugiados na província de Cassala. Em Moçambique, foram reforçadas medidas de prevenção e combate ao Ébola na província de Tete.",
+     "noticias": 9
+    }
+   }
+  },
+  "Agricultura e Mar": {
+   "noticias": 26,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "O Governo procedeu ao alargamento dos apoios destinados às explorações pecuárias afetadas pela doença da língua azul, no âmbito da área governativa da Agricultura. Adicionalmente, foram divulgadas medidas de apoio aos produtores de Valpaços, em resposta aos incêndios florestais que afetaram as suas culturas, nomeadamente vinhas, olivais e amendoais. Em Espanha, foram emitidos alertas de contaminação devido ao calor extremo, enquanto em França se procedeu ao encerramento de centrais nucleares. Em Angola, não foram reportadas notícias relevantes no âmbito da área governativa da Agricultura e do Mar.",
+     "noticias": 21
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "Em Angola, não foram reportadas notícias relevantes no âmbito da área governativa da Agricultura e Mar. Em França, um incêndio florestal foi noticiado, revelando a presença de engenhos explosivos da Segunda Guerra Mundial. Em Espanha, não foram reportadas notícias de relevo para a área governativa em questão. A União Europeia divulgou informações sobre um novo resort de luxo da Banyan Tree na China, com características específicas de lazer e turismo.",
+     "noticias": 3
+    }
+   }
+  },
+  "Ambiente e Energia": {
+   "noticias": 33,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Angola, a seca extrema no rio Danúbio motivou a mobilização do Exército para assegurar o abastecimento de água a gado, enquanto em Portugal a energia solar consolidou a sua posição como fonte primária de eletricidade em julho, liderando a produção pela primeira vez. A situação de seca em diversas regiões, incluindo a Roménia, onde a Dacia e a Ford suspenderam a produção devido à escassez de eletricidade, e a ocorrência de incêndios e calor em Espanha, suscitaram preocupações sobre a segurança alimentar, com ameaças de subida dos preços de alimentos como o azeite. A Hungria encontra-se em situação crítica, estando \"a milímetros\" de desligar a central nuclear devido à seca, e em Cuba verificou-se um novo apagão nacional em menos de 24 horas, evidenciando a vulnerabilidade de sistemas energéticos face a eventos climáticos extremos. Adicionalmente, a gestão de resíduos e a transição para plásticos circulares foram temas abordados, e a bolsa de Lisboa manteve uma trajetória positiva em linha com a Europa.",
+     "noticias": 24
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, o governo divulgou um relatório sobre a gestão de resíduos sólidos urbanos, enquanto no Brasil foram anunciadas medidas para a implementação da CBS e IBS nas notas fiscais, e a Petrobras comunicou a descoberta de um novo poço de gás na margem equatorial da Colômbia. Em Moçambique, as autoridades alertam para a ameaça do fenómeno EL NIÑO à agricultura no norte de Gaza.",
+     "noticias": 7
+    }
+   }
+  },
+  "Assuntos Parlamentares": {
+   "noticias": 4,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Portugal, a Secretaria-Geral do Governo regista que, segundo a publicação Observador, 97% das respostas dos exames nacionais foram corrigidas, enquanto o ECO indica que o Governo mantém o calendário de arranque do 3.º ciclo para entre 11 e 15 de setembro. Adicionalmente, o ECO informa que o Ministro do Governo assegura que as candidaturas ao ensino superior já superam 2025.",
+     "noticias": 3
+    }
+   }
+  },
+  "Cultura, Juventude e Desporto": {
+   "noticias": 11,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Portugal, foi divulgada a certificação de Aldeia Rewilding em Vila Maior, no âmbito de iniciativas de revitalização de territórios rurais. O Governo francês suspendeu testes antidoping à seleção nacional antes da conquista do Mundial de 1998, em contexto de preparação competitiva. No âmbito da área governativa, destaca-se a importância das férias de verão como componente do processo formativo, e o Benfica foi considerado favorito no play-off da Liga Europa.",
+     "noticias": 4
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, foram divulgadas informações relativas a iniciativas governamentais, não especificadas nos títulos apresentados. Em Cabo Verde, iniciaram-se obras de reabilitação da Casa da Tabanca de Achada Grande e o artista cabo-verdiano Nelson Neves representou o país no projeto internacional \"Manifiesto Universal\". Em Portugal, foram abertas inscrições para a segunda edição do Celpe-Bras e, no Brasil, o TSE declarou a urna eletrónica património da democracia, iniciaram-se campanhas de multivacinação em São Paulo e alunos do Encceja 2026 puderam consultar a cartilha de redação.",
+     "noticias": 6
+    }
+   }
+  },
+  "Defesa Nacional": {
+   "noticias": 31,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Angola, a Ucrânia efetuou ataques a infraestruturas russas, incluindo a empresa Wildberries, e a Rússia reportou a destruição de 320 drones ucranianos em 19 regiões. Em Espanha, a UAVision procura validar a EDA em novos contratos europeus de defesa, enquanto a Indra anuncia um investimento de 18 milhões para um polo europeu de produção de veículos militares. Em Portugal, a Tekever realiza fornecimentos de drones ao Exército britânico e a Ucrânia amplia a campanha contra a Wildberries, tendo ocorrido uma explosão na praia por queda de um drone ucraniano, com Kiev a atribuir a responsabilidade a Moscovo. Em Israel e Líbano, iniciou-se em Roma uma nova ronda de negociações, e a Dinamarca reintroduziu o serviço militar obrigatório de 11 meses para ambos os sexos.",
+     "noticias": 21
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, foram noticiados desenvolvimentos relativos à atividade parlamentar brasileira, designadamente uma condenação judicial de um militar por violação de guerrilheira durante o período da ditadura, bem como a abertura de urnas eleitorais no estado do Rio de Janeiro e a discussão sobre a segurança do voto eletrónico. No Brasil, registou-se um corte de 23,1% na ajuda internacional para 2025, o maior da história, e a divulgação de imagens de uma antiga líder política detida em Mianmar, suscitando preocupações sobre o seu estado de saúde. Em contexto brasileiro, verificou-se ainda um ataque ucraniano que resultou em vítimas numa praia russa. Em São Paulo, a Unifesp reportou a identificação de um resíduo compatível com sangue no antigo DOI-Codi.",
+     "noticias": 7
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "Em Angola, não foram reportadas ocorrências no âmbito da Defesa Nacional. Em Espanha, a imprensa noticiou combates no Tigray que afetaram campos de refugiados no Sudão. Em vários Estados-membros da União Europeia, a adesão da Ucrânia à União Europeia foi objeto de análise, com particular destaque para o apoio de alguns Estados-membros.",
+     "noticias": 3
+    }
+   }
+  },
+  "Economia e Coesão Territorial": {
+   "noticias": 64,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Angola, a petrolífera Aramco registou um aumento de 44% nos lucros no primeiro semestre, impulsionado pela escalada nos preços do petróleo. Em Espanha, a InPost selecionou a Havas Market para a gestão da estratégia de performance media. Em Portugal, a Anacom propôs uma compensação de até 5.750 euros por falhas na mudança de operador de Internet, enquanto a CP confirmou dois candidatos para o fornecimento de comboios de alta velocidade. A Galp procedeu ao pagamento de um dividendo intercalar a partir de 21 de agosto. A CP propôs uma compensação de até 5.750 euros por falhas na mudança de operador de Internet, reiterando a proposta anteriormente noticiada. A AIMA procedeu à expulsão de um empresário brasileiro de Portugal, alegando falta de meios de subsistência. A Escola de Calceteiros de Lisboa encontra-se quase inactiva, conforme indicado pelo sindicato do município. Cinco projetos nacionais de exploração espacial receberam um financiamento de 600 mil euros. A Tekever estabeleceu um contrato para o fornecimento de drones ao exército britânico por 467 milhões de euros. A Amazon alcançou uma capitalização bolsista de 3 biliões de dólares, após ter atingido anteriormente 3 mil milhões de dólares, e a SpaceX procedeu ao lançamento de um foguetão, conforme noticiado.",
+     "noticias": 44
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, o Conselho de Ministros apreciou a proposta de revisão da legislação sobre o setor energético, visando otimizar a gestão dos recursos e promover a eficiência. No Brasil, o Tribunal Regional Eleitoral do Rio de Janeiro procedeu à abertura de urnas para o público, reforçando a segurança do voto eletrónico, e iniciou-se a emissão de notas fiscais com CBS e IBS. A Comissão de Valores Mobiliários do Brasil divulgou a abertura de inscrições para a segunda edição do Celpe-Bras, enquanto a Petrobras procedeu à descoberta de um novo poço de gás na margem equatorial da Colômbia. Em Cabo Verde, o Instituto Nacional de Estatística rejeitou acusações de manipulação de dados, disponibilizando-se para avaliação independente, e iniciou-se a chamada pública para pesquisas sobre endometriose. O Governo brasileiro procedeu ao reforço do controlo sobre produtos químicos, e a Biosfera confirmou um impacto significativo dos acordos de pesca na pesca artesanal cabo-verdiana. Em Cabo Verde, os Estados Unidos da América tornaram permanente o programa de caução para vistos, abrangendo o território nacional, e procedeu-se à reabilitação da Casa da Tabanca de Achada Grande.",
+     "noticias": 18
+    }
+   }
+  },
+  "Educação, Ciência e Inovação": {
+   "noticias": 59,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "O Conselho de Ética propôs a cobrança de uma taxa a quem recuse vaga nos cuidados continuados, admitida posteriormente pelo mesmo órgão, enquanto em Portugal se regista a antecipação de prazos pela Missão Escola Pública, a reapreciação de exames com impacto na melhoria das notas e a dispensa de docentes de classificação. Em Espanha, o Governo mantém o calendário do 3.º ciclo, e em Angola, a reapreciação dos exames favorece os alunos.",
+     "noticias": 45
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, foram divulgados os resultados de um estudo sobre acesso ao ensino superior, enquanto em Cabo Verde, a Universidade da Madeira promoveu uma conferência sobre políticas de investigação científica. Em Brasil, registou-se a abertura de um concurso público para bolsas de investigação em endometriose e a divulgação de informações relativas ao programa Fies 2026, bem como a reabertura de inscrições para a segunda edição do Celpe-Bras. Em Moçambique, a UEM inaugurou uma nova central de dados, e a Agência Brasil noticiou um corte previsto na ajuda internacional para 2025.",
+     "noticias": 12
+    }
+   }
+  },
+  "Finanças": {
+   "noticias": 14,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Portugal, o Orçamento do Estado contempla a compensação às concessionárias de portagens decorrente dos constrangimentos provocados pela tempestade Kristin. O Fisco procedeu à fusão de dois serviços de Finanças em Lisboa e à criação de uma repartição única em Vila Franca de Xira. O Tribunal arbitral reiterou a oposição ao Fisco quanto à tributação de cauções no arrendamento. O Governo informou sobre a evolução da dívida pública, mantendo a meta de redução para 87,5% do PIB em 2026.",
      "noticias": 11
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "Em Angola, foram divulgadas alterações à legislação fiscal relacionadas com a implementação da CBS e IBS. No Brasil, a dívida pública atingiu 81,9% do PIB, correspondendo ao valor mais elevado em mais de cinco anos, e o custo da dívida pública atingiu o maior nível em quase uma década, exercendo pressão sobre as contas do governo. Em Moçambique, a Autoridade Tributária procedeu à alteração das regras de desembaraço aduaneiro e da tabela de taxas.",
+     "texto": "Em Angola, o Governo reiterou a discrepância de 8,3 mil milhões de escudos nas contas públicas, contestando o esclarecimento apresentado pelo MpD. Em Cabo Verde, o Primeiro-Ministro foi qualificado de “perigoso para a economia” pelo MpD, que exige retratação pública. Em Espanha, iniciou-se a emissão de notas fiscais com CBS e IBS, a partir de segunda-feira.",
+     "noticias": 3
+    }
+   }
+  },
+  "Infraestruturas e Habitação": {
+   "noticias": 14,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Portugal, o Tribunal arbitral reiteradamente contraria o Fisco quanto à tributação de cauções no arrendamento, tendo sido igualmente noticiado que a garantia pública à habitação apenas é superada pela dívida da Madeira nas contas do Estado. Adicionalmente, a Justiça iniciou uma investigação sobre suicídios na administração de Lecornu e, no âmbito da habitação, foram já implementadas regras mais exigentes.",
+     "noticias": 11
+    }
+   }
+  },
+  "Justiça": {
+   "noticias": 28,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Portugal, o tribunal arbitral voltou a pronunciar-se contra a interpretação da Autoridade Tributária relativamente à tributação de cauções no arrendamento, reiterando que estas não integram a base tributável de IRS. O Tribunal de Contas certificou as contas da Presidência da República e da Presidência do Governo referentes a 2025. O Tribunal de Contas certificou também as contas da Presidência de 2025. O Ministério Público não obteve da CMVM os documentos solicitados sobre a venda da herdade do Novobanco. Em Angola, o Governo aprovou medidas legislativas no âmbito da reforma do sistema judicial.",
+     "noticias": 18
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, o TSE reafirmou a urna eletrónica como património da democracia. No Brasil, a justiça condenou um militar por estupro de guerrilheira durante a ditadura e o TRE-RJ abriu urnas para o público, defendendo a segurança do voto eletrónico. Em Espanha, o CNJ poderá vir a aprovar regras de conduta para juízes, enquanto no Brasil o STF derrubou uma restrição à compra de veículos por pessoas com deficiência. Em Cabo Verde, as candidaturas às presidenciais devem ser entregues até 16 de Setembro.",
+     "noticias": 8
+    }
+   }
+  },
+  "Negócios Estrangeiros": {
+   "noticias": 21,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Angola, a reunião de ministros da Administração Interna da União Europeia focou-se na crise em Ceuta, enquanto em Espanha, a imprensa nacional noticiou a discussão urgente da mesma crise entre os ministros da UE e a solidariedade expressa pelos embaixadores na União Europeia. Em Portugal, a TAP foi considerada um potencial complemento para a Lufthansa em rotas para a América do Sul, e o Irão foi alvo de novas ameaças por parte de Trump, exigindo um acordo ou “rendição total”. Adicionalmente, a Europa enfrenta desafios migratórios que poderão levar a um “espaço cada vez mais fechado”, conforme noticiado em Portugal.",
      "noticias": 12
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, o Secretário de Estado dos Negócios Estrangeiros e da Cooperação participou num encontro bilateral com o seu homólogo sul-africano, reforçando a cooperação em matéria de segurança e desenvolvimento. Em Cabo Verde, o Ministério dos Negócios Estrangeiros e da Integração Regional informou sobre a rejeição de acusações de manipulação de dados pelo INE, reiterando a disponibilidade para avaliação independente. Em Espanha, a Comissão Europeia apelou ao reforço das fronteiras da União Europeia face à crise em Ceuta, no âmbito da política de gestão de fluxos migratórios. Em Moçambique, a UNECA prosseguiu o reforço do apoio ao desenvolvimento nacional após encontro com o Presidente da República, com particular enfoque em projetos de infraestruturas e capacitação. Em Cabo Verde, a Biosfera confirmou o impacto significativo dos acordos de pesca nas atividades da pesca artesanal, no contexto da gestão sustentável dos recursos marinhos.",
+     "noticias": 6
     },
     "internacionais": {
      "rotulo": "Internacional",
-     "texto": "Em Angola, a relação dívida pública/PIB atinge 93,2%, segundo dados oficiais. Em França, Moçambique importa cereais no valor de 700 milhões de dólares anuais. No Brasil, a dívida pública atinge 82% do PIB, nível mais elevado desde a pandemia de Covid. Em Espanha, não foram reportadas notícias sobre finanças públicas. Em Vietname, o Grupo da Indústria de Carvão e Minerais contribuiu com quase 16,9 trilhões de VND para o orçamento do Estado nos primeiros sete meses, superando a meta estabelecida. Empresas com faturamento superior a 1 bilião de VND devem utilizar faturas eletrónicas com códigos da autoridade tributária, conforme estabelecido em regulamentos recentes.",
-     "noticias": 9
+     "texto": "Em Angola, a discussão sobre a adesão da Ucrânia à União Europeia suscitou divergências entre os Estados-membros quanto ao nível de apoio, enquanto em Espanha e França registam-se posições distintas sobre a imigração, nomeadamente no que concerne à gestão de Ceuta. A União Europeia debate a viabilidade das suas ambições de inteligência artificial, face aos desafios de implementação e validação dos modelos desenvolvidos.",
+     "noticias": 3
+    }
+   }
+  },
+  "Presidência": {
+   "noticias": 47,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Espanha, foi demitida uma funcionária por divulgar o número de migrantes que chegaram a Ceuta, e em Portugal, Marrocos informou ter alertado Espanha sobre a decisão do Supremo espanhol relativa a migrantes. Ministros da Administração Interna da UE reúnem-se para discutir a crise migratória em Ceuta, enquanto a UE debate em cimeira de urgência a situação na fronteira. Em Angola, o governo acompanha a evolução da situação migratória na região. A discussão sobre a crise migratória estende-se a vários fóruns internacionais, incluindo a UE e países como o Brasil e a Espanha. A questão da imigração ilegal é abordada em diferentes contextos, com Itália a reportar uma diminuição de 82% desde 2023.",
+     "noticias": 29
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, a crise migratória em Ceuta motivou um reforço do debate europeu sobre fronteiras e gestão de fluxos, com a União Europeia a ponderar respostas face à pressão da ultradireita. Em Espanha, a situação migratória desafiou a imagem de liderança em matéria de fronteiras abertas, gerando uma tempestade política. Em Cabo Verde, o reforço do programa de caução para vistos dos EUA foi formalizado, enquanto a atenção se mantém sobre a gestão de migrações e a proteção de direitos.",
+     "noticias": 10
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "Em Ceuta, a distribuição de alimentos por uma ONG, após o alívio da crise, mobilizou dois mil pequenos-almoços em duas horas, enquanto Marrocos e Espanha suscitam tensões devido a rumores nas redes sociais que agravam a crise migratória. Em Ceuta, permanecem milhar de migrantes, incluindo 860 menores sob tutela das autoridades locais, e a situação é objeto de exigências de investigação por parte da ministra espanhola. Em paralelo, Itália apresenta à União Europeia um plano para centros de acolhimento de migrantes, e a questão é referida como um assunto exclusivamente marroquino por fontes francesas.",
+     "noticias": 8
+    }
+   }
+  },
+  "Reforma do Estado": {
+   "noticias": 10,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Portugal, a inteligência artificial tem suscitado particular atenção no âmbito da reforma do Estado, com desenvolvimentos como a aquisição de livros por sistemas de IA e a sua aplicação em cibersegurança, evidenciados por operações como a compra da BioCatch pela Visa. A nível internacional, a China tem registado um crescimento de 40% no setor da inteligência artificial em 2025, enquanto empresas como a Alibaba apresentam modelos avançados. Adicionalmente, a aplicação da inteligência artificial em cenários de conflito tem sido objeto de análise, nomeadamente através de exemplos de transformação da guerra.",
+     "noticias": 7
+    }
+   }
+  },
+  "Saúde": {
+   "noticias": 33,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Portugal, o Conselho de Ética para as Questões da Medicina propôs a instituição de uma taxa semanal progressiva para os utentes que recusem uma vaga nos cuidados continuados, tendo sido admitida pelo Ministério da Saúde após retificação de um despacho inicial. Adicionalmente, foi promulgada a criação da carreira de médico dentista no Serviço Nacional de Saúde e o programa ‘Voltar a Casa’ para a gestão de internamentos sociais. O Governo procedeu à correção de um despacho que afetava as vias verdes de AVC e cardiologia, assegurando a continuidade dos serviços. O INEM convocou os seus trabalhadores para uma Assembleia Geral extraordinária e foram anunciados investimentos em equipamentos cirúrgicos nos Açores e em Maputo, com vista à melhoria da assistência hospitalar.",
+     "noticias": 26
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, foram divulgadas informações relativas à situação de saúde pública, nomeadamente no que concerne à prevenção e vacinação, com o início da Campanha Nacional de Multivacinação a ocorrer nesta segunda-feira. Em Cabo Verde, foi reportada a intensificação de ações de saúde pública, igualmente no âmbito da vacinação. Em Moçambique, a cobertura mediática focou-se na situação de saúde de um líder da oposição ugandesa, Kizza Besigye, internado em estado crítico. Em São Paulo, foram registados novos casos de sarampo, no contexto de uma campanha de vacinação. No Brasil, foram comunicadas atualizações relativas ao Fies 2026 e à gestão de processos de candidatura.",
+     "noticias": 6
+    }
+   }
+  },
+  "Trabalho, Solidariedade e Segurança Social": {
+   "noticias": 11,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "Em Espanha, o aumento do desemprego suscitou surpresa, enquanto em Portugal os inscritos na Segurança Social atingiram um novo máximo. O IEFP registou 269 pedidos de prolongamento do incentivo ao trabalho, no âmbito da depressão Kristin. O mercado de trabalho apresenta ofertas para técnicos agrícolas e florestais em Faro e Mesão Frio.",
+     "noticias": 6
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "Em Angola, foi noticiado o movimento de trabalhadores das linhas 11, 12 e 13 da CPTM, tendo sido comunicada a sua adesão a greve. Em Cabo Verde, a imprensa noticiou a temática da cultura, referindo a sua importância para a identidade nacional e o valor económico do setor. No Brasil, foi divulgada a condenação de um militar por violação de uma guerrilheira durante o período da ditadura, e foi também informada a necessidade de os estudantes completarem as informações para o programa Fies 2026 até esta terça.",
+     "noticias": 4
     }
    }
   }
