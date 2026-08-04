@@ -1,0 +1,252 @@
+name: Relatorio diario por email
+
+# Envia, todas as manhãs, um relatório por área governativa, aos destinatários
+# do segredo SUBSCRITORES. Corre depois da recolha e da síntese, para que as
+# notícias incluam a manhã do próprio dia.
+#
+# QUANDO CORRE. A seguir à síntese do Amália, que por sua vez corre a seguir à
+# recolha da manhã. Os três formam um circuito encadeado, em vez de três relógios
+# independentes: assim o relatório nunca sai antes de as notícias e as sínteses
+# do dia estarem prontas, nem depende de o GitHub disparar um agendamento à hora
+# certa — o que falhou nos primeiros dias.
+#
+# Corre mesmo que a síntese falhe: nesse caso sai sem o parágrafo, que é
+# acessório. As notícias é que não podem faltar.
+#
+# CREDENCIAIS, uma única vez, em Settings > Secrets and variables > Actions:
+#   SMTP_SERVIDOR    servidor de correio (ex.: smtp.office365.com)
+#   SMTP_PORTA       normalmente 587
+#   SMTP_UTILIZADOR  endereço que envia
+#   SMTP_SENHA       senha de aplicação, não a senha pessoal
+#   SUBSCRITORES     lista de destinatários em JSON, por área
+#
+# Os destinatários ficam no segredo SUBSCRITORES, e não no repositório: são
+# dados de contacto de terceiros e o repositório é público.
+
+on:
+  workflow_dispatch:
+    inputs:
+      periodo:
+        description: "Janela do relatório"
+        type: choice
+        default: "auto"
+        options: ["auto", "24h", "48h", "72h", "7d"]
+  # Chamado pelo fluxo da recolha, a seguir à síntese. Corre dentro da mesma
+  # execução, pelo que não depende de gatilhos entre fluxos.
+  workflow_call:
+    inputs:
+      periodo:
+        type: string
+        required: false
+        default: "auto"
+      encadeado:
+        description: "Chamado pela recolha: aplica as verificações do dia"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+# Não grava no repositório, mas dois envios em paralelo duplicariam mensagens
+concurrency:
+  group: relatorio-diario
+  cancel-in-progress: false
+
+env:
+  PAINEL: "https://celine-mestre.github.io/radar-noticias/"
+  # Origens a incluir no relatório: nacionais, lusofonas, internacionais.
+  # Vazio inclui as três.
+  ORIGENS: ""
+
+jobs:
+  # Envia-se UMA VEZ por dia útil. A marca do último envio fica num ficheiro do
+  # repositório: é o que impede sete envios — um por cada recolha — e o que
+  # permite ensaiar o circuito a qualquer hora, sem depender de um relógio.
+  decidir:
+    runs-on: ubuntu-latest
+    outputs:
+      seguir: ${{ steps.v.outputs.seguir }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+        # A execução está presa ao commit que a iniciou. Sem pedir o ramo, este
+        # passo receberia o repositório como estava ANTES de a recolha gravar o
+        # arquivo — e a síntese e o relatório trabalhariam sobre a véspera.
+        with:
+          ref: main
+
+      - name: Verificar se ja houve envio hoje
+        id: v
+        run: |
+          if [ "${{ inputs.encadeado }}" != "true" ]; then
+            echo "Execução manual: segue sempre."
+            echo "seguir=sim" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          DIA=$(date -u +%u)
+          if [ "$DIA" -gt 5 ]; then
+            echo "Fim de semana: não há envio."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          # A mesma guarda da síntese: a recolha das 07h07 é cedo de mais, e o
+          # fluxo da síntese também é dado por terminado quando desiste — sem
+          # isto, o relatório sairia a essa hora com as notícias da véspera.
+          # A janela é a da manhã. A recolha das 07h07 é cedo de mais, e a das
+          # 23h07 — que existe para fechar o dia — não deve gerar relatórios a
+          # meio da noite.
+          HORA=$(date -u +%H)
+          if [ "$HORA" -gt 12 ]; then
+            echo "Recolha do fim do dia: não gera síntese nem relatório."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if [ "$HORA" -lt 8 ]; then
+            echo "Cedo de mais: o relatório do dia sai depois da recolha das 09h07."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          HOJE=$(TZ=Europe/Lisbon date +%Y-%m-%d)
+          ULTIMO=$(cat ultimo-relatorio.txt 2>/dev/null || echo "")
+          echo "Hoje: $HOJE · último envio: ${ULTIMO:-nenhum}"
+
+          if [ "$ULTIMO" = "$HOJE" ]; then
+            echo "O relatório de hoje já foi enviado."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"
+          else
+            echo "Ainda não houve envio hoje: segue."
+            echo "seguir=sim" >> "$GITHUB_OUTPUT"
+          fi
+
+  preparar:
+    needs: decidir
+    if: needs.decidir.outputs.seguir == 'sim'
+    runs-on: ubuntu-latest
+    outputs:
+      envios: ${{ steps.gerar.outputs.envios }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+        # A execução está presa ao commit que a iniciou. Sem pedir o ramo, este
+        # passo receberia o repositório como estava ANTES de a recolha gravar o
+        # arquivo — e a síntese e o relatório trabalhariam sobre a véspera.
+        with:
+          ref: main
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Sem o segredo neste passo. O GitHub recusa passar adiante um resultado
+      # produzido por um passo que teve acesso a segredos — foi o que aconteceu:
+      # "Skip output 'envios' since it may contain secret". Os destinatários são
+      # apurados no envio, onde o segredo é de facto preciso.
+      - name: Gerar os relatorios
+        id: gerar
+        run: |
+          set -euo pipefail
+          PERIODO="${{ inputs.periodo }}"
+          # Vazio (execução agendada) significa janela automática: 24 horas,
+          # ou 72 à segunda-feira, para cobrir o fim de semana.
+          if [ -z "$PERIODO" ]; then PERIODO="auto"; fi
+          python relatorio_email.py \
+            --dados arquivo.json \
+            --todas \
+            --periodo "$PERIODO" \
+            --um-por-area \
+            --subscritores subscritores.json \
+            --origens "$ORIGENS" \
+            --sinteses sinteses.json \
+            --pasta relatorios \
+            --painel "$PAINEL"
+          echo "envios=$(cat relatorios/manifesto.json)" >> "$GITHUB_OUTPUT"
+
+      # A marca fica gravada antes do envio: sendo o envio feito por dezasseis
+      # trabalhos em paralelo, marcar no fim seria marcar dezasseis vezes.
+      - name: Marcar o envio de hoje
+        if: inputs.encadeado
+        run: |
+          set -euo pipefail
+          TZ=Europe/Lisbon date +%Y-%m-%d > ultimo-relatorio.txt
+          git config user.name "Radar de Noticias"
+          git config user.email "actions@github.com"
+          git add ultimo-relatorio.txt
+          git diff --cached --quiet || git commit -m "relatório do dia enviado"
+          git pull --rebase --autostash
+          git push
+
+      - name: Guardar os relatorios
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-diarios
+          path: relatorios/
+          retention-days: 14
+
+  enviar:
+    needs: preparar
+    if: needs.preparar.outputs.envios != '[]' && needs.preparar.outputs.envios != ''
+    runs-on: ubuntu-latest
+    # O nome do trabalho usa apenas a área: os valores da matriz aparecem no
+    # nome, e num repositório público seriam visíveis para qualquer pessoa.
+    name: Enviar ${{ matrix.envio.area }}
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        envio: ${{ fromJSON(needs.preparar.outputs.envios) }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+        # A execução está presa ao commit que a iniciou. Sem pedir o ramo, este
+        # passo receberia o repositório como estava ANTES de a recolha gravar o
+        # arquivo — e a síntese e o relatório trabalhariam sobre a véspera.
+        with:
+          ref: main
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Obter os relatorios
+        uses: actions/download-artifact@v4
+        with:
+          name: relatorios-diarios
+          path: relatorios
+
+      # Os endereços são apurados aqui, a partir do segredo, e nunca chegam a
+      # aparecer nos registos: seguem pelo ficheiro de saída do passo e são
+      # ocultados pelo GitHub.
+      - name: Apurar os destinatarios
+        id: dest
+        env:
+          SUBSCRITORES: ${{ secrets.SUBSCRITORES }}
+        run: python relatorio_email.py --destinatarios-de "${{ matrix.envio.area }}"
+
+      - name: Verificar as credenciais
+        id: correio
+        run: |
+          if [ -n "${{ secrets.SMTP_SERVIDOR }}" ]; then
+            echo "pronto=sim" >> "$GITHUB_OUTPUT"
+          else
+            echo "pronto=nao" >> "$GITHUB_OUTPUT"
+            echo "::notice::Sem credenciais de correio. Os relatórios ficam em Artifacts."
+          fi
+
+      - name: Enviar
+        if: steps.correio.outputs.pronto == 'sim' && steps.dest.outputs.para != ''
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVIDOR }}
+          server_port: ${{ secrets.SMTP_PORTA }}
+          secure: false
+          username: ${{ secrets.SMTP_UTILIZADOR }}
+          password: ${{ secrets.SMTP_SENHA }}
+          subject: ${{ matrix.envio.assunto }}
+          to: ${{ steps.dest.outputs.para }}
+          from: Radar de Noticias <${{ secrets.SMTP_UTILIZADOR }}>
+          # As duas versões seguem juntas: o cliente apresenta a que sabe ler.
+          html_body: file://${{ matrix.envio.ficheiro }}
+          body: file://${{ matrix.envio.texto }}
+          convert_markdown: false
