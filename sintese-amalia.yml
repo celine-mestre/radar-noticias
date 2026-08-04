@@ -11,9 +11,19 @@ name: Sintese pelo Amalia
 # corre, por isso, no seu próprio trabalho, e um passo final junta os resultados
 # num só ficheiro. O tempo total passa a ser o da área mais demorada.
 #
-# CALENDÁRIO. 08h22 UTC — 09h22 em Lisboa —, entre a recolha das 09h07 e o envio
-# dos relatórios das 10h17, para que a síntese e a lista digam respeito ao mesmo
-# momento.
+# QUANDO CORRE. Não por relógio próprio, mas **a seguir à recolha da manhã**. Os
+# três fluxos — recolha, síntese e relatório — formam um circuito encadeado: cada
+# um arranca quando o anterior termina. Com horários independentes, bastava a
+# recolha atrasar-se para a síntese trabalhar sobre notícias da véspera.
+#
+# O gatilho é a conclusão do fluxo "Radar de Noticias", que corre sete vezes por
+# dia. A síntese faz-se UMA VEZ por dia útil, e na recolha certa: salta a das
+# 07h07, por ser cedo de mais — a imprensa ainda mal publicou —, e trata a das
+# 09h07. Falhando essa, qualquer recolha posterior do mesmo dia serve.
+#
+# A verificação é "já se fez hoje?" e não "que horas são?". Assim há margem para
+# atrasos, o dia nunca sai duplicado, e o circuito pode ser ensaiado a qualquer
+# momento correndo a recolha à mão.
 
 on:
   workflow_dispatch:
@@ -33,8 +43,10 @@ on:
         type: boolean
         required: false
         default: false
-  schedule:
-    - cron: "22 8 * * 1-5"
+  # A seguir à recolha, não a horas certas
+  workflow_run:
+    workflows: ["Radar de Noticias"]
+    types: [completed]
 
 permissions:
   contents: write
@@ -44,9 +56,60 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Só a recolha da manhã tem seguimento. As outras seis do dia servem o painel e
+  # não geram síntese nem relatório.
+  decidir:
+    runs-on: ubuntu-latest
+    outputs:
+      seguir: ${{ steps.v.outputs.seguir }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Verificar se ja ha sintese de hoje
+        id: v
+        run: |
+          if [ "${{ github.event_name }}" != "workflow_run" ]; then
+            echo "Execução manual: segue sempre."
+            echo "seguir=sim" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          DIA=$(date -u +%u)
+          if [ "$DIA" -gt 5 ]; then
+            echo "Fim de semana: não há síntese nem relatório."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          # A primeira recolha do dia, às 07h07 de Lisboa, é cedo de mais: a
+          # imprensa ainda mal publicou e o relatório sairia com a véspera.
+          # Espera-se pela das 09h07. Falhando essa, qualquer recolha posterior
+          # do mesmo dia serve — o que dá margem sem fixar uma hora rígida.
+          HORA=$(date -u +%H)
+          if [ "$HORA" -lt 8 ]; then
+            echo "Recolha das 07h07: cedo de mais para a síntese do dia."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          HOJE=$(TZ=Europe/Lisbon date +%Y-%m-%d)
+          FEITA=""
+          if [ -f sinteses.json ]; then
+            FEITA=$(python -c "import json;print(json.load(open('sinteses.json',encoding='utf-8')).get('gerado','')[:10])" 2>/dev/null || echo "")
+          fi
+          echo "Hoje: $HOJE · síntese existente: ${FEITA:-nenhuma}"
+
+          if [ "$FEITA" = "$HOJE" ]; then
+            echo "Já há síntese de hoje: esta recolha não gera outra."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"
+          else
+            echo "Primeira recolha do dia com síntese por fazer: segue."
+            echo "seguir=sim" >> "$GITHUB_OUTPUT"
+          fi
+
   # Uma área por trabalho. O GitHub corre até vinte em simultâneo em
   # repositórios públicos, pelo que as dezasseis arrancam todas ao mesmo tempo.
   sintetizar:
+    needs: decidir
+    if: needs.decidir.outputs.seguir == 'sim'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
@@ -133,8 +196,8 @@ jobs:
   # Junta as partes e grava. Corre mesmo que alguma área tenha falhado: mais vale
   # um ficheiro com quinze áreas do que nenhum.
   juntar:
-    needs: sintetizar
-    if: always() && (inputs.apenas == '' || inputs.gravar)
+    needs: [decidir, sintetizar]
+    if: always() && needs.decidir.outputs.seguir == 'sim' && (inputs.apenas == '' || inputs.gravar)
     runs-on: ubuntu-latest
     steps:
       - name: Obter o repositorio

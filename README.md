@@ -287,32 +287,46 @@ agrupadas por dia, com hora, título, resumo, publicação e ligação — e ter
 botão para abrir o painel, onde se pode refazer a pesquisa, alargar o período ou
 exportar para Excel.
 
-O dia corre assim. As horas estão na **hora de Lisboa**, que é a que o painel e os
-relatórios apresentam; entre parênteses fica a hora UTC, que é a que o GitHub usa nos
-agendamentos e a única que aparece nos registos das execuções.
+O dia corre assim. **Um único agendamento**, o da recolha; os outros dois arrancam
+quando o anterior termina.
 
-| Lisboa | UTC | O quê | Dias |
-|---|---|---|---|
-| 07h07 | 06h07 | 1.ª recolha | Todos |
-| 09h07 | 08h07 | 2.ª recolha — é sobre esta que o Amália trabalha | Todos |
-| 09h22 | 08h22 | Síntese do Amália | Seg a sex |
-| 10h17 | 09h17 | Envio dos relatórios | Seg a sex |
-| 11h07 · 13h07 · 15h07 · 17h07 · 19h07 | 10h07 · 12h07 · 14h07 · 16h07 · 18h07 | Recolhas do resto do dia | Todos |
+| Lisboa | O quê | Como arranca |
+|---|---|---|
+| 07h07 · 09h07 · 11h07 · 13h07 · 15h07 · 17h07 · 19h07 | Recolha | Agendada, todos os dias |
+| a seguir à recolha das 09h07 | Síntese do Amália | Quando a recolha termina, em dias úteis |
+| a seguir à síntese | Envio dos relatórios | Quando a síntese termina, em dias úteis |
 
-São **sete recolhas por dia**, de duas em duas horas entre as 07h07 e as 19h07 de
-Lisboa. Cada uma demora cerca de um minuto.
+São sete recolhas por dia, de duas em duas horas. Cada uma demora cerca de um minuto.
 
-A sequência da manhã é encadeada de propósito: a recolha das 09h07 traz as notícias da
-manhã, o Amália escreve as sínteses às 09h22 sobre essa recolha, e os relatórios saem
-às 10h17 já com elas. As restantes recolhas não têm síntese nem envio — servem o painel.
+**Porque é encadeado e não agendado.** Com três horários independentes, bastava a
+recolha atrasar-se dez minutos para a síntese trabalhar sobre as notícias da véspera, e
+o relatório sair sem as da manhã. Pior: as execuções agendadas do GitHub são atrasadas
+em períodos de muita procura e, por vezes, saltadas — foi o que sucedeu nos primeiros
+dias, em que nem a síntese nem o relatório chegaram a disparar.
+
+Encadeando-os, há um só agendamento que pode falhar, e falhando ele nada corre — o que
+é preferível a correr pela metade.
+
+**Uma vez por dia, e na recolha certa.** A síntese e o relatório saltam a recolha das
+07h07 — a essa hora a imprensa ainda mal publicou e o relatório sairia com as notícias
+da véspera. É a das 09h07 que os desencadeia.
+
+A partir daí a verificação é "já se fez hoje?" e não "que horas são?". A síntese olha
+para a data do `sinteses.json`; o relatório para o ficheiro `ultimo-relatorio.txt`. As
+recolhas seguintes encontram o trabalho feito e desistem — mas se a das 09h07 falhar,
+qualquer recolha posterior do mesmo dia assume o encargo. Há margem para atrasos sem
+que o dia saia duplicado.
+
+Assim o circuito não depende de uma hora certa, e pode ser ensaiado a qualquer momento —
+basta correr a recolha à mão. Executadas manualmente, a síntese e o relatório seguem
+sempre, sem estas verificações: um ensaio não deve ser recusado por serem quinze horas.
+
+O relatório sai mesmo que a síntese falhe: nesse caso vai sem o parágrafo, que é
+acessório. As notícias é que não podem faltar.
 
 **O painel não é instantâneo.** Não vai buscar notícias enquanto o consulta: lê os
 ficheiros da última recolha. Quem o abrir às 16h vê o que foi recolhido às 15h07, e a
 hora dessa recolha está sempre indicada ao lado do título das áreas.
-
-Os minutos estão deslocados de propósito. Às horas certas o GitHub tem picos de
-procura e as execuções agendadas são atrasadas — por vezes saltadas. Um minuto
-qualquer a meio da hora é mais fiável.
 
 A recolha corre **todos os dias**, incluindo fim de semana: de outro modo o arquivo
 ficaria com um buraco de dois dias e o que fosse notícia ao sábado nunca chegaria ao
