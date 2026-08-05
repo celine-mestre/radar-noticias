@@ -1,21 +1,236 @@
 {
- "gerado": "2026-08-04 17:52",
+ "gerado": "2026-08-05 09:52",
  "periodo": "24h",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "modo": "local",
  "areas": {
-  "Saúde": {
-   "noticias": 54,
+  "Administração Interna": {
+   "noticias": 37,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A imprensa de Portugal noticiou, em relação à área da saúde, a rectificação de um despacho pelo Ministério da Saúde sobre a resposta a situações clínicas urgentes, a suspensão pelo Infarmed do abastecimento de um medicamento utilizado no tratamento da esquizofrenia e depressão, a ocorrência de um acidente com um autocarro que embateu no Hospital de Tomar, resultando num morto e múltiplas vítimas, e a imposição de uma taxa a quem recuse vaga nos cuidados continuados, conforme admitido pela ministra da Saúde e pelo Conselho de Ética. Adicionalmente, foram reportadas dificuldades no abastecimento de medicamentos e a necessidade de reforço do exército no Japão, bem como casos de violência e ocorrências criminais.",
-     "noticias": 47
+     "texto": "A imprensa de Portugal noticiou a crise em Ceuta, com a UE a concordar em reforçar as fronteiras e mecanismos de regresso de migrantes, sem que o país de origem seja mencionado. Relatos indicam que a gestão espanhola de Ceuta foi elogiada e que o espaço Schengen não ficou comprometido. Adicionalmente, foram noticiados incêndios florestais em Castro Verde, em Portugal, e em reserva natural nos Países Baixos, com cortes no IP2, e a violência doméstica a registar um aumento de 13,3% com sete vítimas mortais em três meses. O Governo português alertou para a persistência de incêndios de origem humana.",
+     "noticias": 31
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A imprensa brasileira noticiou o impacto das telas na saúde mental, com debate em 80% das escolas; também informou sobre a presença de mais de 180 convidados e 65 mesas de debates em São Paulo; registou o aumento de casos de sarampo para 16 em São Paulo; e divulgou que o número de mortos nos sismos na Venezuela subiu para 6125.",
+     "texto": "A imprensa lusófona noticiou desenvolvimentos relacionados com a situação em Ceuta, incluindo a análise do colonialismo e a divergência de especialistas sobre a postura de Marrocos face à migração para aquela cidade. Adicionalmente, registou-se a divulgação de informação sobre um evento em São Paulo, Brasil, onde se realizarão mais de 180 convidados e 65 mesas de debates.",
+     "noticias": 3
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "A imprensa internacional noticiou, na Grécia, um incêndio florestal de grande dimensão combatido por bombeiros face a ventos fortes. Em Marrocos, foi comunicado à Espanha o desagrado face a uma revisão da lei de estrangeiros. Na França, 70 bombeiros ucranianos apoiaram o combate ao incêndio de Gironde.",
+     "noticias": 3
+    }
+   }
+  },
+  "Agricultura e Mar": {
+   "noticias": 18,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou a antecipação do pagamento de apoios a agricultores e pescadores para setembro, no montante de 87,1 milhões de euros, abrangendo mais de 170 mil beneficiários. Foram igualmente reportados apoios definidos pelo Governo para formação e informação no âmbito do plano da PAC, bem como a existência de medidas da UE para combater incêndios florestais, cuja suficiência foi questionada. Registos de ocorrências de incêndios em França, Países Baixos e Estados Unidos foram objeto de cobertura noticiosa, com destaque para a declaração de estado de emergência e detenções efetuadas. A situação de vigilantes da natureza e a gestão de financiamento das pescas foram também temas abordados na imprensa portuguesa.",
+     "noticias": 15
+    }
+   }
+  },
+  "Ambiente e Energia": {
+   "noticias": 25,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou que a Floene alertou para a potencial repercussão de uma limitação excessiva do investimento no setor energético, podendo impactar os custos da eletricidade e do gás. Adicionalmente, foi divulgado um relatório da Agência Portuguesa do Ambiente que evidencia a persistência da presença de plástico nas praias portuguesas. Um ciberataque foi detetado contra a Águas de Portugal, embora o fornecimento e a qualidade da água não tenham sido afetados. A BB&G procedeu à instalação de uma unidade inovadora de valorização de pneus em Ourém, no âmbito de iniciativas de economia circular. A imprensa nacional também registou a ocorrência de calor extremo em múltiplos continentes, associado a incêndios florestais e secas, com impacto na inflação de preços. A Hungria encontra-se em situação crítica devido à seca, podendo levar à paragem total da central nuclear. O Danúbio atingiu mínimos históricos, colocando em risco a produção de energia nuclear na Europa, enquanto outras bacias hidrográficas apresentaram níveis de água superiores aos normais. A Sogrape comprometeu-se a reduzir as emissões de gases com efeito de estufa e o consumo de água até 2025.",
+     "noticias": 16
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa brasileira noticiou a divulgação de um edital de quatro milhões de reais destinado a projetos de comunicação climática, o reforço de alertas meteorológicos para tempestades e vendavais nas regiões Sul, Sudeste e Centro-Oeste, e o impacto de eventos climáticos extremos nas concessionárias de energia. Adicionalmente, registou-se interesse do Core Energy Consortium no investimento nos setores de energia, petróleo e gás, e a existência de declarações sobre a responsabilidade de Marrocos relativamente ao desespero de imigrantes que procuram a Europa.",
+     "noticias": 8
+    }
+   }
+  },
+  "Cultura, Juventude e Desporto": {
+   "noticias": 23,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa portuguesa noticiou, entre outros temas, a edição do Locarno 2026, festival de cinema, e a renúncia da seleção russa de voleibol ao Mundial2027 na Polónia por razões de segurança. O Público divulgou a atribuição de mais de 5,3 milhões de euros para a valorização do património cultural do Alentejo e um concerto de Luís Represas previsto para abril de 2027. O Observador registou a promessa de fundos da FIFA, declarações sobre arquitetura e a participação de Maryam Touzani num debate sobre a representação de corpos velhos no cinema.",
+     "noticias": 14
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa de Cabo Verde noticiou a edição 1288 da sua publicação. A imprensa brasileira divulgou uma investigação sobre a origem do colonialismo em Ceuta, indicando que não provém da fonte habitualmente presumida. A imprensa brasileira informou sobre a redução de oportunidades e autonomia de meninas devido à gravidez, conforme resultados de pesquisa. A imprensa brasileira reportou que o impacto das telas na saúde mental é tema de debate em 80% das escolas. A imprensa brasileira divulgou uma declaração de uma ONG que atribui responsabilidade a Marrocos pelo desespero de imigrantes que se dirigem à Europa, reiterada numa segunda notícia. A imprensa brasileira noticiou a divergência de especialistas sobre a anuência de Marrocos em relação à migração para Ceuta. A imprensa brasileira anunciou que a Festa Literária Internacional de São Paulo incluirá mais de 180 convidados e 65 mesas de debates.",
+     "noticias": 8
+    }
+   }
+  },
+  "Defesa Nacional": {
+   "noticias": 42,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa portuguesa noticiou desenvolvimentos relacionados com a defesa nacional, incluindo a proteção de 600 satélites no espaço por fabricantes portugueses, a resposta do Exército dos EUA a uma aliança com 18 países contra o crime organizado e a necessidade de reforço militar expressa por autoridades de Angola e Japão. Foram reportados ataques russos contra Kiev, resultando em vítimas mortais e feridos, e a Ucrânia comunicou perdas no terreno. O contexto de conflito na Ucrânia motivou pedidos de sistemas de defesa e integração acelerada na União Europeia, enquanto a Coreia do Norte criticou o Japão por se transformar num \"Estado bélico\". A situação em Ceuta e a reestruturação das Forças Armadas ucranianas foram também objeto de análise.",
+     "noticias": 30
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa de Cabo Verde noticiou mortes de civis na Guerra da Ucrânia, atingindo o maior nível desde o início do conflito. A imprensa de Angola e de Moçambique divulgou imagens de ataques russos que provocaram megaincêndios em Kiev. A imprensa de Angola e de Moçambique também deu conta de contactos diplomáticos entre Brasil e Rússia.",
+     "noticias": 8
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "A imprensa internacional noticiou que, em Kherson, um vídeo documentou a perseguição e ataque de um civil por um drone de origem russa. Paralelamente, em França, bombeiros ucranianos apoiaram o combate a um incêndio na região de Gironde. A cobertura mediática destacou ainda a posição de Estados-membros da União Europeia relativamente à adesão da Ucrânia ao bloco comunitário.",
+     "noticias": 4
+    }
+   }
+  },
+  "Economia e Coesão Territorial": {
+   "noticias": 94,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou diversos desenvolvimentos na área económica e territorial. Foram referenciados efeitos de limitação de investimento, com Floene a alertar para potenciais impactos nos custos de energia e gás, e a necessidade de reforçar a competitividade da cadeia de valor do caju em Moçambique. O setor empresarial português destacou-se com a elegância e o luxo discreto, a aceleração na guerra das estrelas protegendo 600 satélites no espaço e a valorização de biorresíduos pela Ambilital. O comércio mundial demonstrou resiliência face às tensões no Médio Oriente, enquanto o Alentejo 2030 disponibilizou 5,3 milhões de euros para a recuperação de património histórico. Adicionalmente, foram noticiados investimentos em tecnologia, incluindo um fundo de cinco mil milhões de euros para empresas tecnológicas europeias e a atribuição de um contrato de 470 milhões de euros para a entrega de drones ao exército britânico.",
+     "noticias": 73
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa de Cabo Verde noticiou a suspensão temporária do transporte por autocarro na Praia devido a problemas técnicos. No Brasil, a imprensa registou a manutenção de uma greve de ferroviários, a paralisação parcial de três linhas de comboios na CPTM e um congestionamento superior a dois mil quilómetros causado pela greve de trens em São Paulo. A imprensa brasileira divulgou ainda a realização de uma reunião do Comité de Política Monetária que definirá a taxa básica de juros. Em Moçambique, a imprensa noticiou acidentes laborais que feriram mais de doiscentos e noventa trabalhadores e a retenção de mais de cem mil toneladas de minério após a paralisação nas areias pesadas de Chibuto. A imprensa de Moçambique informou também sobre o interesse do Core Energy Consortium em investir nos setores de energia, petróleo e gás.",
+     "noticias": 20
+    }
+   }
+  },
+  "Educação, Ciência e Inovação": {
+   "noticias": 45,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou a aprovação de investimentos para a construção de 254 residências estudantis para a Universidade Nova de Lisboa, bem como a existência de uma rede de excelência em Inteligência Artificial responsável promovida por dez universidades espanholas. Foram ainda registadas declarações da Federação Nacional de Educação relativas a garantias para a recuperação da confiança nos exames nacionais, e a FENPROF reiterou denúncias de pressões sobre os professores para a alteração do calendário escolar e das férias. Relatos de irregularidades na digitalização de exames e de situações de recusa de vagas em cuidados continuados foram igualmente objeto de cobertura mediática. Adicionalmente, a imprensa portuguesa divulgou informações sobre a aceitação de duas respostas corretas numa questão do exame de Física e Química, e sobre a apresentação de propostas para a melhoria da qualidade da educação.",
+     "noticias": 37
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa lusófona noticiou eventos climáticos extremos que desafiam concessionárias de energia no Brasil, tendo em conta a gravidez como fator de redução de oportunidades e autonomia para meninas, conforme aponta uma pesquisa, e o impacto das telas na saúde mental, tema debatido em cerca de 80 por cento das escolas brasileiras.",
+     "noticias": 7
+    }
+   }
+  },
+  "Finanças": {
+   "noticias": 29,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa portuguesa noticiou, no domínio das finanças, a contratação por parte do IGCP de um seguro para mitigar o aumento da fatura associada aos Certificados de Aforro, a diminuição das reservas das barragens para 82% em três bacias, com três a terminarem julho abaixo da média, e a previsão de quebra na produção de novo crédito por parte dos bancos face ao apertar das regras. Adicionalmente, registaram-se declarações do primeiro-ministro sobre os resultados “surpreendentes” no fim do ano, a manutenção da liquidação do IUC em datas fixas a partir de amanhã, com regras a alterarem-se a 1 de Janeiro de 2028, e a disponibilização de uma verba do Orçamento do Estado para o pagamento de isenções de portagens. O Tribunal arbitral voltou a contrariar o Fisco quanto à tributação de cauções no arrendamento, enquanto a ERSE confirmou a diminuição do preço eficiente da gasolina para 1,993 euros e o aumento do preço eficiente do gasóleo para 2,121 euros.",
+     "noticias": 26
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa de Cabo Verde noticiou o início do pagamento do subsídio de férias aos funcionários públicos em São Tomé e Príncipe, no âmbito da área governativa das Finanças. Em Cabo Verde, o PAICV confirmou a realização de uma auditoria independente às contas públicas, com o apoio da oposição. O governo de Cabo Verde acusou o MpD de distorcer o esclarecimento do FMI e reiterou a discrepância de 8,3 mil milhões de escudos nas contas públicas.",
+     "noticias": 3
+    }
+   }
+  },
+  "Infraestruturas e Habitação": {
+   "noticias": 15,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou, entre outros aspetos, a celebração dos 30 anos da CPLP com referência à mobilidade em Moçambique, a reparação de quatro mil habitações em La Guaira na Venezuela, a designação de Albano Jerónimo como “Dono do Tempo” na campanha de Transportes Metropolitanos de Lisboa, a intenção de transformar um antigo colégio em Mangualde em habitação para arrendamento acessível, a estimativa de queda de até dez por cento no crédito à habitação, a previsão de quebra na produção de novo crédito com o apertar de regras, o aumento previsto de rendas em dois vírgula cinco por cento em 2027, a celebração do maior contrato de arrendamento logístico do Porto por Panattoni e Cushman & Wakefield, a existência de mais de setecentos mil casas em Portugal pertencentes a proprietários com mais de setenta anos, a decisão de que as cauções de arrendamento ficam fora do IRS pela segunda vez por um tribunal arbitral e indicações para aliviar o orçamento familiar face à subida dos custos.",
+     "noticias": 12
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa de Cabo Verde noticiou o aumento do número de vítimas mortais nos sismos da Venezuela para 6125, enquanto a imprensa brasileira divulgou um edital de quatro milhões de reais destinado a projetos de comunicação climática.",
+     "noticias": 3
+    }
+   }
+  },
+  "Justiça": {
+   "noticias": 37,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou irregularidades na Polícia Judiciária, com o Tribunal de Contas a perdoar infrações financeiras a Luís Neves. Foram comunicadas detenções na sequência da operação Flamma e de um incêndio na Amadora, aplicando-se prisão preventiva em alguns casos. O perdão de Luís Neves foi objeto de análise e de referências a exames de saúde. Regras de arrendamento foram objeto de decisões judiciais sobre cauções e a sua dedutibilidade no IRS. O Presidente da República foi mencionado em relação a uma questão institucional.",
+     "noticias": 18
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa brasileira noticiou a repulpação do visto de uma embaixadora nos Estados Unidos, a remessa de uma lista de gestores com contas rejeitadas ao Tribunal Superior Eleitoral, a apresentação de novas regras de conduta para magistrados pelo Ministro Fachin, a solicitação de um parecer da Procuradora-Geral da República sobre a proibição de visitas ao Presidente afastado, a extinção da aposentadoria compulsória como punição máxima para juízes pelo Conselho Nacional de Justiça, a operação para desarticular ataques a Brasília pelo Ministério da Justiça, a investigação de um senador por suspeita de desvios no INSS pela Polícia Federal e a criação de filtros para recursos que deverão reduzir ações no Supremo Tribunal de Justiça. Adicionalmente, a imprensa de São Tomé e Príncipe confirmou a reeleição do Presidente da República com uma maioria de 55,88%, enquanto a imprensa de Moçambique noticiou a condenação de um ex-Vice-Comandante Geral da Polícia da República de Moçambique por difamação e a atenção da Justiça do Trabalho ao assédio eleitoral no trabalho.",
+     "noticias": 19
+    }
+   }
+  },
+  "Negócios Estrangeiros": {
+   "noticias": 32,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou 30 anos de CPLP, com Moçambique a destacar a mobilidade como conquista. A União Europeia avança na legislação da inteligência artificial, com implicações para diversos Estados-membros. A Jordânia convocou chefes da diplomacia de países árabes e muçulmanos, e Zelensky solicitou uma integração acelerada na União Europeia. A diplomacia climática tem estado em foco entre as Conferências das Partes, enquanto o Estado português não detém capital direto na futura Gigafábrica de IA. O Governo Trump anunciou a revogação de um visto da embaixadora do Brasil nos Estados Unidos. A União Europeia criticou a regularização em massa de migrantes ilegais em Espanha e, em relação a Ceuta, os ministros elogiaram a gestão espanhola e anunciaram o reforço das fronteiras. A imprensa portuguesa registou a crise em Ceuta, com os ministros da UE a concordarem no reforço das fronteiras e dos mecanismos de regresso de migrantes.",
+     "noticias": 22
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa de Cabo Verde noticiou a condenação por parte de ministros da União Europeia a alegada interferência estrangeira na crise migratória de Ceuta, enquanto a imprensa brasileira divulgou reações europeias à regularização de imigrantes e declarações presidenciais sobre comércio e geopolítica com a Rússia. Adicionalmente, a imprensa brasileira registou preocupações de organizações não governamentais relativamente à responsabilidade marroquina no êxodo migratório para a Europa.",
+     "noticias": 8
+    }
+   }
+  },
+  "Presidência": {
+   "noticias": 52,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou a exigência de uma ONG espanhola relativa à proteção de menores migrantes em Ceuta, no contexto de uma crise migratória. Paralelamente, a imprensa portuguesa divulgou a preocupação da União Europeia com a regularização em massa de migrantes ilegais em Espanha e a necessidade de reforçar as fronteiras e os mecanismos de regresso. O debate político interno sobre a gestão da imigração e a organização do Mundial 2030 com Marrocos foi também objeto de cobertura, com posições divergentes entre partidos sobre a integração e a receção de migrantes. Adicionalmente, foram noticiados o aumento do número de vítimas mortais na crise fronteiriça de Ceuta e a resgate de migrantes no Canal da Mancha.",
+     "noticias": 42
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa de Angola e de Moçambique noticiou a condenação por parte de ministros da UE à interferência estrangeira na crise migratória de Ceuta, o alerta de um grupo de direitos humanos sobre assédio a imigrantes na África do Sul e a aprovação de novos Códigos do Processo Aduaneiro e Fiscal pelo Governo de Moçambique. Adicionalmente, foi referida a proposta para o novo Procurador-Geral da República submetida ao Presidente da República e a discussão sobre a anuência de Marrocos na migração a Ceuta, com opiniões divergentes entre especialistas. A imprensa brasileira divulgou declarações europeias sobre a regularização de imigrantes, considerando-a um sinal não positivo, e a Itália propôs controlos temporários nas fronteiras com Espanha.",
+     "noticias": 9
+    }
+   }
+  },
+  "Reforma do Estado": {
+   "noticias": 11,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou a progressão da legislação relativa à inteligência artificial na União Europeia, com a definição de novas obrigações para chatbots e deepfakes, e a ausência de regulamentação específica sobre entidades como a OpenAI, Google e Anthropic. Adicionalmente, foram divulgados desenvolvimentos relativos à futura Gigafábrica de IA, indicando que o Estado português não deterá capital direto na mesma, e a inexistência de medidas que visem a dona do Facebook e a empresa chinesa DeepSeek no âmbito da regulamentação dos EUA.",
+     "noticias": 7
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa brasileira noticiou a divulgação de um edital de quatro milhões de reais destinado a projetos de comunicação climática. O debate sobre o impacto das telas na saúde mental foi alargado a 80 por cento das escolas do país. A Flipei em São Paulo contará com mais de 180 convidados e 65 mesas de debates. Foi divulgado um manual e um sistema de inteligência artificial para orientar empresas no combate ao branqueamento de capitais.",
+     "noticias": 4
+    }
+   }
+  },
+  "Saúde": {
+   "noticias": 42,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou a divulgação de novas normas para intervenções endovasculares com aval da Ordem dos Médicos, a aprovação do modelo de gestão privada para a primeira Unidade de Saúde Familiar de São Pedro da Cadeira e a consideração de taxas para utentes que recusem vagas em cuidados continuados. O Infarmed suspendeu o abastecimento de quetiapina e cessou a produção e exportação do medicamento utilizado no tratamento da esquizofrenia e depressão, motivadas por problemas no fornecimento. Foram registados múltiplos acidentes com autocarros em Tomar, com relatos de um morto e vários feridos, e o Governo admitiu a possibilidade de cobrar taxas a quem recuse cuidados continuados.",
+     "noticias": 34
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa de Cabo Verde noticiou o aumento do número de vítimas mortais nos sismos da Venezuela para 6125. A imprensa brasileira divulgou a criação de salas especiais para mulheres vítimas de violência em delegacias do Rio de Janeiro e o início de um serviço de teleatendimentos no âmbito do Sistema Único de Saúde para o tratamento de vício em apostas. A imprensa brasileira informou também sobre o debate sobre o impacto das telas na saúde mental em 80% das escolas do país. A imprensa moçambicana deu conta da internamento em estado crítico do líder da oposição ugandesa Kizza Besigye.",
+     "noticias": 7
+    }
+   }
+  },
+  "Trabalho, Solidariedade e Segurança Social": {
+   "noticias": 19,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A imprensa de Portugal noticiou a existência de empresas que recorrem à inteligência artificial para justificar reduções de pessoal, bem como um caso de ocultação de cadáver por um filho para manutenção de benefícios sociais e um erro no portal da Segurança Social relativamente a prestações de desemprego. Foram ainda divulgados processos judiciais relacionados com a conservação de cadáveres e processos de contestação em arbitragem desportiva.",
      "noticias": 5
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A imprensa de Cabo Verde noticiou o início do pagamento do subsídio de férias aos funcionários públicos de São Tomé e Príncipe. A imprensa brasileira informou sobre a manutenção de uma greve de ferroviários, com impacto no trânsito de São Paulo, e sobre a paralisação parcial de três linhas de trens metropolitanos. Adicionalmente, a imprensa brasileira divulgou a criação de filtros para recursos judiciais, a reunião de dados sobre igualdade salarial entre homens e mulheres e a identificação de assédio eleitoral no contexto laboral.",
+     "noticias": 14
     }
    }
   }
