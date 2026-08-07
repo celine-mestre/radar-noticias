@@ -808,34 +808,32 @@
    "periodo": "24h",
    "areas": {
     "Administração Interna": {
-     "noticias": 4,
-     "novas": 4,
-     "fontes": 4,
+     "noticias": 5,
+     "novas": 5,
+     "fontes": 3,
      "origens": {
       "nacionais": 3,
       "lusofonas": 0,
-      "internacionais": 1
+      "internacionais": 2
      },
      "palavras": {
-      "incêndios florestais": 2,
-      "fronteiras": 1,
-      "PSP": 1
+      "incêndios florestais": 3,
+      "fronteiras": 2
      }
     },
     "Agricultura e Mar": {
-     "noticias": 5,
-     "novas": 5,
-     "fontes": 4,
+     "noticias": 7,
+     "novas": 7,
+     "fontes": 3,
      "origens": {
       "nacionais": 4,
-      "lusofonas": 0,
-      "internacionais": 1
+      "lusofonas": 1,
+      "internacionais": 2
      },
      "palavras": {
+      "florestas": 4,
       "agricultura": 2,
-      "florestas": 2,
-      "agricultores": 1,
-      "segurança alimentar": 1
+      "agricultores": 1
      }
     },
     "Ambiente e Energia": {
@@ -848,201 +846,214 @@
       "internacionais": 2
      },
      "palavras": {
-      "renováveis": 2,
+      "energia": 4,
       "seca": 2,
-      "energia": 1,
-      "eletricidade": 1,
-      "poluição": 1
+      "alterações climáticas": 1,
+      "eletricidade": 1
      }
     },
     "Cultura, Juventude e Desporto": {
-     "noticias": 10,
-     "novas": 10,
-     "fontes": 5,
+     "noticias": 13,
+     "novas": 13,
+     "fontes": 8,
      "origens": {
-      "nacionais": 8,
-      "lusofonas": 0,
+      "nacionais": 9,
+      "lusofonas": 2,
       "internacionais": 2
      },
      "palavras": {
-      "jovens": 4,
+      "jovens": 5,
       "desporto": 3,
+      "museus": 2,
+      "artistas": 1,
       "cinema": 1,
       "atletas": 1,
       "bibliotecas": 1
      }
     },
     "Defesa Nacional": {
-     "noticias": 8,
-     "novas": 8,
-     "fontes": 6,
-     "origens": {
-      "nacionais": 5,
-      "lusofonas": 2,
-      "internacionais": 1
-     },
-     "palavras": {
-      "Ucrânia": 7,
-      "NATO": 1,
-      "militares": 1
-     }
-    },
-    "Economia e Coesão Territorial": {
-     "noticias": 26,
-     "novas": 26,
-     "fontes": 10,
-     "origens": {
-      "nacionais": 20,
-      "lusofonas": 6,
-      "internacionais": 0
-     },
-     "palavras": {
-      "empresas": 15,
-      "investimento": 6,
-      "exportações": 4,
-      "turismo": 3,
-      "crescimento económico": 1,
-      "coesão territorial": 1,
-      "autarquias": 1,
-      "comércio": 1
-     }
-    },
-    "Educação, Ciência e Inovação": {
-     "noticias": 21,
-     "novas": 21,
-     "fontes": 9,
-     "origens": {
-      "nacionais": 19,
-      "lusofonas": 2,
-      "internacionais": 0
-     },
-     "palavras": {
-      "escolas": 14,
-      "exames nacionais": 7,
-      "alunos": 6,
-      "professores": 5,
-      "ensino superior": 4,
-      "ensino secundário": 3,
-      "Ministério da Educação": 2,
-      "universidades": 2,
-      "ciência e inovação": 1
-     }
-    },
-    "Finanças": {
-     "noticias": 3,
-     "novas": 3,
-     "fontes": 3,
-     "origens": {
-      "nacionais": 2,
-      "lusofonas": 1,
-      "internacionais": 0
-     },
-     "palavras": {
-      "défice": 1,
-      "impostos": 1,
-      "dívida pública": 1
-     }
-    },
-    "Infraestruturas e Habitação": {
-     "noticias": 2,
-     "novas": 2,
-     "fontes": 2,
-     "origens": {
-      "nacionais": 2,
-      "lusofonas": 0,
-      "internacionais": 0
-     },
-     "palavras": {
-      "preço das casas": 1,
-      "comboios": 1
-     }
-    },
-    "Justiça": {
      "noticias": 9,
      "novas": 9,
      "fontes": 7,
      "origens": {
       "nacionais": 4,
-      "lusofonas": 4,
+      "lusofonas": 3,
+      "internacionais": 2
+     },
+     "palavras": {
+      "Ucrânia": 6,
+      "militares": 3,
+      "Forças Armadas": 1,
+      "serviço militar": 1,
+      "NATO": 1
+     }
+    },
+    "Economia e Coesão Territorial": {
+     "noticias": 28,
+     "novas": 28,
+     "fontes": 12,
+     "origens": {
+      "nacionais": 21,
+      "lusofonas": 6,
       "internacionais": 1
      },
      "palavras": {
-      "tribunais": 5,
-      "prisões": 3,
-      "Ministério Público": 2,
-      "Ministério da Justiça": 1
+      "empresas": 14,
+      "investimento": 6,
+      "exportações": 5,
+      "crescimento económico": 2,
+      "turismo": 2,
+      "autarquias": 1,
+      "fundos europeus": 1,
+      "coesão territorial": 1,
+      "comércio": 1
      }
     },
-    "Negócios Estrangeiros": {
-     "noticias": 3,
-     "novas": 3,
+    "Educação, Ciência e Inovação": {
+     "noticias": 23,
+     "novas": 23,
+     "fontes": 9,
+     "origens": {
+      "nacionais": 19,
+      "lusofonas": 3,
+      "internacionais": 1
+     },
+     "palavras": {
+      "escolas": 11,
+      "ensino superior": 7,
+      "alunos": 5,
+      "professores": 5,
+      "exames nacionais": 4,
+      "universidades": 3,
+      "ensino secundário": 2,
+      "investigação e desenvolvimento": 1,
+      "Ministério da Educação": 1,
+      "ciência e inovação": 1
+     }
+    },
+    "Finanças": {
+     "noticias": 4,
+     "novas": 4,
      "fontes": 3,
      "origens": {
-      "nacionais": 2,
-      "lusofonas": 1,
+      "nacionais": 4,
+      "lusofonas": 0,
       "internacionais": 0
      },
      "palavras": {
-      "Nações Unidas": 3
+      "défice": 2,
+      "Autoridade Tributária": 1,
+      "IVA": 1,
+      "impostos": 1
      }
     },
-    "Presidência": {
-     "noticias": 7,
-     "novas": 7,
-     "fontes": 6,
+    "Infraestruturas e Habitação": {
+     "noticias": 4,
+     "novas": 4,
+     "fontes": 3,
      "origens": {
       "nacionais": 4,
-      "lusofonas": 2,
+      "lusofonas": 0,
+      "internacionais": 0
+     },
+     "palavras": {
+      "habitação": 2,
+      "arrendamento": 1,
+      "comboios": 1
+     }
+    },
+    "Justiça": {
+     "noticias": 11,
+     "novas": 11,
+     "fontes": 8,
+     "origens": {
+      "nacionais": 4,
+      "lusofonas": 6,
       "internacionais": 1
      },
      "palavras": {
-      "migrantes": 5,
+      "tribunais": 6,
+      "Ministério Público": 4,
+      "prisões": 4
+     }
+    },
+    "Negócios Estrangeiros": {
+     "noticias": 4,
+     "novas": 4,
+     "fontes": 4,
+     "origens": {
+      "nacionais": 3,
+      "lusofonas": 0,
+      "internacionais": 1
+     },
+     "palavras": {
+      "União Europeia": 2,
+      "CPLP": 1,
+      "Nações Unidas": 1
+     }
+    },
+    "Presidência": {
+     "noticias": 8,
+     "novas": 8,
+     "fontes": 7,
+     "origens": {
+      "nacionais": 4,
+      "lusofonas": 3,
+      "internacionais": 1
+     },
+     "palavras": {
+      "migrantes": 4,
+      "Conselho de Ministros": 2,
+      "Programa do Governo": 1,
+      "Presidência do Conselho de Ministros": 1,
       "migratória": 1,
-      "Conselho de Ministros": 1,
       "imigrantes": 1,
       "imigração": 1
      }
     },
     "Reforma do Estado": {
-     "noticias": 7,
-     "novas": 7,
-     "fontes": 5,
-     "origens": {
-      "nacionais": 7,
-      "lusofonas": 0,
-      "internacionais": 0
-     },
-     "palavras": {
-      "inteligência artificial": 7
-     }
-    },
-    "Saúde": {
-     "noticias": 3,
-     "novas": 3,
-     "fontes": 2,
-     "origens": {
-      "nacionais": 3,
-      "lusofonas": 0,
-      "internacionais": 0
-     },
-     "palavras": {
-      "saúde mental": 1,
-      "hospitais": 1,
-      "medicamentos": 1
-     }
-    },
-    "Trabalho, Solidariedade e Segurança Social": {
      "noticias": 6,
      "novas": 6,
-     "fontes": 5,
+     "fontes": 6,
      "origens": {
       "nacionais": 5,
       "lusofonas": 0,
       "internacionais": 1
      },
      "palavras": {
-      "salários": 4,
-      "emprego": 3
+      "inteligência artificial": 6
+     }
+    },
+    "Saúde": {
+     "noticias": 3,
+     "novas": 3,
+     "fontes": 3,
+     "origens": {
+      "nacionais": 1,
+      "lusofonas": 2,
+      "internacionais": 0
+     },
+     "palavras": {
+      "hospitais": 1,
+      "urgências": 1,
+      "Serviço Nacional de Saúde": 1
+     }
+    },
+    "Trabalho, Solidariedade e Segurança Social": {
+     "noticias": 7,
+     "novas": 7,
+     "fontes": 7,
+     "origens": {
+      "nacionais": 4,
+      "lusofonas": 2,
+      "internacionais": 1
+     },
+     "palavras": {
+      "salários": 2,
+      "emprego": 2,
+      "pensões": 1,
+      "Ministério do Trabalho": 1,
+      "greve": 1
      }
     }
    }
