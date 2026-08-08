@@ -579,9 +579,14 @@ Escrita em cada recolha. Por dia e por área: quantas notícias foram **publicad
 dia**, quantas publicações distintas as trouxeram, a repartição por origem (Portugal,
 lusofonia, internacional) e a contagem de cada palavra-chave.
 
-Conta-se pela data de publicação, e não pelo que a recolha trouxe: a recolha traz sempre
-a janela inteira do arquivo — sete dias —, pelo que contar tudo faria cada dia registar
-o que os sete anteriores já tinham registado, e o total viria multiplicado por sete.
+**A série é reconstruída do arquivo, não da recolha em curso.** Cada execução recalcula
+os sete dias que o arquivo cobre e reescreve-os. É o que garante que a soma da série é
+igual ao que o painel mostra: são o mesmo conjunto de notícias, contado da mesma maneira.
+
+Contar pelo que cada recolha lê seria contar de menos — um feed só expõe os seus últimos
+artigos, e o valor que ficasse seria o da última recolha do dia, não o que o dia trouxe.
+Reconstruindo do arquivo, o dia anterior também é corrigido com o que foi publicado
+depois da última recolha.
 
 São agregados, não notícias. Cerca de **2 KB por dia**, menos de 1 MB por ano. Chega
 para responder a perguntas de tendência: que áreas cresceram, que assuntos ganharam

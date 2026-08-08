@@ -1261,7 +1261,8 @@ def principal():
         guardar_mensal(args.mensal, linhas)
 
     if args.historico:
-        atualizar_historico(args.historico, linhas, args.periodo, vistos_anteriores)
+        atualizar_historico(args.historico, linhas, args.periodo, vistos_anteriores,
+                            arquivo=args.arquivo)
     if falhas:
         print(f"{len(falhas)} áreas falharam — ver a folha Falhas.")
 
@@ -1542,7 +1543,57 @@ def gravar_corpus(caminho, lidos, dias=7):
     print(f"corpus de {dias} dias: {len(mantidos)} artigos em {caminho} ({tamanho:.1f} MB)")
 
 
-def atualizar_historico(caminho, linhas, periodo, vistos=None):
+def historico_do_arquivo(caminho, arquivo):
+    """Reconstrói a série dos últimos dias a partir do arquivo acumulado.
+
+    ANTES CONTAVA-SE MAL. Cada recolha registava o dia com base no que ela
+    própria tinha lido dos feeds naquele instante — e um feed só expõe os seus
+    últimos artigos. Como cada execução substituía o registo do dia, o valor que
+    ficava era o da última recolha, e não a soma do que o dia trouxe. Daí a série
+    mostrar cerca de um terço do que o arquivo tem.
+
+    O arquivo, esse, acumula todas as recolhas e está desduplicado. Reconstruir a
+    série a partir dele torna os dois números coerentes por construção: o que o
+    painel de evolução soma passa a ser o mesmo que o radar mostra.
+
+    Reescrevem-se todos os dias que o arquivo cobre — sete —, o que também
+    corrige o dia anterior com o que foi publicado depois da última recolha.
+    """
+    try:
+        with open(arquivo, encoding="utf-8") as origem:
+            noticias = json.load(origem).get("noticias", [])
+    except (json.JSONDecodeError, OSError) as erro:
+        print(f"Série diária: não foi possível ler {arquivo} ({erro}).")
+        return None
+
+    por_dia = {}
+    for n in noticias:
+        dia = (n.get("data") or "")[:10]
+        area = n.get("area")
+        if not dia or not area:
+            continue
+        registo = por_dia.setdefault(dia, {}).setdefault(area, {
+            "noticias": 0, "novas": 0, "fontes": set(),
+            "origens": {"nacionais": 0, "lusofonas": 0, "internacionais": 0},
+            "palavras": {},
+        })
+        registo["noticias"] += 1
+        registo["novas"] += 1
+        if n.get("fonte"):
+            registo["fontes"].add(n["fonte"])
+        registo["origens"][origem_da_fonte(n.get("dominio"))] += 1
+        for pal in (n.get("palavras") or []):
+            registo["palavras"][pal] = registo["palavras"].get(pal, 0) + 1
+
+    return {dia: {nome: {
+                "noticias": v["noticias"], "novas": v["novas"], "fontes": len(v["fontes"]),
+                "origens": v["origens"],
+                "palavras": dict(sorted(v["palavras"].items(), key=lambda x: -x[1])),
+            } for nome, v in sorted(areas.items())}
+            for dia, areas in por_dia.items()}
+
+
+def atualizar_historico(caminho, linhas, periodo, vistos=None, arquivo=None):
     """Acrescenta à série diária o retrato de hoje, por área governativa.
 
     Guarda apenas agregados — notícias recolhidas, notícias publicadas nesse dia
@@ -1567,10 +1618,22 @@ def atualizar_historico(caminho, linhas, periodo, vistos=None):
         except (json.JSONDecodeError, OSError):
             pass                                   # série ilegível: recomeça-se
 
-    # SÓ O QUE FOI PUBLICADO NESTE DIA. A recolha traz sempre a janela inteira do
-    # arquivo — sete dias —, pelo que contar tudo fazia cada dia registar o que
-    # os sete anteriores já tinham registado. Somando os dias, o total vinha
-    # multiplicado por sete.
+    # A série é reconstruída a partir do arquivo acumulado, que é o mesmo que o
+    # painel consulta. Só se recorre à recolha em curso quando não há arquivo.
+    do_arquivo = historico_do_arquivo(caminho, arquivo) if arquivo else None
+
+    if do_arquivo is not None:
+        for dia, areas in sorted(do_arquivo.items()):
+            serie["dias"] = [d for d in serie["dias"] if d.get("data") != dia]
+            serie["dias"].append({"data": dia, "periodo": "dia completo", "areas": areas})
+        serie["dias"].sort(key=lambda d: d.get("data", ""))
+        with open(caminho, "w", encoding="utf-8") as destino:
+            json.dump(serie, destino, ensure_ascii=False, indent=1)
+        total = sum(v["noticias"] for areas in do_arquivo.values() for v in areas.values())
+        print(f"série diária: {len(do_arquivo)} dias reconstruídos do arquivo "
+              f"({total} notícias) · {len(serie['dias'])} dias em {caminho}")
+        return
+
     do_dia = [l for l in linhas if l[2] and l[2].strftime("%Y-%m-%d") == hoje]
     print(f"série diária: {len(do_dia)} de {len(linhas)} notícias foram publicadas hoje")
 
