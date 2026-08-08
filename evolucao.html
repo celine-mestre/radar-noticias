@@ -43,6 +43,7 @@ header{background:linear-gradient(115deg,var(--azul) 0%, #23506f 45%, var(--verd
 .marca .txt small{display:block;font-size:.72rem;opacity:.82;letter-spacing:.06em;text-transform:uppercase}
 header h1{font-size:1.6rem;font-weight:600;letter-spacing:-.02em;margin-top:.35rem}
 header p{font-size:.88rem;opacity:.9;margin-top:.4rem;max-width:70ch;line-height:1.55}
+header p.inicio{font-size:.78rem;opacity:.75;margin-top:.5rem}
 header .voltar{display:inline-flex;align-items:center;gap:.4rem;margin-top:1rem;
   padding:.5rem 1rem;border-radius:999px;border:1px solid rgba(255,255,255,.45);
   background:rgba(255,255,255,.12);color:#fff;text-decoration:none;font-size:.82rem}
@@ -254,6 +255,7 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
     <p>Série longitudinal do Radar de Notícias, construída a partir do retrato que cada
        recolha deixa registado. Conta, em cada dia, as notícias <strong>publicadas nesse
        dia</strong>. Cresce um ponto por dia e nunca é apagada.</p>
+    <p class="inicio" id="inicio"></p>
     <a class="voltar" href="index.html#radar">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
       Voltar ao radar
@@ -393,6 +395,16 @@ const AREAS = [
     palavras:["Ministério da Agricultura e Mar","política agrícola comum","agricultura","agricultores","desenvolvimento rural","florestas","gestão florestal","pescas","pescadores","aquicultura","economia do mar","segurança alimentar","regadio"], excluir:["ambiente de trabalho","ambiente empresarial","ambiente de negócios"] }
 
 ];
+
+/* ── INÍCIO DA SÉRIE ───────────────────────────────────────────────────────
+   Os primeiros dias de uma aplicação são de ensaio: recolhas incompletas,
+   palavras-chave a mudar, contagens que ainda não valiam. Incluí-los faria a
+   série começar por um degrau que nada diz sobre o que foi noticiado.
+
+   Datas anteriores a esta ficam de fora de tudo — gráfico, contagens e
+   exportação. Para as repor, basta esvaziar: INICIO_SERIE = "".
+   ────────────────────────────────────────────────────────────────────────── */
+const INICIO_SERIE = "2026-08-04";
 
 const $ = s => document.querySelector(s);
 const cor = g => (GRUPOS.find(x => x.id === g) || {}).cor || "#2B5683";
@@ -1021,8 +1033,18 @@ $("#agregacao").addEventListener("click", e => {
 });
 
 (async () => {
-  SERIE = (await carregar()).filter(d => d && d.data).sort((a, b) => a.data.localeCompare(b.data));
+  SERIE = (await carregar())
+    .filter(d => d && d.data && (!INICIO_SERIE || d.data >= INICIO_SERIE))
+    .sort((a, b) => a.data.localeCompare(b.data));
   encherAreas();
+  const marca = $("#inicio");
+  if(marca && INICIO_SERIE){
+    const d = new Date(INICIO_SERIE + "T00:00:00");
+    marca.textContent = "A série começa em "
+      + d.toLocaleDateString("pt-PT", { day:"numeric", month:"long", year:"numeric" })
+      + ". Os dias anteriores foram de ensaio e não entram nos quadros.";
+  }
+
   $("#cobertura").textContent = SERIE.length
     ? `${SERIE.length} ${SERIE.length === 1 ? "dia" : "dias"} · de ${SERIE[0].data} a ${SERIE[SERIE.length - 1].data}`
     : "sem série registada";
