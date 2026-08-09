@@ -1933,86 +1933,91 @@
    "periodo": "dia completo",
    "areas": {
     "Administração Interna": {
-     "noticias": 3,
-     "novas": 3,
-     "fontes": 3,
-     "origens": {
-      "nacionais": 3,
-      "lusofonas": 0,
-      "internacionais": 0
-     },
-     "palavras": {
-      "fronteiras": 2,
-      "incêndios florestais": 1
-     }
-    },
-    "Agricultura e Mar": {
-     "noticias": 2,
-     "novas": 2,
-     "fontes": 1,
-     "origens": {
-      "nacionais": 2,
-      "lusofonas": 0,
-      "internacionais": 0
-     },
-     "palavras": {
-      "florestas": 2
-     }
-    },
-    "Ambiente e Energia": {
-     "noticias": 3,
-     "novas": 3,
-     "fontes": 2,
-     "origens": {
-      "nacionais": 1,
-      "lusofonas": 0,
-      "internacionais": 2
-     },
-     "palavras": {
-      "energia": 2,
-      "escassez de água": 1,
-      "seca": 1
-     }
-    },
-    "Cultura, Juventude e Desporto": {
-     "noticias": 1,
-     "novas": 1,
-     "fontes": 1,
-     "origens": {
-      "nacionais": 1,
-      "lusofonas": 0,
-      "internacionais": 0
-     },
-     "palavras": {
-      "cinema": 1
-     }
-    },
-    "Defesa Nacional": {
-     "noticias": 2,
-     "novas": 2,
-     "fontes": 2,
-     "origens": {
-      "nacionais": 1,
-      "lusofonas": 0,
-      "internacionais": 1
-     },
-     "palavras": {
-      "Ucrânia": 2
-     }
-    },
-    "Educação, Ciência e Inovação": {
      "noticias": 4,
      "novas": 4,
-     "fontes": 3,
+     "fontes": 4,
      "origens": {
       "nacionais": 4,
       "lusofonas": 0,
       "internacionais": 0
      },
      "palavras": {
+      "fronteiras": 2,
+      "incêndios florestais": 1,
+      "PSP": 1
+     }
+    },
+    "Agricultura e Mar": {
+     "noticias": 4,
+     "novas": 4,
+     "fontes": 1,
+     "origens": {
+      "nacionais": 4,
+      "lusofonas": 0,
+      "internacionais": 0
+     },
+     "palavras": {
+      "florestas": 4
+     }
+    },
+    "Ambiente e Energia": {
+     "noticias": 4,
+     "novas": 4,
+     "fontes": 3,
+     "origens": {
+      "nacionais": 2,
+      "lusofonas": 0,
+      "internacionais": 2
+     },
+     "palavras": {
+      "energia": 2,
+      "qualidade da água": 1,
+      "escassez de água": 1,
+      "seca": 1
+     }
+    },
+    "Cultura, Juventude e Desporto": {
+     "noticias": 3,
+     "novas": 3,
+     "fontes": 2,
+     "origens": {
+      "nacionais": 3,
+      "lusofonas": 0,
+      "internacionais": 0
+     },
+     "palavras": {
+      "artistas": 1,
+      "língua portuguesa": 1,
+      "cinema": 1
+     }
+    },
+    "Defesa Nacional": {
+     "noticias": 5,
+     "novas": 5,
+     "fontes": 3,
+     "origens": {
+      "nacionais": 4,
+      "lusofonas": 0,
+      "internacionais": 1
+     },
+     "palavras": {
+      "Ucrânia": 3,
+      "indústria de defesa": 2
+     }
+    },
+    "Educação, Ciência e Inovação": {
+     "noticias": 6,
+     "novas": 6,
+     "fontes": 4,
+     "origens": {
+      "nacionais": 6,
+      "lusofonas": 0,
+      "internacionais": 0
+     },
+     "palavras": {
+      "escolas": 3,
       "Ministério da Educação": 2,
-      "escolas": 2,
-      "universidades": 1
+      "universidades": 2
      }
     },
     "Finanças": {
@@ -2045,16 +2050,16 @@
      }
     },
     "Saúde": {
-     "noticias": 3,
-     "novas": 3,
+     "noticias": 4,
+     "novas": 4,
      "fontes": 3,
      "origens": {
-      "nacionais": 2,
+      "nacionais": 3,
       "lusofonas": 0,
       "internacionais": 1
      },
      "palavras": {
-      "hospitais": 2,
+      "hospitais": 3,
       "saúde mental": 1,
       "urgências": 1
      }
