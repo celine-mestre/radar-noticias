@@ -1933,33 +1933,36 @@
    "periodo": "dia completo",
    "areas": {
     "Administração Interna": {
-     "noticias": 6,
-     "novas": 6,
-     "fontes": 5,
+     "noticias": 9,
+     "novas": 9,
+     "fontes": 7,
      "origens": {
-      "nacionais": 5,
-      "lusofonas": 1,
+      "nacionais": 6,
+      "lusofonas": 3,
       "internacionais": 0
      },
      "palavras": {
-      "incêndios florestais": 2,
-      "fronteiras": 2,
-      "segurança interna": 1,
-      "PSP": 1
+      "incêndios florestais": 3,
+      "fronteiras": 3,
+      "PSP": 2,
+      "refugiados": 1,
+      "segurança interna": 1
      }
     },
     "Agricultura e Mar": {
-     "noticias": 8,
-     "novas": 8,
-     "fontes": 4,
+     "noticias": 12,
+     "novas": 12,
+     "fontes": 6,
      "origens": {
-      "nacionais": 7,
-      "lusofonas": 1,
+      "nacionais": 8,
+      "lusofonas": 4,
       "internacionais": 0
      },
      "palavras": {
-      "florestas": 7,
-      "agricultura": 1
+      "florestas": 9,
+      "agricultura": 2,
+      "agricultores": 1,
+      "pescadores": 1
      }
     },
     "Ambiente e Energia": {
@@ -1979,67 +1982,86 @@
       "seca": 1
      }
     },
-    "Cultura, Juventude e Desporto": {
-     "noticias": 3,
-     "novas": 3,
-     "fontes": 2,
+    "Assuntos Parlamentares": {
+     "noticias": 1,
+     "novas": 1,
+     "fontes": 1,
      "origens": {
-      "nacionais": 3,
-      "lusofonas": 0,
+      "nacionais": 0,
+      "lusofonas": 1,
       "internacionais": 0
      },
      "palavras": {
-      "artistas": 1,
+      "Assembleia da República": 1
+     }
+    },
+    "Cultura, Juventude e Desporto": {
+     "noticias": 9,
+     "novas": 9,
+     "fontes": 5,
+     "origens": {
+      "nacionais": 4,
+      "lusofonas": 5,
+      "internacionais": 0
+     },
+     "palavras": {
+      "jovens": 4,
+      "artistas": 3,
+      "atletas": 1,
       "língua portuguesa": 1,
       "cinema": 1
      }
     },
     "Defesa Nacional": {
-     "noticias": 6,
-     "novas": 6,
-     "fontes": 3,
+     "noticias": 12,
+     "novas": 12,
+     "fontes": 6,
      "origens": {
-      "nacionais": 5,
-      "lusofonas": 0,
+      "nacionais": 9,
+      "lusofonas": 2,
       "internacionais": 1
      },
      "palavras": {
-      "Ucrânia": 4,
-      "indústria de defesa": 2
+      "Ucrânia": 5,
+      "militares": 4,
+      "indústria de defesa": 3,
+      "serviço militar": 1
      }
     },
     "Economia e Coesão Territorial": {
-     "noticias": 5,
-     "novas": 5,
-     "fontes": 5,
+     "noticias": 7,
+     "novas": 7,
+     "fontes": 6,
      "origens": {
-      "nacionais": 4,
-      "lusofonas": 1,
+      "nacionais": 5,
+      "lusofonas": 2,
       "internacionais": 0
      },
      "palavras": {
-      "empresas": 3,
+      "empresas": 4,
+      "turismo": 2,
       "autarquias": 2,
       "comércio": 2,
       "crescimento económico": 1,
       "exportações": 1,
-      "investimento": 1,
-      "turismo": 1
+      "investimento": 1
      }
     },
     "Educação, Ciência e Inovação": {
-     "noticias": 8,
-     "novas": 8,
-     "fontes": 5,
+     "noticias": 11,
+     "novas": 11,
+     "fontes": 8,
      "origens": {
-      "nacionais": 8,
-      "lusofonas": 0,
+      "nacionais": 9,
+      "lusofonas": 2,
       "internacionais": 0
      },
      "palavras": {
+      "escolas": 6,
+      "Ministério da Educação": 3,
       "universidades": 3,
-      "escolas": 3,
-      "Ministério da Educação": 2,
+      "exames nacionais": 1,
+      "professores": 1,
       "investigação científica": 1
      }
     },
@@ -2073,31 +2095,35 @@
      }
     },
     "Justiça": {
-     "noticias": 3,
-     "novas": 3,
-     "fontes": 3,
+     "noticias": 8,
+     "novas": 8,
+     "fontes": 7,
      "origens": {
-      "nacionais": 2,
-      "lusofonas": 1,
-      "internacionais": 0
+      "nacionais": 3,
+      "lusofonas": 4,
+      "internacionais": 1
      },
      "palavras": {
+      "tribunais": 4,
+      "prisões": 2,
+      "Ministério da Justiça": 1,
+      "corrupção": 1,
       "Ministério Público": 1,
-      "magistrados": 1,
-      "tribunais": 1,
-      "prisões": 1
+      "magistrados": 1
      }
     },
     "Negócios Estrangeiros": {
-     "noticias": 2,
-     "novas": 2,
+     "noticias": 4,
+     "novas": 4,
      "fontes": 2,
      "origens": {
       "nacionais": 1,
-      "lusofonas": 1,
+      "lusofonas": 3,
       "internacionais": 0
      },
      "palavras": {
+      "Nações Unidas": 1,
+      "diplomacia": 1,
       "emigrantes": 1,
       "comunidades portuguesas": 1
      }
@@ -2121,31 +2147,31 @@
      }
     },
     "Reforma do Estado": {
-     "noticias": 1,
-     "novas": 1,
-     "fontes": 1,
+     "noticias": 2,
+     "novas": 2,
+     "fontes": 2,
      "origens": {
-      "nacionais": 1,
+      "nacionais": 2,
       "lusofonas": 0,
       "internacionais": 0
      },
      "palavras": {
-      "inteligência artificial": 1
+      "inteligência artificial": 2
      }
     },
     "Saúde": {
-     "noticias": 5,
-     "novas": 5,
-     "fontes": 3,
+     "noticias": 8,
+     "novas": 8,
+     "fontes": 5,
      "origens": {
-      "nacionais": 4,
-      "lusofonas": 0,
+      "nacionais": 5,
+      "lusofonas": 2,
       "internacionais": 1
      },
      "palavras": {
-      "hospitais": 3,
-      "saúde mental": 2,
-      "urgências": 1
+      "hospitais": 5,
+      "urgências": 3,
+      "saúde mental": 2
      }
     }
    }
