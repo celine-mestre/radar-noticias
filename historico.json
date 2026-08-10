@@ -2213,11 +2213,11 @@
    "periodo": "dia completo",
    "areas": {
     "Administração Interna": {
-     "noticias": 24,
-     "novas": 24,
+     "noticias": 25,
+     "novas": 25,
      "fontes": 12,
      "origens": {
-      "nacionais": 15,
+      "nacionais": 16,
       "lusofonas": 6,
       "internacionais": 3
      },
@@ -2225,6 +2225,7 @@
       "incêndios florestais": 11,
       "fronteiras": 6,
       "deportação": 3,
+      "refugiados": 1,
       "PSP": 1,
       "GNR": 1,
       "forças de segurança": 1,
@@ -2249,71 +2250,73 @@
      }
     },
     "Ambiente e Energia": {
-     "noticias": 26,
-     "novas": 26,
-     "fontes": 11,
+     "noticias": 30,
+     "novas": 30,
+     "fontes": 12,
      "origens": {
-      "nacionais": 17,
+      "nacionais": 21,
       "lusofonas": 3,
       "internacionais": 6
      },
      "palavras": {
-      "seca": 10,
-      "energia": 10,
+      "seca": 12,
+      "energia": 12,
       "poluição": 5,
-      "alterações climáticas": 3,
+      "alterações climáticas": 4,
       "abastecimento de água": 2,
       "escassez de água": 2,
       "resíduos": 1
      }
     },
     "Cultura, Juventude e Desporto": {
-     "noticias": 26,
-     "novas": 26,
+     "noticias": 29,
+     "novas": 29,
      "fontes": 11,
      "origens": {
-      "nacionais": 19,
+      "nacionais": 22,
       "lusofonas": 4,
       "internacionais": 3
      },
      "palavras": {
       "jovens": 12,
       "desporto": 5,
-      "atletas": 4,
-      "cinema": 3,
+      "atletas": 5,
+      "cinema": 4,
       "espetáculos": 2,
+      "língua portuguesa": 1,
       "museus": 1
      }
     },
     "Defesa Nacional": {
-     "noticias": 50,
-     "novas": 50,
-     "fontes": 11,
+     "noticias": 54,
+     "novas": 54,
+     "fontes": 12,
      "origens": {
-      "nacionais": 39,
+      "nacionais": 43,
       "lusofonas": 4,
       "internacionais": 7
      },
      "palavras": {
       "Ucrânia": 35,
-      "militares": 16,
-      "NATO": 3,
+      "militares": 17,
+      "NATO": 5,
+      "Ministério da Defesa Nacional": 1,
       "Forças Armadas": 1,
       "indústria de defesa": 1
      }
     },
     "Economia e Coesão Territorial": {
-     "noticias": 67,
-     "novas": 67,
+     "noticias": 69,
+     "novas": 69,
      "fontes": 14,
      "origens": {
-      "nacionais": 61,
+      "nacionais": 63,
       "lusofonas": 5,
       "internacionais": 1
      },
      "palavras": {
-      "empresas": 39,
-      "investimento": 16,
+      "empresas": 40,
+      "investimento": 17,
       "autarquias": 7,
       "comércio": 3,
       "turismo": 3,
@@ -2323,37 +2326,37 @@
      }
     },
     "Educação, Ciência e Inovação": {
+     "noticias": 29,
+     "novas": 29,
+     "fontes": 10,
+     "origens": {
+      "nacionais": 23,
+      "lusofonas": 5,
+      "internacionais": 1
+     },
+     "palavras": {
+      "escolas": 10,
+      "alunos": 8,
+      "ensino superior": 8,
+      "exames nacionais": 6,
+      "universidades": 6,
+      "Ministério da Educação": 4,
+      "professores": 4,
+      "bolsas de estudo": 2
+     }
+    },
+    "Finanças": {
      "noticias": 17,
      "novas": 17,
      "fontes": 10,
      "origens": {
       "nacionais": 13,
-      "lusofonas": 3,
-      "internacionais": 1
-     },
-     "palavras": {
-      "alunos": 6,
-      "escolas": 5,
-      "ensino superior": 4,
-      "professores": 4,
-      "universidades": 3,
-      "exames nacionais": 2,
-      "Ministério da Educação": 1,
-      "bolsas de estudo": 1
-     }
-    },
-    "Finanças": {
-     "noticias": 14,
-     "novas": 14,
-     "fontes": 9,
-     "origens": {
-      "nacionais": 11,
-      "lusofonas": 3,
+      "lusofonas": 4,
       "internacionais": 0
      },
      "palavras": {
+      "impostos": 7,
       "Ministério das Finanças": 5,
-      "impostos": 4,
       "Autoridade Tributária": 3,
       "défice": 3,
       "IRS": 1,
@@ -2362,33 +2365,34 @@
      }
     },
     "Infraestruturas e Habitação": {
-     "noticias": 12,
-     "novas": 12,
+     "noticias": 15,
+     "novas": 15,
      "fontes": 8,
      "origens": {
-      "nacionais": 9,
+      "nacionais": 12,
       "lusofonas": 2,
       "internacionais": 1
      },
      "palavras": {
-      "habitação": 5,
+      "habitação": 6,
       "comboios": 5,
+      "preço das casas": 2,
       "transportes públicos": 2,
       "ferrovia": 1
      }
     },
     "Justiça": {
-     "noticias": 18,
-     "novas": 18,
+     "noticias": 20,
+     "novas": 20,
      "fontes": 10,
      "origens": {
-      "nacionais": 14,
+      "nacionais": 16,
       "lusofonas": 3,
       "internacionais": 1
      },
      "palavras": {
-      "tribunais": 9,
-      "prisões": 6,
+      "tribunais": 10,
+      "prisões": 7,
       "Ministério da Justiça": 3,
       "corrupção": 1
      }
@@ -2428,48 +2432,50 @@
      }
     },
     "Reforma do Estado": {
-     "noticias": 5,
-     "novas": 5,
+     "noticias": 8,
+     "novas": 8,
      "fontes": 5,
      "origens": {
-      "nacionais": 3,
-      "lusofonas": 2,
+      "nacionais": 5,
+      "lusofonas": 3,
       "internacionais": 0
      },
      "palavras": {
-      "inteligência artificial": 5
+      "inteligência artificial": 8
      }
     },
     "Saúde": {
-     "noticias": 11,
-     "novas": 11,
-     "fontes": 8,
+     "noticias": 14,
+     "novas": 14,
+     "fontes": 9,
      "origens": {
-      "nacionais": 6,
-      "lusofonas": 4,
+      "nacionais": 8,
+      "lusofonas": 5,
       "internacionais": 1
      },
      "palavras": {
-      "hospitais": 3,
-      "medicamentos": 3,
+      "hospitais": 4,
+      "medicamentos": 4,
       "Serviço Nacional de Saúde": 2,
+      "cuidados continuados": 1,
       "listas de espera": 1,
       "saúde mental": 1,
       "médicos de família": 1
      }
     },
     "Trabalho, Solidariedade e Segurança Social": {
-     "noticias": 16,
-     "novas": 16,
+     "noticias": 17,
+     "novas": 17,
      "fontes": 9,
      "origens": {
-      "nacionais": 13,
+      "nacionais": 14,
       "lusofonas": 2,
       "internacionais": 1
      },
      "palavras": {
       "emprego": 8,
       "salários": 5,
+      "apoios sociais": 1,
       "ação social": 1,
       "pensões": 1,
       "segurança social": 1
