@@ -12,7 +12,7 @@ Unidade de Pesquisa e Estatísticas
 
 ## Como funciona
 
-A recolha lê, de duas em duas horas, **73 feeds de 66 publicações de imprensa** — portuguesas,
+A recolha lê, de duas em duas horas, **73 feeds de 66 órgãos de comunicação social** — imprensa, rádio e televisão, portugueses,
 lusófonas e internacionais — e marca cada artigo com as áreas governativas cujas
 palavras-chave ele satisfaz. Um artigo é recolhido por ser de uma fonte conhecida, não
 por corresponder a uma pesquisa.
@@ -45,9 +45,15 @@ anterior ao arquivo, não aparece — e alargar o âmbito é acrescentar feeds �
    cada área no título e no resumo. Encontrando, marca o artigo com essa área e com
    as expressões que a acionaram. Um artigo pode ficar em mais de uma área.
 4. **Gravação.** Os artigos marcados são acumulados no `arquivo.json`, sem
-   repetições, mantendo sete dias. Gravam-se também o retrato do dia e a série
-   diária de contagens.
-5. **No painel.** O radar lê o `arquivo.json` e conta as notícias de cada área
+   repetições, mantendo sete dias. Gravam-se também o retrato do dia, o `corpus.json`
+   (todos os artigos lidos, marcados ou não, para a pesquisa por termo), a série
+   diária de contagens e o arquivo mensal permanente. Ainda na mesma execução,
+   o `alertas.py` compara o volume do dia com o comportamento habitual de cada área
+   e grava as tempestades e o momentum.
+5. **Uma vez por dia, o sentimento.** A primeira recolha da manhã encadeia o Amália,
+   que classifica o tom das notícias nacionais ainda sem avaliação e grava o
+   `sentimentos.json`. Corre à parte, sem atrasar a recolha nem o relatório.
+6. **No painel.** O radar lê o `arquivo.json` e conta as notícias de cada área
    dentro do período e da origem escolhidos. Ao abrir uma área, o mesmo ficheiro é
    filtrado pelas palavras-chave selecionadas. As duas contagens seguem os mesmos
    critérios, pelo que dizem sempre o mesmo número. Tudo local, em milissegundos.
@@ -63,23 +69,37 @@ notícias, com a distância ao centro a significar quanto foi noticiado — quan
 perto do centro, mais notícias. Ao centro, o total do período e da origem escolhidos.
 Em ecrãs estreitos o círculo dá lugar a uma grelha de cartões, que faz o mesmo trabalho.
 
-**Predefinições.** Últimos sete dias e imprensa de todas as origens. O período vai das
+**Predefinições.** Últimos sete dias e comunicação social de todas as origens. O período vai das
 24 horas aos sete dias que o arquivo guarda; a origem escolhe entre Portugal, lusofonia,
 internacional ou todas. Ambos valem para o radar e para as consultas.
 
 **Uma área abre-se num clique**, já com as notícias recolhidas. Dentro da janela:
 
-- Todas as palavras-chave da área à cabeça, selecionáveis uma a uma ou em conjunto, com
-  a consulta a refazer-se no momento; e uma caixa para pesquisa por termo livre.
-- Seletores de período, imprensa e **área**, este último para trocar de área sem fechar
+- As palavras-chave da área **recolhidas por defeito**, num botão que as mostra a pedido —
+  para as notícias terem o espaço todo, sobretudo no telemóvel. Abertas, selecionam-se
+  uma a uma ou em conjunto, com a consulta a refazer-se no momento; ao lado, uma caixa
+  para pesquisa por termo livre.
+- Seletores de período, OCS e **área**, este último para trocar de área sem fechar
   a janela — útil para comparar duas áreas com os mesmos critérios.
 - Botão para **ampliar** a janela a quase todo o ecrã, e outro para voltar ao radar.
 - Notícias por ordem cronológica, agrupadas por dia, com hora, imagem quando a
   publicação a fornece, resumo, publicação e etiqueta de origem.
 - Síntese com indicadores: distribuição por publicação, assuntos recorrentes, cobertura
-  de cada palavra-chave e evolução da área ao longo do tempo.
+  de cada palavra-chave e evolução da área ao longo do período escolhido.
 - Impressão em PDF com cabeçalho institucional, e exportação para Excel com folha de
   notícias, folha de especificações e folha de síntese.
+
+**Alertas de tempestade política.** Quando uma área dispara — um volume de notícias muito
+acima do seu comportamento habitual —, o painel abre com uma faixa de alerta, e o
+relatório diário assinala-o. Abaixo, o *momentum* do dia: as cinco áreas mais acima da sua
+mediana. O método está descrito na tabela de ficheiros (`alertas.json`) e no manual.
+
+**Sentimento da cobertura, em validação.** O Amália classifica o tom (positivo, neutro,
+negativo) das notícias da comunicação social nacional; as avaliações aparecem como um
+ponto junto a cada notícia e como distribuição agregada — mas só quando há cobertura
+suficiente para a leitura ser fiável (ao menos 60% das notícias nacionais do dia
+avaliadas). Enquanto a leitura humana não estiver concluída, tudo isto mostra o rótulo
+«em validação».
 
 **Nada reduz sem explicar.** Sempre que a consulta deixa notícias de fora, o painel diz
 quantas e porquê: com outras palavras-chave da área, de outra origem, ou no arquivo mas
@@ -194,7 +214,7 @@ comparáveis entre áreas. Fica de fora:
 - **Publicações não subscritas** — imprensa regional, especializada ou estrangeira
   fora da lista.
 - **Redes sociais** — as plataformas sociais não publicam feeds e estão fora do
-  âmbito da aplicação, que é a imprensa.
+  âmbito da aplicação, que é a comunicação social.
 - **Períodos anteriores ao arquivo** — que guarda sete dias, valor definido na recolha.
 
 Alargar o âmbito é acrescentar feeds à lista — e passa a valer na recolha seguinte.
@@ -263,6 +283,11 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
 - **As expressões são curtas, como a imprensa escreve.** "política de imigração" quase
   nunca aparece num título; "imigração", "imigrantes" e "migrantes" aparecem sempre. Uma
   expressão longa é precisa e não apanha nada. São 276 expressões nas 17 áreas, incluindo os cargos governativos (ministro e secretários de Estado de cada pasta, com alternância automática de género).
+- **O Primeiro-Ministro é a 17.ª área,** no topo da ordem protocolar. Como não tem
+  matéria setorial própria — não há «assuntos do PM» com léxico específico —, a área
+  assenta no titular e no cargo: «Luís Montenegro», «primeiro-ministro português»,
+  «XXV Governo», com exclusões locativas para o país e a cidade homónimos. É a exceção
+  à regra de que as áreas se definem pela matéria tutelada.
 - **Áreas vizinhas separam-se pela tutela, não pelo tema.** Três áreas tratam de pessoas
   que atravessam fronteiras, e a fronteira entre elas é a das secretarias de Estado. A
   **Presidência** tem a política de imigração, a AIMA, as autorizações de residência, a
@@ -283,7 +308,11 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
   o respetivo ministério tutela, incluindo as das secretarias de Estado — é por isso que
   a política de imigração está na Presidência, que tem o Secretário de Estado Adjunto da
   Presidência e Imigração, e não na Administração Interna, a quem cabe o controlo de
-  fronteiras. Uma remodelação governamental obriga a rever a lista, na constante `AREAS`.
+  fronteiras. Os cargos entram pela função, não pelo nome — «ministro da Saúde», e não o
+  titular do momento —, e a marcação alterna o género sozinha («ministra da Saúde» conta
+  na mesma), pelo que uma troca de titular ou uma remodelação normal não obriga a mexer
+  em nada; só uma mudança de orgânica (pastas criadas, extintas ou renomeadas) pede uma
+  revisão da constante `AREAS`.
 - **Comparação entre áreas.** Legítima dentro do corpus: nenhuma área é truncada e o
   método é o mesmo para todas. As contagens medem o que as publicações subscritas
   noticiaram, não o total do que foi noticiado.
@@ -394,7 +423,7 @@ O conteúdo é JSON, uma lista por área:
 }
 ```
 
-O ficheiro `subscritores.json` do repositório é apenas o modelo, com as dezasseis
+O ficheiro `subscritores.json` do repositório é apenas o modelo, com as dezassete
 áreas e sem endereços. Serve para copiar a estrutura e para trabalho local.
 
 **Processamento.** Em **Actions › Subscricao do relatorio › Run workflow**, com o
@@ -476,7 +505,7 @@ ou contrato. Usa-se a conversão quantizada de 4 bits, com cerca de 5,5 GB, que 
 placa gráfica.
 
 **Corre em paralelo, uma área por trabalho.** Sem placa gráfica, um parágrafo demora
-vários minutos, e uma área com notícias nas três origens passa dos vinte. As dezasseis
+vários minutos, e uma área com notícias nas três origens passa dos vinte. As dezassete
 em sequência levariam horas. Cada área tem por isso o seu próprio trabalho — o GitHub
 corre até vinte em simultâneo em repositórios públicos — e um passo final junta as
 partes num só `sinteses.json`. O tempo total passa a ser o da área mais demorada, não a
