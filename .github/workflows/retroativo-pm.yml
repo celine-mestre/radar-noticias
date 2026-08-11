@@ -26,6 +26,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Instalar dependencias
+        # O extrair_noticias.py importa o openpyxl (Excel diario) a abrir;
+        # sem ele, qualquer script que o importe morre no arranque.
+        run: pip install --quiet openpyxl
+
       - name: Reclassificar e injetar
         run: python retroativo_pm.py
 
