@@ -1,58 +1,58 @@
 {
- "atualizado": "2026-08-11 10:12",
+ "atualizado": "2026-08-11 12:01",
  "dia": "2026-08-11",
- "corte": "10:12",
+ "corte": "12:01",
  "dias_base": 7,
- "regra": "Tempestade quando a contagem do dia, até às 10:12, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 12:01, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [],
  "momentum": [
   {
    "area": "Defesa Nacional",
-   "hoje": 23,
-   "mediana": 11,
-   "limiar": 28.8,
-   "excesso": 12,
-   "variacao_pct": 109,
-   "dias_base": 7,
-   "tempestade": false
-  },
-  {
-   "area": "Infraestruturas e Habitação",
-   "hoje": 9,
-   "mediana": 2,
-   "limiar": 10,
-   "excesso": 7,
-   "variacao_pct": 350,
-   "dias_base": 7,
-   "tempestade": false
-  },
-  {
-   "area": "Saúde",
-   "hoje": 9,
-   "mediana": 4,
-   "limiar": 12,
-   "excesso": 5,
-   "variacao_pct": 125,
+   "hoje": 33,
+   "mediana": 16,
+   "limiar": 45.7,
+   "excesso": 17,
+   "variacao_pct": 106,
    "dias_base": 7,
    "tempestade": false
   },
   {
    "area": "Ambiente e Energia",
-   "hoje": 8,
+   "hoje": 13,
+   "mediana": 6,
+   "limiar": 14,
+   "excesso": 7,
+   "variacao_pct": 117,
+   "dias_base": 7,
+   "tempestade": false
+  },
+  {
+   "area": "Infraestruturas e Habitação",
+   "hoje": 11,
    "mediana": 4,
    "limiar": 12,
-   "excesso": 4,
+   "excesso": 7,
+   "variacao_pct": 175,
+   "dias_base": 7,
+   "tempestade": false
+  },
+  {
+   "area": "Saúde",
+   "hoje": 12,
+   "mediana": 6,
+   "limiar": 14,
+   "excesso": 6,
    "variacao_pct": 100,
    "dias_base": 7,
    "tempestade": false
   },
   {
    "area": "Administração Interna",
-   "hoje": 10,
-   "mediana": 8,
-   "limiar": 16.9,
-   "excesso": 2,
-   "variacao_pct": 25,
+   "hoje": 14,
+   "mediana": 10,
+   "limiar": 18,
+   "excesso": 4,
+   "variacao_pct": 40,
    "dias_base": 7,
    "tempestade": false
   }
