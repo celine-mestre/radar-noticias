@@ -298,6 +298,10 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
       <button data-o="internacionais">Internacional</button>
     </div>
     <label class="sel-area">
+      <span>Agrupamento</span>
+      <select id="grupo"><option value="">Todos os agrupamentos</option></select>
+    </label>
+    <label class="sel-area">
       <span>Área</span>
       <select id="area"><option value="">Todas as áreas</option></select>
     </label>
@@ -389,6 +393,8 @@ const GRUPOS = [
   { id:"ambiente",  nome:"Ambiente, energia e recursos naturais", cor:"#266B73" }
 ];
 const AREAS = [
+  { id:"primeiro_ministro", nome:"Primeiro-Ministro", grupo:"soberania", icone:"pm",
+    palavras:["Luís Montenegro","Montenegro","primeiro-ministro português","chefe do Governo português","XXV Governo"] },
   { id:"estrangeiros", nome:"Negócios Estrangeiros", grupo:"soberania", icone:"estrangeiros",
     palavras:["Ministério dos Negócios Estrangeiros","política externa","diplomacia","assuntos europeus","Conselho Europeu","União Europeia","CPLP","Nações Unidas","comunidades portuguesas","emigrantes","rede consular","cooperação para o desenvolvimento"] },
   { id:"financas", nome:"Finanças", grupo:"economia", icone:"financas",
@@ -406,7 +412,7 @@ const AREAS = [
   { id:"justica", nome:"Justiça", grupo:"soberania", icone:"justica",
     palavras:["Ministério da Justiça","tribunais","Ministério Público","magistrados","processos pendentes","sistema prisional","prisões","registos e notariado","reforma da justiça","apoio judiciário","corrupção"], excluir:["justiça poética","fazer justiça a"] },
   { id:"economia", nome:"Economia e Coesão Territorial", grupo:"economia", icone:"economia",
-    palavras:["Ministério da Economia","crescimento económico","exportações","investimento","empresas","turismo","comércio","fundos europeus","desenvolvimento regional","coesão territorial","administração local","autarquias","ordenamento do território","interioridade"], excluir:["comércio eletrónico de dados","ambiente de trabalho","empresa familiar"] },
+    palavras:["Ministério da Economia","crescimento económico","exportações","investimento","tecido empresarial","PME","apoios às empresas","empresas portuguesas","PRR","Plano de Recuperação e Resiliência","turismo","comércio","fundos europeus","desenvolvimento regional","coesão territorial","administração local","autarquias","ordenamento do território","interioridade"], excluir:["comércio eletrónico de dados","ambiente de trabalho","empresa familiar"] },
   { id:"infraestruturas", nome:"Infraestruturas e Habitação", grupo:"economia", icone:"infraestruturas",
     palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","preço das casas","compra de casa","obras públicas","ferrovia","comboios","novo aeroporto","transportes públicos","mobilidade","licenciamento urbanístico"] },
   { id:"educacao", nome:"Educação, Ciência e Inovação", grupo:"social", icone:"educacao",
@@ -443,14 +449,21 @@ const num = n => n.toLocaleString("pt-PT");
 let SERIE = [];        // [{data, areas:{nome:{noticias, novas, fontes, origens, palavras}}}]
 let TEMPESTADES = [];  // [{data, area, hoje, mediana, limiar}] — do alertas.json
 let SENTIMENTO = [];   // [{data, fechado, areas:{nome:{nacionais, avaliadas, positivo, neutro, negativo}}}]
-let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas", areaEscolhida = "";
+let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas", areaEscolhida = "", grupoEscolhido = "";
 
-/* Escolhida uma área, tudo passa a ser dela: o gráfico deixa de somar as
-   dezasseis e mostra só a sua, e as expressões ficam só as suas. */
+/* Nomes das áreas de um agrupamento temático, para filtrar por grupo. */
+const areasDoGrupo = g => new Set(AREAS.filter(a => a.grupo === g).map(a => a.nome));
+
+/* Escolhida uma área, tudo passa a ser dela; escolhido um agrupamento, tudo
+   passa a ser das áreas desse grupo. A área tem precedência sobre o grupo. */
 function areasDe(d){
   const todas = d.areas || {};
-  if(!areaEscolhida) return todas;
-  return todas[areaEscolhida] ? { [areaEscolhida]: todas[areaEscolhida] } : {};
+  if(areaEscolhida) return todas[areaEscolhida] ? { [areaEscolhida]: todas[areaEscolhida] } : {};
+  if(grupoEscolhido){
+    const doGrupo = areasDoGrupo(grupoEscolhido);
+    return Object.fromEntries(Object.entries(todas).filter(([n]) => doGrupo.has(n)));
+  }
+  return todas;
 }
 
 /* Quantas notícias conta uma área, conforme a origem escolhida. Escolhida uma,
@@ -1199,11 +1212,31 @@ $("#periodo").addEventListener("click", e => {
 function encherAreas(){
   const vistas = new Set();
   SERIE.forEach(d => Object.keys(d.areas || {}).forEach(n => vistas.add(n)));
+
+  const selG = $("#grupo");
+  if(selG && !selG.dataset.pronto){
+    selG.innerHTML = `<option value="">Todos os agrupamentos</option>` +
+      GRUPOS.map(g => `<option value="${g.id}">${g.nome}</option>`).join("");
+    selG.dataset.pronto = "1";
+  }
+
   const sel = $("#area");
-  const ordenadas = AREAS.map(a => a.nome).filter(n => vistas.has(n));
-  sel.innerHTML = `<option value="">Todas as áreas</option>` +
-    ordenadas.map(n => `<option value="${n}">${n}</option>`).join("");
+  const doGrupo = grupoEscolhido ? areasDoGrupo(grupoEscolhido) : null;
+  const ordenadas = AREAS.map(a => a.nome)
+    .filter(n => vistas.has(n) && (!doGrupo || doGrupo.has(n)));
+  sel.innerHTML = `<option value="">${grupoEscolhido ? "Todas as áreas do agrupamento" : "Todas as áreas"}</option>` +
+    ordenadas.map(n => `<option value="${n}"${n === areaEscolhida ? " selected" : ""}>${n}</option>`).join("");
 }
+
+$("#grupo").addEventListener("change", e => {
+  grupoEscolhido = e.target.value;
+  /* Ao mudar de agrupamento, uma área escolhida que já não lhe pertence deixa
+     de fazer sentido — repõe-se «todas as áreas do grupo». */
+  if(areaEscolhida && grupoEscolhido && !areasDoGrupo(grupoEscolhido).has(areaEscolhida))
+    areaEscolhida = "";
+  encherAreas();
+  desenhar();
+});
 
 $("#area").addEventListener("change", e => {
   areaEscolhida = e.target.value;
