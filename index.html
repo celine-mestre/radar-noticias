@@ -3311,19 +3311,19 @@ function descarregarXLSX(){
     ["Termos excluídos", (consultaAtiva.area.excluir || []).join("; ") || "—"],
     ["Janela temporal", ROTULO_PERIODO[periodo]],
     ["Origem das fontes", {
-      nacionais: "imprensa de Portugal — domínios .pt e títulos portugueses reconhecidos",
-      lusofonas: "imprensa da lusofonia — Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil",
-      internacionais: "imprensa internacional, excluindo a lusofonia",
-      todas: "imprensa de todas as origens"
+      nacionais: "OCS de Portugal — domínios .pt e títulos portugueses reconhecidos",
+      lusofonas: "OCS da lusofonia — Angola, Moçambique, Cabo Verde, Timor-Leste, São Tomé e Brasil",
+      internacionais: "OCS internacionais, excluindo a lusofonia",
+      todas: "OCS de todas as origens"
     }[filtroFontes]],
-    ["Tipo de fonte", "imprensa — jornais, rádios, televisões e agências"],
-    ["Origem", "Feeds de 66 publicações de imprensa — Portugal, lusofonia e internacional"],
+    ["Tipo de fonte", "Órgãos de comunicação social — jornais, rádios, televisões e agências"],
+    ["Origem", "Feeds de 66 órgãos de comunicação social — Portugal, lusofonia e internacional"],
     ["Notícias exportadas", String(recolha.length)],
     ["Data da exportação", new Date().toLocaleString("pt-PT")],
     ["Versão do painel", CONFIG.versao],
     ["", ""],
     ["Âmbito",
-     "Feeds de publicações de imprensa subscritas, marcadas pelas palavras-chave da área. " +
+     "Feeds de órgãos de comunicação social subscritos, marcados pelas palavras-chave da área. " +
      "As contagens medem o que essas publicações noticiaram no período, não o total noticiado. " +
      "Nenhuma área é truncada, pelo que a comparação entre áreas é legítima."],
     ["Ordenação",
