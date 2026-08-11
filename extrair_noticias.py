@@ -92,6 +92,35 @@ GRUPOS = {
 }
 
 AREAS = [
+    # O Primeiro-Ministro encabeça a lista: precede protocolarmente todas as
+    # áreas ministeriais. O cargo em absoluto ("primeiro-ministro") não entra
+    # nas palavras — apanharia os chefes de governo estrangeiros, e enumerar
+    # qualificativos nunca chega (testado: Bulgária, Israel e Hungria escapavam).
+    # Fica o apelido, que a imprensa portuguesa usa quase sempre, com exclusões
+    # locativas para o país homónimo e para a cidade gaúcha de Montenegro (RS).
+    # A sigla "PM" também fica de fora (Polícia Marítima, "3 pm").
+    ("primeiro_ministro", "Primeiro-Ministro", "soberania",
+     [
+      "Luís Montenegro",
+      "Montenegro",
+      "primeiro-ministro português",
+      "chefe do Governo português",
+      "XXV Governo"],
+     [
+      "no Montenegro",
+      "ao Montenegro",
+      "pelo Montenegro",
+      "em Montenegro",
+      "cidade de Montenegro",
+      "município de Montenegro",
+      "Montenegro e Sérvia",
+      "Sérvia e Montenegro",
+      "Montenegro, Sérvia",
+      "capital do Montenegro",
+      "Podgorica",
+      "Bósnia",
+      "ex-primeiro-ministro",
+      "antigo primeiro-ministro"]),
     ("estrangeiros", "Negócios Estrangeiros", "soberania",
      [
       "Ministério dos Negócios Estrangeiros",
@@ -105,7 +134,11 @@ AREAS = [
       "comunidades portuguesas",
       "emigrantes",
       "rede consular",
-      "cooperação para o desenvolvimento"],
+      "cooperação para o desenvolvimento",
+      "ministro dos Negócios Estrangeiros",
+      "secretário de Estado dos Assuntos Europeus",
+      "secretário de Estado dos Negócios Estrangeiros",
+      "secretário de Estado das Comunidades Portuguesas"],
      []),
     ("financas", "Finanças", "economia",
      [
@@ -121,7 +154,12 @@ AREAS = [
       "Autoridade Tributária",
       "Administração Pública",
       "funcionários públicos",
-      "execução orçamental"],
+      "execução orçamental",
+      "ministro das Finanças",
+      "secretário de Estado Adjunto e do Orçamento",
+      "secretário de Estado dos Assuntos Fiscais",
+      "secretário de Estado do Tesouro",
+      "secretário de Estado da Administração Pública"],
      []),
     ("presidencia", "Presidência", "soberania",
      [
@@ -139,7 +177,10 @@ AREAS = [
       "vistos de residência",
       "nacionalidade portuguesa",
       "regularização de estrangeiros",
-      "acolhimento e integração"],
+      "acolhimento e integração",
+      "ministro da Presidência",
+      "secretário de Estado Adjunto da Presidência",
+      "secretário de Estado da Presidência"],
      []),
     ("reforma", "Reforma do Estado", "soberania",
      [
@@ -155,7 +196,11 @@ AREAS = [
       "inteligência artificial",
       "modernização administrativa",
       "SIADAP",
-      "avaliação de desempenho"],
+      "avaliação de desempenho",
+      "ministro Adjunto e da Reforma do Estado",
+      "ministro da Reforma do Estado",
+      "secretário de Estado para a Digitalização",
+      "secretário de Estado para a Simplificação"],
      ["inteligência artificial generativa em contexto militar"]),
     ("parlamentares", "Assuntos Parlamentares", "soberania",
      [
@@ -166,7 +211,8 @@ AREAS = [
       "comissão de inquérito",
       "iniciativa legislativa",
       "moção de censura",
-      "regulação da comunicação social"],
+      "regulação da comunicação social",
+      "ministro dos Assuntos Parlamentares"],
      []),
     ("defesa", "Defesa Nacional", "soberania",
      [
@@ -179,7 +225,10 @@ AREAS = [
       "indústria de defesa",
       "missões militares",
       "serviço militar",
-      "Ucrânia"],
+      "Ucrânia",
+      "ministro da Defesa",
+      "secretário de Estado Adjunto e da Defesa Nacional",
+      "secretário de Estado da Defesa"],
      ["defesa do consumidor", "defesa pessoal", "linha de defesa", "defesa do título"]),
     ("interna", "Administração Interna", "soberania",
      [
@@ -195,8 +244,11 @@ AREAS = [
       "expulsão do território",
       "proteção civil",
       "incêndios florestais",
-      "sinistralidade rodoviária"
-     ],
+      "sinistralidade rodoviária",
+      "ministro da Administração Interna",
+      "secretário de Estado da Administração Interna",
+      "secretário de Estado Adjunto da Administração Interna",
+      "secretário de Estado da Proteção Civil"],
      ["fronteira entre", "fronteiras do conhecimento", "últimas fronteiras"]),
     ("justica", "Justiça", "soberania",
      [
@@ -210,7 +262,10 @@ AREAS = [
       "registos e notariado",
       "reforma da justiça",
       "apoio judiciário",
-      "corrupção"],
+      "corrupção",
+      "ministro da Justiça",
+      "secretário de Estado da Justiça",
+      "secretário de Estado Adjunto e da Justiça"],
      ["justiça poética", "fazer justiça a"]),
     ("economia", "Economia e Coesão Territorial", "economia",
      [
@@ -218,7 +273,12 @@ AREAS = [
       "crescimento económico",
       "exportações",
       "investimento",
-      "empresas",
+      "tecido empresarial",
+      "PME",
+      "apoios às empresas",
+      "empresas portuguesas",
+      "PRR",
+      "Plano de Recuperação e Resiliência",
       "turismo",
       "comércio",
       "fundos europeus",
@@ -227,7 +287,12 @@ AREAS = [
       "administração local",
       "autarquias",
       "ordenamento do território",
-      "interioridade"],
+      "interioridade",
+      "ministro da Economia",
+      "secretário de Estado da Economia",
+      "secretário de Estado do Turismo",
+      "secretário de Estado da Administração Local",
+      "secretário de Estado do Planeamento"],
      ["comércio eletrónico de dados", "ambiente de trabalho", "empresa familiar"]),
     ("infraestruturas", "Infraestruturas e Habitação", "economia",
      [
@@ -242,7 +307,11 @@ AREAS = [
       "novo aeroporto",
       "transportes públicos",
       "mobilidade",
-      "licenciamento urbanístico"],
+      "licenciamento urbanístico",
+      "ministro das Infraestruturas",
+      "secretário de Estado das Infraestruturas",
+      "secretário de Estado da Mobilidade",
+      "secretário de Estado da Habitação"],
      []),
     ("educacao", "Educação, Ciência e Inovação", "social",
      [
@@ -264,7 +333,12 @@ AREAS = [
       "investigação científica",
       "investigação e desenvolvimento",
       "bolsas de estudo",
-      "bolsas de investigação"],
+      "bolsas de investigação",
+      "ministro da Educação",
+      "secretário de Estado Adjunto e da Educação",
+      "secretário de Estado da Administração Escolar",
+      "secretário de Estado da Ciência e Inovação",
+      "secretário de Estado do Ensino Superior"],
      ["bolsa de valores", "bolsa espanhola", "bolsa de Lisboa"]),
     ("saude", "Saúde", "social",
      [
@@ -277,7 +351,10 @@ AREAS = [
       "cuidados continuados",
       "medicamentos",
       "saúde mental",
-      "enfermeiros"],
+      "enfermeiros",
+      "ministro da Saúde",
+      "secretário de Estado da Saúde",
+      "secretário de Estado da Gestão da Saúde"],
      []),
     ("trabalho", "Trabalho, Solidariedade e Segurança Social", "social",
      [
@@ -292,7 +369,11 @@ AREAS = [
       "ação social",
       "greve",
       "negociação coletiva",
-      "apoios sociais"],
+      "apoios sociais",
+      "ministro do Trabalho",
+      "secretário de Estado do Trabalho",
+      "secretário de Estado da Segurança Social",
+      "secretário de Estado da Ação Social"],
      []),
     ("cultura", "Cultura, Juventude e Desporto", "social",
      [
@@ -314,7 +395,12 @@ AREAS = [
       "federações desportivas",
       "alta competição",
       "atletas",
-      "língua portuguesa"],
+      "língua portuguesa",
+      "ministro da Cultura",
+      "secretário de Estado da Cultura",
+      "secretário de Estado do Desporto",
+      "secretário de Estado adjunto da Juventude",
+      "secretário de Estado da Juventude"],
      ["cultura organizacional", "cultura de empresa", "cultura do cancelamento", "desporto-rei", "património genético", "património imobiliário"]),
     ("ambiente", "Ambiente e Energia", "ambiente",
      [
@@ -329,7 +415,10 @@ AREAS = [
       "abastecimento de água",
       "qualidade da água",
       "escassez de água",
-      "poluição"],
+      "poluição",
+      "ministro do Ambiente",
+      "secretário de Estado do Ambiente",
+      "secretário de Estado da Energia"],
      ["ambiente de trabalho", "ambiente empresarial", "ambiente de negócios"]),
     ("agricultura", "Agricultura e Mar", "ambiente",
      [
@@ -345,7 +434,11 @@ AREAS = [
       "aquicultura",
       "economia do mar",
       "segurança alimentar",
-      "regadio"],
+      "regadio",
+      "ministro da Agricultura",
+      "secretário de Estado da Agricultura",
+      "secretário de Estado das Pescas",
+      "secretário de Estado das Florestas"],
      [])
 
 ]
@@ -783,6 +876,16 @@ def _formas(palavra, original):
         return [re.escape(palavra)]
 
     formas = {palavra}
+
+    # Cargos governativos admitem os dois géneros: uma expressão escrita como
+    # "ministro da Saúde" casa também com "ministra da Saúde", e sobrevive
+    # assim às remodelações sem se reescrever a lista. As formas são exatas
+    # — géneros e plurais, sem o sufixo de derivação das palavras longas,
+    # que faria "ministra" casar com "ministradas".
+    _GENERO = {"ministro", "ministra", "secretario", "secretaria"}
+    if palavra in _GENERO:
+        raiz = palavra[:-1]
+        return [re.escape(raiz + fim) for fim in ("o", "a", "os", "as")]
     if palavra.endswith("oes"):
         formas.add(palavra[:-3] + "ao")
     elif palavra.endswith("ao"):
@@ -1259,6 +1362,8 @@ def principal():
 
     if args.mensal:
         guardar_mensal(args.mensal, linhas)
+        if todos_lidos:
+            guardar_mensal_integral(args.mensal, todos_lidos, linhas)
 
     if args.historico:
         atualizar_historico(args.historico, linhas, args.periodo, vistos_anteriores,
@@ -1541,6 +1646,62 @@ def gravar_corpus(caminho, lidos, dias=7):
 
     tamanho = os.path.getsize(caminho) / 1024 / 1024
     print(f"corpus de {dias} dias: {len(mantidos)} artigos em {caminho} ({tamanho:.1f} MB)")
+
+
+def guardar_mensal_integral(pasta, lidos, linhas):
+    """Depósito mensal também para as notícias NÃO marcadas (área vazia).
+
+    O depósito guardava apenas o que as regras do dia marcaram. Mas as regras
+    mudam — criou-se a área do Primeiro-Ministro, acrescentaram-se os cargos —
+    e o que não foi marcado hoje pode ser exatamente o que uma regra futura
+    procurará. Guardando tudo, os passos retroativos deixam de estar presos à
+    janela de sete dias do corpus: passam a ter meses de profundidade.
+
+    Uma notícia entra com área vazia apenas se nenhuma área a marcou: as
+    marcadas já lá estão com as suas áreas, e o texto é o mesmo. Custa cerca
+    de dois a três megabytes comprimidos por mês. A área vazia é ignorada por
+    tudo o que conta por área (alertas, séries) e mantida pela revalidação.
+    """
+    import gzip
+
+    os.makedirs(pasta, exist_ok=True)
+    marcados = {(l[5] or "").lower() for l in linhas}
+
+    por_mes = {}
+    for n in lidos:
+        data = n.get("data")
+        titulo = (n.get("titulo") or "").strip()
+        if not data or not titulo or titulo.lower() in marcados:
+            continue
+        por_mes.setdefault(data.strftime("%Y-%m"), []).append({
+            "area": "", "grupo": "",
+            "data": data.strftime("%Y-%m-%d %H:%M"),
+            "fonte": n.get("fonte", ""), "dominio": n.get("dominio", ""),
+            "titulo": titulo, "resumo": n.get("resumo") or "",
+            "ligacao": n.get("ligacao", ""), "palavras": [],
+        })
+
+    total = 0
+    for mes, registos in sorted(por_mes.items()):
+        caminho = os.path.join(pasta, f"{mes}.jsonl.gz")
+        vistos = set()
+        if os.path.exists(caminho):
+            with gzip.open(caminho, "rt", encoding="utf-8") as origem:
+                for linha in origem:
+                    try:
+                        r = json.loads(linha)
+                    except json.JSONDecodeError:
+                        continue
+                    vistos.add((r.get("titulo") or "").lower())
+        novas = [r for r in registos if r["titulo"].lower() not in vistos]
+        if not novas:
+            continue
+        with gzip.open(caminho, "at", encoding="utf-8") as destino:
+            for r in novas:
+                destino.write(json.dumps(r, ensure_ascii=False) + "\n")
+        total += len(novas)
+    if total:
+        print(f"depósito mensal integral: +{total} notícias não marcadas")
 
 
 def historico_do_arquivo(caminho, arquivo):

@@ -160,14 +160,14 @@ INSTRUCAO = (
     "no título.\n\n"
     "- Abre o parágrafo declarando quem publica: 'A imprensa de Cabo Verde "
     "noticiou…', 'Segundo a imprensa angolana…'. Vindo os títulos de vários "
-    "países, nomeia-os: 'A imprensa de Angola e de Moçambique…'.\n"
+    "países, nomeia-os: 'A comunicação social de Angola e de Moçambique…'.\n"
     "- Depois, ao contar cada facto, só nomeias o país, a cidade ou a região se "
     "o nome constar do título. Não estando lá, contas o facto sem dizer onde. "
     "Inventar o lugar é o pior erro que podes cometer.\n"
     "- Um jornal angolano noticia o mundo inteiro: NUNCA escrevas 'Em Angola' "
     "só porque o título veio de um jornal angolano. Impostos como o CBS e o IBS "
     "são brasileiros, ainda que noticiados em Lisboa ou na Praia.\n"
-    "- Não trates imprensa estrangeira como se falasse de Portugal.\n"
+    "- Não trates comunicação social estrangeira como se falasse de Portugal.\n"
     "- Devolve apenas o parágrafo, sem título nem marcas de formatação."
 )
 

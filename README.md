@@ -1,6 +1,6 @@
 # Radar de Notícias por Área Governativa
 
-Painel de monitorização de comunicação social organizado pelas 16 áreas governativas
+Painel de monitorização de comunicação social organizado pelas 17 áreas governativas
 do XXV Governo Constitucional.
 
 **Secretaria-Geral do Governo** · Direção de Serviços de Suporte à Decisão ·
@@ -58,7 +58,7 @@ Nada disto passa por serviços intermediários nem depende da rede de quem consu
 
 ## O que o painel faz
 
-**Entrada em radar.** As dezasseis áreas dispostas em círculo, ordenadas por volume de
+**Entrada em radar.** As dezassete áreas dispostas em círculo, ordenadas por volume de
 notícias, com a distância ao centro a significar quanto foi noticiado — quanto mais
 perto do centro, mais notícias. Ao centro, o total do período e da origem escolhidos.
 Em ecrãs estreitos o círculo dá lugar a uma grelha de cartões, que faz o mesmo trabalho.
@@ -108,8 +108,11 @@ fora do período.
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
 | `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
 | `historico.json` | **Série diária.** Por dia e por área: notícias, notícias novas, publicações distintas, repartição por origem e contagem de cada palavra-chave. Agregados, não notícias. |
+| `alertas.json` | **Tempestades políticas e momentum.** Escrito pelo `alertas.py` após cada recolha: compara o volume do dia, por área, com a mediana dos últimos 28 dias *à mesma hora* (desvio robusto, mínimo de 8 notícias de subida, piso de 12). Guarda as tempestades do dia, o top 5 do momentum e o histórico acumulado de alertas por área e por dia. |
 | `corpus.json` | **Imprensa em bruto, sete dias.** Todos os artigos lidos dos feeds, marcados ou não. Serve a pesquisa por termo livre; o painel só o carrega quando alguém pesquisa. |
-| `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente.** Um ficheiro comprimido por mês, com todas as notícias desse mês. Nada o lê no dia a dia. |
+| `sentimento_ia.py` + `.github/workflows/sentimento-amalia.yml` | **Sentimento em validação.** Uma vez por dia, o Amália classifica o tom (positivo, neutro, negativo) das notícias da comunicação social nacional ainda sem avaliação, em lotes e com teto por execução, e grava sentimentos.json e a série diária sentimento-serie.json — agregados por área e dia que se acumulam desde o primeiro dia, para a futura leitura longitudinal não nascer sem passado. As avaliações aparecem no radar (ponto junto a cada notícia e linha agregada da consulta) e na evolução (quadro de barras diárias positivas/neutras/negativas), sempre com o rótulo «em validação» até a leitura humana estar concluída — a funcionalidade é definitiva; o rótulo é temporário. |
+| `retroativo_pm.py` + `.github/workflows/retroativo-pm.yml` | **Passo retroativo, execução única.** Revalida todas as marcações existentes sob as regras atuais (retirando pares de expressões entretanto removidas, como «empresas») e reclassifica o corpus de 7 dias com as áreas e expressões novas, injetando o resultado no arquivo, no retrato, no arquivo mensal, na série diária e nos alertas. Idempotente: correr duas vezes não duplica nem retira mais nada. |
+| `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente e integral.** Um ficheiro comprimido por mês com todas as notícias desse mês — as marcadas com a sua área, e as não marcadas com área vazia (guardadas para que os passos retroativos futuros tenham meses de profundidade, e não apenas os sete dias do corpus). A área vazia é ignorada por tudo o que conta por área. ~2–3 MB/mês. |
 
 Os três ficheiros de dados são gerados pela recolha. Não devem ser editados à mão.
 
@@ -259,7 +262,7 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
 - **As expressões são curtas, como a imprensa escreve.** "política de imigração" quase
   nunca aparece num título; "imigração", "imigrantes" e "migrantes" aparecem sempre. Uma
-  expressão longa é precisa e não apanha nada. São 206 expressões nas 16 áreas.
+  expressão longa é precisa e não apanha nada. São 276 expressões nas 17 áreas, incluindo os cargos governativos (ministro e secretários de Estado de cada pasta, com alternância automática de género).
 - **Áreas vizinhas separam-se pela tutela, não pelo tema.** Três áreas tratam de pessoas
   que atravessam fronteiras, e a fronteira entre elas é a das secretarias de Estado. A
   **Presidência** tem a política de imigração, a AIMA, as autorizações de residência, a

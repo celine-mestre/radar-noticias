@@ -117,10 +117,10 @@ ETIQUETA_ORIGEM = {
 MAX_IDADE_SINTESE = 8
 
 ROTULO_ORIGENS = {
-    frozenset({"nacionais"}): "imprensa de Portugal",
-    frozenset({"lusofonas"}): "imprensa da lusofonia",
-    frozenset({"internacionais"}): "imprensa internacional",
-    frozenset({"nacionais", "lusofonas"}): "imprensa de Portugal e da lusofonia",
+    frozenset({"nacionais"}): "OCS de Portugal",
+    frozenset({"lusofonas"}): "OCS da lusofonia",
+    frozenset({"internacionais"}): "OCS internacionais",
+    frozenset({"nacionais", "lusofonas"}): "OCS de Portugal e da lusofonia",
 }
 
 
@@ -260,7 +260,7 @@ def bloco_sintese(sintese, escrita_em="", origens=None):
           {corpo}
           <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:10px;line-height:1.5">
             Textos gerados automaticamente a partir dos títulos abaixo, sem acesso a outras
-            fontes, e separados pela origem da imprensa. Servem de primeira leitura e não
+            fontes, e separados pela origem da comunicação social. Servem de primeira leitura e não
             dispensam a consulta das notícias.
           </div>
         </td></tr>
@@ -408,6 +408,64 @@ def carregar_sinteses(caminho="sinteses.json", periodo=""):
     return d.get("areas", {}), gerado
 
 
+VERMELHO = "#B23A3A"
+
+
+def carregar_alertas(caminho="alertas.json"):
+    """Lê os alertas do dia, se existirem e forem de hoje.
+
+    Um ficheiro de ontem anunciaria tempestades já passadas: nesse caso
+    devolve-se None e o relatório sai sem a faixa.
+    """
+    if not os.path.exists(caminho):
+        return None
+    try:
+        with open(caminho, encoding="utf-8") as origem:
+            alertas = json.load(origem)
+    except (json.JSONDecodeError, OSError):
+        return None
+    hoje = agora_lisboa().strftime("%Y-%m-%d")
+    if alertas.get("dia") != hoje:
+        return None
+    return alertas
+
+
+def bloco_alertas(alertas):
+    """Faixa de «tempestade política» a abrir o relatório.
+
+    Só aparece havendo tempestades: o momentum fica para o painel, para que o
+    email não ganhe peso em dias normais.
+    """
+    if not alertas or not alertas.get("tempestades"):
+        return ""
+    linhas = []
+    for t in alertas["tempestades"]:
+        variacao = (f" · +{t['variacao_pct']}% face ao habitual"
+                    if t.get("variacao_pct") is not None else "")
+        linhas.append(
+            f"""<div style="font:400 13px Arial,sans-serif;color:{CINZA_TEXTO};
+                        padding-top:6px;line-height:1.5">
+              <span style="font-weight:600">{esc(t['area'])}</span>
+              — {t['hoje']} notícias até às {esc(alertas.get('corte', ''))}
+              (mediana à mesma hora: {t['mediana']}){variacao}</div>""")
+    return f"""
+  <tr><td style="padding:14px 24px 4px">
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+           style="border-left:3px solid {VERMELHO};background:#fdf6f6">
+      <tr><td style="padding:12px 16px">
+        <div style="font:700 11px Arial,sans-serif;color:{VERMELHO};
+                    letter-spacing:1.2px;text-transform:uppercase">
+          &#9889; Tempestade política — volume anormal de notícias</div>
+        {''.join(linhas)}
+        <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:8px;line-height:1.5">
+          Alerta automático: contagem do dia acima da mediana dos últimos
+          {alertas.get('dias_base', '—')} dias à mesma hora, em pelo menos dois
+          desvios robustos. A leitura do que se passa é de quem recebe.</div>
+      </td></tr>
+    </table>
+  </td></tr>"""
+
+
 def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None, escrita_em=""):
     agora = agora_lisboa()
     data_extenso = f"{agora.day} de {MESES[agora.month - 1]} de {agora.year}"
@@ -422,8 +480,8 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
                                   sintese, escrita_em, origens))
 
     criterios = f"{ROTULO_PERIODO.get(periodo, periodo)} · " + (
-        ROTULO_ORIGENS.get(frozenset(origens), "imprensa selecionada")
-        if origens else "imprensa de todas as origens")
+        ROTULO_ORIGENS.get(frozenset(origens), "OCS selecionados")
+        if origens else "OCS de todas as origens")
 
     return f"""<!DOCTYPE html>
 <html lang="pt-PT"><head><meta charset="UTF-8">
@@ -454,6 +512,8 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
       {'notícia recolhida' if total == 1 else 'notícias recolhidas'} em
       {len(areas)} {'área' if len(areas) == 1 else 'áreas'}</span>
   </td></tr>
+
+  {bloco_alertas(carregar_alertas())}
 
   {''.join(seccoes)}
 
