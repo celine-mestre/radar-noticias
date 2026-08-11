@@ -1,9 +1,9 @@
 {
- "atualizado": "2026-08-11 01:38",
+ "atualizado": "2026-08-11 01:48",
  "dia": "2026-08-11",
- "corte": "01:38",
+ "corte": "01:48",
  "dias_base": 7,
- "regra": "Tempestade quando a contagem do dia, até às 01:38, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 01:48, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [],
  "momentum": [
   {
@@ -19,10 +19,10 @@
   {
    "area": "Educação, Ciência e Inovação",
    "hoje": 2,
-   "mediana": 0,
-   "limiar": 8,
-   "excesso": 2,
-   "variacao_pct": null,
+   "mediana": 1,
+   "limiar": 9,
+   "excesso": 1,
+   "variacao_pct": 100,
    "dias_base": 7,
    "tempestade": false
   }
