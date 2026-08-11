@@ -1,80 +1,61 @@
 {
- "atualizado": "2026-08-11 08:24",
+ "atualizado": "2026-08-11 10:12",
  "dia": "2026-08-11",
- "corte": "08:24",
+ "corte": "10:12",
  "dias_base": 7,
- "regra": "Tempestade quando a contagem do dia, até às 08:24, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
- "tempestades": [
-  {
-   "area": "Defesa Nacional",
-   "hoje": 19,
-   "mediana": 7,
-   "limiar": 15,
-   "excesso": 12,
-   "variacao_pct": 171,
-   "dias_base": 7,
-   "tempestade": true
-  }
- ],
+ "regra": "Tempestade quando a contagem do dia, até às 10:12, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "tempestades": [],
  "momentum": [
   {
    "area": "Defesa Nacional",
-   "hoje": 19,
-   "mediana": 7,
-   "limiar": 15,
+   "hoje": 23,
+   "mediana": 11,
+   "limiar": 28.8,
    "excesso": 12,
-   "variacao_pct": 171,
-   "dias_base": 7,
-   "tempestade": true
-  },
-  {
-   "area": "Infraestruturas e Habitação",
-   "hoje": 8,
-   "mediana": 1,
-   "limiar": 9,
-   "excesso": 7,
-   "variacao_pct": 700,
+   "variacao_pct": 109,
    "dias_base": 7,
    "tempestade": false
   },
   {
-   "area": "Negócios Estrangeiros",
-   "hoje": 5,
+   "area": "Infraestruturas e Habitação",
+   "hoje": 9,
    "mediana": 2,
    "limiar": 10,
-   "excesso": 3,
-   "variacao_pct": 150,
+   "excesso": 7,
+   "variacao_pct": 350,
    "dias_base": 7,
    "tempestade": false
   },
   {
    "area": "Saúde",
-   "hoje": 5,
-   "mediana": 3,
-   "limiar": 11,
-   "excesso": 2,
-   "variacao_pct": 67,
+   "hoje": 9,
+   "mediana": 4,
+   "limiar": 12,
+   "excesso": 5,
+   "variacao_pct": 125,
    "dias_base": 7,
    "tempestade": false
   },
   {
    "area": "Ambiente e Energia",
-   "hoje": 4,
-   "mediana": 2,
-   "limiar": 10,
-   "excesso": 2,
+   "hoje": 8,
+   "mediana": 4,
+   "limiar": 12,
+   "excesso": 4,
    "variacao_pct": 100,
+   "dias_base": 7,
+   "tempestade": false
+  },
+  {
+   "area": "Administração Interna",
+   "hoje": 10,
+   "mediana": 8,
+   "limiar": 16.9,
+   "excesso": 2,
+   "variacao_pct": 25,
    "dias_base": 7,
    "tempestade": false
   }
  ],
- "historico": [
-  {
-   "data": "2026-08-11",
-   "area": "Defesa Nacional",
-   "hoje": 19,
-   "mediana": 7,
-   "limiar": 15
-  }
- ]
+ "historico": []
 }
