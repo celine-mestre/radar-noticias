@@ -2183,7 +2183,11 @@ function blocoEvolucao(area){
   const serie = serieDaArea(area.nome);
   if(serie.length < 3) return "";
 
-  const recentes = serie.slice(-30);
+  /* O gráfico segue a janela escolhida no filtro de período: com «últimos 7
+     dias», mostra sete dias, não a série toda. Sem período definido, mostra
+     no máximo 30 dias, para não crescer sem limite. */
+  const diasJanela = HORAS_PERIODO[periodo] ? Math.round(HORAS_PERIODO[periodo] / 24) : 30;
+  const recentes = serie.slice(-diasJanela);
   const temNovas = recentes.every(d => d.novas != null);
   const valor = d => temNovas ? d.novas : d.noticias;
   const ultimo = recentes[recentes.length - 1];
@@ -2217,7 +2221,7 @@ function blocoEvolucao(area){
       <p class="sin-nota">${temNovas
         ? "A série conta <strong>notícias novas</strong>: as que não constavam já da recolha da véspera. As janelas de 24 horas não são perfeitamente disjuntas — um artigo republicado pela publicação reaparece —, pelo que contar apenas o que é novo evita somar repetições."
         : "A série conta as notícias devolvidas em cada recolha. Pode incluir repetições entre dias consecutivos, quando uma publicação volta a difundir o mesmo artigo."}
-        Todas as recolhas usam a mesma janela e o mesmo método, pelo que a comparação é legítima. ${serie.length} dias registados.</p>
+        Todas as recolhas usam a mesma janela e o mesmo método, pelo que a comparação é legítima. ${recentes.length} de ${serie.length} dias registados.</p>
     </div>`;
 }
 
