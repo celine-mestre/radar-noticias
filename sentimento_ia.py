@@ -292,8 +292,6 @@ def principal():
     ap.add_argument("--repo", default=None)
     ap.add_argument("--ficheiro", default=None)
     ap.add_argument("--endereco", default=os.environ.get("AMALIA_ENDERECO", ""))
-    ap.add_argument("--serie", default="sentimento-serie.json",
-                    help="agregados diários por área (alicerce da evolução)")
     args = ap.parse_args()
 
     recolha, sintese = modulos_do_repositorio()
