@@ -168,6 +168,8 @@ main{padding:1.6rem 0 3rem}
 .sb-barra .pos{background:var(--verde)}
 .sb-barra .neu{background:#9aa1a8}
 .sb-barra .neg{background:var(--vermelho,#B23A3A)}
+.sb-barra.sb-espera{background:repeating-linear-gradient(45deg,var(--superficie-alt),var(--superficie-alt) 5px,transparent 5px,transparent 10px)}
+.sb-barra .esp{background:transparent}
 .sb-n{text-align:right;font-variant-numeric:tabular-nums;color:var(--texto-suave);font-size:.74rem}
 @media(max-width:620px){.sb{grid-template-columns:70px 1fr 74px;font-size:.76rem}}
 
@@ -789,12 +791,43 @@ function blocoSentimento(linhas){
       n += v.nacionais || 0; av += v.avaliadas || 0;
     });
     nacionais += n; avaliadas += av;
-    return { data: d.data, p, ne, ng, av };
-  }).filter(f => f.av > 0);
+    return { data: d.data, p, ne, ng, av, n };
+  }).filter(f => f.n > 0);
   if(!filas.length) return "";
 
+  /* Uma barra só se desenha com massa crítica: pelo menos COBERTURA_MINIMA da
+     comunicação social nacional desse dia avaliada, E um piso absoluto de
+     avaliações. Uma distribuição sobre quatro notícias não é uma leitura, é
+     ruído — mostrá-la convidaria a conclusões que os números não sustentam.
+     Os dias abaixo do patamar aparecem em espera, e acendem-se sozinhos à
+     medida que a classificação avança. */
+  const COBERTURA_MINIMA = 0.60;
+  const MINIMO_AVALIADAS = 8;
+  const suficiente = f => f.av >= MINIMO_AVALIADAS && f.av >= COBERTURA_MINIMA * f.n;
+
   const cobertura = nacionais ? Math.round(100 * avaliadas / nacionais) : 0;
+  const comMassa = filas.filter(suficiente).length;
+  if(!comMassa) {
+    return `
+    <div class="bloco">
+      <h2>Sentimento da cobertura <span style="font-size:.7em;opacity:.7">(em validação)</span>
+        ${areaEscolhida ? `— ${areaEscolhida}` : ""}</h2>
+      <p class="nota">A avaliação automática está em curso: ainda não há dias com cobertura
+        suficiente (pelo menos ${Math.round(COBERTURA_MINIMA * 100)}% das notícias nacionais
+        do dia avaliadas) para mostrar a distribuição sem induzir em erro. Até agora,
+        ${cobertura}% do período foi avaliado; o quadro preenche-se sozinho à medida que a
+        classificação avança, a um ritmo de 300 notícias por dia.</p>
+    </div>`;
+  }
+
   const barra = f => {
+    if(!suficiente(f)) {
+      return `<div class="sb">
+        <span class="sb-data">${f.data.slice(8)}/${f.data.slice(5, 7)}/${f.data.slice(0, 4)}</span>
+        <span class="sb-barra sb-espera"><i class="esp" style="width:100%"></i></span>
+        <span class="sb-n" style="opacity:.6">${f.av}/${f.n} · a avaliar</span>
+      </div>`;
+    }
     const total = f.p + f.ne + f.ng || 1;
     const seg = (n, c) => n ? `<i class="${c}" style="width:${(100 * n / total).toFixed(1)}%"
       title="${c === "pos" ? "positivas" : c === "neu" ? "neutras" : "negativas"}: ${n}"></i>` : "";
@@ -804,6 +837,12 @@ function blocoSentimento(linhas){
       <span class="sb-n">${num(f.p)} · ${num(f.ne)} · ${num(f.ng)}</span>
     </div>`;
   };
+
+  const incompleta = cobertura < 90
+    ? `<p class="nota" style="color:var(--vermelho,#B23A3A)"><strong>Série ainda incompleta:</strong>
+        ${cobertura}% do período avaliado. Os dias marcados «a avaliar» acendem-se quando
+        atingirem cobertura suficiente. Leia as proporções com esta reserva.</p>`
+    : "";
 
   return `
     <div class="bloco">
@@ -815,11 +854,12 @@ function blocoSentimento(linhas){
         <span style="--cor:#9aa1a8"><i></i>Neutras</span>
         <span style="--cor:var(--vermelho,#B23A3A)"><i></i>Negativas</span>
       </div>
+      ${incompleta}
       <p class="nota">Tom do acontecimento noticiado, avaliado pelo Amália apenas na
-        comunicação social nacional — avaliação automática em validação humana. Cobertura:
-        ${cobertura}% das notícias nacionais do período avaliadas (o acumulado dos
-        primeiros dias resolve-se a um ritmo de 300 por dia). Números à direita:
-        positivas · neutras · negativas.</p>
+        comunicação social nacional — avaliação automática em validação humana. Só se
+        desenham os dias com pelo menos ${Math.round(COBERTURA_MINIMA * 100)}% das notícias
+        nacionais avaliadas; os restantes ficam «a avaliar» até atingirem esse patamar.
+        Números à direita: positivas · neutras · negativas.</p>
     </div>`;
 }
 

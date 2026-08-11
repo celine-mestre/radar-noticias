@@ -347,15 +347,18 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
   .segmentado button{white-space:nowrap}
   .filtros{overflow-x:auto;flex-wrap:nowrap;padding-bottom:.3rem}
   .filtros button{white-space:nowrap;flex:none}
-  .modal{width:100%;max-height:94vh;border-radius:12px}
+  .modal{width:100%;max-height:96vh;border-radius:12px}
   .modal-cab{padding:1rem 1.1rem;gap:.7rem}
   .modal-cab h3{font-size:1rem}
   .barra-chaves,.barra-criterios{padding-left:1.1rem;padding-right:1.1rem}
   .chaves-topo{flex-direction:column;align-items:stretch}
   .chaves-topo .campo-livre{max-width:none;margin-left:0}
-  .barra-criterios{flex-direction:column;align-items:stretch;gap:.6rem}
-  .barra-criterios .crit-campo{width:100%}
+  /* Critérios em duas colunas compactas em vez de três linhas empilhadas:
+     poupa altura, que no telemóvel é o que falta para ver as notícias. */
+  .barra-criterios{display:grid;grid-template-columns:1fr 1fr;gap:.5rem .7rem;align-items:end}
+  .barra-criterios .crit-campo{width:auto}
   .barra-criterios select{width:100%}
+  .barra-criterios #critRepor{grid-column:1 / -1}
   .barra-res{flex-wrap:wrap;gap:.5rem}
   .hero h1{font-size:1.7rem}
 }
@@ -838,8 +841,18 @@ body.sem-radar #conteudo{display:block !important}
 .chaves-topo{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.6rem}
 .chaves-topo .campo-livre{flex:1;min-width:180px;max-width:340px;margin-left:auto}
 .barra-chaves .chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.barra-chaves .chips[hidden]{display:none}
+/* A lista de palavras-chave passou a recolher-se: fechada, liberta a altura
+   toda para as notícias — decisivo no telemóvel. O botão abre-a a pedido. */
+.chaves-toggle{display:flex;align-items:center;gap:.45rem;background:none;border:0;
+  padding:0;cursor:pointer;color:var(--texto-ligeiro);font:inherit;text-align:left}
+.chaves-toggle .chaves-seta{width:15px;height:15px;flex:none;fill:none;
+  stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  transition:transform .18s ease;transform:rotate(-90deg)}
+.chaves-toggle[aria-expanded="true"] .chaves-seta{transform:rotate(0)}
+.chaves-toggle:hover{color:var(--texto)}
 
-.marca-selecao{font-size:.78rem;color:var(--texto-ligeiro);margin:-.2rem 0 .55rem}
+.marca-selecao{font-size:.78rem;color:var(--texto-ligeiro)}
 .consulta-txt{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.74rem;line-height:1.6;
   background:var(--superficie-alt);border:1px solid var(--borda);border-radius:var(--raio-s);
@@ -1629,12 +1642,16 @@ function abrirExportacao(id){
 
     <div class="barra-chaves">
       <div class="chaves-topo">
-        <span id="marcaSelecao" class="marca-selecao">${consultaAtiva.termos
-          ? consultaAtiva.rotulo : "Todas as palavras-chave da área"}</span>
+        <button type="button" id="btnChaves" class="chaves-toggle" aria-expanded="false"
+          title="Mostrar ou esconder as palavras-chave da área">
+          <svg viewBox="0 0 24 24" class="chaves-seta"><path d="m6 9 6 6 6-6"/></svg>
+          <span id="marcaSelecao" class="marca-selecao">${consultaAtiva.termos
+            ? consultaAtiva.rotulo : `Palavras-chave da área (${a.palavras.length})`}</span>
+        </button>
         <input class="campo campo-livre" id="campoLivre"
                placeholder="Ou pesquise um termo · prima Enter">
       </div>
-      <div class="chips">${a.palavras.map(p =>
+      <div class="chips" id="listaChips" hidden>${a.palavras.map(p =>
         `<span class="chip${(consultaAtiva.termos || []).includes(p) ? " sel" : ""}"
                data-termo="${esc(p)}" style="--cor:${cor(a.grupo)}">${esc(p)}</span>`).join("")}</div>
     </div>
@@ -1742,6 +1759,20 @@ function abrirExportacao(id){
 
   /* A janela ampliada é preferência do momento, não predefinição: repõe-se
      ao tamanho normal quando se fecha. */
+  /* Palavras-chave recolhíveis: fechadas por defeito para as notícias terem
+     espaço. Se a consulta já usa termos escolhidos, abre-se de início, para
+     a seleção estar à vista. */
+  const btnChaves = $("#btnChaves");
+  const listaChips = $("#listaChips");
+  if(btnChaves && listaChips){
+    const abrir = mostrar => {
+      listaChips.hidden = !mostrar;
+      btnChaves.setAttribute("aria-expanded", mostrar ? "true" : "false");
+    };
+    if(consultaAtiva.termos && consultaAtiva.termos.length) abrir(true);
+    btnChaves.addEventListener("click", () => abrir(listaChips.hidden));
+  }
+
   const ampliar = $("#btnAmpliar");
   if(ampliar) ampliar.addEventListener("click", () => {
     const m = $("#modal");
@@ -2244,13 +2275,22 @@ function corpoLista(){
       if(a.s === "positivo") p++; else if(a.s === "negativo") ng++;
       else if(a.s === "neutro") ne++;
     });
-    if(p + ne + ng)
-      faixaSent = `<div class="res-nota" style="padding:4px 0 8px">
+    if(p + ne + ng) {
+      const av = p + ne + ng;
+      const cob = recolha.length ? av / recolha.length : 0;
+      /* Mesmo critério da evolução: só se mostram proporções com massa
+         crítica. Abaixo disso, diz-se quantas faltam, sem distribuição. */
+      faixaSent = (av >= 8 && cob >= 0.60)
+        ? `<div class="res-nota" style="padding:4px 0 8px">
         Sentimento (em validação · comunicação social nacional):
         <span class="sent pos"></span>${p} positivas ·
         <span class="sent neu"></span>${ne} neutras ·
         <span class="sent neg"></span>${ng} negativas
-        · ${p + ne + ng} de ${recolha.length} avaliadas</div>`;
+        · ${av} de ${recolha.length} avaliadas</div>`
+        : `<div class="res-nota" style="padding:4px 0 8px;opacity:.75">
+        Sentimento (em validação): ${av} de ${recolha.length} notícias avaliadas —
+        ainda poucas para uma distribuição fiável. Preenche-se nos próximos dias.</div>`;
+    }
   }
 
   const comData = recolha.filter(n => n.data);
@@ -2637,7 +2677,7 @@ function anunciarConsulta(){
       ? `${n} ${n === 1 ? "palavra-chave selecionada" : "palavras-chave selecionadas"}`
       : (consultaAtiva && consultaAtiva.termos
           ? `Pesquisa por ${consultaAtiva.rotulo}`
-          : "Todas as palavras-chave da área");
+          : `Palavras-chave da área${consultaAtiva && consultaAtiva.area ? ` (${consultaAtiva.area.palavras.length})` : ""}`);
   }
   const cab = $("#cabConsulta");
   if(cab && consultaAtiva){
