@@ -1,0 +1,42 @@
+name: Retroativo - area Primeiro-Ministro
+
+# Execucao unica, a pedido: reclassifica o corpus dos ultimos 7 dias com a
+# area Primeiro-Ministro e injeta o resultado no arquivo, no retrato, no
+# arquivo mensal, na serie diaria e nos alertas. Correr uma segunda vez nao
+# duplica nada: tudo e desduplicado pela ligacao.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gravacao-repositorio
+  cancel-in-progress: false
+
+jobs:
+  retroativo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Reclassificar e injetar
+        run: python retroativo_pm.py
+
+      - name: Gravar os ficheiros de dados
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          for f in noticias.json historico.json arquivo.json alertas.json; do
+            [ -f "$f" ] && git add "$f"
+          done
+          [ -d meses ] && git add meses/
+          git diff --cached --quiet || git commit -m "Retroativo: area Primeiro-Ministro"
+          git pull --rebase --autostash
+          git push

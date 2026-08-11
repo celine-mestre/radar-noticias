@@ -118,7 +118,14 @@ jobs:
           # imprensa ainda mal publicou e o relatório sairia com a véspera.
           # Espera-se pela das 09h07. Falhando essa, qualquer recolha posterior
           # do mesmo dia serve — o que dá margem sem fixar uma hora rígida.
+          # A janela é a da manhã. A recolha das 07h07 é cedo de mais, e a das
+          # 23h07 — que existe para fechar o dia — não deve gerar relatórios a
+          # meio da noite.
           HORA=$(date -u +%H)
+          if [ "$HORA" -gt 12 ]; then
+            echo "Recolha do fim do dia: não gera síntese nem relatório."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
+          fi
           if [ "$HORA" -lt 8 ]; then
             echo "Recolha das 07h07: cedo de mais para a síntese do dia."
             echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0

@@ -16,6 +16,9 @@ on:
     # Os minutos estão deslocados de propósito: às horas certas o GitHub tem
     # picos de procura e as execuções agendadas são atrasadas ou saltadas.
     - cron: "7 6-18/2 * * *"
+    # E uma última às 23h07 de Lisboa, para fechar o dia: o que for publicado ao
+    # serão entraria de outro modo já depois de a série do dia estar escrita.
+    - cron: "7 22 * * *"
 
 permissions:
   contents: write
@@ -50,13 +53,18 @@ jobs:
             --arquivo arquivo.json --dias-arquivo 7 --mensal meses \
             --corpus corpus.json --fontes
 
+      - name: Avaliar os alertas de tempestade politica
+        # Corre depois da recolha, sobre o arquivo mensal ja atualizado. Uma
+        # falha aqui nao pode derrubar a recolha: os alertas sao acessorios.
+        run: python alertas.py --mensal meses --saida alertas.json || true
+
       - name: Gravar os ficheiros de dados
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           # Só se acrescenta o que existe: um ficheiro opcional em falta fazia
           # o "git add" falhar e derrubava a recolha inteira.
-          for f in noticias.json historico.json arquivo.json corpus.json; do
+          for f in noticias.json historico.json arquivo.json corpus.json alertas.json; do
             [ -f "$f" ] && git add "$f"
           done
           [ -d meses ] && git add meses/
@@ -90,6 +98,15 @@ jobs:
       # Escrever "nacionais" limita a síntese à imprensa portuguesa — é a saída
       # se os parágrafos das outras origens não convencerem.
       origens: ""
+    secrets: inherit
+
+  # O sentimento corre em paralelo com a síntese: nenhum depende do outro,
+  # e ambos verificam por si se o trabalho do dia já está feito.
+  sentimento:
+    needs: recolher
+    uses: ./.github/workflows/sentimento-amalia.yml
+    with:
+      encadeado: true
     secrets: inherit
 
   # Corre mesmo que a síntese falhe: o relatório sai sem o parágrafo, que é

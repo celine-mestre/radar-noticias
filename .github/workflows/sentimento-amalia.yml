@@ -1,0 +1,114 @@
+name: Sentimento pelo Amalia
+
+# Classifica o tom (positivo, neutro, negativo) das noticias da imprensa
+# nacional, de forma incremental: cada execucao trata apenas o que ainda nao
+# tem avaliacao, com um teto para caber na janela de tempo. Corre UMA VEZ por
+# dia, a seguir a sintese da manha, e grava sentimentos.json.
+#
+# MODO DE ENSAIO. As avaliacoes servem a validacao humana no painel; nenhum
+# agregado ou serie e produzido enquanto a precisao nao for validada.
+
+on:
+  workflow_dispatch:
+    inputs:
+      teto:
+        description: "Noticias a classificar, no maximo"
+        type: string
+        required: false
+        default: "300"
+  workflow_call:
+    inputs:
+      encadeado:
+        type: boolean
+        required: false
+        default: false
+      teto:
+        type: string
+        required: false
+        default: "300"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gravacao-repositorio-sentimento
+  cancel-in-progress: false
+
+jobs:
+  decidir:
+    runs-on: ubuntu-latest
+    outputs:
+      seguir: ${{ steps.v.outputs.seguir }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Verificar se ja ha sentimento de hoje
+        id: v
+        run: |
+          if [ "${{ inputs.encadeado }}" != "true" ]; then
+            echo "Execucao manual: segue sempre."
+            echo "seguir=sim" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          # A primeira recolha do dia, as 07h07 de Lisboa, e cedo de mais.
+          HORA=$(date -u +%H)
+          if [ "$HORA" -lt 8 ]; then
+            echo "Recolha das 07h07: cedo de mais para o sentimento do dia."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          HOJE=$(TZ=Europe/Lisbon date +%Y-%m-%d)
+          FEITO=""
+          if [ -f sentimentos.json ]; then
+            FEITO=$(python -c "import json;print(json.load(open('sentimentos.json',encoding='utf-8')).get('gerado','')[:10])" 2>/dev/null || echo "")
+          fi
+          if [ "$FEITO" = "$HOJE" ]; then
+            echo "O sentimento de hoje ja foi avaliado."
+            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "seguir=sim" >> "$GITHUB_OUTPUT"
+
+  classificar:
+    needs: decidir
+    if: needs.decidir.outputs.seguir == 'sim'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install --quiet llama-cpp-python huggingface-hub
+
+      - name: Guardar o modelo em cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: amalia-gguf
+
+      - name: Classificar
+        run: |
+          python sentimento_ia.py --local \
+            --teto "${{ inputs.teto || '300' }}"
+
+      - name: Gravar as avaliacoes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          for f in sentimentos.json sentimento-serie.json; do
+            [ -f "$f" ] && git add "$f"
+          done
+          [ -f sentimento-serie.json ] && git add sentimento-serie.json
+          git diff --cached --quiet || git commit -m "Sentimento das noticias"
+          git pull --rebase --autostash
+          git push
