@@ -1,7 +1,248 @@
 {
- "gerado": "2026-08-11 03:29",
+ "gerado": "2026-08-11 05:33",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "estado": "em validação — avaliações automáticas, leitura humana em curso",
  "criterio": "Tom do acontecimento noticiado (positivo, neutro, negativo), comunicação social nacional apenas, uma avaliação por notícia.",
- "avaliacoes": {}
+ "avaliacoes": {
+  "https://www.rtp.pt/noticias/mundo/espanha-lanca-ultimato-a-italia-para-que-levante-controlos-na-fronteira_n1758231": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/familia-de-perez-hilton-fugiu-de-casa-com-os-tres-filhos-do-blogger-para-que-nao-vissem-o-pai-mutilar-se/": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://www.publico.pt/2026/08/07/economia/noticia/psu-governo-admite-6-futuros-beneficiarios-terao-reducao-apoio-2184400": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://www.publico.pt/2026/08/07/mundo/noticia/ceuta-espanha-promete-reciprocidade-italia-nao-levantar-restricoes-acordo-schengen-2184404": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/prisao-preventiva-para-homem-suspeito-de-varios-roubos-a-idosas-em-mafra/": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://www.rtp.pt/noticias/sporting/rui-borges-sem-pressao-reconhece-ambicoes-do-sporting_d1758234": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/lesados-do-bes-exigem-em-espinho-que-estado-lhes-devolva-milhoes-de-euros/": {
+   "s": "positivo",
+   "d": "2026-08-07"
+  },
+  "https://www.publico.pt/2026/08/07/desporto/noticia/psp-afastase-evento-benfica-luz-responsabilidade-organizado-promotor-2184351": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/mau-tempo-obras-mais-urgentes-nas-praias-estao-concluidas/": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/governo-rejeita-discriminacao-do-setor-social-na-execucao-das-obras-do-prr/": {
+   "s": "positivo",
+   "d": "2026-08-07"
+  },
+  "https://cnnportugal.iol.pt/guerra/medio-oriente/armas-nucleares-soldados-e-religiao-tres-potencias-juntaram-se-para-formar-uma-especie-de-nato/20260807/6a75e90dd34ed0733ba7ebcf": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://www.publico.pt/2026/08/07/sociedade/noticia/dois-estrangeiros-detidos-maia-suspeita-trafico-criancas-2184371": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-15h-2418/": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/ciberataque-ao-grupo-aguas-de-portugal-nao-afetou-fornecimento-de-agua-diz-ministra-do-ambiente/": {
+   "s": "positivo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/violencia-domestica-prisao-preventiva-para-suspeito-de-agredir-a-mae-em-lisboa/": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://www.publico.pt/2026/08/07/publico-brasil/noticia/esquerda-direita-amam-pecanha-antonio-tabet-volta-portugal-2184275": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://eco.sapo.pt/2026/08/07/ministra-garante-que-ciberataque-a-aguas-de-portugal-nao-afetou-fornecimento-de-agua/": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://www.agroportal.pt/grande-iniciativa-de-luta-dos-viticultores-pelo-futuro-do-douro/": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://jornaleconomico.sapo.pt/noticias/xtb-assina-pelo-fc-porto-por-tres-epocas-como-parceiro-oficial-de-investimento/": {
+   "s": "positivo",
+   "d": "2026-08-07"
+  },
+  "https://www.publico.pt/2026/08/07/mundo/noticia/escolas-primarias-britanicas-terao-identificar-alunos-risco-desemprego-futuro-2184361": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://eco.sapo.pt/2026/08/06/governo-autoriza-forca-aerea-a-gastar-67-milhoes-de-euros-para-fornecimento-alimentar/": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://eco.sapo.pt/2026/08/06/marinha-com-ok-de-21-milhoes-para-modernizar-base-naval-do-alfeite/": {
+   "s": "positivo",
+   "d": "2026-08-06"
+  },
+  "https://sol.iol.pt/sociedade/noticias/morreu-francisco-carvalho-guerra-fundador-da-universidade-catolica-no-porto-tinha-94-anos/20260806/6a748dc10cf2b42132dbcf7c": {
+   "s": "negativo",
+   "d": "2026-08-06"
+  },
+  "https://www.agroportal.pt/agricultura-de-precisao-e-usada-por-18-das-exploracoes-agricolas-da-ue/": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://visao.pt/opiniao/2026-08-06-ceuta-e-os-idiotas-uteis-do-trumpismo-na-europa-opiniao-de-goncalo-ribeiro-telles/?utm_source=rss&utm_medium=rss&utm_campaign=ceuta-e-os-idiotas-uteis-do-trumpismo-na-europa-opiniao-de-goncalo-ribeiro-telles": {
+   "s": "positivo",
+   "d": "2026-08-06"
+  },
+  "https://sol.iol.pt/economia/noticias/investimento-imobiliario-em-portugal-sobe-11-para-1-4-mil-milhoes-hotelaria-e-retalho-lideram-procura/20260806/6a747d390cf2b42132dbcf62": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://observador.pt/2026/08/06/empresa-estatais-mocambicanas-diminuiram-divida-em-quase-3-no-primeiro-trimestre/": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://visao.pt/atualidade/cultura/2026-08-06-calle-malaga-carmen-maura-poe-a-velhice-nua-e-o-cinema-em-sentido/?utm_source=rss&utm_medium=rss&utm_campaign=calle-malaga-carmen-maura-poe-a-velhice-nua-e-o-cinema-em-sentido": {
+   "s": "positivo",
+   "d": "2026-08-06"
+  },
+  "https://www.agroportal.pt/fao-apoiou-5-640-familias-mocambicanas-afetadas-por-conflito-e-choques-climaticos/": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://sol.iol.pt/economia/noticias/pib-da-uniao-europeia-cresce-1-5-com-portugal-a-valer-1-6/20260806/6a7475a40cf2b42132dbcf4d": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://tek.sapo.pt/opiniao/artigos/a-ilusao-da-proibicao-por-que-banir-os-smartphones-nao-e-solucao/": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://www.jornaldenegocios.pt/economia/europa/uniao-europeia/detalhe/pib-da-uniao-europeia-estimado-em-18-8-bilioes-em-2025-alemanha-explica-quase-um-quarto": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://jornaleconomico.sapo.pt/noticias/autocuidado-uma-oportunidade-que-portugal-nao-pode-desperdicar/": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://eco.sapo.pt/2026/08/06/caixabank-e-outros-bancos-espanhois-contratam-kpmg-para-criar-plano-anti-mythos/": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://observador.pt/especiais/isabella-rossellini-noutros-tempos-esteve-na-moda-a-expressao-se-bonita-e-cala-te-felizmente-as-coisas-mudaram/": {
+   "s": "negativo",
+   "d": "2026-08-06"
+  },
+  "https://www.rtp.pt/noticias/economia/homem-procurado-na-moldova-por-trafico-de-seres-humanos-detido-no-alentejo_n1757985": {
+   "s": "negativo",
+   "d": "2026-08-06"
+  },
+  "https://observador.pt/programas/a-guerra-traduzida/armas-trump-afasta-dramas-e-pede-prisao-para-traidores/": {
+   "s": "negativo",
+   "d": "2026-08-06"
+  },
+  "https://www.rtp.pt/noticias/mundo/autoridades-alemas-detem-ucraniano-por-suspeita-de-espionagem-em-fabrica-de-armas_n1757986": {
+   "s": "positivo",
+   "d": "2026-08-06"
+  },
+  "https://www.rtp.pt/noticias/mundo/apos-absolvicao-em-2021-jornalista-indiano-condenado-por-violar-colega_n1757984": {
+   "s": "negativo",
+   "d": "2026-08-06"
+  },
+  "https://jornaleconomico.sapo.pt/noticias/negociacoes-complexas-eua-canada-e-mexico-vao-rever-acordo-de-2020/": {
+   "s": "neutro",
+   "d": "2026-08-06"
+  },
+  "https://eco.sapo.pt/descodificador/as-razoes-das-tensoes-entre-espanha-e-marrocos-alem-da-crise-migratoria/": {
+   "s": "negativo",
+   "d": "2026-08-04"
+  },
+  "https://cnnportugal.iol.pt/videos/vamos-ver-se-marrocos-nao-e-o-unico-responsavel-pela-crise-migratoria-em-ceuta/6a720c9e0cf2f6a1a1e72faf": {
+   "s": "negativo",
+   "d": "2026-08-04"
+  },
+  "https://cnnportugal.iol.pt/videos/ataques-ucranianos-a-wildberries-afetam-o-espirito-e-a-vontade-dos-oligarcas-donos-das-companhias-mais-prejudicadas/6a7211d80cf2b42132dbcc65": {
+   "s": "negativo",
+   "d": "2026-08-04"
+  },
+  "https://cnnportugal.iol.pt/videos/comeca-a-ser-visivel-uma-maior-ajuda-aos-migrantes-muitos-queixam-se-de-nao-ter-comida-ou-agua/6a7210720cf2b42132dbcc63": {
+   "s": "positivo",
+   "d": "2026-08-04"
+  },
+  "https://www.publico.pt/2026/08/04/p3/noticia/passar-demasiado-tempo-online-aumenta-stress-piora-humor-revela-estudo-2183582": {
+   "s": "neutro",
+   "d": "2026-08-04"
+  },
+  "https://eco.sapo.pt/2026/08/04/ventura-considera-que-dados-sobre-divida-publica-evidenciam-pessima-gestao-do-governo/": {
+   "s": "neutro",
+   "d": "2026-08-04"
+  },
+  "https://www.agroportal.pt/fogo-florestal-alastra-em-reserva-natural-no-sul-dos-paises-baixos/": {
+   "s": "negativo",
+   "d": "2026-08-04"
+  },
+  "https://www.rtp.pt/noticias/pais/infantario-de-vilar-de-mouros-mantem-se-aberto-no-proximo-ano-letivo_n1757664": {
+   "s": "negativo",
+   "d": "2026-08-04"
+  },
+  "https://www.rtp.pt/noticias/economia/mocambique-lanca-estrategia-para-desenvolver-turismo-de-negocios-no-pais_n1757652": {
+   "s": "positivo",
+   "d": "2026-08-04"
+  },
+  "https://www.rtp.pt/noticias/mundo/venezuela-sobe-para-138-o-numero-de-portugueses-e-lusodescendentes-mortos_n1757665": {
+   "s": "negativo",
+   "d": "2026-08-04"
+  },
+  "https://www.rtp.pt/noticias/pais/candidatos-ao-ensino-superior-ultrapassam-1a-fase-do-ano-passado_n1757674": {
+   "s": "neutro",
+   "d": "2026-08-04"
+  },
+  "https://www.rtp.pt/noticias/mundo/china-aponta-narrativas-falsas-japao-parte-para-a-maior-expansao-militar-desde-a-segunda-guerra_n1757679": {
+   "s": "negativo",
+   "d": "2026-08-04"
+  },
+  "https://www.rtp.pt/noticias/pais/violencia-domestica-sobe-133-e-faz-sete-vitimas-mortais-em-tres-meses_n1757673": {
+   "s": "negativo",
+   "d": "2026-08-04"
+  },
+  "https://www.rtp.pt/noticias/pais/governo-alerta-que-continua-a-haver-muito-fogo-que-nasce-da-responsabilidade-humana_n1757672": {
+   "s": "neutro",
+   "d": "2026-08-04"
+  },
+  "https://www.rtp.pt/noticias/mundo/ue-sobre-ceuta-ministros-elogiam-gestao-espanhola-e-anunciam-reforco-das-fronteiras_n1757681": {
+   "s": "positivo",
+   "d": "2026-08-04"
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-17h-2259/": {
+   "s": "neutro",
+   "d": "2026-08-04"
+  },
+  "https://observador.pt/2026/08/04/procuradoria-europeia-investiga-973-mil-euros-em-fundos-europeus-atribuidos-a-empresa-de-amigo-de-luis-neves-para-obras-na-pj-da-guarda/": {
+   "s": "neutro",
+   "d": "2026-08-04"
+  },
+  "https://www.agroportal.pt/incendios-troco-do-ip2-cortado-no-concelho-de-castro-verde-devido-a-fogo-em-area-agricola/": {
+   "s": "neutro",
+   "d": "2026-08-04"
+  },
+  "https://observador.pt/2026/08/04/violencia-domestica-participacoes-sobem-133-no-2-o-trimestre-de-2026-com-sete-mortes-e-7-871-casos-registados/": {
+   "s": "negativo",
+   "d": "2026-08-04"
+  },
+  "https://jornaleconomico.sapo.pt/noticias/bbg-instala-em-ourem-inovadora-de-valorizacao-de-pneus/": {
+   "s": "positivo",
+   "d": "2026-08-04"
+  }
+ }
 }
