@@ -1,17 +1,27 @@
 {
- "atualizado": "2026-08-12 18:09",
+ "atualizado": "2026-08-12 20:16",
  "dia": "2026-08-12",
- "corte": "18:09",
+ "corte": "20:16",
  "dias_base": 8,
- "regra": "Tempestade quando a contagem do dia, até às 18:09, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 20:16, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [
   {
    "area": "Saúde",
-   "hoje": 31,
-   "mediana": 12.5,
-   "limiar": 27.3,
-   "excesso": 18.5,
-   "variacao_pct": 148,
+   "hoje": 34,
+   "mediana": 13.5,
+   "limiar": 29.8,
+   "excesso": 20.5,
+   "variacao_pct": 152,
+   "dias_base": 8,
+   "tempestade": true
+  },
+  {
+   "area": "Reforma do Estado",
+   "hoje": 15,
+   "mediana": 6.5,
+   "limiar": 14.5,
+   "excesso": 8.5,
+   "variacao_pct": 131,
    "dias_base": 8,
    "tempestade": true
   }
@@ -19,51 +29,51 @@
  "momentum": [
   {
    "area": "Saúde",
-   "hoje": 31,
-   "mediana": 12.5,
-   "limiar": 27.3,
-   "excesso": 18.5,
-   "variacao_pct": 148,
+   "hoje": 34,
+   "mediana": 13.5,
+   "limiar": 29.8,
+   "excesso": 20.5,
+   "variacao_pct": 152,
    "dias_base": 8,
    "tempestade": true
   },
   {
    "area": "Ambiente e Energia",
-   "hoje": 27,
-   "mediana": 15.5,
-   "limiar": 28.8,
-   "excesso": 11.5,
-   "variacao_pct": 74,
+   "hoje": 28,
+   "mediana": 16.0,
+   "limiar": 33.8,
+   "excesso": 12.0,
+   "variacao_pct": 75,
    "dias_base": 8,
    "tempestade": false
   },
   {
    "area": "Reforma do Estado",
-   "hoje": 13,
-   "mediana": 6.0,
-   "limiar": 14.0,
-   "excesso": 7.0,
-   "variacao_pct": 117,
+   "hoje": 15,
+   "mediana": 6.5,
+   "limiar": 14.5,
+   "excesso": 8.5,
+   "variacao_pct": 131,
    "dias_base": 8,
-   "tempestade": false
-  },
-  {
-   "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 14,
-   "mediana": 7.5,
-   "limiar": 22.3,
-   "excesso": 6.5,
-   "variacao_pct": 87,
-   "dias_base": 8,
-   "tempestade": false
+   "tempestade": true
   },
   {
    "area": "Primeiro-Ministro",
-   "hoje": 10,
-   "mediana": 4.0,
-   "limiar": 12.9,
-   "excesso": 6.0,
-   "variacao_pct": 150,
+   "hoje": 12,
+   "mediana": 4.5,
+   "limiar": 16.4,
+   "excesso": 7.5,
+   "variacao_pct": 167,
+   "dias_base": 8,
+   "tempestade": false
+  },
+  {
+   "area": "Negócios Estrangeiros",
+   "hoje": 22,
+   "mediana": 15.0,
+   "limiar": 34.3,
+   "excesso": 7.0,
+   "variacao_pct": 47,
    "dias_base": 8,
    "tempestade": false
   }
@@ -85,10 +95,17 @@
   },
   {
    "data": "2026-08-12",
+   "area": "Reforma do Estado",
+   "hoje": 15,
+   "mediana": 6.5,
+   "limiar": 14.5
+  },
+  {
+   "data": "2026-08-12",
    "area": "Saúde",
-   "hoje": 31,
-   "mediana": 12.5,
-   "limiar": 27.3
+   "hoje": 34,
+   "mediana": 13.5,
+   "limiar": 29.8
   }
  ]
 }
