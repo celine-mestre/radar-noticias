@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-11 05:33",
+ "gerado": "2026-08-12 03:49",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "estado": "em validação — avaliações automáticas, leitura humana em curso",
  "criterio": "Tom do acontecimento noticiado (positivo, neutro, negativo), comunicação social nacional apenas, uma avaliação por notícia.",
@@ -243,6 +243,166 @@
   "https://jornaleconomico.sapo.pt/noticias/bbg-instala-em-ourem-inovadora-de-valorizacao-de-pneus/": {
    "s": "positivo",
    "d": "2026-08-04"
+  },
+  "https://cnnportugal.iol.pt/trafico-de-droga/violencia-domestica/era-investigado-por-violencia-domestica-gnr-encontra-tres-tipos-de-droga-durante-busca-a-casa/20260808/6a76f7b2d34e511da0b324a8": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-10h-2431/": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://www.publico.pt/2026/08/08/azul/noticia/epoca-incendios-florestais-europa-expoe-lacunas-seguros-climaticos-2183965": {
+   "s": "neutro",
+   "d": "2026-08-08"
+  },
+  "https://www.agroportal.pt/epoca-de-incendios-florestais-na-europa-expoe-lacunas-dos-seguros-climaticos/": {
+   "s": "neutro",
+   "d": "2026-08-08"
+  },
+  "https://jornaleconomico.sapo.pt/noticias/montante-medio-do-credito-da-casa-sobe-13-mil-euros-num-mes-e-o-prazo-nao-acompanha/": {
+   "s": "neutro",
+   "d": "2026-08-08"
+  },
+  "https://www.jornaldenegocios.pt/mercados/detalhe/wall-street-preve-subida-de-bonus-dos-banqueiros-impulsionada-pela-volatilidade": {
+   "s": "neutro",
+   "d": "2026-08-08"
+  },
+  "https://visao.pt/opiniao/ponto-de-vista/incerto-mundo-novo/2026-08-08-a-mesa-opiniao-de-sofia-santos-machado/?utm_source=rss&utm_medium=rss&utm_campaign=a-mesa-opiniao-de-sofia-santos-machado": {
+   "s": "neutro",
+   "d": "2026-08-08"
+  },
+  "https://www.rtp.pt/noticias/guerra-na-ucrania/kiev-ataca-sul-e-sudoeste-da-russia-com-400-drones-e-danifica-duas-refinarias_n1758345": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://www.rtp.pt/noticias/pais/fogo-rural-em-fornos-de-algodres-dominado_n1758346": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://www.rtp.pt/noticias/mundo/apenas-seis-dos-82-migrantes-que-morreram-na-travessia-para-ceuta-foram-identificados_n1758347": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://www.jornaldenegocios.pt/economia/detalhe/ps-quer-que-governo-esclareca-se-ha-risco-de-impostos-da-venda-de-barragens-da-edp-caducarem": {
+   "s": "neutro",
+   "d": "2026-08-08"
+  },
+  "https://observador.pt/2026/08/08/ps-quer-que-governo-esclareca-se-ha-risco-de-impostos-da-venda-de-barragens-da-edp-caducarem/": {
+   "s": "neutro",
+   "d": "2026-08-08"
+  },
+  "https://www.rtp.pt/noticias/mundo/zelensky-agradece-ao-senado-dos-eua-aprovacao-de-sancoes-contra-russia-e-irao_n1758328": {
+   "s": "positivo",
+   "d": "2026-08-08"
+  },
+  "https://eco.sapo.pt/2026/08/08/ps-quer-que-governo-esclareca-se-ha-risco-de-impostos-da-venda-barragens-da-edp-caducarem/": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://www.rtp.pt/noticias/pais/openai-pausa-novo-modelo-de-ia-por-risco-critico-de-ciberseguranca_n1758323": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://www.rtp.pt/noticias/pais/vitimas-de-nudes-criadas-com-ia-mudam-de-escola-para-escapar-ao-bullying_n1758332": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://www.rtp.pt/noticias/pais/adolescentes-criam-imagens-de-colegas-nuas-com-ia-como-se-fosse-brincadeira-mas-e-crime_n1758331": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://www.rtp.pt/noticias/mundo/tres-mortos-em-novo-ataque-russo-a-kiev_n1758333": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-9h-2434/": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://www.rtp.pt/noticias/mundo/china-eleva-nivel-de-alerta-perante-aproximacao-do-tufao-dolphin_n1758336": {
+   "s": "negativo",
+   "d": "2026-08-08"
+  },
+  "https://sol.iol.pt/sociedade/noticias/primeira-fase-de-acesso-ao-ensino-superior-com-o-maior-numero-de-candidatos-desde-1996/20260807/6a75dc6a0cf2b42132dbd13b": {
+   "s": "positivo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-14h-2437/": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/exames-afinal-reapreciacoes-nao-chegaram-as-escolas-esta-manha-atraso-pode-sobrecarregar-secretarias-e-dificultar-emissao-da-ficha-enes/": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/cinemas-tiveram-em-julho-mais-212-de-receitas-de-bilheteira-face-a-homologo-de-2025/": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://sol.iol.pt/sociedade/noticias/caso-luis-neves-ps-diz-que-situacao-atingiu-o-limite-do-admissivel-e-pede-decisoes-dificeis-a-montenegro/20260807/6a75dac40cf2b42132dbd13a": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/russia-estara-a-preparar-ataque-de-falsa-bandeira-no-baltico-com-drones-ucranianos/": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/livre-pergunta-onde-anda-o-primeiro-ministro-perante-auditoria-pedida-pelo-governo-a-mandatos-de-neves-na-pj/": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://www.rtp.pt/noticias/economia/prr-portugal-recebeu-hoje-2320-me-referente-ao-9o-desembolso_n1758197": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/exportacoes-de-bens-sobem-10-e-importacoes-196-em-junho/": {
+   "s": "positivo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/prr-portugal-recebeu-2-320-milhoes-de-euros-referente-ao-9-o-desembolso/": {
+   "s": "positivo",
+   "d": "2026-08-07"
+  },
+  "https://www.jornaldenegocios.pt/opiniao/economistas/detalhe/diga-nao-ao-trabalho-remoto": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://observador.pt/2026/08/07/direito-de-resposta-da-universidade-nova-de-lisboa/": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://sol.iol.pt/tecnologia/noticias/meta-condenada-a-pagar-567-milhoes-de-dolares-por-danos-das-redes-sociais-nos-jovens/20260807/6a75d6b20cf2b42132dbd131": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://eco.sapo.pt/2026/08/07/economia-dos-eua-perde-23-mil-empregos-em-julho-e-complica-contas-da-fed-para-subir-juros/": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://jornaleconomico.sapo.pt/noticias/ine-reve-em-baixa-as-exportacoes-e-em-alta-as-importacoes-em-2025/": {
+   "s": "neutro",
+   "d": "2026-08-07"
+  },
+  "https://www.publico.pt/2026/08/07/sociedade/noticia/condenados-seis-nove-anos-prisao-burla-falsos-arrendamentos-alojamentos-locais-2184375": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://www.jornaldenegocios.pt/economia/seguranca-social/detalhe/nova-prestacao-social-unica-podera-reduzir-apoios-para-6-dos-beneficiarios-diz-governo": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://cnnportugal.iol.pt/guerra/russia/putin-encurralado-e-perigoso-secretas-dos-eua-avisam-que-russia-pode-estar-a-preparar-incursao-militar-na-europa/20260807/6a75ccd5d34e511da0b322bc": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://www.publico.pt/2026/08/07/economia/noticia/prr-bruxelas-ja-pagou-nono-penultimo-cheque-portugal-2184377": {
+   "s": "negativo",
+   "d": "2026-08-07"
+  },
+  "https://jornaleconomico.sapo.pt/noticias/portugueses-estao-a-beber-mais-cerveja-sem-alcool/": {
+   "s": "neutro",
+   "d": "2026-08-07"
   }
  }
 }
