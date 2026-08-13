@@ -128,16 +128,19 @@ DIAS_SEMANA = ["segunda-feira", "terça-feira", "quarta-feira", "quinta-feira",
 def quando_recebe(agora=None):
     """Quando sai o primeiro relatório, contado a partir de agora.
 
-    Os relatórios são enviados às 10h00 de Lisboa, de segunda a sexta. Quem
-    subscreve a uma sexta-feira à tarde não recebe no dia seguinte — recebe na
-    segunda —, e dizer-lhe "a partir de amanhã" seria faltar à verdade.
+    Os relatórios são enviados de manhã, de segunda a sexta. A recolha e o
+    envio correm em horários agendados que o GitHub por vezes atrasa alguns
+    minutos, pelo que a hora certa varia — daí falar-se em «de manhã» e não
+    numa hora fixa. Quem subscreve a uma sexta à tarde não recebe no dia
+    seguinte, recebe na segunda; dizer-lhe «a partir de amanhã» seria faltar
+    à verdade.
     """
     agora = agora or datetime.now()
     dia, hora = agora.weekday(), agora.hour
 
-    # Ainda dá para apanhar o envio de hoje, se for dia útil e antes das 10h00
-    if dia <= 4 and hora < 10:
-        return "hoje", "ainda esta manhã, às 10h00"
+    # Ainda dá para apanhar o envio de hoje, se for dia útil e de manhã cedo
+    if dia <= 4 and hora < 9:
+        return "hoje", "ainda esta manhã"
 
     seguinte = agora + timedelta(days=1)
     while seguinte.weekday() > 4:
@@ -145,9 +148,9 @@ def quando_recebe(agora=None):
 
     dias_passados = (seguinte.date() - agora.date()).days
     if dias_passados == 1:
-        return "amanhã", "a partir de amanhã, às 10h00"
+        return "amanhã", "a partir de amanhã, de manhã"
     return (DIAS_SEMANA[seguinte.weekday()],
-            f"a partir de {DIAS_SEMANA[seguinte.weekday()]}, às 10h00")
+            f"a partir de {DIAS_SEMANA[seguinte.weekday()]}, de manhã")
 
 
 def mensagem_confirmacao(email, areas, acao, painel):

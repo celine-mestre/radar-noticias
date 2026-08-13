@@ -57,8 +57,9 @@ INSTRUCAO = (
     "Classificas o acontecimento, não a tua opinião nem a qualidade do "
     "texto. Na dúvida entre dois valores, escolhe neutro.\n"
     "RESPONDE APENAS com uma linha por notícia, no formato exato\n"
-    "N: valor\n"
-    "sem comentários, sem repetir os títulos, sem outra formatação."
+    "N=valor\n"
+    "(exemplo: «3=negativo»), sem repetir os títulos, sem comentários, "
+    "sem outra formatação."
 )
 
 
@@ -110,29 +111,53 @@ def pendentes(noticias, avaliacoes, origem_da_fonte, dias):
 
 
 def compor_lote(lote):
+    """Apresenta as notícias ao modelo. Usa «[N]» como marcador, distinto do
+    formato de resposta pedido («N=valor»), para o modelo não ser tentado a
+    ecoar a entrada e o parsing não confundir título com classificação."""
     linhas = []
     for i, n in enumerate(lote, start=1):
         resumo = (n.get("resumo") or "").strip()
         extra = f" — {resumo[:140]}" if resumo else ""
-        linhas.append(f"{i}: {n.get('titulo', '').strip()}{extra}")
+        linhas.append(f"[{i}] {n.get('titulo', '').strip()}{extra}")
     return "\n".join(linhas)
 
 
 def interpretar(texto, tamanho):
-    """Lê as linhas «N: valor» da resposta. O que não se entender fica sem
-    avaliação — volta à fila na execução seguinte, não se inventa."""
+    """Lê a classificação de cada notícia da resposta do modelo.
+
+    Tolerante ao formato: aceita «N=valor», «N: valor», «N - valor» e, se o
+    modelo ecoar o título antes do valor, apanha a classificação mesmo assim.
+    Estratégia por linha: se houver um separador (= : -) depois do número,
+    procura a classificação NO QUE VEM A SEGUIR (evita apanhar uma palavra do
+    título); se não houver, usa a última palavra-chave reconhecida da linha.
+    O que não se entender fica sem avaliação e volta à fila — nunca se inventa.
+    """
+    equivalencias = {"positivo": "positivo", "positiva": "positivo",
+                     "negativo": "negativo", "negativa": "negativo",
+                     "neutro": "neutro", "neutra": "neutro",
+                     "neutral": "neutro"}
+
+    def classificar(fragmento):
+        achado = None
+        for palavra in re.findall(r"[A-Za-zÀ-ÿ]+", fragmento):
+            v = _sem_acentos(palavra).lower()
+            if v in equivalencias:
+                achado = equivalencias[v]      # última reconhecida
+        return achado
+
     resultado = {}
     for linha in texto.splitlines():
-        m = re.match(r"\s*(\d+)\s*[:).\-]\s*([A-Za-zÀ-ÿ]+)", linha)
-        if not m:
+        ini = re.match(r"\s*\[?(\d+)\]?\s*([=:).\-–]?)(.*)", linha)
+        if not ini:
             continue
-        i = int(m.group(1))
-        valor = _sem_acentos(m.group(2)).lower()
-        equivalencias = {"positivo": "positivo", "positiva": "positivo",
-                         "negativo": "negativo", "negativa": "negativo",
-                         "neutro": "neutro", "neutra": "neutro"}
-        if 1 <= i <= tamanho and valor in equivalencias:
-            resultado[i] = equivalencias[valor]
+        i = int(ini.group(1))
+        if not (1 <= i <= tamanho):
+            continue
+        # com separador, o valor vem depois dele; sem, procura na linha toda
+        depois = ini.group(3) if ini.group(2) else linha
+        valor = classificar(depois) or classificar(linha)
+        if valor:
+            resultado[i] = valor
     return resultado
 
 
@@ -142,7 +167,7 @@ def perguntar_local(sintese, lote, repo, ficheiro):
         messages=[{"role": "system", "content": INSTRUCAO},
                   {"role": "user", "content": compor_lote(lote)}],
         temperature=0.0,
-        max_tokens=12 * len(lote) + 40,
+        max_tokens=16 * len(lote) + 64,
     )
     return resposta["choices"][0]["message"]["content"].strip()
 
@@ -281,7 +306,7 @@ def principal():
     ap.add_argument("--saida", default="sentimentos.json")
     ap.add_argument("--teto", type=int, default=300,
                     help="notícias a classificar, no máximo, nesta execução")
-    ap.add_argument("--lote", type=int, default=20,
+    ap.add_argument("--lote", type=int, default=10,
                     help="notícias por pergunta ao modelo")
     ap.add_argument("--dias", type=int, default=8,
                     help="idade máxima das notícias a classificar")
@@ -374,7 +399,7 @@ def principal():
               f"{len(lidas)}/{len(lote)} avaliadas (acumulado: {len(avaliacoes)})")
         # Grava o progresso de tempos a tempos: se a corrida for cortada a
         # seguir, o trabalho feito até aqui fica salvo.
-        if (indice + 1) % 5 == 0:
+        if (indice + 1) % 2 == 0:
             gravar()
 
     gravar()
