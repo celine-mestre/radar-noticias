@@ -3331,10 +3331,20 @@ function normalizarFeed(bruto){
    trazem-nos, a pesquisa complementar não. */
 function colunasExcel(){
   const comResumo = recolha.some(n => n.resumo);
+  /* O tom não é um campo da notícia: vem da avaliação do Amália, casada pela
+     ligação. Entra como coluna própria para o Excel poder filtrar e dinamizar
+     por ele — só faz sentido havendo avaliações nesta consulta. */
+  const comTom = SENTIMENTOS && recolha.some(n =>
+    SENTIMENTOS[n.ligacao || (n.titulo || "").toLowerCase()]);
+  const tomDe = r => {
+    const a = SENTIMENTOS[r.ligacao || (r.titulo || "").toLowerCase()];
+    return a ? a.s.charAt(0).toUpperCase() + a.s.slice(1) : "Por avaliar";
+  };
   return [
     ["area","Área governativa"], ["grupo","Agrupamento temático"], ["data","Data de publicação"],
     ["fonte","Fonte"], ["dominio","Domínio"], ["titulo","Título"],
     ...(comResumo ? [["resumo","Resumo"]] : []),
+    ...(comTom ? [["tom","Tom (Amália, em validação)", tomDe]] : []),
     ["ligacao","Ligação"], ["consulta","Palavras-chave da consulta"]
   ];
 }
@@ -3418,13 +3428,78 @@ function escXML(v){
     .replace(/"/g, "&quot;").replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
 }
 
+/* Secções de tom para a folha de Síntese do Excel — as mesmas leituras do
+   painel (quem escreve em que tom, sobre que assuntos), aqui em números para
+   quem quiser continuar a análise na folha de cálculo. Devolve vazio quando
+   não há avaliações suficientes, para o ficheiro não sugerir precisão que não
+   existe. */
+function seccoesTomExcel(){
+  if(!SENTIMENTOS || !Object.keys(SENTIMENTOS).length) return [];
+  const avaliadas = [];
+  recolha.forEach(n => {
+    const a = SENTIMENTOS[n.ligacao || (n.titulo || "").toLowerCase()];
+    if(a && ["positivo", "neutro", "negativo"].includes(a.s))
+      avaliadas.push({ n, s: a.s });
+  });
+  if(avaliadas.length < 8 || avaliadas.length < 0.60 * recolha.length) return [];
+
+  const conta = itens => {
+    const c = { positivo: 0, neutro: 0, negativo: 0 };
+    itens.forEach(x => { c[x.s]++; });
+    return c;
+  };
+  const geral = conta(avaliadas);
+
+  const agrupar = (chaves, minimo) => {
+    const grupos = new Map();
+    avaliadas.forEach(x => (chaves(x.n) || []).forEach(k => {
+      if(!k) return;
+      if(!grupos.has(k)) grupos.set(k, []);
+      grupos.get(k).push(x);
+    }));
+    return [...grupos.entries()]
+      .filter(([, itens]) => itens.length >= minimo)
+      .map(([k, itens]) => {
+        const c = conta(itens);
+        return [`${k} — ${c.positivo} pos. · ${c.neutro} neu. · ${c.negativo} neg.`,
+                Math.round(100 * c.negativo / itens.length)];
+      })
+      .sort((x, y) => y[1] - x[1]);
+  };
+
+  const seccoes = [[
+    "Tom da cobertura (Amália, em validação)",
+    "Conjunto da consulta",
+    [[`Total avaliado: ${avaliadas.length} de ${recolha.length} notícias — ` +
+      `${geral.positivo} pos. · ${geral.neutro} neu. · ${geral.negativo} neg.`,
+      Math.round(100 * geral.negativo / avaliadas.length)]],
+    "% negativo"
+  ]];
+  const publicacoes = agrupar(n => [n.fonte], 5);
+  const assuntos = agrupar(n => n.palavras, 5);
+  if(publicacoes.length)
+    seccoes.push(["Tom por publicação", "Publicação", publicacoes, "% negativo"]);
+  if(assuntos.length)
+    seccoes.push(["Tom por assunto", "Palavra-chave", assuntos, "% negativo"]);
+  return seccoes;
+}
+
 function descarregarXLSX(){
   const COL = colunasExcel();
   const comResumo = COL.some(c => c[0] === "resumo");
-  const larguras = comResumo
-    ? [24, 22, 17, 18, 18, 52, 52, 40, 46]
-    : [24, 22, 17, 18, 18, 60, 46, 50];
+  /* As larguras seguem a coluna e não a sua posição: assim uma coluna nova —
+     o tom, por exemplo — não desalinha as restantes. */
+  const larguras = COL.map(c =>
+    c[0] === "titulo" || c[0] === "resumo" ? 52 :
+    c[0] === "ligacao" ? 46 :
+    c[0] === "consulta" ? 40 :
+    c[0] === "tom" ? 22 :
+    c[0] === "area" ? 24 :
+    c[0] === "grupo" ? 22 : 18);
   const letra = i => String.fromCharCode(65 + i);
+  /* Uma coluna pode trazer um valor calculado — havendo função, é ela que
+     manda; senão, lê-se o campo da notícia. */
+  const valorCol = (c, r) => c[2] ? c[2](r) : r[c[0]];
 
   const linhaXML = (valores, num, estilo) =>
     `<row r="${num}">` + valores.map((v, i) =>
@@ -3432,7 +3507,7 @@ function descarregarXLSX(){
     ).join("") + `</row>`;
 
   const linhas = [linhaXML(COL.map(c => c[1]), 1, 2)]
-    .concat(recolha.map((r, i) => linhaXML(COL.map(c => r[c[0]]), i + 2)));
+    .concat(recolha.map((r, i) => linhaXML(COL.map(c => valorCol(c, r)), i + 2)));
 
   const folha = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
@@ -3474,8 +3549,13 @@ function descarregarXLSX(){
      "Feeds de órgãos de comunicação social subscritos, marcados pelas palavras-chave da área. " +
      "As contagens medem o que essas publicações noticiaram no período, não o total noticiado. " +
      "Nenhuma área é truncada, pelo que a comparação entre áreas é legítima."],
-    ["Ordenação",
-     "Por data de publicação, decrescente."],
+    ["Tom das notícias",
+     "A coluna «Tom» traz a avaliação automática do Amália — positivo, neutro ou negativo, " +
+     "quanto ao acontecimento noticiado — apenas para a comunicação social nacional; as " +
+     "restantes origens ficam «Por avaliar», tal como as notícias ainda não classificadas. " +
+     "A avaliação está em validação por leitura humana e deve ser lida em agregado, não " +
+     "notícia a notícia."],
+    ["Ordenação",     "Por data de publicação, decrescente."],
   ];
 
   const folha2 = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -3495,7 +3575,7 @@ function descarregarXLSX(){
     ["Assuntos recorrentes nos títulos", "Expressão", ag.assuntos.map(x => [x.termo, x.n])],
     ["Cobertura das palavras-chave", "Palavra-chave", ag.cobertura.map(c => [c.palavra, c.n])],
     ["Distribuição por dia", "Dia", ag.dias]
-  ];
+  ].concat(seccoesTomExcel());
   const linhasSin = [];
   let ln = 1;
   /* Os valores numéricos vão como número, para o Excel os poder representar */
@@ -3509,10 +3589,10 @@ function descarregarXLSX(){
     ln++; return r;
   };
   linhasSin.push(linhaSin([consultaAtiva.area.nome, ROTULO_PERIODO[periodo], `${recolha.length} notícias`], 2));
-  secoes.forEach(([titulo, rotulo, pares]) => {
+  secoes.forEach(([titulo, rotulo, pares, unidade]) => {
     linhasSin.push(linhaSin(["", "", ""], 1));
     linhasSin.push(linhaSin([titulo], 3));
-    linhasSin.push(linhaSin([rotulo, "Notícias"], 2));
+    linhasSin.push(linhaSin([rotulo, unidade || "Notícias"], 2));
     pares.forEach(([r, n]) => linhasSin.push(linhaSin([String(r), n], 1)));
   });
 
