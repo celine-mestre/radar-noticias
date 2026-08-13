@@ -31,6 +31,7 @@ AZUL, VERDE, CINZA_TEXTO, CINZA_SUAVE, BORDA = "#2B5683", "#0E7433", "#171715", 
 
 AREAS = [
     # Ordem protocolar do XXV Governo Constitucional, como no painel
+    "Primeiro-Ministro",
     "Negócios Estrangeiros",
     "Finanças",
     "Presidência",

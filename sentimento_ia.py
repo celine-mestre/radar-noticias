@@ -328,8 +328,29 @@ def principal():
     print(f"sentimento: {por_fazer} notícias nacionais por avaliar; "
           f"{len(fila)} nesta execução, em lotes de {args.lote}")
 
+    def gravar():
+        """Escreve o estado atual — chamada durante a corrida e no fim, para
+        que uma execução interrompida (limite de tempo do GitHub, falha de
+        rede) não perca o que já classificou. Gravar por partes é o que torna
+        seguras as corridas longas."""
+        agora = agora_lisboa()
+        with open(args.saida, "w", encoding="utf-8") as destino:
+            json.dump({
+                "gerado": agora.strftime("%Y-%m-%d %H:%M"),
+                "modelo": sintese.MODELO,
+                "estado": "em validação — avaliações automáticas, leitura humana em curso",
+                "criterio": ("Tom do acontecimento noticiado (positivo, neutro, "
+                             "negativo), comunicação social nacional apenas, uma avaliação "
+                             "por notícia."),
+                "avaliacoes": avaliacoes,
+            }, destino, ensure_ascii=False, indent=1)
+        if args.serie:
+            atualizar_serie(args.serie, noticias, avaliacoes,
+                            recolha.origem_da_fonte, args.dias)
+
     novas, falhas = 0, 0
-    for inicio in range(0, len(fila), args.lote):
+    total_lotes = (len(fila) + args.lote - 1) // args.lote
+    for indice, inicio in enumerate(range(0, len(fila), args.lote)):
         lote = fila[inicio:inicio + args.lote]
         try:
             if args.local:
@@ -338,7 +359,7 @@ def principal():
                 resposta = perguntar_servico(args.endereco, chave, lote,
                                              sintese.MODELO)
         except Exception as erro:                              # noqa: BLE001
-            print(f"  lote {inicio // args.lote + 1}: falhou "
+            print(f"  lote {indice + 1}/{total_lotes}: falhou "
                   f"({type(erro).__name__}: {erro}) — fica para a próxima")
             falhas += 1
             continue
@@ -349,30 +370,16 @@ def principal():
             lig = n.get("ligacao") or (n.get("titulo") or "").lower()
             avaliacoes[lig] = {"s": lidas[i], "d": (n.get("data") or "")[:10]}
             novas += 1
-        print(f"  lote {inicio // args.lote + 1}: "
-              f"{len(lidas)}/{len(lote)} avaliadas")
+        print(f"  lote {indice + 1}/{total_lotes}: "
+              f"{len(lidas)}/{len(lote)} avaliadas (acumulado: {len(avaliacoes)})")
+        # Grava o progresso de tempos a tempos: se a corrida for cortada a
+        # seguir, o trabalho feito até aqui fica salvo.
+        if (indice + 1) % 5 == 0:
+            gravar()
 
-    agora = agora_lisboa()
-    with open(args.saida, "w", encoding="utf-8") as destino:
-        json.dump({
-            "gerado": agora.strftime("%Y-%m-%d %H:%M"),
-            "modelo": sintese.MODELO,
-            "estado": "em validação — avaliações automáticas, leitura humana em curso",
-            "criterio": ("Tom do acontecimento noticiado (positivo, neutro, "
-                         "negativo), comunicação social nacional apenas, uma avaliação "
-                         "por notícia."),
-            "avaliacoes": avaliacoes,
-        }, destino, ensure_ascii=False, indent=1)
-
-    n_dias = atualizar_serie(args.serie, noticias, avaliacoes,
-                             recolha.origem_da_fonte, args.dias)
+    gravar()
     print(f"sentimento: {novas} novas avaliações, {falhas} lotes falhados, "
-          f"{len(avaliacoes)} no total em {args.saida}; "
-          f"série diária com {n_dias} dias em {args.serie}")
-
-    if args.serie:
-        atualizar_serie(args.serie, noticias, avaliacoes,
-                        recolha.origem_da_fonte, args.dias)
+          f"{len(avaliacoes)} no total em {args.saida}")
 
 
 if __name__ == "__main__":
