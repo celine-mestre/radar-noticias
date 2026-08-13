@@ -2326,8 +2326,12 @@ function blocoEvolucao(area){
      no máximo 30 dias, para não crescer sem limite. */
   const diasJanela = HORAS_PERIODO[periodo] ? Math.round(HORAS_PERIODO[periodo] / 24) : 30;
   const recentes = serie.slice(-diasJanela);
-  const temNovas = recentes.every(d => d.novas != null);
-  const valor = d => temNovas ? d.novas : d.noticias;
+  /* A série teve, no início, duas contagens: as notícias do dia e as «novas»
+     face à recolha anterior. Desde que a série passou a ser reconstruída do
+     arquivo a cada recolha, cada notícia conta uma só vez no seu dia de
+     publicação e as duas contagens são a mesma — o campo «novas» ficou no
+     ficheiro por compatibilidade, mas não é uma leitura distinta. */
+  const valor = d => d.noticias;
   const ultimo = recentes[recentes.length - 1];
   const anteriores = recentes.slice(0, -1);
   const media = anteriores.reduce((soma, d) => soma + valor(d), 0) / anteriores.length;
@@ -2346,20 +2350,20 @@ function blocoEvolucao(area){
     <div class="bloco">
       <h4>Evolução da área</h4>
       <div class="evo-topo">
-        <div><strong>${valor(ultimo)}</strong><span>${temNovas ? "publicadas no último dia" : "notícias no último dia"}</span></div>
+        <div><strong>${valor(ultimo)}</strong><span>publicadas no último dia</span></div>
         <div><strong>${media.toFixed(1).replace(".", ",")}</strong><span>média dos ${anteriores.length} dias anteriores</span></div>
         <div><strong style="color:${corVar}">${sinal}${variacao}%</strong><span>face a essa média</span></div>
       </div>
       <div class="evo-grafico">${recentes.map((d, i) => `
-        <div class="evo-col" title="${d.data}: ${d.noticias} notícias${d.novas != null ? ", " + d.novas + " novas" : ""}, ${d.fontes} publicações">
+        <div class="evo-col" title="${d.data}: ${d.noticias} notícias, ${d.fontes} publicações">
           <span class="evo-haste" style="height:${Math.max(4, Math.round(valor(d) / maximo * 88))}px;
             background:${i === recentes.length - 1 ? cor(area.grupo) : "color-mix(in srgb, " + cor(area.grupo) + " 40%, transparent)"}"></span>
           <span class="evo-dia">${i % passo === 0 || i === recentes.length - 1 ? etiqueta(d.data) : ""}</span>
         </div>`).join("")}</div>
-      <p class="sin-nota">${temNovas
-        ? "A série conta <strong>notícias novas</strong>: as que não constavam já da recolha da véspera. As janelas de 24 horas não são perfeitamente disjuntas — um artigo republicado pela publicação reaparece —, pelo que contar apenas o que é novo evita somar repetições."
-        : "A série conta as notícias devolvidas em cada recolha. Pode incluir repetições entre dias consecutivos, quando uma publicação volta a difundir o mesmo artigo."}
-        Todas as recolhas usam a mesma janela e o mesmo método, pelo que a comparação é legítima. ${recentes.length} de ${serie.length} dias registados.</p>
+      <p class="sin-nota">A série conta cada notícia uma só vez, no dia em que foi
+        publicada — um artigo que a publicação volte a difundir não soma de novo.
+        Todas as recolhas usam a mesma janela e o mesmo método, pelo que a comparação é
+        legítima. ${recentes.length} de ${serie.length} dias registados.</p>
     </div>`;
 }
 

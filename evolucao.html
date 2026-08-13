@@ -1227,7 +1227,7 @@ function descarregarXLSX(){
      As folhas seguintes são leituras já feitas deste mesmo material. */
   const detalhe = [["Data", "Ano", "Mês", "Dia do mês", "Dia da semana",
                     "Semana (2.ª feira)", "Agrupamento temático", "Área governativa",
-                    "Notícias", "Notícias novas", "Portugal", "Lusofonia",
+                    "Notícias", "Portugal", "Lusofonia",
                     "Internacional", "Publicações"]];
   linhas.forEach(d => {
     const data = new Date(d.data + "T00:00:00");
@@ -1238,7 +1238,7 @@ function descarregarXLSX(){
       detalhe.push([d.data, Number(d.data.slice(0, 4)), Number(d.data.slice(5, 7)),
         Number(d.data.slice(8, 10)), DIAS_SEMANA[data.getDay()],
         chaveDoPeriodo(d.data, "semana"), nomeGrupoDe(nome), nome,
-        n, v.novas || 0, o.nacionais || 0, o.lusofonas || 0, o.internacionais || 0,
+        n, o.nacionais || 0, o.lusofonas || 0, o.internacionais || 0,
         v.fontes || 0]);
     });
   });
