@@ -33,6 +33,7 @@ Por serviço: AMALIA_ENDERECO=... AMALIA_CHAVE=... python sentimento_ia.py
 """
 
 import argparse
+import glob
 import importlib.util
 import json
 import os
@@ -124,6 +125,69 @@ def carregar_do_mensal(pasta, datas):
                 vistos.add(chave)
                 registos.append(r)
     return registos
+
+
+def caminho_sentimento_mensal(pasta, mes):
+    return os.path.join(pasta, f"{mes}.jsonl.gz")
+
+
+def carregar_sentimento_arquivado(pasta):
+    """Todas as avaliações já feitas, de sempre, do arquivo permanente.
+
+    O sentimentos.json é o ficheiro de trabalho e é podado — guarda apenas a
+    janela recente, para não crescer sem fim. Mas uma avaliação é um facto que
+    não muda: a notícia foi classificada uma vez e não precisa de o ser outra.
+    Por isso as avaliações são também arquivadas por mês, à maneira do arquivo
+    das notícias. É este arquivo que permite, no futuro, alargar a janela do
+    painel ou repescar meses inteiros sem mandar o Amália trabalhar de novo.
+    """
+    import gzip
+    arquivadas = {}
+    if not os.path.isdir(pasta):
+        return arquivadas
+    for caminho in sorted(glob.glob(os.path.join(pasta, "*.jsonl.gz"))):
+        try:
+            with gzip.open(caminho, "rt", encoding="utf-8") as origem:
+                for linha in origem:
+                    try:
+                        r = json.loads(linha)
+                    except json.JSONDecodeError:
+                        continue
+                    lig = r.get("lig")
+                    if lig and r.get("s") in VALORES:
+                        arquivadas[lig] = {"s": r["s"], "d": r.get("d", "")}
+        except OSError:
+            continue
+    return arquivadas
+
+
+def arquivar_sentimento(pasta, avaliacoes, ja_arquivadas):
+    """Acrescenta ao arquivo permanente as avaliações que ainda lá não estão.
+
+    Escreve por mês, em acréscimo — nunca reescreve o que já lá está, para o
+    ficheiro não mudar por inteiro a cada execução.
+    """
+    import gzip
+    novas = {lig: v for lig, v in avaliacoes.items() if lig not in ja_arquivadas}
+    if not novas:
+        return 0
+    os.makedirs(pasta, exist_ok=True)
+    por_mes = {}
+    for lig, v in novas.items():
+        mes = (v.get("d") or "")[:7]
+        if len(mes) != 7:
+            continue
+        por_mes.setdefault(mes, []).append(
+            {"lig": lig, "s": v["s"], "d": v.get("d", "")})
+    total = 0
+    for mes, registos in sorted(por_mes.items()):
+        with gzip.open(caminho_sentimento_mensal(pasta, mes), "at",
+                       encoding="utf-8") as destino:
+            for r in registos:
+                destino.write(json.dumps(r, ensure_ascii=False) + "\n")
+        total += len(registos)
+    print(f"arquivo de sentimento: +{total} avaliações guardadas para sempre")
+    return total
 
 
 def pendentes(noticias, avaliacoes, origem_da_fonte, dias, datas_extra=frozenset()):
@@ -299,6 +363,9 @@ def principal():
     ap.add_argument("--repo", default=None)
     ap.add_argument("--ficheiro", default=None)
     ap.add_argument("--endereco", default=os.environ.get("AMALIA_ENDERECO", ""))
+    ap.add_argument("--arquivo-sentimento", default="sentimento-meses",
+                    dest="arquivo_sentimento",
+                    help="pasta do arquivo permanente das avaliações, por mês")
     ap.add_argument("--reter", type=int, default=35,
                     help="dias de avaliações a guardar (a janela do arquivo é "
                          "menor; guarda-se mais para o painel poder alargar)")
@@ -330,6 +397,12 @@ def principal():
         print(f"repesca: {len(repescadas)} registos de {len(datas_extra)} dia(s) "
               f"lidos do arquivo mensal")
 
+    # As avaliações de sempre — o arquivo permanente. Juntam-se às da janela
+    # para nada ser reclassificado e para a série poder recontar dias antigos.
+    arquivadas = carregar_sentimento_arquivado(args.arquivo_sentimento)
+    if arquivadas:
+        print(f"arquivo de sentimento: {len(arquivadas)} avaliações de sempre")
+
     anterior = {}
     if os.path.exists(args.saida):
         try:
@@ -348,7 +421,12 @@ def principal():
                   if (v.get("d") or "9999") >= limite
                   or (v.get("d") or "") in datas_extra}
 
-    fila = pendentes(noticias, avaliacoes, recolha.origem_da_fonte, args.dias,
+    # Para saber o que falta e para reconstruir a série, vale tudo o que já se
+    # sabe: a janela de trabalho mais o arquivo de sempre.
+    conhecidas = dict(arquivadas)
+    conhecidas.update(avaliacoes)
+
+    fila = pendentes(noticias, conhecidas, recolha.origem_da_fonte, args.dias,
                      datas_extra)
     por_fazer = len(fila)
     fila = fila[:args.teto]
@@ -371,8 +449,18 @@ def principal():
                              "por notícia."),
                 "avaliacoes": avaliacoes,
             }, destino, ensure_ascii=False, indent=1)
+
+        # O arquivo permanente fica com tudo o que se souber — é ele que
+        # sobrevive à poda e que permitirá repescar meses no futuro.
+        if args.arquivo_sentimento:
+            guardadas = arquivar_sentimento(args.arquivo_sentimento,
+                                            conhecidas, arquivadas)
+            if guardadas:
+                arquivadas.update({lig: v for lig, v in conhecidas.items()
+                                   if lig not in arquivadas})
+
         if args.serie:
-            atualizar_serie(args.serie, noticias, avaliacoes,
+            atualizar_serie(args.serie, noticias, conhecidas,
                             recolha.origem_da_fonte, args.dias, datas_extra)
 
     novas, falhas = 0, 0
@@ -396,6 +484,7 @@ def principal():
                 continue
             lig = n.get("ligacao") or (n.get("titulo") or "").lower()
             avaliacoes[lig] = {"s": lidas[i], "d": (n.get("data") or "")[:10]}
+            conhecidas[lig] = avaliacoes[lig]
             novas += 1
         print(f"  lote {indice + 1}/{total_lotes}: "
               f"{len(lidas)}/{len(lote)} avaliadas (acumulado: {len(avaliacoes)})")
