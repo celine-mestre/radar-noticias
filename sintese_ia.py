@@ -470,6 +470,39 @@ def principal():
                   f"em {time.monotonic() - inicio:.0f}s")
             print(f"        {texto[:140]}{'…' if len(texto) > 140 else ''}")
 
+        # Áreas de pouco volume — o Primeiro-Ministro é o caso típico, por só
+        # marcar quando o titular ou o cargo são nomeados — podem ter notícias
+        # suficientes no total e nenhuma origem a chegar ao mínimo. Nesse caso,
+        # em vez de ficarem sem síntese nenhuma, escreve-se um parágrafo único
+        # com todas as origens juntas. Separar por origem continua a ser a
+        # regra; isto é o recurso para quando separar deixaria tudo de fora.
+        if not por_origem and len(doDia) >= args.minimo:
+            titulos = []
+            for n in doDia[: args.maximo]:
+                fonte = n.get("fonte") or "publicação não identificada"
+                pais = pais_da_fonte(n.get("dominio"))
+                titulos.append((f"{fonte} · {pais}" if pais else fonte, n["titulo"]))
+            try:
+                texto = (perguntar_local(titulos, area, args.repo, args.ficheiro,
+                                         "várias origens")
+                         if args.local else
+                         perguntar(args.endereco, chave, titulos, area,
+                                   "várias origens"))
+                texto = texto.strip().strip("*_` ")
+                if len(texto) >= 40:
+                    por_origem["todas"] = {
+                        "rotulo": "Todas as origens",
+                        "texto": texto,
+                        "noticias": len(doDia),
+                    }
+                    contas["escrita"] += 1
+                    print(f"     agregado (pouco volume): {len(doDia)} notícias "
+                          f"→ {len(texto)} caracteres")
+            except (urllib.error.URLError, KeyError, ValueError,
+                    TimeoutError, RuntimeError) as erro:
+                print(f"     agregado: falhou ({type(erro).__name__}: {erro})")
+                contas["falhou"] += 1
+
         if por_origem:
             resultado["areas"][area] = {
                 "noticias": len(doDia),

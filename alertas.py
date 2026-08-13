@@ -74,7 +74,12 @@ def agora_lisboa():
 def ler_arquivo_mensal(pasta):
     """Lê todos os meses/AAAA-MM.jsonl.gz e devolve as notícias sem repetidos.
 
-    A chave de desduplicação é a ligação; faltando, título + domínio + data.
+    A chave de desduplicação é o PAR ligação-área, não a ligação sozinha: o
+    arquivo guarda uma linha por cada área que marcou a notícia, e uma notícia
+    pode pertencer a várias (uma greve nos hospitais é Saúde e é Trabalho).
+    Desduplicar só pela ligação faria a notícia contar apenas para a primeira
+    área encontrada, subestimando as restantes — e, como o efeito varia de dia
+    para dia, isso distorce as medianas e produz alertas falsos.
     """
     vistas, linhas = set(), []
     for caminho in sorted(glob.glob(os.path.join(pasta, "*.jsonl.gz"))):
@@ -85,9 +90,10 @@ def ler_arquivo_mensal(pasta):
                         registo = json.loads(linha)
                     except json.JSONDecodeError:
                         continue
-                    chave = registo.get("ligacao") or (
+                    identidade = registo.get("ligacao") or (
                         registo.get("titulo", ""), registo.get("dominio", ""),
                         registo.get("data", ""))
+                    chave = (identidade, registo.get("area", ""))
                     if chave in vistas:
                         continue
                     vistas.add(chave)
