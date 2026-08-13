@@ -4,7 +4,7 @@
 
 Depois de cada recolha, compara o volume de notícias de hoje, por área
 governativa, com o comportamento habitual dessa mesma área nos últimos dias.
-Um crescimento anormal — um disparar de notícias — é sinal de que algo se
+Uma subida muito acima do habitual — um disparar de notícias — é sinal de que algo se
 passa no setor, e o radar assinala-o.
 
 O MÉTODO, em três regras simples e documentáveis:

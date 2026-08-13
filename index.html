@@ -3785,7 +3785,7 @@ $("#capa").addEventListener("click", e => { if(e.target.id === "capa") fecharCap
 
 /* ── Alertas de tempestade política e momentum ────────────────────────────
    O ficheiro alertas.json é escrito pela recolha agendada: o painel limita-se
-   a mostrá-lo. Uma tempestade é um volume de notícias anormal numa área face
+   a mostrá-lo. Um pico é um volume de notícias muito acima do habitual numa área face
    ao seu próprio comportamento recente — o método vem descrito no ficheiro. */
 /* Sentimento (ensaio): avaliações por ligação, lidas uma vez por sessão.
    Sem ficheiro, nada aparece — o painel não depende dele. */
@@ -3848,7 +3848,7 @@ async function desenharAlertas(){
   if((a.tempestades || []).length){
     corpo += `<div class="tempestade">
       <span class="selo">⚡ Pico noticioso</span>
-      <span style="font:400 .8rem/1.4 inherit">Volume anormal de notícias em:</span>
+      <span style="font:400 .8rem/1.4 inherit">Volume muito acima do habitual em:</span>
       ${a.tempestades.map(t => chip(t, true)).join("")}
     </div>`;
   }
