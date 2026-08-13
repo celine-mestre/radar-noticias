@@ -1216,52 +1216,216 @@ function descarregarXLSX(){
   if(!linhas.length) return;
   const pares = agregar(linhas);
   const foco = linhasEmFoco(linhas, pares);
+  const pct = (parte, todo) => todo ? Math.round(1000 * parte / todo) / 10 : 0;
+  const nomeGrupoDe = nome => (GRUPOS.find(g => g.id === grupoDaArea(nome)) || {}).nome || "";
+  const DIAS_SEMANA = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
 
-  const serie = [["Período", "Notícias", "Portugal", "Lusofonia", "Internacional"]];
-  pares.forEach(([chave, d]) => {
-    const o = { nacionais:0, lusofonas:0, internacionais:0 };
-    let total = 0;
-    Object.values(areasDe(d)).forEach(v => {
-      total += contar(v);
-      Object.entries(v.origens || {}).forEach(([k, n]) => o[k] += n);
+  /* ── 1. Série detalhada ─────────────────────────────────────────────────
+     Uma linha por dia e por área, com as colunas todas ao lado. É o formato
+     que as tabelas dinâmicas do Excel esperam: quem receber isto pode cruzar
+     área com origem, com dia da semana, com mês, sem ter de reorganizar nada.
+     As folhas seguintes são leituras já feitas deste mesmo material. */
+  const detalhe = [["Data", "Ano", "Mês", "Dia do mês", "Dia da semana",
+                    "Semana (2.ª feira)", "Agrupamento temático", "Área governativa",
+                    "Notícias", "Notícias novas", "Portugal", "Lusofonia",
+                    "Internacional", "Publicações"]];
+  linhas.forEach(d => {
+    const data = new Date(d.data + "T00:00:00");
+    Object.entries(areasDe(d)).forEach(([nome, v]) => {
+      const n = contar(v);
+      if(!n) return;
+      const o = v.origens || {};
+      detalhe.push([d.data, Number(d.data.slice(0, 4)), Number(d.data.slice(5, 7)),
+        Number(d.data.slice(8, 10)), DIAS_SEMANA[data.getDay()],
+        chaveDoPeriodo(d.data, "semana"), nomeGrupoDe(nome), nome,
+        n, v.novas || 0, o.nacionais || 0, o.lusofonas || 0, o.internacionais || 0,
+        v.fontes || 0]);
     });
-    serie.push([chave, total, o.nacionais, o.lusofonas, o.internacionais]);
   });
 
-  const areas = [["Área governativa", "Notícias"]];
-  totaisPorArea(foco).forEach(([nome, n]) => areas.push([nome, n]));
+  /* ── 2. Matriz período × área ───────────────────────────────────────────
+     A mesma série, disposta como quem a quer ver: períodos em linha, áreas em
+     coluna. Serve para gráficos diretos, sem tabela dinâmica pelo meio. */
+  const nomesAreas = AREAS.map(a => a.nome).filter(nome =>
+    (!areaEscolhida || nome === areaEscolhida) &&
+    (!grupoEscolhido || areasDoGrupo(grupoEscolhido).has(nome)));
+  const matriz = [["Período", "Descrição", ...nomesAreas, "Total"]];
+  pares.forEach(([chave, d]) => {
+    const porArea = nomesAreas.map(nome => contar((d.areas || {})[nome]));
+    matriz.push([chave, descreverPeriodo(chave), ...porArea,
+                 porArea.reduce((s, x) => s + x, 0)]);
+  });
 
-  const expr = [["Área governativa", "Expressão", "Notícias"]];
-  expressoesPorArea(foco, 30).forEach(e =>
-    e.topo.forEach(([p, n]) => expr.push([e.area, p, n])));
+  /* ── 3. Sentimento por dia e área ───────────────────────────────────────
+     Com a cobertura ao lado de cada linha: quem analisar sabe sempre sobre
+     quantas notícias a proporção assenta, e pode filtrar as insuficientes. */
+  const sentimento = [["Data", "Agrupamento temático", "Área governativa",
+                       "Notícias nacionais", "Avaliadas", "Cobertura (%)",
+                       "Positivas", "Neutras", "Negativas",
+                       "Positivas (%)", "Neutras (%)", "Negativas (%)",
+                       "Saldo (pos. − neg.)", "Cobertura suficiente"]];
+  SENTIMENTO.forEach(d => {
+    if(d.data < linhas[0].data || d.data > linhas[linhas.length - 1].data) return;
+    Object.entries(d.areas || {}).forEach(([nome, v]) => {
+      if(areaEscolhida && nome !== areaEscolhida) return;
+      if(grupoEscolhido && !areasDoGrupo(grupoEscolhido).has(nome)) return;
+      const av = v.avaliadas || 0;
+      if(!av) return;
+      const p = v.positivo || 0, ne = v.neutro || 0, ng = v.negativo || 0;
+      const nac = v.nacionais || 0;
+      sentimento.push([d.data, nomeGrupoDe(nome), nome, nac, av, pct(av, nac),
+        p, ne, ng, pct(p, av), pct(ne, av), pct(ng, av), p - ng,
+        (av >= 8 && av >= 0.6 * nac) ? "Sim" : "Não"]);
+    });
+  });
+
+  /* ── 4. Picos noticiosos, com a explicação do Amália ────────────────────*/
+  const picos = [["Data", "Agrupamento temático", "Área governativa",
+                  "Notícias no dia", "Mediana da área", "Excesso",
+                  "Variação face à mediana (%)", "Limiar de alerta",
+                  "Notícias resumidas", "O que motivou o pico (Amália)"]];
+  TEMPESTADES.filter(t => t.data >= linhas[0].data &&
+                          t.data <= linhas[linhas.length - 1].data &&
+                          (!areaEscolhida || t.area === areaEscolhida) &&
+                          (!grupoEscolhido || areasDoGrupo(grupoEscolhido).has(t.area)))
+    .sort((a, b) => b.data.localeCompare(a.data))
+    .forEach(t => {
+      const r = RESUMOS_PICOS[`${t.data}|${t.area}`] || {};
+      picos.push([t.data, nomeGrupoDe(t.area), t.area, t.hoje, t.mediana,
+        Math.round((t.hoje - t.mediana) * 10) / 10,
+        t.variacao_pct != null ? t.variacao_pct : pct(t.hoje - t.mediana, t.mediana),
+        t.limiar != null ? t.limiar : "", r.n || 0,
+        (r.texto || "Ainda sem resumo.").replace(/\s+/g, " ")]);
+    });
+
+  /* ── 5. Expressões, por área ────────────────────────────────────────────*/
+  const expr = [["Agrupamento temático", "Área governativa", "Expressão",
+                 "Notícias", "% das notícias da área"]];
+  const totaisArea = Object.fromEntries(totaisPorArea(foco));
+  expressoesPorArea(foco, 200).forEach(e =>
+    e.topo.forEach(([p, n]) =>
+      expr.push([nomeGrupoDe(e.area), e.area, p, n, pct(n, totaisArea[e.area] || 0)])));
+
+  /* ── 6. Retrato por área ────────────────────────────────────────────────
+     Uma linha por área, com tudo o que se pode dizer dela no período: volume,
+     peso, ritmo, dia mais forte, repartição por origem, picos e tom. É a
+     folha para quem quer a leitura pronta, sem cruzar nada. */
+  const totalGeral = Object.values(totaisArea).reduce((s, n) => s + n, 0) || 1;
+  const retrato = [["Agrupamento temático", "Área governativa", "Notícias",
+                    "% do total", "Média por dia", "Dias com notícias",
+                    "Máximo num dia", "Data do máximo", "Portugal", "Lusofonia",
+                    "Internacional", "Picos no período", "Avaliadas",
+                    "Negativas (%)", "Saldo (pos. − neg.)"]];
+  totaisPorArea(foco).forEach(([nome, n]) => {
+    let comNoticias = 0, maximo = 0, dataMax = "", o = { nacionais:0, lusofonas:0, internacionais:0 };
+    foco.forEach(d => {
+      const v = (d.areas || {})[nome];
+      const c = contar(v);
+      if(c > 0) comNoticias++;
+      if(c > maximo){ maximo = c; dataMax = d.data; }
+      Object.entries((v || {}).origens || {}).forEach(([k, q]) => o[k] += q);
+    });
+    let av = 0, p = 0, ng = 0;
+    SENTIMENTO.forEach(d => {
+      if(d.data < foco[0].data || d.data > foco[foco.length - 1].data) return;
+      const v = (d.areas || {})[nome];
+      if(!v) return;
+      av += v.avaliadas || 0; p += v.positivo || 0; ng += v.negativo || 0;
+    });
+    retrato.push([nomeGrupoDe(nome), nome, n, pct(n, totalGeral),
+      Math.round(10 * n / Math.max(foco.length, 1)) / 10, comNoticias,
+      maximo, dataMax, o.nacionais, o.lusofonas, o.internacionais,
+      TEMPESTADES.filter(t => t.area === nome && t.data >= foco[0].data &&
+                              t.data <= foco[foco.length - 1].data).length,
+      av, av ? pct(ng, av) : "", av ? p - ng : ""]);
+  });
 
   const espec = [
-    ["Radar de Notícias · evolução", ""],
+    ["Radar de Notícias · painel de evolução", ""],
     ["Gerado em", new Date().toLocaleString("pt-PT")],
     ["Janela", dias ? `últimos ${dias} dias` : "toda a série"],
+    ["Período coberto", `${linhas[0].data} a ${linhas[linhas.length - 1].data}`],
     ["Agregação", agregacao],
-    ["Origem", origem === "todas" ? "todas" : origem],
-    ["Período escolhido", diaEscolhido || "—"],
-    ["Dias registados", linhas.length],
-    ["Fonte", "Síntese diária do Radar de Notícias · SGGov"],
+    ["Origem da comunicação social", origem === "todas" ? "todas" : origem],
+    ["Agrupamento escolhido", grupoEscolhido
+      ? (GRUPOS.find(g => g.id === grupoEscolhido) || {}).nome : "todos"],
+    ["Área escolhida", areaEscolhida || "todas"],
+    ["Período em foco", diaEscolhido ? descreverPeriodo(diaEscolhido) : "—"],
+    ["Dias registados na janela", linhas.length],
+    ["", ""],
+    ["Folhas deste ficheiro",
+     "Série detalhada (uma linha por dia e área, para tabelas dinâmicas); " +
+     "Matriz (períodos em linha, áreas em coluna); Sentimento; Picos noticiosos; " +
+     "Expressões; Retrato por área."],
+    ["Contagens",
+     "As contagens medem o que as publicações subscritas noticiaram no período, " +
+     "não o total noticiado. Nenhuma área é truncada, pelo que a comparação entre " +
+     "áreas é legítima. Com uma origem escolhida, as contagens são só dessa origem."],
+    ["Sentimento",
+     "Avaliação automática do Amália sobre o acontecimento noticiado, apenas na " +
+     "comunicação social nacional — as origens lusófona e internacional não são " +
+     "avaliadas. Em validação por leitura humana. A coluna «Cobertura suficiente» " +
+     "assinala as linhas que cumprem o critério do painel (ao menos oito avaliadas " +
+     "e 60% das nacionais do dia); abaixo disso as proporções não são de fiar."],
+    ["Picos noticiosos",
+     "Dias em que uma área teve volume muito acima do habitual — mediana dos 28 " +
+     "dias anteriores à mesma hora, mais dois desvios robustos. Contam todas as " +
+     "origens juntas. O resumo é escrito pelo Amália a partir das notícias reais " +
+     "desse dia e dessa área."],
+    ["Fonte", "Radar de Notícias por Área Governativa · UPE/DSSD · Secretaria-Geral do Governo"],
   ];
 
   const folhas = [
-    { nome:"Série", linhas:serie },
-    { nome:"Por área", linhas:areas },
+    { nome:"Série detalhada", linhas:detalhe },
+    { nome:"Matriz", linhas:matriz },
+    { nome:"Sentimento", linhas:sentimento },
+    { nome:"Picos", linhas:picos },
     { nome:"Expressões", linhas:expr },
+    { nome:"Retrato por área", linhas:retrato },
     { nome:"Especificações", linhas:espec },
-  ];
+  ].filter(f => f.linhas.length > 1 || f.nome === "Especificações");
 
-  const letra = i => String.fromCharCode(65 + i);
-  const folhaXML = f => `<?xml version="1.0" encoding="UTF-8"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>
+  /* Além de Z as colunas passam a duas letras — a matriz pode ter dezassete
+     áreas mais as colunas de contexto. */
+  const letra = i => i < 26 ? String.fromCharCode(65 + i)
+    : String.fromCharCode(64 + Math.floor(i / 26)) + String.fromCharCode(65 + i % 26);
+
+  /* Largura por coluna, estimada do cabeçalho e do conteúdo, para o ficheiro
+     abrir legível sem ninguém ter de ajustar nada. */
+  const largurasDe = f => (f.linhas[0] || []).map((cab, j) => {
+    const amostra = f.linhas.slice(1, 60).map(l => String(l[j] ?? "").length);
+    const maior = Math.max(String(cab).length, ...(amostra.length ? amostra : [0]));
+    return Math.min(Math.max(maior + 2, 9), 64);
+  });
+
+  const folhaXML = f => {
+    const nCols = Math.max(...f.linhas.map(l => l.length));
+    const nLinhas = f.linhas.length;
+    const cabecalho = f.nome !== "Especificações";
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+${cabecalho ? `<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>` : ""}
+<cols>${largurasDe(f).map((w, j) => `<col min="${j + 1}" max="${j + 1}" width="${w}" customWidth="1"/>`).join("")}</cols>
+<sheetData>
 ${f.linhas.map((l, i) => `<row r="${i + 1}">${l.map((v, j) =>
   typeof v === "number"
-    ? `<c r="${letra(j)}${i + 1}"><v>${v}</v></c>`
-    : `<c r="${letra(j)}${i + 1}" t="inlineStr"><is><t>${escXML(String(v ?? ""))}</t></is></c>`
+    ? `<c r="${letra(j)}${i + 1}"${i === 0 ? ` s="1"` : ""}><v>${v}</v></c>`
+    : `<c r="${letra(j)}${i + 1}" t="inlineStr"${i === 0 ? ` s="1"` : ""}><is><t xml:space="preserve">${escXML(String(v ?? ""))}</t></is></c>`
 ).join("")}</row>`).join("")}
-</sheetData></worksheet>`;
+</sheetData>
+${cabecalho && nLinhas > 1 ? `<autoFilter ref="A1:${letra(nCols - 1)}${nLinhas}"/>` : ""}
+</worksheet>`;
+  };
+
+  /* Uma folha de estilos mínima, só para o cabeçalho se distinguir. */
+  const estilos = `<?xml version="1.0" encoding="UTF-8"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="10"/><name val="Arial"/></font></fonts>
+<fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF2B5683"/><bgColor indexed="64"/></patternFill></fill></fills>
+<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
+<cellStyleXfs count="1"><xf/></cellStyleXfs>
+<cellXfs count="2"><xf/><xf fontId="1" fillId="2" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf></cellXfs>
+</styleSheet>`;
 
   const ficheiros = [
     ["[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8"?>
@@ -1269,6 +1433,7 @@ ${f.linhas.map((l, i) => `<row r="${i + 1}">${l.map((v, j) =>
 <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
 <Default Extension="xml" ContentType="application/xml"/>
 <Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
 ${folhas.map((f, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}
 </Types>`],
     ["_rels/.rels", `<?xml version="1.0" encoding="UTF-8"?>
@@ -1283,7 +1448,9 @@ ${folhas.map((f, i) => `<sheet name="${escXML(f.nome)}" sheetId="${i + 1}" r:id=
     ["xl/_rels/workbook.xml.rels", `<?xml version="1.0" encoding="UTF-8"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
 ${folhas.map((f, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join("")}
+<Relationship Id="rIdEstilos" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
 </Relationships>`],
+    ["xl/styles.xml", estilos],
     ...folhas.map((f, i) => [`xl/worksheets/sheet${i + 1}.xml`, folhaXML(f)]),
   ];
 
