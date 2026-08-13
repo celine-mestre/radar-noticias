@@ -160,6 +160,9 @@ main{padding:1.6rem 0 3rem}
 .rk-barra{height:16px;border-radius:4px;background:var(--superficie-alt);overflow:hidden}
 .rk-barra i{display:block;height:100%;background:var(--cor);border-radius:4px}
 .rk-n{text-align:right;font-variant-numeric:tabular-nums;color:var(--texto);font-weight:500}
+.rk-pct{display:inline-block;min-width:46px;text-align:right;margin-left:.5rem;
+  font-weight:400;font-size:.82em;color:var(--texto-ligeiro)}
+@media(max-width:620px){.rk-pct{min-width:40px;margin-left:.3rem;font-size:.76em}}
 .tp{display:grid;grid-template-columns:86px 1fr auto;gap:.7rem;align-items:center;
   font-size:.82rem;padding:.45rem .6rem;border-left:3px solid var(--vermelho,#B23A3A);
   background:color-mix(in srgb,var(--vermelho,#B23A3A) 7%,transparent);border-radius:0 6px 6px 0}
@@ -919,11 +922,11 @@ function blocoSentimento(linhas){
     }
     const total = f.p + f.ne + f.ng || 1;
     const seg = (n, c) => n ? `<i class="${c}" style="width:${(100 * n / total).toFixed(1)}%"
-      title="${c === "pos" ? "positivas" : c === "neu" ? "neutras" : "negativas"}: ${n}"></i>` : "";
+      title="${c === "pos" ? "positivas" : c === "neu" ? "neutras" : "negativas"}: ${n} de ${total} (${Math.round(100 * n / total)}%)"></i>` : "";
     return `<div class="sb">
       <span class="sb-data">${f.data.slice(8)}/${f.data.slice(5, 7)}/${f.data.slice(0, 4)}</span>
-      <span class="sb-barra">${seg(f.p, "pos")}${seg(f.ne, "neu")}${seg(f.ng, "neg")}</span>
-      <span class="sb-n">${num(f.p)} · ${num(f.ne)} · ${num(f.ng)}</span>
+      <span class="sb-barra" title="${f.p} positivas (${Math.round(100 * f.p / total)}%) · ${f.ne} neutras (${Math.round(100 * f.ne / total)}%) · ${f.ng} negativas (${Math.round(100 * f.ng / total)}%)">${seg(f.p, "pos")}${seg(f.ne, "neu")}${seg(f.ng, "neg")}</span>
+      <span class="sb-n" title="positivas · neutras · negativas">${num(f.p)} · ${num(f.ne)} · ${num(f.ng)}</span>
     </div>`;
   };
 
@@ -1033,13 +1036,22 @@ function desenhar(){
     <div class="bloco">
       <h2>${areaEscolhida ? "Volume da área" : "Volume por área governativa"} ${rotuloFoco}</h2>
       <div class="ranking">
-        ${areas.map(([nome, n]) => `
+        ${(() => {
+          /* A percentagem é sobre o total das áreas mostradas — com um
+             agrupamento ou uma área escolhida, é sobre esse conjunto, que é o
+             que está à vista. A barra continua proporcional à maior. */
+          const totalAreas = areas.reduce((s, [, n]) => s + n, 0) || 1;
+          return areas.map(([nome, n]) => `
           <div class="rk" style="--cor:${cor(grupoDaArea(nome))}">
             <span class="rk-nome" title="${nome}">${nome}</span>
             <span class="rk-barra"><i style="width:${(n / areas[0][1] * 100).toFixed(1)}%"></i></span>
-            <span class="rk-n">${num(n)}</span>
-          </div>`).join("")}
+            <span class="rk-n">${num(n)}<b class="rk-pct">${(n / totalAreas * 100).toFixed(1).replace(".", ",")}%</b></span>
+          </div>`).join("");
+        })()}
       </div>
+      <p class="nota">A barra é proporcional à área mais noticiada; a percentagem
+        é a parte de cada área no total ${areaEscolhida || grupoEscolhido
+          ? "do conjunto escolhido" : "das dezassete áreas"} no período.</p>
     </div>
 
     ${blocoTempestades(linhas)}

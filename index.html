@@ -2281,10 +2281,11 @@ function blocoSentimentoArea(area, corArea){
     const marca = Math.abs(desvio) < 0.10 ? ""
       : ` <b class="sa-desvio" style="--c:${desvio > 0 ? "var(--vermelho,#B23A3A)" : "var(--verde)"}">
           ${desvio > 0 ? "+" : "−"}${Math.round(Math.abs(desvio) * 100)} p.p.</b>`;
-    const seg = (v, c) => v ? `<i class="${c}" style="width:${(100 * v / x.n).toFixed(1)}%"></i>` : "";
+    const seg = (v, c) => v ? `<i class="${c}" style="width:${(100 * v / x.n).toFixed(1)}%"
+      title="${c === "pos" ? "positivas" : c === "neu" ? "neutras" : "negativas"}: ${v} de ${x.n} (${Math.round(100 * v / x.n)}%)"></i>` : "";
     return `<div class="sa-linha">
       <span class="sa-rot" title="${esc(x.chave)}">${esc(x.chave)}</span>
-      <span class="sa-barra">${seg(x.positivo, "pos")}${seg(x.neutro, "neu")}${seg(x.negativo, "neg")}</span>
+      <span class="sa-barra" title="${x.positivo} positivas (${Math.round(100 * x.positivo / x.n)}%) · ${x.neutro} neutras (${Math.round(100 * x.neutro / x.n)}%) · ${x.negativo} negativas (${Math.round(100 * x.negativo / x.n)}%)">${seg(x.positivo, "pos")}${seg(x.neutro, "neu")}${seg(x.negativo, "neg")}</span>
       <span class="sa-n">${pct(x.pctNeg)} neg.${marca}</span>
     </div>`;
   };
