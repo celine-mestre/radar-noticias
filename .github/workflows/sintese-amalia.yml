@@ -157,6 +157,7 @@ jobs:
       fail-fast: false
       matrix:
         area:
+          - "Primeiro-Ministro"
           - "Negócios Estrangeiros"
           - "Finanças"
           - "Presidência"

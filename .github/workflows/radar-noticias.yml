@@ -109,6 +109,17 @@ jobs:
       encadeado: true
     secrets: inherit
 
+  # O resumo dos picos explica, com o Amália, o que motivou cada pico do dia.
+  # Depende dos alertas, que a recolha grava — daí correr depois dela. É
+  # incremental: só resume picos que ainda não tenham resumo, pelo que correr
+  # a cada recolha custa quase nada nos dias sem picos novos.
+  resumo_picos:
+    needs: recolher
+    uses: ./.github/workflows/resumo-picos.yml
+    with:
+      encadeado: true
+    secrets: inherit
+
   # Corre mesmo que a síntese falhe: o relatório sai sem o parágrafo, que é
   # acessório. As notícias é que não podem faltar.
   relatorio:

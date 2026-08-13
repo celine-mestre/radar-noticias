@@ -22,7 +22,40 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Passo leve, sem modelo: há algum pico ainda sem resumo? Se não houver,
+  # nada disto precisa de correr — poupa descarregar 5,6 GB a cada recolha.
+  decidir:
+    runs-on: ubuntu-latest
+    outputs:
+      seguir: ${{ steps.v.outputs.seguir }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Ha picos por resumir?
+        id: v
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          picos = []
+          if os.path.exists("alertas.json"):
+              with open("alertas.json", encoding="utf-8") as f:
+                  picos = json.load(f).get("historico", [])
+          feitos = {}
+          if os.path.exists("picos-resumos.json"):
+              with open("picos-resumos.json", encoding="utf-8") as f:
+                  feitos = json.load(f).get("resumos", {})
+          faltam = [p for p in picos
+                    if f"{p.get('data')}|{p.get('area')}" not in feitos]
+          print(f"seguir={'sim' if faltam else 'nao'}")
+          print(f"# {len(faltam)} picos por resumir, {len(feitos)} ja feitos")
+          PY
+
   resumir:
+    needs: decidir
+    if: needs.decidir.outputs.seguir == 'sim'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
