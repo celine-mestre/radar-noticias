@@ -185,7 +185,7 @@ main{padding:1.6rem 0 3rem}
   border-radius:0 var(--raio-s) var(--raio-s) 0}
 .tp-resumo p{margin:0 0 .4rem;font-size:.86rem;line-height:1.5;color:var(--texto)}
 .tp-resumo .tp-fonte{font-size:.72rem;color:var(--texto-ligeiro);margin:0}
-.sb{display:grid;grid-template-columns:86px 1fr 92px;gap:.7rem;align-items:center;font-size:.82rem}
+.sb{display:grid;grid-template-columns:minmax(86px,190px) 1fr 92px;gap:.7rem;align-items:center;font-size:.82rem}
 .sb+.sb{margin-top:.4rem}
 .sb-data{font-variant-numeric:tabular-nums;color:var(--texto-suave)}
 .sb-barra{display:flex;height:16px;border-radius:4px;overflow:hidden;background:var(--superficie-alt)}
@@ -196,7 +196,7 @@ main{padding:1.6rem 0 3rem}
 .sb-barra.sb-espera{background:repeating-linear-gradient(45deg,var(--superficie-alt),var(--superficie-alt) 5px,transparent 5px,transparent 10px)}
 .sb-barra .esp{background:transparent}
 .sb-n{text-align:right;font-variant-numeric:tabular-nums;color:var(--texto-suave);font-size:.74rem}
-@media(max-width:620px){.sb{grid-template-columns:70px 1fr 74px;font-size:.76rem}}
+@media(max-width:620px){.sb{grid-template-columns:minmax(70px,120px) 1fr 74px;font-size:.72rem}}
 
 .mini{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-top:1rem}
 @media(max-width:900px){.mini{grid-template-columns:repeat(2,1fr)}}
@@ -596,20 +596,23 @@ function janela(){
 }
 
 /* Agrega por dia, semana ou mês. A chave devolvida é a etiqueta do período. */
+/* A chave do período a que um dia pertence — a mesma regra para o volume, o
+   sentimento e os picos, para os três reagirem de igual modo aos filtros. */
+function chaveDoPeriodo(dataISO, modo = agregacao){
+  if(modo === "dia") return dataISO;
+  if(modo === "mes") return dataISO.slice(0, 7);
+  const d = new Date(dataISO + "T00:00:00");
+  const seg = new Date(d);
+  seg.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  return seg.toISOString().slice(0, 10);
+}
+
 function agregar(linhas){
   if(agregacao === "dia") return linhas.map(d => [d.data, d]);
 
   const grupos = new Map();
   linhas.forEach(d => {
-    const data = new Date(d.data + "T00:00:00");
-    let chave;
-    if(agregacao === "mes"){
-      chave = d.data.slice(0, 7);
-    }else{
-      const seg = new Date(data);
-      seg.setDate(data.getDate() - ((data.getDay() + 6) % 7));
-      chave = seg.toISOString().slice(0, 10);
-    }
+    const chave = chaveDoPeriodo(d.data);
     if(!grupos.has(chave)) grupos.set(chave, { data: chave, areas: {} });
     const alvo = grupos.get(chave).areas;
     Object.entries(d.areas || {}).forEach(([nome, v]) => {
@@ -746,6 +749,33 @@ const totalExpressoes = e => e.reduce((s, x) => s + x.quantas, 0);
 
 /* ── DESENHO ─────────────────────────────────────────────────────────────── */
 
+/* Descreve por extenso o período de uma chave de agregação. Um dia diz-se
+   pela data; uma semana e um mês dizem-se pelo intervalo que cobrem, porque
+   «10/08» sozinho não deixa perceber até onde vai. O fim nunca ultrapassa o
+   último dia com dados, para não prometer dias que ainda não existem. */
+function descreverPeriodo(chave, modo = agregacao){
+  const MESES = ["janeiro","fevereiro","março","abril","maio","junho","julho",
+                 "agosto","setembro","outubro","novembro","dezembro"];
+  const curto = d => `${d.slice(8)}/${d.slice(5, 7)}`;
+  const ultimoComDados = SERIE.length ? SERIE[SERIE.length - 1].data : chave;
+
+  if(modo === "dia") return `${chave.slice(8)}/${chave.slice(5, 7)}/${chave.slice(0, 4)}`;
+
+  if(modo === "mes"){
+    const [ano, mes] = chave.split("-");
+    const fimMes = new Date(Number(ano), Number(mes), 0).toISOString().slice(0, 10);
+    const fim = fimMes > ultimoComDados ? ultimoComDados : fimMes;
+    return `${MESES[Number(mes) - 1]} de ${ano} · ${curto(chave + "-01")} a ${curto(fim)}`;
+  }
+
+  const inicio = new Date(chave + "T00:00:00");
+  const seguinte = new Date(inicio);
+  seguinte.setDate(inicio.getDate() + 6);
+  const fimSemana = seguinte.toISOString().slice(0, 10);
+  const fim = fimSemana > ultimoComDados ? ultimoComDados : fimSemana;
+  return `semana de ${curto(chave)} a ${curto(fim)}`;
+}
+
 function barrasEmpilhadas(pontos){
   /* O eixo acompanha o que há: a largura das barras, o passo das etiquetas e a
      própria altura do desenho ajustam-se ao número de períodos. Com três dias
@@ -779,7 +809,7 @@ function barrasEmpilhadas(pontos){
       <rect x="${(esq + i * largura).toFixed(1)}" y="10" width="${largura.toFixed(1)}"
         height="${(base - 10).toFixed(1)}" fill="transparent"/>
       ${partes}
-      <title>${p.rotulo} · ${num(p.total)} notícias</title>
+      <title>${descreverPeriodo(p.rotulo)} · ${num(p.total)} notícias</title>
     </g>`;
   }).join("");
 
@@ -823,7 +853,7 @@ function blocoTempestades(linhas){
     (!areaEscolhida || t.area === areaEscolhida) &&
     /* Com um dia escolhido no gráfico, só esse dia; com semana ou mês em
        foco, a chave não é uma data e o quadro mantém a janela inteira. */
-    (!diaEscolhido || agregacao !== "dia" || t.data === diaEscolhido));
+    (!diaEscolhido || chaveDoPeriodo(t.data) === diaEscolhido));
   if(!dentro.length) return "";
   const ordenadas = [...dentro].sort((a, b) =>
     b.data.localeCompare(a.data) || (b.hoje - b.mediana) - (a.hoje - a.mediana));
@@ -869,22 +899,32 @@ function blocoSentimento(linhas){
   if(!SENTIMENTO.length || !linhas.length) return "";
   if(origem === "lusofonas" || origem === "internacionais") return "";
   const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
+  /* Segue a agregação escolhida, como o volume: por dia, por semana ou por
+     mês. E respeita o período em foco seja ele qual for — antes só reagia ao
+     dia, pelo que com semana ou mês escolhidos o quadro não mexia. */
   const dias = SENTIMENTO.filter(d =>
     d.data >= primeiro && d.data <= ultimo &&
-    (!diaEscolhido || agregacao !== "dia" || d.data === diaEscolhido));
+    (!diaEscolhido || chaveDoPeriodo(d.data) === diaEscolhido));
   if(!dias.length) return "";
 
   let nacionais = 0, avaliadas = 0;
-  const filas = dias.map(d => {
+  const grupos = new Map();
+  dias.forEach(d => {
     let p = 0, ne = 0, ng = 0, n = 0, av = 0;
     Object.entries(d.areas || {}).forEach(([nome, v]) => {
       if(areaEscolhida && nome !== areaEscolhida) return;
+      if(grupoEscolhido && !areasDoGrupo(grupoEscolhido).has(nome)) return;
       p += v.positivo || 0; ne += v.neutro || 0; ng += v.negativo || 0;
       n += v.nacionais || 0; av += v.avaliadas || 0;
     });
     nacionais += n; avaliadas += av;
-    return { data: d.data, p, ne, ng, av, n };
-  }).filter(f => f.n > 0);
+    const chave = chaveDoPeriodo(d.data);
+    const g = grupos.get(chave) ||
+      grupos.set(chave, { data: chave, p:0, ne:0, ng:0, av:0, n:0 }).get(chave);
+    g.p += p; g.ne += ne; g.ng += ng; g.av += av; g.n += n;
+  });
+  const filas = [...grupos.values()].filter(f => f.n > 0)
+    .sort((a, b) => a.data.localeCompare(b.data));
   if(!filas.length) return "";
 
   /* Uma barra só se desenha com massa crítica: pelo menos COBERTURA_MINIMA da
@@ -915,7 +955,7 @@ function blocoSentimento(linhas){
   const barra = f => {
     if(!suficiente(f)) {
       return `<div class="sb">
-        <span class="sb-data">${f.data.slice(8)}/${f.data.slice(5, 7)}/${f.data.slice(0, 4)}</span>
+        <span class="sb-data">${descreverPeriodo(f.data)}</span>
         <span class="sb-barra sb-espera"><i class="esp" style="width:100%"></i></span>
         <span class="sb-n" style="opacity:.6">${f.av}/${f.n} · a avaliar</span>
       </div>`;
@@ -924,7 +964,7 @@ function blocoSentimento(linhas){
     const seg = (n, c) => n ? `<i class="${c}" style="width:${(100 * n / total).toFixed(1)}%"
       title="${c === "pos" ? "positivas" : c === "neu" ? "neutras" : "negativas"}: ${n} de ${total} (${Math.round(100 * n / total)}%)"></i>` : "";
     return `<div class="sb">
-      <span class="sb-data">${f.data.slice(8)}/${f.data.slice(5, 7)}/${f.data.slice(0, 4)}</span>
+      <span class="sb-data">${descreverPeriodo(f.data)}</span>
       <span class="sb-barra" title="${f.p} positivas (${Math.round(100 * f.p / total)}%) · ${f.ne} neutras (${Math.round(100 * f.ne / total)}%) · ${f.ng} negativas (${Math.round(100 * f.ng / total)}%)">${seg(f.p, "pos")}${seg(f.ne, "neu")}${seg(f.ng, "neg")}</span>
       <span class="sb-n" title="positivas · neutras · negativas">${num(f.p)} · ${num(f.ne)} · ${num(f.ng)}</span>
     </div>`;
@@ -997,7 +1037,7 @@ function desenhar(){
     linhas[linhas.length - 1].data === new Date().toISOString().slice(0, 10);
 
   const rotuloFoco = diaEscolhido
-    ? `<button class="limpar" id="limparDia">${diaEscolhido} · ver o período inteiro ✕</button>`
+    ? `<button class="limpar" id="limparDia">${descreverPeriodo(diaEscolhido)} · ver o período inteiro ✕</button>`
     : "";
 
   corpo.innerHTML = `
