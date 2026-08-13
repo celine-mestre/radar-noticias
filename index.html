@@ -2398,7 +2398,7 @@ function corpoLista(){
       const av = p + ne + ng;
       const cob = nacionais.length ? av / nacionais.length : 0;
       const doTotal = recolha.length !== nacionais.length
-        ? ` (de ${num(recolha.length)} notícias nesta consulta, ${num(nacionais.length)} são nacionais)` : "";
+        ? ` (de ${recolha.length} notícias nesta consulta, ${nacionais.length} são nacionais)` : "";
       /* Mesmo critério da evolução: só se mostram proporções com massa
          crítica. Abaixo disso, diz-se quantas faltam, sem distribuição. */
       faixaSent = (av >= 8 && cob >= 0.60)
@@ -2407,9 +2407,9 @@ function corpoLista(){
         <span class="sent pos"></span>${p} positivas ·
         <span class="sent neu"></span>${ne} neutras ·
         <span class="sent neg"></span>${ng} negativas
-        · ${av} de ${num(nacionais.length)} nacionais avaliadas${doTotal}</div>`
+        · ${av} de ${nacionais.length} nacionais avaliadas${doTotal}</div>`
         : `<div class="res-nota" style="padding:4px 0 8px;opacity:.75">
-        Sentimento (em validação · só comunicação social nacional): ${av} de ${num(nacionais.length)} nacionais
+        Sentimento (em validação · só comunicação social nacional): ${av} de ${nacionais.length} nacionais
         avaliadas — ainda poucas para uma distribuição fiável. Preenche-se nos próximos dias.</div>`;
     }
   }
