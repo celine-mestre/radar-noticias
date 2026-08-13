@@ -50,10 +50,16 @@ anterior ao arquivo, não aparece — e alargar o âmbito é acrescentar feeds �
    diária de contagens e o arquivo mensal permanente. Ainda na mesma execução,
    o `alertas.py` compara o volume do dia com o comportamento habitual de cada área
    e grava os picos noticiosos e o momentum.
-5. **Uma vez por dia, o sentimento.** A primeira recolha da manhã encadeia o Amália,
-   que classifica o tom das notícias nacionais ainda sem avaliação e grava o
-   `sentimentos.json`. Corre à parte, sem atrasar a recolha nem o relatório.
-6. **No painel.** O radar lê o `arquivo.json` e conta as notícias de cada área
+5. **O sentimento, a cada recolha.** Cada recolha encadeia o Amália, que classifica
+   o tom das notícias da comunicação social nacional ainda sem avaliação e grava o
+   `sentimentos.json`. É incremental e só arranca havendo trabalho que o justifique
+   (pelo menos quinze notícias por avaliar), pelo que as recolhas sem novidade não
+   chegam a carregar o modelo. Corre à parte, sem atrasar a recolha nem o relatório.
+6. **E o resumo dos picos.** Havendo picos noticiosos ainda por explicar, o Amália lê
+   as notícias reais desse dia e dessa área no arquivo mensal e escreve, em três ou
+   quatro frases, o que motivou o pico — para `picos-resumos.json`, que a evolução
+   mostra ao clique.
+7. **No painel.** O radar lê o `arquivo.json` e conta as notícias de cada área
    dentro do período e da origem escolhidos. Ao abrir uma área, o mesmo ficheiro é
    filtrado pelas palavras-chave selecionadas. As duas contagens seguem os mesmos
    critérios, pelo que dizem sempre o mesmo número. Tudo local, em milissegundos.
@@ -87,7 +93,8 @@ internacional ou todas. Ambos valem para o radar e para as consultas.
 - Síntese com indicadores: distribuição por publicação, assuntos recorrentes, cobertura
   de cada palavra-chave e evolução da área ao longo do período escolhido.
 - Impressão em PDF com cabeçalho institucional, e exportação para Excel com folha de
-  notícias, folha de especificações e folha de síntese.
+  notícias — incluindo o tom de cada notícia, quando avaliado —, folha de especificações
+  e folha de síntese, esta com o tom do conjunto, por publicação e por assunto.
 
 **Alertas de pico noticioso.** Quando uma área dispara — um volume de notícias muito
 acima do seu comportamento habitual —, o painel abre com uma faixa de alerta, e o
@@ -95,11 +102,19 @@ relatório diário assinala-o. Abaixo, o *momentum* do dia: as cinco áreas mais
 mediana. O método está descrito na tabela de ficheiros (`alertas.json`) e no manual.
 
 **Sentimento da cobertura, em validação.** O Amália classifica o tom (positivo, neutro,
-negativo) das notícias da comunicação social nacional; as avaliações aparecem como um
-ponto junto a cada notícia e como distribuição agregada — mas só quando há cobertura
-suficiente para a leitura ser fiável (ao menos 60% das notícias nacionais do dia
-avaliadas). Enquanto a leitura humana não estiver concluída, tudo isto mostra o rótulo
-«em validação».
+negativo) das notícias da comunicação social nacional — e só dessas: as origens lusófona
+e internacional servem outra leitura, a da reputação externa, que fica para depois. As
+avaliações aparecem como um ponto junto a cada notícia e como distribuição agregada, mas
+só quando há cobertura suficiente para a leitura ser fiável (ao menos 60% das notícias
+nacionais do período avaliadas, e nunca menos de oito). Abaixo desse patamar o painel
+diz que está à espera, em vez de mostrar proporções que enganam.
+
+Na síntese de cada área há ainda duas leituras que a evolução não dá: o **tom por
+publicação** — que órgãos escrevem em tom mais negativo sobre aquela área — e o **tom por
+assunto**, que mostra quais as palavras-chave que carregam esse tom. Ambas assinalam quem
+se afasta dez ou mais pontos percentuais da média da área, e exigem pelo menos cinco
+notícias avaliadas por linha, porque abaixo disso uma proporção não diz nada. Enquanto a
+leitura humana não estiver concluída, tudo isto mostra o rótulo «em validação».
 
 **Nada reduz sem explicar.** Sempre que a consulta deixa notícias de fora, o painel diz
 quantas e porquê: com outras palavras-chave da área, de outra origem, ou no arquivo mas
@@ -130,7 +145,8 @@ fora do período.
 | `historico.json` | **Série diária.** Por dia e por área: notícias, notícias novas, publicações distintas, repartição por origem e contagem de cada palavra-chave. Agregados, não notícias. |
 | `alertas.json` | **Picos noticiosos e momentum.** Escrito pelo `alertas.py` após cada recolha: compara o volume do dia, por área, com a mediana dos últimos 28 dias *à mesma hora* (desvio robusto, mínimo de 8 notícias de subida, piso de 12). Guarda os picos do dia, o top 5 do momentum e o histórico acumulado de alertas por área e por dia. |
 | `corpus.json` | **Comunicação social em bruto, sete dias.** Todos os artigos lidos dos feeds, marcados ou não. Serve a pesquisa por termo livre; o painel só o carrega quando alguém pesquisa. |
-| `sentimento_ia.py` + `.github/workflows/sentimento-amalia.yml` | **Sentimento em validação.** Uma vez por dia, o Amália classifica o tom (positivo, neutro, negativo) das notícias da comunicação social nacional ainda sem avaliação, em lotes e com teto por execução, e grava sentimentos.json e a série diária sentimento-serie.json — agregados por área e dia que se acumulam desde o primeiro dia, para a futura leitura longitudinal não nascer sem passado. As avaliações aparecem no radar (ponto junto a cada notícia e linha agregada da consulta) e na evolução (quadro de barras diárias positivas/neutras/negativas), sempre com o rótulo «em validação» até a leitura humana estar concluída — a funcionalidade é definitiva; o rótulo é temporário. |
+| `sentimento_ia.py` + `.github/workflows/sentimento-amalia.yml` | **Sentimento em validação.** A cada recolha, o Amália classifica o tom (positivo, neutro, negativo) das notícias da comunicação social nacional ainda sem avaliação — e só dessas —, em lotes, e grava sentimentos.json e a série sentimento-serie.json (agregados por área e dia). O critério de arranque é o trabalho pendente, não a hora: sem pelo menos quinze notícias por avaliar, o modelo nem chega a ser carregado. As avaliações aparecem no radar (ponto junto a cada notícia, distribuição da consulta, e o tom por publicação e por assunto na síntese), na evolução (barras por dia, semana ou mês) e no Excel (coluna própria e secções na folha de síntese), sempre com o rótulo «em validação» até a leitura humana estar concluída — a funcionalidade é definitiva; o rótulo é temporário. |
+| `resumo_picos.py` + `.github/workflows/resumo-picos.yml` | **Porquê de cada pico.** Para cada pico registado no alertas.json, recupera as notícias reais desse dia e dessa área do arquivo mensal — que guarda tudo, para lá dos sete dias do corpus — e pede ao Amália um resumo de três ou quatro frases do que aconteceu. Grava picos-resumos.json, que a evolução mostra ao clicar num pico. Incremental: um pico já resumido não volta a ser tratado, e o modelo só é carregado havendo picos por explicar. O resumo é sempre sobre notícias que existem; não havendo, o painel di-lo em vez de inventar. |
 | `retroativo_pm.py` + `.github/workflows/retroativo-pm.yml` | **Passo retroativo, execução única.** Revalida todas as marcações existentes sob as regras atuais (retirando pares de expressões entretanto removidas, como «empresas») e reclassifica o corpus de 7 dias com as áreas e expressões novas, injetando o resultado no arquivo, no retrato, no arquivo mensal, na série diária e nos alertas. Idempotente: correr duas vezes não duplica nem retira mais nada. |
 | `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente e integral.** Um ficheiro comprimido por mês com todas as notícias desse mês — as marcadas com a sua área, e as não marcadas com área vazia (guardadas para que os passos retroativos futuros tenham meses de profundidade, e não apenas os sete dias do corpus). A área vazia é ignorada por tudo o que conta por área. ~2–3 MB/mês. |
 
@@ -586,12 +602,19 @@ recolhida"** em vez de "arquivo de 7 dias".
 
 - Volume por período, repartido por origem da comunicação social. Clicar numa barra passa os
   quadros seguintes a mostrar apenas esse período.
-- Volume por área governativa, trajetória das oito mais noticiadas, e uma nuvem com as
-  expressões que trouxeram notícias no período — o tamanho vale pela quantidade, e as
-  que não aparecem ficaram a zero, sendo candidatas a revisão.
+- Volume por área governativa, com a contagem e a parte de cada área no total do conjunto
+  mostrado; trajetória das oito mais noticiadas; e uma nuvem com as expressões que
+  trouxeram notícias no período — o tamanho vale pela quantidade, e as que não aparecem
+  ficaram a zero, sendo candidatas a revisão.
+- **Picos noticiosos registados**, com o volume do dia e a mediana da área. Clicar num
+  pico abre o resumo do Amália sobre o que o motivou.
+- **Sentimento da cobertura**, em barras por dia, semana ou mês, apenas da comunicação
+  social nacional e sujeito ao patamar de cobertura.
 - Seletores de janela (30 dias, 90, um ano, tudo), de agregação (dia, semana, mês), de
-  origem (Portugal, lusofonia, internacional, todas) e de **área governativa**, que reduz
-  todos os quadros a uma só área.
+  origem (Portugal, lusofonia, internacional, todas), de **agrupamento temático** e de
+  **área governativa**, que reduzem todos os quadros ao que se escolheu. Escolhido um
+  período no gráfico, os quadros seguintes seguem-no — seja ele um dia, uma semana ou um
+  mês, e sempre identificado pelo intervalo que cobre.
 - Modo claro e escuro, ecrã inteiro, impressão em PDF, exportação para Excel com quatro
   folhas, e manual de leitura embutido.
 

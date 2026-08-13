@@ -154,15 +154,17 @@ main{padding:1.6rem 0 3rem}
 .legenda i{width:10px;height:10px;border-radius:3px;background:var(--cor);display:block}
 
 .ranking{display:grid;gap:.45rem;margin-top:1rem}
-.rk{display:grid;grid-template-columns:190px 1fr 54px;gap:.7rem;align-items:center;font-size:.82rem}
-@media(max-width:620px){.rk{grid-template-columns:120px 1fr 44px;font-size:.76rem}}
+.rk{display:grid;grid-template-columns:190px 1fr auto;gap:.7rem;align-items:center;font-size:.82rem}
+@media(max-width:620px){.rk{grid-template-columns:110px 1fr auto;font-size:.76rem}}
 .rk-nome{color:var(--texto-suave);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rk-barra{height:16px;border-radius:4px;background:var(--superficie-alt);overflow:hidden}
 .rk-barra i{display:block;height:100%;background:var(--cor);border-radius:4px}
-.rk-n{text-align:right;font-variant-numeric:tabular-nums;color:var(--texto);font-weight:500}
-.rk-pct{display:inline-block;min-width:46px;text-align:right;margin-left:.5rem;
-  font-weight:400;font-size:.82em;color:var(--texto-ligeiro)}
-@media(max-width:620px){.rk-pct{min-width:40px;margin-left:.3rem;font-size:.76em}}
+.rk-n{text-align:right;font-variant-numeric:tabular-nums;color:var(--texto);font-weight:500;
+  white-space:nowrap;display:flex;align-items:baseline;justify-content:flex-end;gap:.5rem}
+.rk-n>span{min-width:44px;text-align:right}
+.rk-pct{min-width:48px;text-align:right;font-weight:400;font-size:.82em;
+  color:var(--texto-ligeiro)}
+@media(max-width:620px){.rk-n{gap:.35rem}.rk-n>span{min-width:34px}.rk-pct{min-width:40px;font-size:.76em}}
 .tp{display:grid;grid-template-columns:86px 1fr auto;gap:.7rem;align-items:center;
   font-size:.82rem;padding:.45rem .6rem;border-left:3px solid var(--vermelho,#B23A3A);
   background:color-mix(in srgb,var(--vermelho,#B23A3A) 7%,transparent);border-radius:0 6px 6px 0}
@@ -394,7 +396,7 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
         <div class="aj-c" style="--c:var(--teal)">
           <div class="aj-ic">💬</div>
           <b>Sentimento <small>(em validação)</small></b>
-          <span>Barras diárias com o tom das notícias nacionais — positivas, neutras,
+          <span>Barras com o tom da comunicação social <strong>nacional</strong> — positivas, neutras,
             negativas —, avaliado pelo Amália. Em validação por leitura humana.</span>
         </div>
       </div>
@@ -942,7 +944,8 @@ function blocoSentimento(linhas){
   if(!comMassa) {
     return `
     <div class="bloco">
-      <h2>Sentimento da cobertura <span style="font-size:.7em;opacity:.7">(em validação)</span>
+      <h2>Sentimento da cobertura <span style="font-size:.7em;opacity:.7">(em validação
+        · só comunicação social nacional)</span>
         ${areaEscolhida ? `— ${areaEscolhida}` : ""}</h2>
       <p class="nota">A avaliação automática está em curso: ainda não há dias com cobertura
         suficiente (pelo menos ${Math.round(COBERTURA_MINIMA * 100)}% das notícias nacionais
@@ -978,7 +981,8 @@ function blocoSentimento(linhas){
 
   return `
     <div class="bloco">
-      <h2>Sentimento da cobertura <span style="font-size:.7em;opacity:.7">(em validação)</span>
+      <h2>Sentimento da cobertura <span style="font-size:.7em;opacity:.7">(em validação
+        · só comunicação social nacional)</span>
         ${areaEscolhida ? `— ${areaEscolhida}` : ""}</h2>
       ${filas.slice().reverse().map(barra).join("")}
       <div class="legenda">
@@ -1085,7 +1089,7 @@ function desenhar(){
           <div class="rk" style="--cor:${cor(grupoDaArea(nome))}">
             <span class="rk-nome" title="${nome}">${nome}</span>
             <span class="rk-barra"><i style="width:${(n / areas[0][1] * 100).toFixed(1)}%"></i></span>
-            <span class="rk-n">${num(n)}<b class="rk-pct">${(n / totalAreas * 100).toFixed(1).replace(".", ",")}%</b></span>
+            <span class="rk-n"><span>${num(n)}</span><b class="rk-pct">${(n / totalAreas * 100).toFixed(1).replace(".", ",")}%</b></span>
           </div>`).join("");
         })()}
       </div>

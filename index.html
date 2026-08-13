@@ -2292,7 +2292,7 @@ function blocoSentimentoArea(area, corArea){
 
   return `
       <div class="bloco">
-        <h4>Tom da cobertura <span style="font-weight:400;opacity:.7">(em validação)</span></h4>
+        <h4>Tom da cobertura <span style="font-weight:400;opacity:.7">(em validação · só comunicação social nacional)</span></h4>
         <p class="sin-nota" style="margin:0 0 .7rem">
           Nesta consulta, ${totalGeral} das ${recolha.length} notícias estão avaliadas:
           <b style="color:var(--verde)">${geral.positivo} positivas</b>,
@@ -2395,7 +2395,7 @@ function corpoLista(){
         <span class="sent neg"></span>${ng} negativas
         · ${av} de ${recolha.length} avaliadas</div>`
         : `<div class="res-nota" style="padding:4px 0 8px;opacity:.75">
-        Sentimento (em validação): ${av} de ${recolha.length} notícias avaliadas —
+        Sentimento (em validação · só comunicação social nacional): ${av} de ${recolha.length} avaliadas —
         ainda poucas para uma distribuição fiável. Preenche-se nos próximos dias.</div>`;
     }
   }
@@ -3469,7 +3469,7 @@ function seccoesTomExcel(){
   };
 
   const seccoes = [[
-    "Tom da cobertura (Amália, em validação)",
+    "Tom da cobertura (Amália, em validação · só comunicação social nacional)",
     "Conjunto da consulta",
     [[`Total avaliado: ${avaliadas.length} de ${recolha.length} notícias — ` +
       `${geral.positivo} pos. · ${geral.neutro} neu. · ${geral.negativo} neg.`,
@@ -3892,7 +3892,7 @@ function pontoSentimento(n){
   if(!a) return "";
   const classe = { positivo:"pos", neutro:"neu", negativo:"neg" }[a.s];
   if(!classe) return "";
-  return `<span class="sent ${classe}" title="Sentimento (em validação, Amália): ${a.s}"></span>`;
+  return `<span class="sent ${classe}" title="Sentimento (em validação, Amália · comunicação social nacional): ${a.s}"></span>`;
 }
 
 async function lerAlertas(){
