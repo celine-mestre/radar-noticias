@@ -267,6 +267,20 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .sin-col-b{width:100%;max-width:46px;border-radius:5px 5px 0 0;display:block;transition:.2s}
 .sin-col-d{font-size:.68rem;color:var(--texto-ligeiro);white-space:nowrap}
 .sin-nota{font-size:.78rem;color:var(--texto-ligeiro);margin-top:.7rem;line-height:1.5}
+.sa-sub{font-size:.8rem;font-weight:600;color:var(--texto-suave);margin:.9rem 0 .45rem;
+  text-transform:uppercase;letter-spacing:.04em}
+.sa-lista{display:flex;flex-direction:column;gap:.35rem}
+.sa-linha{display:grid;grid-template-columns:minmax(90px,1.1fr) 2fr auto;gap:.6rem;
+  align-items:center;font-size:.8rem}
+.sa-rot{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--texto)}
+.sa-barra{display:flex;height:14px;border-radius:4px;overflow:hidden;background:var(--superficie-alt)}
+.sa-barra i{display:block;height:100%}
+.sa-barra .pos{background:var(--verde)}
+.sa-barra .neu{background:#9aa1a8}
+.sa-barra .neg{background:var(--vermelho,#B23A3A)}
+.sa-n{font-variant-numeric:tabular-nums;color:var(--texto-suave);white-space:nowrap;font-size:.76rem}
+.sa-desvio{color:var(--c);font-weight:600}
+@media(max-width:620px){.sa-linha{grid-template-columns:minmax(70px,1fr) 1.4fr auto;font-size:.74rem}}
 
 /* --- Síntese: elementos gráficos --- */
 .evo-topo{display:flex;gap:1.8rem;flex-wrap:wrap;margin:.3rem 0 .9rem}
@@ -2210,6 +2224,98 @@ function cobertura(itens, area){
 
 /* Evolução da área ao longo dos dias, a partir da série publicada.
    Só aparece quando existem pelo menos três dias registados. */
+/* Sentimento da área, na consulta em curso: quem escreve em que tom, e que
+   assuntos carregam o tom. É a leitura que a evolução não dá — lá vê-se o tom
+   ao longo dos dias, aqui vê-se de onde vem e sobre o quê. Só a comunicação
+   social nacional é avaliada, pelo que só entram as notícias avaliadas; e só
+   se mostra com cobertura suficiente, pelo mesmo critério do resto. */
+function blocoSentimentoArea(area, corArea){
+  if(!SENTIMENTOS || !Object.keys(SENTIMENTOS).length) return "";
+
+  const avaliadas = [];
+  recolha.forEach(n => {
+    const a = SENTIMENTOS[n.ligacao || (n.titulo || "").toLowerCase()];
+    if(a && (a.s === "positivo" || a.s === "neutro" || a.s === "negativo"))
+      avaliadas.push({ n, s: a.s });
+  });
+  if(avaliadas.length < 8 || avaliadas.length < 0.60 * recolha.length) return "";
+
+  const conta = itens => {
+    const c = { positivo: 0, neutro: 0, negativo: 0 };
+    itens.forEach(x => { c[x.s]++; });
+    return c;
+  };
+  const geral = conta(avaliadas);
+  const totalGeral = avaliadas.length;
+  const pctNegGeral = geral.negativo / totalGeral;
+
+  /* Agrupa por uma chave e devolve os grupos com massa suficiente, ordenados
+     do mais negativo ao menos. Cinco notícias é o mínimo para uma proporção
+     dizer alguma coisa — abaixo disso é ruído. */
+  const porChave = (chaves, minimo) => {
+    const grupos = new Map();
+    avaliadas.forEach(x => {
+      chaves(x.n).forEach(k => {
+        if(!k) return;
+        if(!grupos.has(k)) grupos.set(k, []);
+        grupos.get(k).push(x);
+      });
+    });
+    return [...grupos.entries()]
+      .filter(([, itens]) => itens.length >= minimo)
+      .map(([k, itens]) => {
+        const c = conta(itens);
+        return { chave: k, n: itens.length, ...c,
+                 pctNeg: c.negativo / itens.length };
+      })
+      .sort((x, y) => y.pctNeg - x.pctNeg || y.n - x.n);
+  };
+
+  const publicacoes = porChave(n => [n.fonte], 5).slice(0, 8);
+  const assuntos = porChave(n => n.palavras || [], 5).slice(0, 8);
+  if(!publicacoes.length && !assuntos.length) return "";
+
+  const pct = v => `${Math.round(100 * v)}%`;
+  const linha = x => {
+    const desvio = x.pctNeg - pctNegGeral;
+    const marca = Math.abs(desvio) < 0.10 ? ""
+      : ` <b class="sa-desvio" style="--c:${desvio > 0 ? "var(--vermelho,#B23A3A)" : "var(--verde)"}">
+          ${desvio > 0 ? "+" : "−"}${Math.round(Math.abs(desvio) * 100)} p.p.</b>`;
+    const seg = (v, c) => v ? `<i class="${c}" style="width:${(100 * v / x.n).toFixed(1)}%"></i>` : "";
+    return `<div class="sa-linha">
+      <span class="sa-rot" title="${esc(x.chave)}">${esc(x.chave)}</span>
+      <span class="sa-barra">${seg(x.positivo, "pos")}${seg(x.neutro, "neu")}${seg(x.negativo, "neg")}</span>
+      <span class="sa-n">${pct(x.pctNeg)} neg.${marca}</span>
+    </div>`;
+  };
+
+  return `
+      <div class="bloco">
+        <h4>Tom da cobertura <span style="font-weight:400;opacity:.7">(em validação)</span></h4>
+        <p class="sin-nota" style="margin:0 0 .7rem">
+          Nesta consulta, ${totalGeral} das ${recolha.length} notícias estão avaliadas:
+          <b style="color:var(--verde)">${geral.positivo} positivas</b>,
+          <b>${geral.neutro} neutras</b>,
+          <b style="color:var(--vermelho,#B23A3A)">${geral.negativo} negativas</b>
+          — ${pct(pctNegGeral)} de tom negativo, que é a referência abaixo.</p>
+
+        ${publicacoes.length ? `
+        <h5 class="sa-sub">Por publicação</h5>
+        <div class="sa-lista">${publicacoes.map(linha).join("")}</div>` : ""}
+
+        ${assuntos.length ? `
+        <h5 class="sa-sub">Por assunto</h5>
+        <div class="sa-lista">${assuntos.map(linha).join("")}</div>` : ""}
+
+        <p class="sin-nota">Ordenado do tom mais negativo para o menos. A marca
+          em p.p. assinala quem se afasta dez ou mais pontos percentuais da média
+          da área nesta consulta — é aí que está a informação. Só entram
+          publicações e assuntos com pelo menos cinco notícias avaliadas, porque
+          abaixo disso a proporção não diz nada. Avaliação automática do Amália
+          sobre a comunicação social nacional, em validação por leitura humana.</p>
+      </div>`;
+}
+
 function blocoEvolucao(area){
   const serie = serieDaArea(area.nome);
   if(serie.length < 3) return "";
@@ -2416,6 +2522,8 @@ function corpoSintese(){
           </div>`).join("")}</div>
         <p class="sin-nota">Quantas das notícias recolhidas contêm cada palavra-chave no título. Palavras a zero indicam termos que não estão a puxar cobertura no período escolhido.</p>
       </div>
+
+      ${blocoSentimentoArea(a, corA)}
 
       ${blocoEvolucao(a)}`;
 }
