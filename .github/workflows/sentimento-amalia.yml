@@ -140,7 +140,7 @@ jobs:
           # buscando sempre o mais recente antes de reenviar, para nao perder as
           # avaliacoes por causa de uma colisao de gravacao.
           for tentativa in 1 2 3 4 5; do
-            git add sentimentos.json sentimento-serie.json 2>/dev/null || true
+            git add sentimentos.json sentimento-serie.json sentimento-meses 2>/dev/null || true
             git diff --cached --quiet && { echo "Nada a gravar."; break; }
             git commit -m "Sentimento das noticias" || true
             git pull --rebase --autostash origin main || true
