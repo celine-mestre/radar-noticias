@@ -1,12 +1,13 @@
 name: Sentimento pelo Amalia
 
-# Classifica o tom (positivo, neutro, negativo) das noticias da imprensa
-# nacional, de forma incremental: cada execucao trata apenas o que ainda nao
-# tem avaliacao, com um teto para caber na janela de tempo. Corre UMA VEZ por
-# dia, a seguir a sintese da manha, e grava sentimentos.json.
+# Classifica o tom (positivo, neutro, negativo) das noticias da comunicacao
+# social nacional, de forma incremental: cada execucao trata apenas o que ainda
+# nao tem avaliacao. Corre a seguir a CADA recolha, e nao uma vez por dia: como
+# so trata o que falta, as recolhas sem novidade suficiente nem chegam a
+# carregar o modelo. Grava sentimentos.json e sentimento-serie.json.
 #
-# MODO DE ENSAIO. As avaliacoes servem a validacao humana no painel; nenhum
-# agregado ou serie e produzido enquanto a precisao nao for validada.
+# EM VALIDACAO. As avaliacoes automaticas aparecem nos paineis com esse rotulo
+# enquanto a leitura humana de verificacao nao estiver concluida.
 
 on:
   workflow_dispatch:
@@ -15,7 +16,7 @@ on:
         description: "Noticias a classificar, no maximo"
         type: string
         required: false
-        default: "300"
+        default: "600"
   workflow_call:
     inputs:
       encadeado:
@@ -45,7 +46,10 @@ jobs:
         with:
           ref: main
 
-      - name: Verificar se ja ha sentimento de hoje
+      - name: Instalar o minimo para decidir
+        run: pip install --quiet openpyxl
+
+      - name: Ha noticias por avaliar?
         id: v
         run: |
           if [ "${{ inputs.encadeado }}" != "true" ]; then
@@ -53,23 +57,49 @@ jobs:
             echo "seguir=sim" >> "$GITHUB_OUTPUT"; exit 0
           fi
 
-          # A primeira recolha do dia, as 07h07 de Lisboa, e cedo de mais.
-          HORA=$(date -u +%H)
-          if [ "$HORA" -lt 8 ]; then
-            echo "Recolha das 07h07: cedo de mais para o sentimento do dia."
-            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
-          fi
+          # O criterio e o trabalho pendente, nao a hora nem o dia: assim o
+          # sentimento corre a seguir a QUALQUER recolha e as noticias ficam
+          # classificadas poucas horas depois de publicadas, em vez de so na
+          # manha seguinte. Como e incremental, nas recolhas sem novidade nao
+          # ha nada a fazer e o modelo de 5,6 GB nem chega a ser carregado.
+          # O minimo evita acordar o modelo para meia duzia de noticias.
+          python3 - <<'PY'
+          import json, os, importlib.util
 
-          HOJE=$(TZ=Europe/Lisbon date +%Y-%m-%d)
-          FEITO=""
-          if [ -f sentimentos.json ]; then
-            FEITO=$(python -c "import json;print(json.load(open('sentimentos.json',encoding='utf-8')).get('gerado','')[:10])" 2>/dev/null || echo "")
-          fi
-          if [ "$FEITO" = "$HOJE" ]; then
-            echo "O sentimento de hoje ja foi avaliado."
-            echo "seguir=nao" >> "$GITHUB_OUTPUT"; exit 0
-          fi
-          echo "seguir=sim" >> "$GITHUB_OUTPUT"
+          MINIMO = 15
+
+          def modulo(nome):
+              spec = importlib.util.spec_from_file_location(nome, f"{nome}.py")
+              mod = importlib.util.module_from_spec(spec)
+              spec.loader.exec_module(mod)
+              return mod
+
+          try:
+              sent = modulo("sentimento_ia")
+              recolha, _ = sent.modulos_do_repositorio()
+              with open("arquivo.json", encoding="utf-8") as f:
+                  noticias = json.load(f).get("noticias", [])
+              avaliadas = {}
+              if os.path.exists("sentimentos.json"):
+                  with open("sentimentos.json", encoding="utf-8") as f:
+                      avaliadas = json.load(f).get("avaliacoes", {})
+              faltam = sent.pendentes(noticias, avaliadas,
+                                      recolha.origem_da_fonte, 8)
+              decisao = "sim" if len(faltam) >= MINIMO else "nao"
+              nota = (f"{len(faltam)} por avaliar (minimo {MINIMO}), "
+                      f"{len(avaliadas)} ja feitas")
+          except Exception as erro:
+              # Na duvida, corre: perde-se tempo de maquina, nao dados.
+              decisao = "sim"
+              nota = f"verificacao falhou ({type(erro).__name__}), segue"
+
+          # Só a linha «nome=valor» entra no ficheiro de resultados: o GitHub
+          # rejeita o ficheiro inteiro se lá encontrar outra coisa. As notas
+          # para quem lê o registo vão para o ecrã, como é devido.
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as saida:
+              saida.write(f"seguir={decisao}\n")
+          print(nota)
+          PY
 
   classificar:
     needs: decidir

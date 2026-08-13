@@ -37,8 +37,9 @@ jobs:
       - name: Ha picos por resumir?
         id: v
         run: |
-          python - <<'PY' >> "$GITHUB_OUTPUT"
+          python3 - <<'PY'
           import json, os
+
           picos = []
           if os.path.exists("alertas.json"):
               with open("alertas.json", encoding="utf-8") as f:
@@ -49,8 +50,13 @@ jobs:
                   feitos = json.load(f).get("resumos", {})
           faltam = [p for p in picos
                     if f"{p.get('data')}|{p.get('area')}" not in feitos]
-          print(f"seguir={'sim' if faltam else 'nao'}")
-          print(f"# {len(faltam)} picos por resumir, {len(feitos)} ja feitos")
+
+          # Só a linha «nome=valor» entra no ficheiro de resultados: o GitHub
+          # rejeita o ficheiro inteiro se lá encontrar outra coisa. As notas
+          # para quem lê o registo vão para o ecrã, como é devido.
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as saida:
+              saida.write(f"seguir={'sim' if faltam else 'nao'}\n")
+          print(f"{len(faltam)} picos por resumir, {len(feitos)} ja feitos")
           PY
 
   resumir:
