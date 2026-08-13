@@ -49,7 +49,7 @@ anterior ao arquivo, não aparece — e alargar o âmbito é acrescentar feeds �
    (todos os artigos lidos, marcados ou não, para a pesquisa por termo), a série
    diária de contagens e o arquivo mensal permanente. Ainda na mesma execução,
    o `alertas.py` compara o volume do dia com o comportamento habitual de cada área
-   e grava as tempestades e o momentum.
+   e grava os picos noticiosos e o momentum.
 5. **Uma vez por dia, o sentimento.** A primeira recolha da manhã encadeia o Amália,
    que classifica o tom das notícias nacionais ainda sem avaliação e grava o
    `sentimentos.json`. Corre à parte, sem atrasar a recolha nem o relatório.
@@ -89,7 +89,7 @@ internacional ou todas. Ambos valem para o radar e para as consultas.
 - Impressão em PDF com cabeçalho institucional, e exportação para Excel com folha de
   notícias, folha de especificações e folha de síntese.
 
-**Alertas de tempestade política.** Quando uma área dispara — um volume de notícias muito
+**Alertas de pico noticioso.** Quando uma área dispara — um volume de notícias muito
 acima do seu comportamento habitual —, o painel abre com uma faixa de alerta, e o
 relatório diário assinala-o. Abaixo, o *momentum* do dia: as cinco áreas mais acima da sua
 mediana. O método está descrito na tabela de ficheiros (`alertas.json`) e no manual.
@@ -128,8 +128,8 @@ fora do período.
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
 | `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
 | `historico.json` | **Série diária.** Por dia e por área: notícias, notícias novas, publicações distintas, repartição por origem e contagem de cada palavra-chave. Agregados, não notícias. |
-| `alertas.json` | **Tempestades políticas e momentum.** Escrito pelo `alertas.py` após cada recolha: compara o volume do dia, por área, com a mediana dos últimos 28 dias *à mesma hora* (desvio robusto, mínimo de 8 notícias de subida, piso de 12). Guarda as tempestades do dia, o top 5 do momentum e o histórico acumulado de alertas por área e por dia. |
-| `corpus.json` | **Imprensa em bruto, sete dias.** Todos os artigos lidos dos feeds, marcados ou não. Serve a pesquisa por termo livre; o painel só o carrega quando alguém pesquisa. |
+| `alertas.json` | **Picos noticiosos e momentum.** Escrito pelo `alertas.py` após cada recolha: compara o volume do dia, por área, com a mediana dos últimos 28 dias *à mesma hora* (desvio robusto, mínimo de 8 notícias de subida, piso de 12). Guarda os picos do dia, o top 5 do momentum e o histórico acumulado de alertas por área e por dia. |
+| `corpus.json` | **Comunicação social em bruto, sete dias.** Todos os artigos lidos dos feeds, marcados ou não. Serve a pesquisa por termo livre; o painel só o carrega quando alguém pesquisa. |
 | `sentimento_ia.py` + `.github/workflows/sentimento-amalia.yml` | **Sentimento em validação.** Uma vez por dia, o Amália classifica o tom (positivo, neutro, negativo) das notícias da comunicação social nacional ainda sem avaliação, em lotes e com teto por execução, e grava sentimentos.json e a série diária sentimento-serie.json — agregados por área e dia que se acumulam desde o primeiro dia, para a futura leitura longitudinal não nascer sem passado. As avaliações aparecem no radar (ponto junto a cada notícia e linha agregada da consulta) e na evolução (quadro de barras diárias positivas/neutras/negativas), sempre com o rótulo «em validação» até a leitura humana estar concluída — a funcionalidade é definitiva; o rótulo é temporário. |
 | `retroativo_pm.py` + `.github/workflows/retroativo-pm.yml` | **Passo retroativo, execução única.** Revalida todas as marcações existentes sob as regras atuais (retirando pares de expressões entretanto removidas, como «empresas») e reclassifica o corpus de 7 dias com as áreas e expressões novas, injetando o resultado no arquivo, no retrato, no arquivo mensal, na série diária e nos alertas. Idempotente: correr duas vezes não duplica nem retira mais nada. |
 | `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente e integral.** Um ficheiro comprimido por mês com todas as notícias desse mês — as marcadas com a sua área, e as não marcadas com área vazia (guardadas para que os passos retroativos futuros tenham meses de profundidade, e não apenas os sete dias do corpus). A área vazia é ignorada por tudo o que conta por área. ~2–3 MB/mês. |
@@ -341,7 +341,7 @@ quando o anterior termina.
 | a seguir à síntese | Envio dos relatórios | Quando a síntese termina, em dias úteis |
 
 São **oito recolhas por dia**: de duas em duas horas entre as 07h07 e as 19h07, mais uma
-às 23h07 que fecha o dia — sem ela, o que a imprensa publica ao serão ficaria de fora da
+às 23h07 que fecha o dia — sem ela, o que a comunicação social publica ao serão ficaria de fora da
 série, porque a linha do dia já não é reescrita no dia seguinte. Cada recolha demora
 cerca de um minuto.
 
@@ -360,7 +360,7 @@ fluxo quando outro termina, e não se mostrou fiável.
 Há assim **um só agendamento** em toda a aplicação: o da recolha.
 
 **Uma vez por dia, e na recolha certa.** A síntese e o relatório saltam a recolha das
-07h07 — a essa hora a imprensa ainda mal publicou e o relatório sairia com as notícias
+07h07 — a essa hora a comunicação social ainda mal publicou e o relatório sairia com as notícias
 da véspera. É a das 09h07 que os desencadeia.
 
 A partir daí a verificação é "já se fez hoje?" e não "que horas são?". A síntese olha
@@ -567,14 +567,14 @@ Para isso existe a caixa de **pesquisa por termo**, dentro da janela de uma áre
 contrário da seleção de palavras-chave, procura no `corpus.json` — **todos os artigos
 lidos dos feeds nos últimos sete dias**, marcados ou não por qualquer área.
 
-É, portanto, pesquisa livre sobre imprensa em bruto, sem sair do corpus próprio: nenhum
+É, portanto, pesquisa livre sobre comunicação social em bruto, sem sair do corpus próprio: nenhum
 serviço externo é consultado, e o que se encontra continua a ser das 48 publicações
 subscritas.
 
 O ficheiro ronda os 7 MB com o volume atual. O painel só o carrega à primeira pesquisa
 da sessão, o que demora alguns segundos; daí em diante fica em memória.
 
-Quando os resultados vêm daqui, a etiqueta ao lado da contagem diz **"imprensa
+Quando os resultados vêm daqui, a etiqueta ao lado da contagem diz **"comunicação social
 recolhida"** em vez de "arquivo de 7 dias".
 
 ---
@@ -584,7 +584,7 @@ recolhida"** em vez de "arquivo de 7 dias".
 `evolucao.html`, ao lado do painel principal e ligado a ele pelo ícone de gráfico. Lê o
 `historico.json` e mostra a série ao longo do tempo:
 
-- Volume por período, repartido por origem da imprensa. Clicar numa barra passa os
+- Volume por período, repartido por origem da comunicação social. Clicar numa barra passa os
   quadros seguintes a mostrar apenas esse período.
 - Volume por área governativa, trajetória das oito mais noticiadas, e uma nuvem com as
   expressões que trouxeram notícias no período — o tamanho vale pela quantidade, e as
@@ -622,14 +622,14 @@ depois da última recolha.
 
 São agregados, não notícias. Cerca de **2 KB por dia**, menos de 1 MB por ano. Chega
 para responder a perguntas de tendência: que áreas cresceram, que assuntos ganharam
-peso, como se distribuiu a atenção da imprensa ao longo de um semestre.
+peso, como se distribuiu a atenção da comunicação social ao longo de um semestre.
 
 ### O que fica e o que passa
 
 | Ficheiro | Guarda | Por quanto tempo |
 |---|---|---|
 | `arquivo.json` | Notícias marcadas por área | 7 dias, sempre a deslizar |
-| `corpus.json` | Imprensa em bruto, marcada ou não | 7 dias, sempre a deslizar |
+| `corpus.json` | Comunicação social em bruto, marcada ou não | 7 dias, sempre a deslizar |
 | `historico.json` | Contagens por dia e por área | **Para sempre** |
 | `meses/AAAA-MM.jsonl.gz` | Notícias marcadas, com título e resumo | **Para sempre** |
 
@@ -637,7 +637,7 @@ Para analisar o passado, o que conta são as duas últimas linhas. O `meses/` gu
 todas as notícias de cada dia, uma a uma; o `historico.json` guarda as contagens. Os
 dois primeiros são de trabalho e não têm memória.
 
-O que **não** fica é a imprensa não marcada: o `corpus.json` só existe para a pesquisa
+O que **não** fica é a comunicação social não marcada: o `corpus.json` só existe para a pesquisa
 por termo e não se acumula. Guardá-lo seria multiplicar por dez o espaço para conservar
 artigos que nenhuma área classificou.
 

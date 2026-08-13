@@ -1267,7 +1267,7 @@ $("#agregacao").addEventListener("click", e => {
     const d = new Date(INICIO_SERIE + "T00:00:00");
     marca.textContent = "A série começa em "
       + d.toLocaleDateString("pt-PT", { day:"numeric", month:"long", year:"numeric" })
-      + ". Os dias anteriores foram de ensaio e não entram nos quadros.";
+      + ".";
   }
 
   $("#cobertura").textContent = SERIE.length
