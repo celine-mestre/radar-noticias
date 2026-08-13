@@ -91,10 +91,46 @@ def modulos_do_repositorio():
     return importar("extrair_noticias"), importar("sintese_ia")
 
 
-def pendentes(noticias, avaliacoes, origem_da_fonte, dias):
+def carregar_do_mensal(pasta, datas):
+    """Notícias de dias já fora do arquivo corrente, lidas do depósito mensal.
+
+    O arquivo.json guarda sete dias: passado esse prazo, uma notícia que nunca
+    chegou a ser avaliada deixa de ser alcançável — e o dia fica para sempre
+    com cobertura parcial. O depósito mensal guarda tudo, e é daqui que se
+    repescam esses dias. Serve para fechar buracos deixados por avarias, não
+    para trabalho corrente.
+    """
+    import gzip
+    registos, vistos = [], set()
+    meses = {d[:7] for d in datas}
+    for mes in sorted(meses):
+        caminho = os.path.join(pasta, f"{mes}.jsonl.gz")
+        if not os.path.exists(caminho):
+            continue
+        with gzip.open(caminho, "rt", encoding="utf-8") as origem:
+            for linha in origem:
+                try:
+                    r = json.loads(linha)
+                except json.JSONDecodeError:
+                    continue
+                if (r.get("data") or "")[:10] not in datas:
+                    continue
+                if not (r.get("area") or "").strip():
+                    continue
+                chave = (r.get("ligacao") or (r.get("titulo") or "").lower(),
+                         r.get("area"))
+                if chave in vistos:
+                    continue
+                vistos.add(chave)
+                registos.append(r)
+    return registos
+
+
+def pendentes(noticias, avaliacoes, origem_da_fonte, dias, datas_extra=frozenset()):
     """Notícias nacionais ainda sem avaliação, uma por ligação, recentes
     primeiro. A ligação é a identidade: a mesma notícia marcada em duas
-    áreas classifica-se uma só vez."""
+    áreas classifica-se uma só vez. As datas em `datas_extra` entram mesmo
+    estando fora da janela — é por aí que se repescam dias antigos."""
     limite = (agora_lisboa() - timedelta(days=dias)).strftime("%Y-%m-%d")
     vistas, fila = set(), []
     for n in sorted(noticias, key=lambda x: x.get("data", ""), reverse=True):
@@ -102,7 +138,8 @@ def pendentes(noticias, avaliacoes, origem_da_fonte, dias):
         if not lig or lig in vistas or lig in avaliacoes:
             continue
         vistas.add(lig)
-        if (n.get("data") or "")[:10] < limite:
+        dia = (n.get("data") or "")[:10]
+        if dia < limite and dia not in datas_extra:
             continue
         if origem_da_fonte(n.get("dominio") or "") != "nacionais":
             continue
@@ -190,75 +227,20 @@ def perguntar_servico(endereco, chave, lote, modelo_nome, tempo_limite=90):
     return corpo["choices"][0]["message"]["content"].strip()
 
 
-def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias):
-    """Série diária de sentimento por área, acumulada desde o primeiro dia.
-
-    O sentimentos.json é podado à janela do arquivo; sem esta série, o dia em
-    que a validação terminasse seria também o dia zero da história. Aqui, os
-    agregados de cada dia (quantas positivas, neutras, negativas e por avaliar,
-    por área, comunicação social nacional) ficam registados desde já — pequenos, cerca de
-    um quilobyte por dia. Se a validação reprovar o método, apaga-se o ficheiro
-    e nada se perdeu; se aprovar, a série já existe desde o início.
-
-    Os dias dentro da janela são recalculados a cada execução (chegam sempre
-    avaliações novas de notícias antigas); os dias que já saíram da janela
-    ficam como estão — são história fechada.
-    """
-    limite = (agora_lisboa() - timedelta(days=dias)).strftime("%Y-%m-%d")
-    hoje = agora_lisboa().strftime("%Y-%m-%d")
-
-    por_dia = {}
-    for n in noticias:
-        dia = (n.get("data") or "")[:10]
-        area = n.get("area") or ""
-        if not dia or not area or dia < limite:
-            continue
-        if origem_da_fonte(n.get("dominio") or "") != "nacionais":
-            continue
-        registo = por_dia.setdefault(dia, {}).setdefault(area, {
-            "nacionais": 0, "avaliadas": 0,
-            "positivo": 0, "neutro": 0, "negativo": 0})
-        registo["nacionais"] += 1
-        lig = n.get("ligacao") or (n.get("titulo") or "").lower()
-        a = avaliacoes.get(lig)
-        if a and a.get("s") in VALORES:
-            registo["avaliadas"] += 1
-            registo[a["s"]] += 1
-
-    serie = {"estado": "ensaio — método por validar", "dias": []}
-    if os.path.exists(caminho):
-        try:
-            with open(caminho, encoding="utf-8") as origem:
-                anterior = json.load(origem)
-            if isinstance(anterior.get("dias"), list):
-                serie["estado"] = anterior.get("estado", serie["estado"])
-                serie["dias"] = [d for d in anterior["dias"]
-                                 if d.get("data", "") < limite]
-        except (json.JSONDecodeError, OSError):
-            pass
-
-    for dia in sorted(por_dia):
-        serie["dias"].append({"data": dia,
-                              "fechado": dia < hoje,
-                              "areas": por_dia[dia]})
-    serie["dias"].sort(key=lambda d: d.get("data", ""))
-    serie["atualizado"] = agora_lisboa().strftime("%Y-%m-%d %H:%M")
-
-    with open(caminho, "w", encoding="utf-8") as destino:
-        json.dump(serie, destino, ensure_ascii=False, indent=1)
-    print(f"série de sentimento: {len(serie['dias'])} dias em {caminho}")
-
-
-def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias):
+def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias,
+                    datas_extra=frozenset()):
     """Agregados diários por área — o alicerce da futura vista na evolução.
 
     Acumula desde o primeiro dia, mesmo em modo de ensaio: quando a precisão
     das avaliações for validada, o gráfico nasce com história e não do zero.
     Enquanto isso, nada disto é mostrado. Os dias dentro da janela do arquivo
     recontam-se a cada execução (as avaliações vão chegando); os dias que já
-    saíram da janela ficam fechados como estão. Cresce cerca de 2 KB por dia.
+    saíram da janela ficam fechados como estão — a não ser que venham em
+    `datas_extra`, o caso dos dias repescados do arquivo mensal, que são
+    recontados e substituem o registo parcial que lá estava. Cresce cerca de
+    2 KB por dia.
     """
-    serie = {"atualizado": "", "estado": "ensaio — por validar", "dias": []}
+    serie = {"atualizado": "", "estado": "em validação — leitura humana em curso", "dias": []}
     if os.path.exists(caminho):
         try:
             with open(caminho, encoding="utf-8") as origem:
@@ -273,7 +255,7 @@ def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias):
     for n in noticias:
         dia = (n.get("data") or "")[:10]
         area = n.get("area")
-        if not dia or not area or dia < limite:
+        if not dia or not area or (dia < limite and dia not in datas_extra):
             continue
         if origem_da_fonte(n.get("dominio") or "") != "nacionais":
             continue
@@ -317,6 +299,11 @@ def principal():
     ap.add_argument("--repo", default=None)
     ap.add_argument("--ficheiro", default=None)
     ap.add_argument("--endereco", default=os.environ.get("AMALIA_ENDERECO", ""))
+    ap.add_argument("--recuperar", default="",
+                    help="datas (AAAA-MM-DD, por vírgulas) a repescar do arquivo "
+                         "mensal — para fechar dias que ficaram sem avaliação")
+    ap.add_argument("--mensal", default="meses",
+                    help="pasta do arquivo mensal, usada com --recuperar")
     args = ap.parse_args()
 
     recolha, sintese = modulos_do_repositorio()
@@ -333,6 +320,13 @@ def principal():
     with open(args.dados, encoding="utf-8") as origem:
         noticias = json.load(origem).get("noticias", [])
 
+    datas_extra = frozenset(d.strip() for d in args.recuperar.split(",") if d.strip())
+    if datas_extra:
+        repescadas = carregar_do_mensal(args.mensal, datas_extra)
+        noticias = noticias + repescadas
+        print(f"repesca: {len(repescadas)} registos de {len(datas_extra)} dia(s) "
+              f"lidos do arquivo mensal")
+
     anterior = {}
     if os.path.exists(args.saida):
         try:
@@ -345,9 +339,11 @@ def principal():
     # Poda: avaliações de notícias já fora da janela não servem para nada
     limite = (agora_lisboa() - timedelta(days=args.dias + 2)).strftime("%Y-%m-%d")
     avaliacoes = {lig: v for lig, v in avaliacoes.items()
-                  if (v.get("d") or "9999") >= limite}
+                  if (v.get("d") or "9999") >= limite
+                  or (v.get("d") or "") in datas_extra}
 
-    fila = pendentes(noticias, avaliacoes, recolha.origem_da_fonte, args.dias)
+    fila = pendentes(noticias, avaliacoes, recolha.origem_da_fonte, args.dias,
+                     datas_extra)
     por_fazer = len(fila)
     fila = fila[:args.teto]
     print(f"sentimento: {por_fazer} notícias nacionais por avaliar; "
@@ -371,7 +367,7 @@ def principal():
             }, destino, ensure_ascii=False, indent=1)
         if args.serie:
             atualizar_serie(args.serie, noticias, avaliacoes,
-                            recolha.origem_da_fonte, args.dias)
+                            recolha.origem_da_fonte, args.dias, datas_extra)
 
     novas, falhas = 0, 0
     total_lotes = (len(fila) + args.lote - 1) // args.lote
