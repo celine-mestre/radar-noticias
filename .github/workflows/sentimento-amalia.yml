@@ -105,10 +105,19 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          for f in sentimentos.json sentimento-serie.json; do
-            [ -f "$f" ] && git add "$f"
+          # A recolha de 2 em 2 horas tambem faz commits: o push do sentimento
+          # pode colidir com um commit entretanto chegado. Tenta-se ate 5 vezes,
+          # buscando sempre o mais recente antes de reenviar, para nao perder as
+          # avaliacoes por causa de uma colisao de gravacao.
+          for tentativa in 1 2 3 4 5; do
+            git add sentimentos.json sentimento-serie.json 2>/dev/null || true
+            git diff --cached --quiet && { echo "Nada a gravar."; break; }
+            git commit -m "Sentimento das noticias" || true
+            git pull --rebase --autostash origin main || true
+            if git push origin HEAD:main; then
+              echo "Gravado na tentativa $tentativa."
+              break
+            fi
+            echo "Colisao na tentativa $tentativa; a repetir..."
+            sleep 5
           done
-          [ -f sentimento-serie.json ] && git add sentimento-serie.json
-          git diff --cached --quiet || git commit -m "Sentimento das noticias"
-          git pull --rebase --autostash
-          git push
