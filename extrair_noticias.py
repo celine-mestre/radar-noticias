@@ -1551,6 +1551,11 @@ def guardar_mensal(pasta, linhas):
             "fonte": l[3], "dominio": l[4], "titulo": l[5],
             "resumo": l[6] or "", "ligacao": l[7],
             "palavras": sorted(l[8]) if len(l) > 8 and l[8] else [],
+            # A imagem viaja com a notícia desde a recolha: guardá-la aqui é o
+            # que permite mostrar as notícias antigas com o mesmo aspeto das
+            # recentes, quando a janela do painel se alargar para além dos
+            # sete dias do arquivo. Custa poucos bytes — é só o endereço.
+            "imagem": (l[9] if len(l) > 9 else "") or "",
         })
 
     total = 0
@@ -1678,7 +1683,8 @@ def guardar_mensal_integral(pasta, lidos, linhas):
             "data": data.strftime("%Y-%m-%d %H:%M"),
             "fonte": n.get("fonte", ""), "dominio": n.get("dominio", ""),
             "titulo": titulo, "resumo": n.get("resumo") or "",
-            "ligacao": n.get("ligacao", ""), "palavras": [],
+            "ligacao": n.get("ligacao", ""), "imagem": n.get("imagem") or "",
+            "palavras": [],
         })
 
     total = 0

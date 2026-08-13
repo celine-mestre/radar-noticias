@@ -299,6 +299,9 @@ def principal():
     ap.add_argument("--repo", default=None)
     ap.add_argument("--ficheiro", default=None)
     ap.add_argument("--endereco", default=os.environ.get("AMALIA_ENDERECO", ""))
+    ap.add_argument("--reter", type=int, default=35,
+                    help="dias de avaliações a guardar (a janela do arquivo é "
+                         "menor; guarda-se mais para o painel poder alargar)")
     ap.add_argument("--recuperar", default="",
                     help="datas (AAAA-MM-DD, por vírgulas) a repescar do arquivo "
                          "mensal — para fechar dias que ficaram sem avaliação")
@@ -336,8 +339,11 @@ def principal():
             anterior = {}
     avaliacoes = anterior.get("avaliacoes", {})
 
-    # Poda: avaliações de notícias já fora da janela não servem para nada
-    limite = (agora_lisboa() - timedelta(days=args.dias + 2)).strftime("%Y-%m-%d")
+    # Poda: as avaliações guardam-se muito para lá da janela do arquivo, para
+    # o painel poder mostrar o tom de notícias antigas quando a janela de
+    # consulta se alargar (as quatro semanas pedidas). São ~170 bytes cada:
+    # um mês inteiro fica na ordem do megabyte, o que é comportável.
+    limite = (agora_lisboa() - timedelta(days=args.reter)).strftime("%Y-%m-%d")
     avaliacoes = {lig: v for lig, v in avaliacoes.items()
                   if (v.get("d") or "9999") >= limite
                   or (v.get("d") or "") in datas_extra}
