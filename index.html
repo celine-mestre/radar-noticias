@@ -1990,13 +1990,13 @@ const MANUAL = [
     </div>
     <p class="man-aviso">Não é instantâneo: mostra o retrato da última recolha, cuja hora
     está indicada ao lado do título das áreas.</p>
-    <p><strong>⚡ Tempestade política.</strong> Quando uma área dispara — um volume de
+    <p><strong>⚡ Pico noticioso.</strong> Quando uma área dispara — um volume de
     notícias muito acima do seu comportamento habitual — o painel abre com uma faixa de
     alerta. A comparação é justa: o parcial de hoje é confrontado com os dias anteriores
     <em>à mesma hora</em>, e o limiar é a mediana dos últimos 28 dias acrescida de dois
     desvios robustos (com um mínimo de 8 notícias de subida e um piso de 12). Abaixo da
     faixa, o <strong>momentum do dia</strong>: as cinco áreas mais acima da sua mediana,
-    com ou sem tempestade. Cada alerta fica registado em alertas.json, área a área e dia
+    com ou sem pico. Cada alerta fica registado em alertas.json, área a área e dia
     a dia, para a análise dos períodos em que ocorrem.</p>` },
 
   { n:"2", titulo:"Encontrar uma área", cor:"var(--verde)", icone:"grelha", corpo:`
@@ -3739,7 +3739,7 @@ async function desenharAlertas(){
   let corpo = "";
   if((a.tempestades || []).length){
     corpo += `<div class="tempestade">
-      <span class="selo">⚡ Tempestade política</span>
+      <span class="selo">⚡ Pico noticioso</span>
       <span style="font:400 .8rem/1.4 inherit">Volume anormal de notícias em:</span>
       ${a.tempestades.map(t => chip(t, true)).join("")}
     </div>`;

@@ -158,8 +158,9 @@ INSTRUCAO = (
     "título, e é sempre conhecido.\n"
     "  (b) O país DE QUE A NOTÍCIA TRATA. Só o sabes se o nome estiver escrito "
     "no título.\n\n"
-    "- Abre o parágrafo declarando quem publica: 'A imprensa de Cabo Verde "
-    "noticiou…', 'Segundo a imprensa angolana…'. Vindo os títulos de vários "
+    "- Abre o parágrafo declarando quem publica: 'A comunicação social de Cabo "
+    "Verde noticiou…', 'Segundo a comunicação social angolana…'. Vindo os "
+    "títulos de vários "
     "países, nomeia-os: 'A comunicação social de Angola e de Moçambique…'.\n"
     "- Depois, ao contar cada facto, só nomeias o país, a cidade ou a região se "
     "o nome constar do título. Não estando lá, contas o facto sem dizer onde. "
@@ -216,7 +217,7 @@ def perguntar(endereco, chave, titulos, area, rotulo="", tempo_limite=60):
         "messages": [
             {"role": "system", "content": INSTRUCAO},
             {"role": "user", "content": (f"Área governativa: {area}\n"
-                                        f"Origem da imprensa: {rotulo or 'não especificada'}\n"
+                                        f"Origem da comunicação social: {rotulo or 'não especificada'}\n"
                                         f"Extensão pedida: um parágrafo {extensao(len(titulos))}.\n\n"
                                         f"Títulos:\n{lista}")},
         ],
@@ -302,7 +303,7 @@ def perguntar_local(titulos, area, repo, ficheiro, rotulo=""):
         messages=[
             {"role": "system", "content": INSTRUCAO},
             {"role": "user", "content": (f"Área governativa: {area}\n"
-                                        f"Origem da imprensa: {rotulo or 'não especificada'}\n"
+                                        f"Origem da comunicação social: {rotulo or 'não especificada'}\n"
                                         f"Extensão pedida: um parágrafo {extensao(len(titulos))}.\n\n"
                                         f"Títulos:\n{lista}")},
         ],

@@ -328,7 +328,7 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
       <p>Cada recolha deixa registado o retrato do dia: quantas notícias houve em cada
       área, de que origens vieram e que expressões as trouxeram. Este painel lê essa
       série e mostra-a ao longo do tempo.</p>
-      <p><strong>⚡ Tempestades.</strong> O quadro «Tempestades políticas registadas»
+      <p><strong>⚡ Picos noticiosos.</strong> O quadro «Picos noticiosos registados»
       lista os dias em que uma área disparou acima do seu limiar de alerta. A série
       de alertas acumula desde a entrada do método em funcionamento e respeita a
       janela, a área e o dia escolhidos nos filtros.</p>
@@ -412,7 +412,7 @@ const AREAS = [
   { id:"justica", nome:"Justiça", grupo:"soberania", icone:"justica",
     palavras:["Ministério da Justiça","tribunais","Ministério Público","magistrados","processos pendentes","sistema prisional","prisões","registos e notariado","reforma da justiça","apoio judiciário","corrupção","ministro da Justiça","secretário de Estado da Justiça","secretário de Estado Adjunto e da Justiça"], excluir:["justiça poética","fazer justiça a"] },
   { id:"economia", nome:"Economia e Coesão Territorial", grupo:"economia", icone:"economia",
-    palavras:["Ministério da Economia","crescimento económico","exportações","investimento","tecido empresarial","PME","apoios às empresas","empresas portuguesas","PRR","Plano de Recuperação e Resiliência","turismo","comércio","fundos europeus","desenvolvimento regional","coesão territorial","administração local","autarquias","ordenamento do território","interioridade"], excluir:["comércio eletrónico de dados","ambiente de trabalho","empresa familiar"] },
+    palavras:["Ministério da Economia","crescimento económico","exportações","investimento","tecido empresarial","PME","apoios às empresas","empresas portuguesas","PRR","Plano de Recuperação e Resiliência","turismo","comércio","fundos europeus","desenvolvimento regional","coesão territorial","administração local","autarquias","ordenamento do território","interioridade","ministro da Economia","secretário de Estado da Economia","secretário de Estado do Turismo","secretário de Estado da Administração Local","secretário de Estado do Planeamento"], excluir:["comércio eletrónico de dados","ambiente de trabalho","empresa familiar"] },
   { id:"infraestruturas", nome:"Infraestruturas e Habitação", grupo:"economia", icone:"infraestruturas",
     palavras:["Ministério das Infraestruturas e Habitação","habitação","arrendamento","preço das casas","compra de casa","obras públicas","ferrovia","comboios","novo aeroporto","transportes públicos","mobilidade","licenciamento urbanístico","ministro das Infraestruturas","secretário de Estado das Infraestruturas","secretário de Estado da Mobilidade","secretário de Estado da Habitação"] },
   { id:"educacao", nome:"Educação, Ciência e Inovação", grupo:"social", icone:"educacao",
@@ -424,7 +424,7 @@ const AREAS = [
   { id:"cultura", nome:"Cultura, Juventude e Desporto", grupo:"social", icone:"cultura",
     palavras:["Ministério da Cultura","património cultural","museus","bibliotecas","artes performativas","espetáculos","cinema","programação cultural","artistas","políticas de juventude","associativismo juvenil","jovens","igualdade de género","desporto","prática desportiva","federações desportivas","alta competição","atletas","língua portuguesa","ministro da Cultura","secretário de Estado da Cultura","secretário de Estado do Desporto","secretário de Estado adjunto da Juventude","secretário de Estado da Juventude"], excluir:["cultura organizacional","cultura de empresa","cultura do cancelamento","desporto-rei","património genético","património imobiliário"] },
   { id:"ambiente", nome:"Ambiente e Energia", grupo:"ambiente", icone:"ambiente",
-    palavras:["Ministério do Ambiente e Energia","energia","eletricidade","renováveis","alterações climáticas","descarbonização","resíduos","seca","abastecimento de água","qualidade da água","escassez de água","poluição"],
+    palavras:["Ministério do Ambiente e Energia","energia","eletricidade","renováveis","alterações climáticas","descarbonização","resíduos","seca","abastecimento de água","qualidade da água","escassez de água","poluição","ministro do Ambiente","secretário de Estado do Ambiente","secretário de Estado da Energia"],
     excluir:["clima de negócios","clima organizacional","clima de confiança"] },
   { id:"agricultura", nome:"Agricultura e Mar", grupo:"ambiente", icone:"agricultura",
     palavras:["Ministério da Agricultura e Mar","política agrícola comum","agricultura","agricultores","desenvolvimento rural","florestas","gestão florestal","pescas","pescadores","aquicultura","economia do mar","segurança alimentar","regadio","ministro da Agricultura","secretário de Estado da Agricultura","secretário de Estado das Pescas","secretário de Estado das Florestas"], excluir:["ambiente de trabalho","ambiente empresarial","ambiente de negócios"] }
@@ -495,7 +495,7 @@ async function carregar(){
   return [];
 }
 
-/* O registo de tempestades políticas vem do alertas.json, escrito pela
+/* O registo de picos noticiosos vem do alertas.json, escrito pela
    recolha: um registo por área e por dia em que o volume disparou. É
    acessório — sem ficheiro, o painel funciona igual, sem o quadro. */
 async function carregarTempestades(){
@@ -751,7 +751,7 @@ function faisca(valores, corLinha){
   </svg>`;
 }
 
-/* Tempestades políticas dentro da janela — respeita a área escolhida e o dia
+/* Picos noticiosos dentro da janela — respeita a área escolhida e o dia
    em foco. Um dia sem registo é um dia normal: o quadro só existe quando há
    alertas para mostrar, e a série de alertas começa quando o método começou. */
 function blocoTempestades(linhas){
@@ -768,14 +768,14 @@ function blocoTempestades(linhas){
     b.data.localeCompare(a.data) || (b.hoje - b.mediana) - (a.hoje - a.mediana));
   return `
     <div class="bloco">
-      <h2>⚡ Tempestades políticas registadas</h2>
+      <h2>⚡ Picos noticiosos registados</h2>
       ${ordenadas.map(t => `
         <div class="tp">
           <span class="tp-data">${t.data.slice(8)}/${t.data.slice(5, 7)}/${t.data.slice(0, 4)}</span>
           <span class="tp-area" title="${t.area}">${t.area}</span>
           <span class="tp-n">${num(t.hoje)} notícias · mediana ${num(t.mediana)}</span>
         </div>`).join("")}
-      <p class="nota">Dias em que o volume de uma área excedeu o limiar de alerta —
+      <p class="nota">Dias em que uma área teve um volume de notícias muito acima do habitual —
         mediana dos 28 dias anteriores à mesma hora, mais dois desvios robustos.
         O registo acumula desde a entrada do método em funcionamento; os dias
         sem linha são dias normais.</p>

@@ -455,7 +455,7 @@ def bloco_alertas(alertas):
       <tr><td style="padding:12px 16px">
         <div style="font:700 11px Arial,sans-serif;color:{VERMELHO};
                     letter-spacing:1.2px;text-transform:uppercase">
-          &#9889; Tempestade política — volume anormal de notícias</div>
+          &#9889; Pico noticioso — volume de notícias muito acima do habitual</div>
         {''.join(linhas)}
         <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:8px;line-height:1.5">
           Alerta automático: contagem do dia acima da mediana dos últimos
