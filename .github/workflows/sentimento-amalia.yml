@@ -17,6 +17,11 @@ on:
         type: string
         required: false
         default: "600"
+      recuperar:
+        description: "Dias antigos a repescar do arquivo mensal (AAAA-MM-DD, por virgulas)"
+        type: string
+        required: false
+        default: ""
   workflow_call:
     inputs:
       encadeado:
@@ -129,7 +134,8 @@ jobs:
       - name: Classificar
         run: |
           python sentimento_ia.py --local \
-            --teto "${{ inputs.teto || '300' }}"
+            --teto "${{ inputs.teto || '600' }}" \
+            --recuperar "${{ inputs.recuperar || '' }}"
 
       - name: Gravar as avaliacoes
         run: |
