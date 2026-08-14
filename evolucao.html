@@ -198,6 +198,8 @@ main{padding:1.6rem 0 3rem}
 .sb-barra.sb-espera{background:repeating-linear-gradient(45deg,var(--superficie-alt),var(--superficie-alt) 5px,transparent 5px,transparent 10px)}
 .sb-barra .esp{background:transparent}
 .sb-n{text-align:right;font-variant-numeric:tabular-nums;color:var(--texto-suave);font-size:.74rem}
+.sb-cob{display:inline-block;margin-left:.4rem;font-weight:600;color:var(--dourado);
+  font-size:.94em;cursor:help}
 @media(max-width:620px){.sb{grid-template-columns:minmax(70px,120px) 1fr 74px;font-size:.72rem}}
 
 .mini{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-top:1rem}
@@ -960,16 +962,23 @@ function blocoSentimento(linhas){
       return `<div class="sb">
         <span class="sb-data">${descreverPeriodo(f.data)}</span>
         <span class="sb-barra sb-espera"><i class="esp" style="width:100%"></i></span>
-        <span class="sb-n" style="opacity:.6">${f.av}/${f.n} · a avaliar</span>
+        <span class="sb-n" style="opacity:.6" title="faltam ${f.n - f.av} de ${f.n}">${f.av}/${f.n} · ${f.n ? Math.round(100 * f.av / f.n) : 0}% · a avaliar</span>
       </div>`;
     }
     const total = f.p + f.ne + f.ng || 1;
     const seg = (n, c) => n ? `<i class="${c}" style="width:${(100 * n / total).toFixed(1)}%"
       title="${c === "pos" ? "positivas" : c === "neu" ? "neutras" : "negativas"}: ${n} de ${total} (${Math.round(100 * n / total)}%)"></i>` : "";
+    /* A cobertura de cada período fica à vista: sem ela, uma barra desenhada
+       sobre 60% das notícias parece igual a outra desenhada sobre 100%. Só se
+       mostra quando não está completa, para não encher a linha de «100%». */
+    const cob = f.n ? Math.round(100 * f.av / f.n) : 0;
+    const marcaCob = cob < 100
+      ? ` <b class="sb-cob" title="${f.av} de ${f.n} notícias nacionais deste período avaliadas — faltam ${f.n - f.av}">${cob}% avaliado</b>`
+      : "";
     return `<div class="sb">
       <span class="sb-data">${descreverPeriodo(f.data)}</span>
-      <span class="sb-barra" title="${f.p} positivas (${Math.round(100 * f.p / total)}%) · ${f.ne} neutras (${Math.round(100 * f.ne / total)}%) · ${f.ng} negativas (${Math.round(100 * f.ng / total)}%)">${seg(f.p, "pos")}${seg(f.ne, "neu")}${seg(f.ng, "neg")}</span>
-      <span class="sb-n" title="positivas · neutras · negativas">${num(f.p)} · ${num(f.ne)} · ${num(f.ng)}</span>
+      <span class="sb-barra" title="${f.p} positivas (${Math.round(100 * f.p / total)}%) · ${f.ne} neutras (${Math.round(100 * f.ne / total)}%) · ${f.ng} negativas (${Math.round(100 * f.ng / total)}%) — sobre ${f.av} de ${f.n} nacionais (${cob}%)">${seg(f.p, "pos")}${seg(f.ne, "neu")}${seg(f.ng, "neg")}</span>
+      <span class="sb-n" title="positivas · neutras · negativas">${num(f.p)} · ${num(f.ne)} · ${num(f.ng)}${marcaCob}</span>
     </div>`;
   };
 
@@ -992,9 +1001,7 @@ function blocoSentimento(linhas){
       </div>
       ${incompleta}
       <p class="nota">Tom do acontecimento noticiado, avaliado pelo Amália apenas na
-        comunicação social nacional — avaliação automática em validação humana. Só se
-        desenham os dias com pelo menos ${Math.round(COBERTURA_MINIMA * 100)}% das notícias
-        nacionais avaliadas; os restantes ficam «a avaliar» até atingirem esse patamar.
+        comunicação social nacional — avaliação automática em validação humana. Só se desenham os períodos com pelo menos ${Math.round(COBERTURA_MINIMA * 100)}% das notícias nacionais avaliadas; os restantes ficam «a avaliar» até atingirem esse patamar. Quando a cobertura de um período não está completa, a percentagem avaliada aparece a dourado ao lado dos números.
         Números à direita: positivas · neutras · negativas.</p>
     </div>`;
 }
