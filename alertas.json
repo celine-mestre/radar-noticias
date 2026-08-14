@@ -1,59 +1,59 @@
 {
- "atualizado": "2026-08-14 08:47",
+ "atualizado": "2026-08-14 10:17",
  "dia": "2026-08-14",
- "corte": "08:47",
+ "corte": "10:17",
  "dias_base": 10,
- "regra": "Tempestade quando a contagem do dia, até às 08:47, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 10:17, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [],
  "momentum": [
   {
-   "area": "Justiça",
-   "hoje": 11,
-   "mediana": 5.5,
-   "limiar": 13.5,
-   "excesso": 5.5,
-   "variacao_pct": 100,
-   "dias_base": 10,
-   "tempestade": false
-  },
-  {
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 9,
-   "mediana": 3.5,
-   "limiar": 11.5,
-   "excesso": 5.5,
-   "variacao_pct": 157,
-   "dias_base": 10,
-   "tempestade": false
-  },
-  {
-   "area": "Cultura, Juventude e Desporto",
-   "hoje": 10,
-   "mediana": 6.0,
-   "limiar": 14.0,
-   "excesso": 4.0,
-   "variacao_pct": 67,
-   "dias_base": 10,
-   "tempestade": false
-  },
-  {
-   "area": "Ambiente e Energia",
-   "hoje": 7,
-   "mediana": 4.0,
-   "limiar": 12.0,
-   "excesso": 3.0,
-   "variacao_pct": 75,
+   "hoje": 11,
+   "mediana": 5.0,
+   "limiar": 13.0,
+   "excesso": 6.0,
+   "variacao_pct": 120,
    "dias_base": 10,
    "tempestade": false
   },
   {
    "area": "Primeiro-Ministro",
-   "hoje": 4,
-   "mediana": 1,
-   "limiar": 9,
-   "excesso": 3,
-   "variacao_pct": 300,
+   "hoje": 7,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 5,
+   "variacao_pct": 250,
    "dias_base": 9,
+   "tempestade": false
+  },
+  {
+   "area": "Justiça",
+   "hoje": 13,
+   "mediana": 8.5,
+   "limiar": 16.5,
+   "excesso": 4.5,
+   "variacao_pct": 53,
+   "dias_base": 10,
+   "tempestade": false
+  },
+  {
+   "area": "Cultura, Juventude e Desporto",
+   "hoje": 12,
+   "mediana": 8.0,
+   "limiar": 16.9,
+   "excesso": 4.0,
+   "variacao_pct": 50,
+   "dias_base": 10,
+   "tempestade": false
+  },
+  {
+   "area": "Agricultura e Mar",
+   "hoje": 11,
+   "mediana": 7.0,
+   "limiar": 15.0,
+   "excesso": 4.0,
+   "variacao_pct": 57,
+   "dias_base": 10,
    "tempestade": false
   }
  ],
