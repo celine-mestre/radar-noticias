@@ -1,80 +1,29 @@
 {
- "atualizado": "2026-08-14 23:33",
- "dia": "2026-08-14",
- "corte": "23:33",
- "dias_base": 10,
- "regra": "Tempestade quando a contagem do dia, até às 23:33, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
- "tempestades": [
-  {
-   "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 46,
-   "mediana": 21.0,
-   "limiar": 34.3,
-   "excesso": 25.0,
-   "variacao_pct": 119,
-   "dias_base": 10,
-   "tempestade": true
-  },
-  {
-   "area": "Justiça",
-   "hoje": 51,
-   "mediana": 32.5,
-   "limiar": 41.4,
-   "excesso": 18.5,
-   "variacao_pct": 57,
-   "dias_base": 10,
-   "tempestade": true
-  }
- ],
+ "atualizado": "2026-08-15 07:58",
+ "dia": "2026-08-15",
+ "corte": "07:58",
+ "dias_base": 11,
+ "regra": "Tempestade quando a contagem do dia, até às 07:58, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "tempestades": [],
  "momentum": [
   {
-   "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 46,
-   "mediana": 21.0,
-   "limiar": 34.3,
-   "excesso": 25.0,
-   "variacao_pct": 119,
-   "dias_base": 10,
-   "tempestade": true
-  },
-  {
-   "area": "Justiça",
-   "hoje": 51,
-   "mediana": 32.5,
-   "limiar": 41.4,
-   "excesso": 18.5,
-   "variacao_pct": 57,
-   "dias_base": 10,
-   "tempestade": true
-  },
-  {
-   "area": "Saúde",
-   "hoje": 42,
-   "mediana": 27.0,
-   "limiar": 56.7,
-   "excesso": 15.0,
-   "variacao_pct": 56,
-   "dias_base": 10,
+   "area": "Primeiro-Ministro",
+   "hoje": 8,
+   "mediana": 1,
+   "limiar": 9,
+   "excesso": 7,
+   "variacao_pct": 700,
+   "dias_base": 9,
    "tempestade": false
   },
   {
-   "area": "Administração Interna",
-   "hoje": 40,
-   "mediana": 30.0,
-   "limiar": 52.2,
-   "excesso": 10.0,
-   "variacao_pct": 33,
-   "dias_base": 10,
-   "tempestade": false
-  },
-  {
-   "area": "Finanças",
-   "hoje": 20,
-   "mediana": 11.5,
-   "limiar": 26.3,
-   "excesso": 8.5,
-   "variacao_pct": 74,
-   "dias_base": 10,
+   "area": "Infraestruturas e Habitação",
+   "hoje": 3,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 1,
+   "variacao_pct": 50,
+   "dias_base": 11,
    "tempestade": false
   }
  ],
