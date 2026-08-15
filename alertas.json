@@ -1,30 +1,51 @@
 {
- "atualizado": "2026-08-15 11:34",
+ "atualizado": "2026-08-15 13:56",
  "dia": "2026-08-15",
- "corte": "11:34",
+ "corte": "13:56",
  "dias_base": 11,
- "regra": "Tempestade quando a contagem do dia, até às 11:34, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
- "tempestades": [],
- "momentum": [
+ "regra": "Tempestade quando a contagem do dia, até às 13:56, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "tempestades": [
   {
    "area": "Primeiro-Ministro",
-   "hoje": 9,
-   "mediana": 2.0,
-   "limiar": 10.0,
-   "excesso": 7.0,
-   "variacao_pct": 350,
-   "dias_base": 10,
-   "tempestade": false
+   "hoje": 21,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 19,
+   "variacao_pct": 950,
+   "dias_base": 11,
+   "tempestade": true
   },
   {
    "area": "Infraestruturas e Habitação",
-   "hoje": 9,
-   "mediana": 6,
-   "limiar": 14,
-   "excesso": 3,
-   "variacao_pct": 50,
+   "hoje": 17,
+   "mediana": 9,
+   "limiar": 17,
+   "excesso": 8,
+   "variacao_pct": 89,
    "dias_base": 11,
-   "tempestade": false
+   "tempestade": true
+  }
+ ],
+ "momentum": [
+  {
+   "area": "Primeiro-Ministro",
+   "hoje": 21,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 19,
+   "variacao_pct": 950,
+   "dias_base": 11,
+   "tempestade": true
+  },
+  {
+   "area": "Infraestruturas e Habitação",
+   "hoje": 17,
+   "mediana": 9,
+   "limiar": 17,
+   "excesso": 8,
+   "variacao_pct": 89,
+   "dias_base": 11,
+   "tempestade": true
   }
  ],
  "historico": [
@@ -76,6 +97,20 @@
    "hoje": 46,
    "mediana": 21.0,
    "limiar": 34.3
+  },
+  {
+   "data": "2026-08-15",
+   "area": "Infraestruturas e Habitação",
+   "hoje": 17,
+   "mediana": 9,
+   "limiar": 17
+  },
+  {
+   "data": "2026-08-15",
+   "area": "Primeiro-Ministro",
+   "hoje": 21,
+   "mediana": 2,
+   "limiar": 10
   }
  ]
 }
