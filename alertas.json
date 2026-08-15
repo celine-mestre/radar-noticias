@@ -1,27 +1,17 @@
 {
- "atualizado": "2026-08-15 17:37",
+ "atualizado": "2026-08-15 19:44",
  "dia": "2026-08-15",
- "corte": "17:37",
+ "corte": "19:44",
  "dias_base": 11,
- "regra": "Tempestade quando a contagem do dia, até às 17:37, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 19:44, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [
   {
    "area": "Primeiro-Ministro",
-   "hoje": 24,
-   "mediana": 5,
-   "limiar": 16.9,
-   "excesso": 19,
-   "variacao_pct": 380,
-   "dias_base": 11,
-   "tempestade": true
-  },
-  {
-   "area": "Infraestruturas e Habitação",
-   "hoje": 21,
-   "mediana": 13,
-   "limiar": 21,
-   "excesso": 8,
-   "variacao_pct": 62,
+   "hoje": 27,
+   "mediana": 7,
+   "limiar": 24.8,
+   "excesso": 20,
+   "variacao_pct": 286,
    "dias_base": 11,
    "tempestade": true
   }
@@ -29,31 +19,31 @@
  "momentum": [
   {
    "area": "Primeiro-Ministro",
-   "hoje": 24,
-   "mediana": 5,
-   "limiar": 16.9,
-   "excesso": 19,
-   "variacao_pct": 380,
+   "hoje": 27,
+   "mediana": 7,
+   "limiar": 24.8,
+   "excesso": 20,
+   "variacao_pct": 286,
    "dias_base": 11,
    "tempestade": true
   },
   {
    "area": "Infraestruturas e Habitação",
-   "hoje": 21,
-   "mediana": 13,
-   "limiar": 21,
-   "excesso": 8,
-   "variacao_pct": 62,
+   "hoje": 22,
+   "mediana": 15,
+   "limiar": 23.9,
+   "excesso": 7,
+   "variacao_pct": 47,
    "dias_base": 11,
-   "tempestade": true
+   "tempestade": false
   },
   {
    "area": "Saúde",
-   "hoje": 23,
-   "mediana": 22,
-   "limiar": 51.7,
+   "hoje": 27,
+   "mediana": 26,
+   "limiar": 64.5,
    "excesso": 1,
-   "variacao_pct": 5,
+   "variacao_pct": 4,
    "dias_base": 11,
    "tempestade": false
   }
@@ -110,17 +100,10 @@
   },
   {
    "data": "2026-08-15",
-   "area": "Infraestruturas e Habitação",
-   "hoje": 21,
-   "mediana": 13,
-   "limiar": 21
-  },
-  {
-   "data": "2026-08-15",
    "area": "Primeiro-Ministro",
-   "hoje": 24,
-   "mediana": 5,
-   "limiar": 16.9
+   "hoje": 27,
+   "mediana": 7,
+   "limiar": 24.8
   }
  ]
 }
