@@ -1,28 +1,38 @@
 {
- "atualizado": "2026-08-15 07:58",
+ "atualizado": "2026-08-15 09:41",
  "dia": "2026-08-15",
- "corte": "07:58",
+ "corte": "09:41",
  "dias_base": 11,
- "regra": "Tempestade quando a contagem do dia, até às 07:58, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 09:41, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [],
  "momentum": [
   {
    "area": "Primeiro-Ministro",
+   "hoje": 9,
+   "mediana": 2.0,
+   "limiar": 10.0,
+   "excesso": 7.0,
+   "variacao_pct": 350,
+   "dias_base": 10,
+   "tempestade": false
+  },
+  {
+   "area": "Saúde",
    "hoje": 8,
-   "mediana": 1,
-   "limiar": 9,
-   "excesso": 7,
-   "variacao_pct": 700,
-   "dias_base": 9,
+   "mediana": 7,
+   "limiar": 15.9,
+   "excesso": 1,
+   "variacao_pct": 14,
+   "dias_base": 11,
    "tempestade": false
   },
   {
    "area": "Infraestruturas e Habitação",
-   "hoje": 3,
-   "mediana": 2,
-   "limiar": 10,
+   "hoje": 5,
+   "mediana": 4,
+   "limiar": 12,
    "excesso": 1,
-   "variacao_pct": 50,
+   "variacao_pct": 25,
    "dias_base": 11,
    "tempestade": false
   }
