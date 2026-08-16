@@ -4672,9 +4672,9 @@
    "data": "2026-08-16",
    "periodo": "dia completo",
    "distintas": {
-    "total": 12,
-    "nacionais": 12,
-    "lusofonas": 0,
+    "total": 30,
+    "nacionais": 29,
+    "lusofonas": 1,
     "internacionais": 0
    },
    "areas": {
@@ -4692,6 +4692,20 @@
       "segurança interna": 1
      }
     },
+    "Ambiente e Energia": {
+     "noticias": 2,
+     "novas": 2,
+     "fontes": 2,
+     "origens": {
+      "nacionais": 2,
+      "lusofonas": 0,
+      "internacionais": 0
+     },
+     "palavras": {
+      "energia": 1,
+      "resíduos": 1
+     }
+    },
     "Cultura, Juventude e Desporto": {
      "noticias": 2,
      "novas": 2,
@@ -4707,30 +4721,50 @@
      }
     },
     "Defesa Nacional": {
+     "noticias": 11,
+     "novas": 11,
+     "fontes": 5,
+     "origens": {
+      "nacionais": 10,
+      "lusofonas": 1,
+      "internacionais": 0
+     },
+     "palavras": {
+      "Ucrânia": 7,
+      "NATO": 3,
+      "ministro da Defesa": 3,
+      "militares": 2
+     }
+    },
+    "Economia e Coesão Territorial": {
      "noticias": 2,
      "novas": 2,
-     "fontes": 1,
+     "fontes": 2,
      "origens": {
       "nacionais": 2,
       "lusofonas": 0,
       "internacionais": 0
      },
      "palavras": {
-      "militares": 2
+      "exportações": 1,
+      "PRR": 1,
+      "Plano de Recuperação e Resiliência": 1
      }
     },
-    "Economia e Coesão Territorial": {
-     "noticias": 1,
-     "novas": 1,
-     "fontes": 1,
+    "Educação, Ciência e Inovação": {
+     "noticias": 3,
+     "novas": 3,
+     "fontes": 3,
      "origens": {
-      "nacionais": 1,
+      "nacionais": 3,
       "lusofonas": 0,
       "internacionais": 0
      },
      "palavras": {
-      "PRR": 1,
-      "Plano de Recuperação e Resiliência": 1
+      "professores": 2,
+      "Ministério da Educação": 1,
+      "investigação científica": 1,
+      "alunos": 1
      }
     },
     "Finanças": {
@@ -4748,17 +4782,43 @@
      }
     },
     "Infraestruturas e Habitação": {
-     "noticias": 2,
-     "novas": 2,
-     "fontes": 1,
+     "noticias": 5,
+     "novas": 5,
+     "fontes": 3,
      "origens": {
-      "nacionais": 2,
+      "nacionais": 5,
       "lusofonas": 0,
       "internacionais": 0
      },
      "palavras": {
-      "ferrovia": 1,
-      "novo aeroporto": 1
+      "ferrovia": 3,
+      "novo aeroporto": 2
+     }
+    },
+    "Justiça": {
+     "noticias": 1,
+     "novas": 1,
+     "fontes": 1,
+     "origens": {
+      "nacionais": 1,
+      "lusofonas": 0,
+      "internacionais": 0
+     },
+     "palavras": {
+      "prisões": 1
+     }
+    },
+    "Negócios Estrangeiros": {
+     "noticias": 1,
+     "novas": 1,
+     "fontes": 1,
+     "origens": {
+      "nacionais": 1,
+      "lusofonas": 0,
+      "internacionais": 0
+     },
+     "palavras": {
+      "diplomacia": 1
      }
     },
     "Presidência": {
@@ -4772,6 +4832,20 @@
      },
      "palavras": {
       "migrantes": 1
+     }
+    },
+    "Primeiro-Ministro": {
+     "noticias": 1,
+     "novas": 1,
+     "fontes": 1,
+     "origens": {
+      "nacionais": 1,
+      "lusofonas": 0,
+      "internacionais": 0
+     },
+     "palavras": {
+      "Luís Montenegro": 1,
+      "Montenegro": 1
      }
     }
    }
