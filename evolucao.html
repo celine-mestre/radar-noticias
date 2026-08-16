@@ -436,8 +436,8 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
         <div class="aj-c" style="--c:var(--teal)">
           <div class="aj-ic">📈</div>
           <b>Trajetória</b>
-          <span>A linha de cada uma das oito áreas mais noticiadas. Percorre sempre o
-            período todo, mesmo com um dia escolhido acima.</span>
+          <span>A linha de cada área, da mais noticiada para a menos. Percorre sempre o
+            período todo, mesmo com um dia escolhido acima — e marca-o com um ponto.</span>
         </div>
         <div class="aj-c" style="--c:var(--vermelho)">
           <div class="aj-ic">⚡</div>
@@ -1133,7 +1133,11 @@ function blocoTomPorArea(linhas){
   const dias = SENTIMENTO.filter(d => d.data >= primeiro && d.data <= ultimo);
   if(!dias.length) return "";
 
-  const nomes = areas.slice(0, 12).map(([n]) => n);
+  /* Todas as áreas, não as mais noticiadas: o corte que eu tinha posto era só
+     por comodidade de largura, e escondia justamente as pequenas — que são as
+     que mais interessa vigiar quando disparam. As linhas não custam espaço; o
+     que custa são as colunas, e essas continuam limitadas aos últimos períodos. */
+  const nomes = areas.map(([n]) => n);
   if(!nomes.length) return "";
   const chaves = [...new Set(dias.map(d => chaveDoPeriodo(d.data)))].sort().slice(-14);
   const cel = {};
@@ -1176,9 +1180,10 @@ function blocoTomPorArea(linhas){
       </div>
       <p class="nota">Percentagem de notícias negativas em cada área e período — quanto mais
         carregado o vermelho, mais negativa a cobertura. As células com um ponto têm menos
-        de oito notícias avaliadas: seriam ruído, não leitura. Mostram-se as
-        ${nomes.length} áreas mais noticiadas da janela e os últimos
-        ${chaves.length} períodos. Ao contrário dos outros quadros, este não se
+        de oito notícias avaliadas: seriam ruído, não leitura — é o que sucede quase
+        sempre nas áreas de pouco volume, que por isso aparecem quase todas a ponto.
+        Estão as ${nomes.length} áreas com notícias na janela, da mais noticiada para a
+        menos, e os últimos ${chaves.length} períodos. Ao contrário dos outros quadros, este não se
         restringe ao período escolhido — mostra a evolução inteira e assinala-o.</p>
     </div>`;
 }
@@ -1192,7 +1197,7 @@ function blocoPublicacoes(linhas, areas){
     (!diaEscolhido || chaveDoPeriodo(d.data) === diaEscolhido));
   if(!dias.length) return "";
 
-  const nomes = areas.slice(0, areaEscolhida ? 1 : 10).map(([n]) => n);
+  const nomes = areas.map(([n]) => n);
   const porPub = {}, cel = {};
   dias.forEach(d => nomes.forEach(n => {
     Object.entries((d.areas || {})[n] || {}).forEach(([pub, q]) => {
@@ -1226,8 +1231,9 @@ function blocoPublicacoes(linhas, areas){
         mostrado. Lê-se por linha — que órgãos sustentam uma área — e por coluna — que
         áreas cada órgão cobre mais. ${areaEscolhida
           ? `São as ${pubs.length} publicações que mais noticiaram ${areaEscolhida}.`
-          : `São as ${nomes.length} áreas e as ${pubs.length} publicações com mais volume;
-             o resto fica de fora para a tabela caber.`}</p>
+          : `Estão as ${nomes.length} áreas com notícias no período; das publicações,
+             as ${pubs.length} com mais volume — essas ficam limitadas porque são
+             colunas, e a tabela tem de caber no ecrã.`}</p>
     </div>`;
 }
 
@@ -1597,7 +1603,10 @@ function desenhar(){
         <span class="h2-foco">· período todo${diaEscolhido
           ? `, com ${descreverPeriodo(diaEscolhido)} assinalado` : ""}</span></h2>
       <div class="mini">
-        ${(areaEscolhida ? areas : areas.slice(0, 8)).map(([nome]) => {
+        ${/* Todas as áreas, e não as oito mais noticiadas: o corte era meu e
+             escondia as pequenas, que são precisamente aquelas onde uma subida
+             se nota. São cartões numa grelha — cabem sem estorvar. */
+          areas.map(([nome]) => {
           const g = grupoDaArea(nome);
           const vals = pares.map(([, d]) => contar(d.areas[nome]));
           const iM = diaEscolhido ? pares.findIndex(([c]) => c === diaEscolhido) : -1;
@@ -1615,7 +1624,10 @@ function desenhar(){
           </div>`;
         }).join("")}
       </div>
-      <p class="nota">${areaEscolhida ? "A linha percorre" : "As oito áreas mais noticiadas. A linha percorre"}
+      <p class="nota">${areaEscolhida
+        ? "A linha percorre"
+        : `As ${areas.length} áreas com notícias no período, da mais noticiada para a menos.
+           A linha percorre`}
         o período todo, mesmo com um ${agregNome()} escolhido acima — é isso que faz dela uma
         trajetória.${diaEscolhido ? ` O ponto assinala ${descreverPeriodo(diaEscolhido)}, e o
         número mostra quanto esse período se afasta da média da área no intervalo.` : ""}</p>

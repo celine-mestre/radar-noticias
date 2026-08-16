@@ -612,7 +612,7 @@ recolhida"** em vez de "arquivo de 7 dias".
   numa barra passa os quadros seguintes a mostrar apenas esse período.
 - Volume por área governativa, em **marcações** — porque aqui uma notícia conta em cada
   área que satisfaz —, com a contagem e a parte de cada área no total do conjunto
-  mostrado, e uma nota que dá o rácio entre marcações e notícias do período; trajetória das oito mais noticiadas; e uma nuvem com as expressões que
+  mostrado, e uma nota que dá o rácio entre marcações e notícias do período; trajetória de todas as áreas; e uma nuvem com as expressões que
   trouxeram notícias no período — o tamanho vale pela quantidade, e as que não aparecem
   ficaram a zero, sendo candidatas a revisão.
 - **Picos noticiosos registados**, com o volume do dia, a mediana da área e quantas
