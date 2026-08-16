@@ -73,6 +73,12 @@ header .accoes{margin-left:auto;display:flex;gap:.45rem;flex-wrap:wrap;justify-c
 .btn-i svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:1.9;
   stroke-linecap:round;stroke-linejoin:round}
 .btn-i:hover svg{stroke:var(--azul)}
+/* Os dois botões de saída (PDF e Excel) levam rótulo; os de informação,
+   ecrã inteiro e tema ficam só com o ícone. */
+.btn-i.rot{width:auto;padding:0 .85rem;gap:.42rem;color:#fff;font-family:var(--fonte);
+  font-size:.78rem;font-weight:600;white-space:nowrap}
+.btn-i.rot:hover{color:var(--azul)}
+@media(max-width:430px){.btn-i.rot span{display:none}.btn-i.rot{width:36px;padding:0}}
 .sel-area{display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:var(--texto-suave)}
 .sel-area select{font-family:var(--fonte);font-size:.8rem;color:var(--texto);
   background:var(--superficie-alt);border:1px solid var(--borda);border-radius:999px;
@@ -289,17 +295,19 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
       </div>
     </div>
     <div class="accoes">
-      <button class="btn-i" id="btnPDF" title="Imprimir ou guardar em PDF">
+      <button class="btn-i rot" id="btnPDF" title="Imprimir ou guardar em PDF">
         <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+        <span>Imprimir / PDF</span>
       </button>
-      <button class="btn-i" id="btnXLSX" title="Exportar a série para Excel">
+      <button class="btn-i rot" id="btnXLSX" title="Exportar a série para Excel">
         <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
-      </button>
-      <button class="btn-i" id="btnEcra" title="Ocupar todo o ecrã" aria-pressed="false">
-        <svg viewBox="0 0 24 24" id="icoEcra"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        <span>Exportar Excel</span>
       </button>
       <button class="btn-i" id="btnManual" title="Como ler este painel">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+      </button>
+      <button class="btn-i" id="btnEcra" title="Ocupar todo o ecrã" aria-pressed="false">
+        <svg viewBox="0 0 24 24" id="icoEcra"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
       </button>
       <button class="btn-i" id="btnTema" title="Alternar modo claro e escuro">
         <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
