@@ -863,12 +863,34 @@ body.sem-radar #conteudo{display:block !important}
 @media(max-width:860px){.radar{display:none}}
 /* O ranking só existe onde o círculo não cabe: nos ecrãs largos seria uma
    repetição do que o radar já mostra pela distância ao centro. */
-/* A contagem no topo do cartão é a mesma leitura que o radar dá pela distância
-   ao centro: quantas notícias tem a área no período escolhido. */
-.cartao-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem}
-.cartao-n{font-size:1.45rem;font-weight:700;line-height:1;color:var(--cor);
+/* A contagem é a mesma leitura que o radar dá pela distância ao centro:
+   quantas notícias tem a área no período escolhido. Fica no canto, em posição
+   absoluta como o símbolo, para não empurrar o título nem o subtítulo. */
+.cartao-n{position:absolute;top:34px;right:1.15rem;z-index:1;
+  font-size:1.5rem;font-weight:700;line-height:1;color:var(--cor);
   font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.cartao-n.zero{color:var(--texto-ligeiro);font-weight:600}
+.cartao-n.zero{color:var(--texto-ligeiro);font-weight:600;font-size:1.15rem}
+
+/* No telemóvel o cartão ilustrado ocupa meio ecrã cada, e ver dezassete áreas
+   obriga a rolar muito. Abaixo dos 700px passa a linha de lista: símbolo,
+   nome e contagem, tudo numa altura. A ilustração e a contagem de expressões
+   saem — quem quer o detalhe abre a área. */
+@media(max-width:700px){
+  .grelha{grid-template-columns:1fr;gap:.35rem}
+  .cartao{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.7rem;
+    padding:.5rem .8rem;border-radius:10px}
+  .cartao:hover{transform:none}
+  .cartao .ilustra-cartao{display:none}
+  .cartao .simbolo{position:static;top:auto;left:auto;width:30px;height:30px;
+    border-radius:9px;border-width:2px;box-shadow:none}
+  .cartao .simbolo svg{width:16px;height:16px}
+  .cartao h3{font-size:.86rem;line-height:1.25;overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap}
+  .cartao .sub{display:none}
+  .cartao-n{position:static;top:auto;right:auto;font-size:1.05rem;min-width:2.2rem;
+    text-align:right}
+  .cartao-n.zero{font-size:.95rem}
+}
 
 /* Palavras-chave dentro da janela de resultados: escolher uma refaz a consulta
    sem sair do sítio, que era o que a etapa intermédia obrigava a fazer. */
@@ -1454,10 +1476,8 @@ function cartao(a){
     <div class="ilustra-cartao" aria-hidden="true">
       <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid meet">${ILUSTRA[a.icone] || ILUSTRA.presidencia}</svg>
     </div>
-    <div class="cartao-topo">
-      <div class="simbolo"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
-      <span class="cartao-n" title="a contar…">—</span>
-    </div>
+    <div class="simbolo"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
+    <span class="cartao-n" title="a contar…">—</span>
     <h3>${a.nome}</h3>
     <div class="sub"><span class="ponto"></span>${a.palavras.length} palavras-chave</div>
   </article>`;
