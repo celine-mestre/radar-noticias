@@ -106,16 +106,16 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .marca .txt strong{display:block;font-size:.95rem;font-weight:600;letter-spacing:.01em}
 .marca .txt small{display:block;font-size:.74rem;opacity:.8;letter-spacing:.06em;text-transform:uppercase}
 .barra-inst .acoes{margin-left:auto;display:flex;gap:.5rem}
-/* Dourado com tinta escura: a combinação mais contrastante da paleta (6,7:1,
-   acima do mínimo de 4,5), e a única cor que não se confunde com os estados
-   dos restantes botões. O texto escuro mantém-se nos dois modos, porque o
-   fundo do botão é o mesmo em claro e em escuro. */
+/* O amarelo da marca — o mesmo de «por área governativa» no título — com
+   tinta escura: 12,4:1 de contraste, o mais legível da paleta, e a cor que
+   já diz «isto é do radar». O texto escuro serve os dois modos, porque o
+   fundo do botão não muda com o tema. */
 .btn-evolucao{display:inline-flex;align-items:center;gap:.45rem;height:38px;padding:0 1.05rem;
-  border-radius:999px;border:1px solid #a8873f;background:var(--dourado);color:#171715;
+  border-radius:999px;border:1px solid #e0b800;background:var(--amarelo);color:#171715;
   font:700 .85rem/1 inherit;letter-spacing:.01em;text-decoration:none;cursor:pointer;
-  box-shadow:0 2px 6px rgba(190,156,84,.42);transition:background .15s, transform .15s, box-shadow .15s}
-.btn-evolucao:hover{background:#cfae63;transform:translateY(-1px);
-  box-shadow:0 3px 10px rgba(190,156,84,.55)}
+  box-shadow:0 2px 6px rgba(255,210,0,.40);transition:background .15s, transform .15s, box-shadow .15s}
+.btn-evolucao:hover{background:#ffde3d;transform:translateY(-1px);
+  box-shadow:0 3px 10px rgba(255,210,0,.55)}
 .btn-evolucao:focus-visible{outline:2px solid #171715;outline-offset:2px}
 .btn-evolucao svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;
   stroke-linecap:round;stroke-linejoin:round}
@@ -863,17 +863,12 @@ body.sem-radar #conteudo{display:block !important}
 @media(max-width:860px){.radar{display:none}}
 /* O ranking só existe onde o círculo não cabe: nos ecrãs largos seria uma
    repetição do que o radar já mostra pela distância ao centro. */
-.so-estreito{display:none}
-@media(max-width:860px){.so-estreito{display:block}}
-.rank-movel{display:flex;flex-direction:column;gap:.3rem}
-.rm{display:grid;grid-template-columns:minmax(96px,40%) 1fr auto;gap:.6rem;align-items:center;
-  width:100%;padding:.5rem .6rem;border:0;border-radius:10px;background:var(--superficie);
-  cursor:pointer;text-align:left;font:inherit;color:var(--texto)}
-.rm:hover,.rm:focus-visible{background:var(--superficie-alt);outline:none}
-.rm-nome{font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rm-barra{height:14px;border-radius:4px;background:var(--superficie-alt);overflow:hidden}
-.rm-barra i{display:block;height:100%;background:var(--cor);border-radius:4px}
-.rm-n{font-size:.82rem;font-variant-numeric:tabular-nums;font-weight:600;min-width:38px;text-align:right}
+/* A contagem no topo do cartão é a mesma leitura que o radar dá pela distância
+   ao centro: quantas notícias tem a área no período escolhido. */
+.cartao-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:.6rem}
+.cartao-n{font-size:1.45rem;font-weight:700;line-height:1;color:var(--cor);
+  font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.cartao-n.zero{color:var(--texto-ligeiro);font-weight:600}
 
 /* Palavras-chave dentro da janela de resultados: escolher uma refaz a consulta
    sem sair do sítio, que era o que a etapa intermédia obrigava a fazer. */
@@ -1459,7 +1454,10 @@ function cartao(a){
     <div class="ilustra-cartao" aria-hidden="true">
       <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid meet">${ILUSTRA[a.icone] || ILUSTRA.presidencia}</svg>
     </div>
-    <div class="simbolo"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
+    <div class="cartao-topo">
+      <div class="simbolo"><svg viewBox="0 0 24 24">${ICONES[a.icone]}</svg></div>
+      <span class="cartao-n" title="a contar…">—</span>
+    </div>
     <h3>${a.nome}</h3>
     <div class="sub"><span class="ponto"></span>${a.palavras.length} palavras-chave</div>
   </article>`;
@@ -1468,9 +1466,16 @@ function cartao(a){
 /* Contagens por área nos últimos sete dias, a partir do arquivo. É o mesmo
    ficheiro que serve as consultas — o radar não faz pedidos próprios. */
 let contagens = null;
+let chaveContagens = "";
 
 async function apurarContagens(){
-  if(contagens) return contagens;
+  /* As contagens dependem do período e da origem escolhidos — guardá-las sem
+     olhar a isso fazia o radar (e os cartões) continuarem a mostrar os números
+     dos sete dias depois de se escolher 24 horas. A chave abaixo obriga a
+     recontar sempre que um desses filtros muda. */
+  const chave = `${periodo}|${filtroFontes}`;
+  if(contagens && chaveContagens === chave) return contagens;
+  chaveContagens = chave;
   try{
     const a = await carregarArquivo();
     const c = {};
@@ -1506,7 +1511,7 @@ async function apurarContagens(){
 }
 
 /* Mudando a origem das fontes, as contagens deixam de servir e são refeitas */
-function limparContagens(){ contagens = null; }
+function limparContagens(){ contagens = null; chaveContagens = ""; }
 
 /* O filtro de origem do radar acompanha o da barra, para que o relance e a
    consulta digam a mesma coisa. */
@@ -1628,17 +1633,7 @@ function desenhar(){
      que dá de imediato: quais as áreas mais noticiadas. A grelha segue a ordem
      protocolar, que não responde a essa pergunta. Este quadro repõe-a: as
      áreas por volume, com barra, e leva ao mesmo sítio que os cartões. */
-  const rankingMovel = `
-    <section class="grupo so-estreito" id="rankSeccao" hidden>
-      <div class="grupo-cab">
-        <div class="risco" style="background:var(--verde)"></div>
-        <h2>Áreas mais noticiadas</h2>
-        <span id="rankJanela"></span>
-      </div>
-      <div class="rank-movel" id="rankMovel"></div>
-    </section>`;
-
-  alvo.innerHTML = rankingMovel + `<section class="grupo">
+  alvo.innerHTML = `<section class="grupo">
     <div class="grupo-cab">
       <div class="risco" style="background:var(--azul)"></div>
       <h2>XXV Governo Constitucional</h2>
@@ -1647,36 +1642,47 @@ function desenhar(){
     <div class="grelha">${lista.map(cartao).join("")}</div>
   </section>`;
 
-  preencherRanking(lista);
+  ordenarCartoes();
 }
 
-/* As contagens vêm do arquivo e chegam depois do primeiro desenho — em ecrã
-   estreito o radar nem sequer as vai buscar. Por isso o ranking preenche-se à
-   parte, quando os números estiverem prontos. */
-async function preencherRanking(lista){
-  const caixa = $("#rankMovel"), seccao = $("#rankSeccao");
-  if(!caixa || !seccao) return;
+/* As contagens chegam depois do primeiro desenho — e em ecrã estreito o radar
+   nem sequer as vai buscar. Por isso os cartões nascem na ordem protocolar e,
+   quando os números chegam, recebem a contagem e reordenam-se do mais noticiado
+   para o menos. A reordenação é feita pela propriedade `order` da grelha, sem
+   voltar a desenhar nada: os cartões que já lá estão apenas mudam de lugar. */
+async function ordenarCartoes(){
+  const grelha = $("#conteudo .grelha");
+  if(!grelha) return;
   let dados;
   try{
     dados = await apurarContagens();
   }catch(e){
-    return;                       // sem arquivo, o quadro fica de fora
+    return;                        // sem arquivo, ficam na ordem protocolar
   }
-  const porVolume = lista
-    .map(a => [a, (dados.por && dados.por[a.nome]) || 0])
-    .sort((x, y) => y[1] - x[1]);
-  const maior = porVolume.length ? porVolume[0][1] : 0;
-  if(!maior) return;
-  const janela = $("#rankJanela");
-  if(janela && dados.dias) janela.textContent = `últimos ${dados.dias} dias`;
-  caixa.innerHTML = porVolume.map(([a, n]) => `
-    <button class="rm" data-detalhe="${a.id}" style="--cor:${cor(a.grupo)}"
-            title="${esc(a.nome)}: ${n.toLocaleString("pt-PT")} notícias">
-      <span class="rm-nome">${a.nome}</span>
-      <span class="rm-barra"><i style="width:${(100 * n / maior).toFixed(1)}%"></i></span>
-      <span class="rm-n">${n.toLocaleString("pt-PT")}</span>
-    </button>`).join("");
-  seccao.hidden = false;
+  const por = dados.por || {};
+  const cartoes = [...grelha.querySelectorAll("[data-detalhe]")];
+  const comN = cartoes.map(el => {
+    const area = AREAS.find(a => a.id === el.dataset.detalhe);
+    return { el, n: (area && por[area.nome]) || 0 };
+  }).sort((x, y) => y.n - x.n);
+
+  comN.forEach((c, i) => {
+    c.el.style.order = i;
+    const marca = c.el.querySelector(".cartao-n");
+    if(marca){
+      marca.textContent = c.n.toLocaleString("pt-PT");
+      marca.classList.toggle("zero", c.n === 0);
+      marca.title = `${c.n} ${c.n === 1 ? "notícia" : "notícias"} ${rotuloPeriodo()}`;
+    }
+  });
+}
+
+/* O rótulo do período tal como aparece nos filtros, para a contagem do cartão
+   dizer a que janela se refere. */
+function rotuloPeriodo(){
+  return ({ "24h":"nas últimas 24 horas", "48h":"nas últimas 48 horas",
+            "72h":"nas últimas 72 horas", "7d":"nos últimos 7 dias" })[periodo]
+         || "no período escolhido";
 }
 
 function atualizarKPI(){
@@ -3904,16 +3910,18 @@ $("#filtroFontes").addEventListener("click", e => {
   soNacionais = filtroFontes === "nacionais";
   document.querySelectorAll("#filtroFontes button").forEach(x => x.classList.toggle("ativo", x === b));
   recolha = []; assinaturaRecolha = "";
-  limparContagens();   // o radar conta por origem: mudando o filtro, reconta
+  limparContagens();   // radar e cartões contam por origem: mudando, recontam
   desenharRadar();
+  ordenarCartoes();    // os cartões trazem a contagem: reordenam-se também
   mostrarAviso(ROTULO_FONTES[filtroFontes]);
 });
 
 $("#campoPeriodo").addEventListener("change", e => {
   periodo = e.target.value;
   recolha = []; assinaturaRecolha = "";
-  limparContagens();   // o radar conta dentro do período: mudando-o, reconta
+  limparContagens();   // radar e cartões contam no período: mudando, recontam
   desenharRadar();
+  ordenarCartoes();
   mostrarAviso(`Período: ${ROTULO_PERIODO[periodo]}`);
 });
 
