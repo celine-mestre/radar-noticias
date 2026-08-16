@@ -58,7 +58,10 @@ jobs:
         # 23h07 nao apanha o que sair entre as 23h07 e as 23h59. Este passo
         # reconta todos os dias anteriores a hoje a partir do arquivo mensal,
         # que e a unica fonte que reflete sempre as expressoes em vigor.
-        run: python reconstruir_series.py || true
+        run: |
+          python reconstruir_series.py \
+            || echo "::warning::O fecho dos dias falhou; a serie fica como estava."
+        continue-on-error: true
 
       - name: Avaliar os alertas de tempestade politica
         # Corre depois da recolha, sobre o arquivo mensal ja atualizado. Uma
@@ -73,9 +76,10 @@ jobs:
           # o "git add" falhar e derrubava a recolha inteira.
           for f in noticias.json historico.json arquivo.json corpus.json alertas.json \
                    sentimento-serie.json; do
-            [ -f "$f" ] && git add "$f"
+            if [ -f "$f" ]; then git add "$f"; fi
           done
-          [ -d meses ] && git add meses/
+          if [ -d meses ]; then git add meses/; fi
+          if [ -d sentimento-meses ]; then git add sentimento-meses/; fi
           git diff --cached --quiet || git commit -m "Recolha de noticias"
           # Três fluxos gravam no mesmo repositório e podem cruzar-se: puxa-se
           # primeiro o que houver, para o envio não ser recusado.
