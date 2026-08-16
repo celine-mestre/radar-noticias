@@ -53,6 +53,13 @@ jobs:
             --arquivo arquivo.json --dias-arquivo 7 --mensal meses \
             --corpus corpus.json --fontes
 
+      - name: Fechar os dias ja passados
+        # O dia D so esta completo depois da primeira recolha de D+1: a das
+        # 23h07 nao apanha o que sair entre as 23h07 e as 23h59. Este passo
+        # reconta todos os dias anteriores a hoje a partir do arquivo mensal,
+        # que e a unica fonte que reflete sempre as expressoes em vigor.
+        run: python reconstruir_series.py || true
+
       - name: Avaliar os alertas de tempestade politica
         # Corre depois da recolha, sobre o arquivo mensal ja atualizado. Uma
         # falha aqui nao pode derrubar a recolha: os alertas sao acessorios.
@@ -64,7 +71,8 @@ jobs:
           git config user.email "github-actions@github.com"
           # Só se acrescenta o que existe: um ficheiro opcional em falta fazia
           # o "git add" falhar e derrubava a recolha inteira.
-          for f in noticias.json historico.json arquivo.json corpus.json alertas.json; do
+          for f in noticias.json historico.json arquivo.json corpus.json alertas.json \
+                   sentimento-serie.json; do
             [ -f "$f" ] && git add "$f"
           done
           [ -d meses ] && git add meses/
