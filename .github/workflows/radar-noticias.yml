@@ -75,7 +75,7 @@ jobs:
           # Só se acrescenta o que existe: um ficheiro opcional em falta fazia
           # o "git add" falhar e derrubava a recolha inteira.
           for f in noticias.json historico.json arquivo.json corpus.json alertas.json \
-                   sentimento-serie.json; do
+                   sentimento-serie.json publicacoes.json; do
             if [ -f "$f" ]; then git add "$f"; fi
           done
           if [ -d meses ]; then git add meses/; fi
