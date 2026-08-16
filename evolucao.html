@@ -1169,16 +1169,30 @@ function desenhar(){
           </div>`).join("");
         })()}
       </div>
-      <p class="nota">A barra é proporcional à área mais noticiada; a percentagem
-        é a parte de cada área no total ${areaEscolhida || grupoEscolhido
-          ? "do conjunto escolhido" : "das dezassete áreas"} no período.
-        Aqui conta-se por <strong>marcações</strong>: uma notícia que satisfaz
-        três áreas conta em cada uma delas. Por isso a soma das áreas
-        (${num(marcacoes)}) é maior do que as ${num(total)} notícias do período —
-        são ${(marcacoes / (total || 1)).toFixed(2).replace(".", ",")} áreas por
-        notícia.${grupoEscolhido && !areaEscolhida
-          ? " Com um agrupamento escolhido, também o total acima é de marcações:"
-            + " uma notícia pode tocar duas áreas do mesmo grupo." : ""}</p>
+      <p class="nota">${areaEscolhida
+        ? `Com uma área escolhida, o quadro tem uma linha só: as
+           ${num(areas.length ? areas[0][1] : 0)} notícias da área no período,
+           que são 100% de si
+           mesma. A comparação entre áreas volta assim que limpar o seletor.`
+        : `A barra é proporcional à área mais noticiada; a percentagem
+        é a parte de cada área no total ${grupoEscolhido
+          ? "do conjunto escolhido" : "das dezassete áreas"} no período.`}${(() => {
+        /* A explicação das marcações só faz sentido com tudo à vista. Escolhida
+           uma área, marcação e notícia são a mesma coisa e a frase soava a
+           disparate («a soma das áreas (148) é maior do que as 148 notícias»).
+           Escolhido um agrupamento, há marcações a mais mas não sabemos quantas
+           notícias distintas são: diz-se isso e não se inventa um rácio. */
+        if(areaEscolhida) return "";
+        if(grupoEscolhido) return ` Conta-se por <strong>marcações</strong>: uma
+          notícia que satisfaz duas áreas do agrupamento conta em cada uma delas,
+          pelo que a soma acima é de marcações e não de notícias.`;
+        if(marcacoes <= total) return "";
+        return ` Aqui conta-se por <strong>marcações</strong>: uma notícia que
+          satisfaz três áreas conta em cada uma delas. Por isso a soma das áreas
+          (${num(marcacoes)}) é maior do que as ${num(total)} notícias do período
+          — são ${(marcacoes / total).toFixed(2).replace(".", ",")} áreas por
+          notícia.`;
+      })()}</p>
     </div>
 
     ${blocoTempestades(linhas)}
