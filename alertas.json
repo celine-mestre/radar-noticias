@@ -1,60 +1,29 @@
 {
- "atualizado": "2026-08-15 23:29",
- "dia": "2026-08-15",
- "corte": "23:29",
+ "atualizado": "2026-08-16 02:48",
+ "dia": "2026-08-16",
+ "corte": "02:48",
  "dias_base": 11,
- "regra": "Tempestade quando a contagem do dia, até às 23:29, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
- "tempestades": [
-  {
-   "area": "Primeiro-Ministro",
-   "hoje": 28,
-   "mediana": 7,
-   "limiar": 24.8,
-   "excesso": 21,
-   "variacao_pct": 300,
-   "dias_base": 11,
-   "tempestade": true
-  },
-  {
-   "area": "Infraestruturas e Habitação",
-   "hoje": 24,
-   "mediana": 16,
-   "limiar": 24,
-   "excesso": 8,
-   "variacao_pct": 50,
-   "dias_base": 11,
-   "tempestade": true
-  }
- ],
+ "regra": "Tempestade quando a contagem do dia, até às 02:48, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "tempestades": [],
  "momentum": [
   {
-   "area": "Primeiro-Ministro",
-   "hoje": 28,
-   "mediana": 7,
-   "limiar": 24.8,
-   "excesso": 21,
-   "variacao_pct": 300,
-   "dias_base": 11,
-   "tempestade": true
-  },
-  {
-   "area": "Infraestruturas e Habitação",
-   "hoje": 24,
-   "mediana": 16,
-   "limiar": 24,
-   "excesso": 8,
+   "area": "Administração Interna",
+   "hoje": 3,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 1,
    "variacao_pct": 50,
    "dias_base": 11,
-   "tempestade": true
+   "tempestade": false
   },
   {
-   "area": "Administração Interna",
-   "hoje": 32,
-   "mediana": 31,
-   "limiar": 57.7,
+   "area": "Finanças",
+   "hoje": 2,
+   "mediana": 1,
+   "limiar": 9,
    "excesso": 1,
-   "variacao_pct": 3,
-   "dias_base": 11,
+   "variacao_pct": 100,
+   "dias_base": 9,
    "tempestade": false
   }
  ],
