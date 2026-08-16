@@ -615,8 +615,9 @@ recolhida"** em vez de "arquivo de 7 dias".
   mostrado, e uma nota que dá o rácio entre marcações e notícias do período; trajetória das oito mais noticiadas; e uma nuvem com as expressões que
   trouxeram notícias no período — o tamanho vale pela quantidade, e as que não aparecem
   ficaram a zero, sendo candidatas a revisão.
-- **Picos noticiosos registados**, com o volume do dia e a mediana da área. Clicar num
-  pico abre o resumo do Amália sobre o que o motivou.
+- **Picos noticiosos registados**, com o volume do dia, a mediana da área e quantas
+  vezes o dia esteve acima dela — é por esse número que a lista se ordena, o maior
+  primeiro. Clicar num pico abre o resumo do Amália sobre o que o motivou.
 - **Sentimento da cobertura**, em barras por dia, semana ou mês, apenas da comunicação
   social nacional e sujeito ao patamar de cobertura.
 - **Cruzamentos**: duas áreas lado a lado, na mesma escala e com totais, médias, maior

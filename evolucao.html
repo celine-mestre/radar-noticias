@@ -1217,11 +1217,17 @@ function blocoTempestades(linhas){
     (!grupoEscolhido || areasDoGrupo(grupoEscolhido).has(t.area)));
   if(!dentro.length) return "";
 
-  /* INTENSIDADE, não data. Hoje são cinco picos; ao fim de um ano serão
-     centenas, e a ordem cronológica enterrava os grandes debaixo dos pequenos.
-     A intensidade é quanto o dia excedeu o limiar, em proporção dele: assim uma
-     área pequena que triplica pesa como uma grande que triplica. */
-  const forca = t => (t.hoje - (t.limiar || t.mediana)) / ((t.limiar || t.mediana) || 1);
+  /* INTENSIDADE, não data: ao fim de um ano serão centenas de picos, e a ordem
+     cronológica enterraria os grandes debaixo dos pequenos.
+
+     A intensidade mede-se contra a MEDIANA — o volume habitual da área —, e não
+     contra o limiar. Contra o limiar dava números sem sentido: um dia que o
+     iguale raspando aparecia como «+0%», que se lê como «não aconteceu nada»
+     quando na verdade tinha o dobro do habitual; e o Primeiro-Ministro a 15/8,
+     com quatro vezes o seu volume normal, ficava em sexto lugar por só exceder
+     o limiar em 13%. Contra a mediana, o número diz o que se quer saber: quantas
+     vezes acima do costume esteve aquele dia. */
+  const forca = t => t.hoje / (t.mediana || 1);
   const porForca = (a, b) => forca(b) - forca(a) || b.data.localeCompare(a.data);
 
   /* Escolhido um período, esse abre em lista completa e o resto da janela fica
@@ -1235,18 +1241,23 @@ function blocoTempestades(linhas){
   const porArea = new Map();
   resto.forEach(t => porArea.set(t.area, [...(porArea.get(t.area) || []), t]));
 
+  /* «2,2×» lê-se de imediato; «2,23529×» não. E a mediana pode ser fracionária,
+     porque é a mediana de 28 dias. */
+  const vezes = t => forca(t).toFixed(1).replace(".", ",");
+  const numDec = v => (Math.round(v * 10) / 10).toString().replace(".", ",");
+
   const linhaPico = t => {
         const chave = `${t.data}|${t.area}`;
         const resumo = RESUMOS_PICOS[chave];
         const dataPt = `${t.data.slice(8)}/${t.data.slice(5, 7)}/${t.data.slice(0, 4)}`;
-        const acima = Math.round(forca(t) * 100);
+
         return `
         <div class="tp" data-pico="${chave}" role="button" tabindex="0"
              title="Ver o que motivou este pico">
           <span class="tp-data">${dataPt}</span>
           <span class="tp-area">${t.area}</span>
-          <span class="tp-n"><b class="tp-forca">+${acima}%</b> ${num(t.hoje)} notícias ·
-            limiar ${num(Math.round(t.limiar || t.mediana))}
+          <span class="tp-n"><b class="tp-forca">${vezes(t)}×</b> ${num(t.hoje)} notícias ·
+            mediana ${numDec(t.mediana)}
             <span class="tp-seta">▾</span></span>
         </div>
         <div class="tp-resumo" id="resumo-${chave.replace(/[^a-zA-Z0-9]/g, "-")}" hidden>
@@ -1277,7 +1288,7 @@ function blocoTempestades(linhas){
               <div class="tp-cab" data-grupo="g${i}" role="button" tabindex="0">
                 <span class="tp-area">${area}</span>
                 <span class="tp-n">${ts.length} ${ts.length === 1 ? "pico" : "picos"} ·
-                  maior +${Math.round(forca(ts[0]) * 100)}%
+                  maior ${vezes(ts[0])}×
                   <span class="tp-seta">▾</span></span>
               </div>
               <div class="tp-lista" id="g${i}" hidden>${ts.map(linhaPico).join("")}</div>
@@ -1285,8 +1296,12 @@ function blocoTempestades(linhas){
         </div>` : ""}
       <p class="nota">Dias em que uma área teve um volume de notícias muito acima do habitual —
         mediana dos 28 dias anteriores à mesma hora, mais dois desvios robustos.
-        A percentagem é quanto o dia excedeu esse limiar, e é por ela que a lista
-        está ordenada: o maior primeiro, e não o mais recente.
+        O número à esquerda é quantas vezes o dia esteve acima da mediana da área —
+        o seu volume habitual —, e é por ele que a lista está ordenada: o maior
+        primeiro, e não o mais recente. Mede-se contra a mediana e não contra o
+        limiar porque é isso que responde à pergunta «quanto saiu do normal»:
+        um dia que iguale o limiar à tangente pode ainda assim ter o dobro do
+        habitual.
         Clique num pico para ver, em resumo, o que o motivou. O registo acumula
         desde a entrada do método; os dias sem linha são dias normais.
         Os picos contam todas as origens juntas — respondem à área e ao dia
