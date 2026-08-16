@@ -44,10 +44,17 @@ header{background:linear-gradient(115deg,var(--azul) 0%, #23506f 45%, var(--verd
 header h1{font-size:1.6rem;font-weight:600;letter-spacing:-.02em;margin-top:.35rem}
 header p{font-size:.88rem;opacity:.9;margin-top:.4rem;max-width:70ch;line-height:1.55}
 header p.inicio{font-size:.78rem;opacity:.75;margin-top:.5rem}
-header .voltar{display:inline-flex;align-items:center;gap:.4rem;margin-top:1rem;
-  padding:.5rem 1rem;border-radius:999px;border:1px solid rgba(255,255,255,.45);
-  background:rgba(255,255,255,.12);color:#fff;text-decoration:none;font-size:.82rem}
-header .voltar:hover{background:#fff;color:var(--azul)}
+/* O mesmo amarelo do botão que traz do radar para aqui: a viagem de ida e a
+   de volta merecem a mesma marca, e sobre o cabeçalho azul é o que mais
+   contrasta (tinta escura sobre amarelo, 12,4:1). */
+header .voltar{display:inline-flex;align-items:center;gap:.45rem;margin-top:1rem;
+  padding:.55rem 1.05rem;border-radius:999px;border:1px solid #e0b800;
+  background:var(--amarelo);color:#171715;text-decoration:none;
+  font-size:.82rem;font-weight:700;letter-spacing:.01em;
+  box-shadow:0 2px 6px rgba(255,210,0,.40);transition:background .15s, transform .15s, box-shadow .15s}
+header .voltar:hover{background:#ffde3d;transform:translateY(-1px);
+  box-shadow:0 3px 10px rgba(255,210,0,.55)}
+header .voltar:focus-visible{outline:2px solid #171715;outline-offset:2px}
 
 .barra{background:var(--superficie);border-bottom:1px solid var(--borda);padding:.85rem 0;
   position:sticky;top:0;z-index:5}
@@ -962,7 +969,11 @@ function blocoSentimento(linhas){
       return `<div class="sb">
         <span class="sb-data">${descreverPeriodo(f.data)}</span>
         <span class="sb-barra sb-espera"><i class="esp" style="width:100%"></i></span>
-        <span class="sb-n" style="opacity:.6" title="faltam ${f.n - f.av} de ${f.n}">${f.av}/${f.n} · ${f.n ? Math.round(100 * f.av / f.n) : 0}% · a avaliar</span>
+        <span class="sb-n" style="opacity:.65" title="${f.av >= 0.6 * f.n
+          ? `Só ${f.av} ${f.av === 1 ? "notícia nacional" : "notícias nacionais"} neste período: uma proporção sobre tão poucas não diz nada. O mínimo para desenhar são ${MINIMO_AVALIADAS}.`
+          : `Faltam avaliar ${f.n - f.av} de ${f.n} notícias nacionais deste período.`}">${f.av >= 0.6 * f.n
+          ? `${f.av} ${f.av === 1 ? "notícia" : "notícias"} · amostra pequena`
+          : `${f.av}/${f.n} · ${f.n ? Math.round(100 * f.av / f.n) : 0}% · a avaliar`}</span>
       </div>`;
     }
     const total = f.p + f.ne + f.ng || 1;
@@ -1001,7 +1012,7 @@ function blocoSentimento(linhas){
       </div>
       ${incompleta}
       <p class="nota">Tom do acontecimento noticiado, avaliado pelo Amália apenas na
-        comunicação social nacional — avaliação automática em validação humana. Só se desenham os períodos com pelo menos ${Math.round(COBERTURA_MINIMA * 100)}% das notícias nacionais avaliadas; os restantes ficam «a avaliar» até atingirem esse patamar. Quando a cobertura de um período não está completa, a percentagem avaliada aparece a dourado ao lado dos números.
+        comunicação social nacional — avaliação automática em validação humana. Um período só se desenha quando tem massa que sustente proporções: pelo menos ${MINIMO_AVALIADAS} notícias nacionais avaliadas e ao menos ${Math.round(COBERTURA_MINIMA * 100)}% das desse período. Os que ficam de fora dizem porquê — «amostra pequena» quando há poucas notícias (comum em áreas de baixo volume, como o Primeiro-Ministro, ou ao fim de semana), «a avaliar» quando ainda faltam classificações. Quando a cobertura de um período não está completa, a percentagem avaliada aparece a dourado ao lado dos números.
         Números à direita: positivas · neutras · negativas.</p>
     </div>`;
 }
