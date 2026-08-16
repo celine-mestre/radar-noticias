@@ -1734,11 +1734,17 @@ def historico_do_arquivo(caminho, arquivo):
         return None
 
     por_dia = {}
+    # Notícias DISTINTAS por dia: a mesma notícia deixa uma linha por área, e
+    # somar as áreas dá marcações, não notícias. O painel mostra estas.
+    distintas = {}
     for n in noticias:
         dia = (n.get("data") or "")[:10]
         area = n.get("area")
         if not dia or not area:
             continue
+        lig = n.get("ligacao") or ""
+        if lig:
+            distintas.setdefault(dia, {})[lig] = origem_da_fonte(n.get("dominio"))
         registo = por_dia.setdefault(dia, {}).setdefault(area, {
             "noticias": 0, "novas": 0, "fontes": set(),
             "origens": {"nacionais": 0, "lusofonas": 0, "internacionais": 0},
@@ -1752,12 +1758,21 @@ def historico_do_arquivo(caminho, arquivo):
         for pal in (n.get("palavras") or []):
             registo["palavras"][pal] = registo["palavras"].get(pal, 0) + 1
 
-    return {dia: {nome: {
+    saida = {}
+    for dia, areas in por_dia.items():
+        contagem = {"total": 0, "nacionais": 0, "lusofonas": 0, "internacionais": 0}
+        for o in distintas.get(dia, {}).values():
+            contagem["total"] += 1
+            contagem[o] += 1
+        saida[dia] = {
+            "distintas": contagem,
+            "areas": {nome: {
                 "noticias": v["noticias"], "novas": v["novas"], "fontes": len(v["fontes"]),
                 "origens": v["origens"],
                 "palavras": dict(sorted(v["palavras"].items(), key=lambda x: -x[1])),
-            } for nome, v in sorted(areas.items())}
-            for dia, areas in por_dia.items()}
+            } for nome, v in sorted(areas.items())},
+        }
+    return saida
 
 
 def atualizar_historico(caminho, linhas, periodo, vistos=None, arquivo=None):
@@ -1790,13 +1805,16 @@ def atualizar_historico(caminho, linhas, periodo, vistos=None, arquivo=None):
     do_arquivo = historico_do_arquivo(caminho, arquivo) if arquivo else None
 
     if do_arquivo is not None:
-        for dia, areas in sorted(do_arquivo.items()):
+        for dia, registo in sorted(do_arquivo.items()):
             serie["dias"] = [d for d in serie["dias"] if d.get("data") != dia]
-            serie["dias"].append({"data": dia, "periodo": "dia completo", "areas": areas})
+            serie["dias"].append({"data": dia, "periodo": "dia completo",
+                                  "distintas": registo["distintas"],
+                                  "areas": registo["areas"]})
         serie["dias"].sort(key=lambda d: d.get("data", ""))
         with open(caminho, "w", encoding="utf-8") as destino:
             json.dump(serie, destino, ensure_ascii=False, indent=1)
-        total = sum(v["noticias"] for areas in do_arquivo.values() for v in areas.values())
+        total = sum(v["noticias"] for r in do_arquivo.values()
+                    for v in r["areas"].values())
         print(f"série diária: {len(do_arquivo)} dias reconstruídos do arquivo "
               f"({total} notícias) · {len(serie['dias'])} dias em {caminho}")
         return
@@ -1819,9 +1837,15 @@ def atualizar_historico(caminho, linhas, periodo, vistos=None, arquivo=None):
         for pal in (l[8] if len(l) > 8 and l[8] else []):
             registo["palavras"][pal] = registo["palavras"].get(pal, 0) + 1
 
+    contagem = {"total": 0, "nacionais": 0, "lusofonas": 0, "internacionais": 0}
+    for lig, dom in {l[7]: l[4] for l in do_dia if len(l) > 7 and l[7]}.items():
+        contagem["total"] += 1
+        contagem[origem_da_fonte(dom)] += 1
+
     serie["dias"].append({
         "data": hoje,
         "periodo": periodo or "sem limite",
+        "distintas": contagem,
         "areas": {nome: {
             "noticias": v["noticias"],
             "novas": v["novas"],

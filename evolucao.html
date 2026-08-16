@@ -540,6 +540,44 @@ function contar(v){
   return (v.origens || {})[origem] || 0;
 }
 
+/* NOTÍCIAS vs MARCAÇÕES. Uma notícia que satisfaz três áreas deixa três
+   marcações no arquivo e é contada em cada uma dessas áreas. Somar as áreas
+   dá marcações, não notícias — e inflacionava o total do período em cerca de
+   30%. O arquivo mensal passou a gravar também, por dia, quantas notícias
+   DISTINTAS houve, e é esse o número que o gráfico e o total mostram.
+
+   Escolhida uma área, marcações e notícias são a mesma coisa (cada notícia
+   conta uma só vez dentro da área). Escolhido um agrupamento, não: uma notícia
+   pode tocar duas áreas do mesmo grupo, e aí só há marcações — o quadro
+   avisa. */
+function contagemDistinta(){
+  return !areaEscolhida && !grupoEscolhido;
+}
+
+function marcacoesDoDia(d){
+  return Object.values(areasDe(d)).reduce((s, v) => s + contar(v), 0);
+}
+
+function totalDoDia(d){
+  if(!contagemDistinta() || !d.distintas) return marcacoesDoDia(d);
+  return origem === "todas" ? (d.distintas.total || 0) : (d.distintas[origem] || 0);
+}
+
+function origensDoDia(d){
+  const o = { nacionais:0, lusofonas:0, internacionais:0 };
+  if(contagemDistinta() && d.distintas){
+    ["nacionais", "lusofonas", "internacionais"].forEach(k => {
+      if(origem === "todas" || origem === k) o[k] = d.distintas[k] || 0;
+    });
+    return o;
+  }
+  Object.values(areasDe(d)).forEach(v =>
+    Object.entries(v.origens || {}).forEach(([k, x]) => {
+      if(origem === "todas" || origem === k) o[k] += x;
+    }));
+  return o;
+}
+
 /* Nas expressões não há repartição por origem: a proporção da área serve de
    aproximação, e diz-se isso a quem lê. */
 function fatorOrigem(v){
@@ -632,7 +670,14 @@ function agregar(linhas){
   const grupos = new Map();
   linhas.forEach(d => {
     const chave = chaveDoPeriodo(d.data);
-    if(!grupos.has(chave)) grupos.set(chave, { data: chave, areas: {} });
+    if(!grupos.has(chave)) grupos.set(chave, { data: chave, areas: {},
+      distintas: { total:0, nacionais:0, lusofonas:0, internacionais:0 } });
+    /* As distintas somam-se sem risco: cada notícia pertence a um só dia. */
+    if(d.distintas){
+      const dd = grupos.get(chave).distintas;
+      ["total", "nacionais", "lusofonas", "internacionais"]
+        .forEach(k => dd[k] += d.distintas[k] || 0);
+    }
     const alvo = grupos.get(chave).areas;
     Object.entries(d.areas || {}).forEach(([nome, v]) => {
       const a = alvo[nome] || (alvo[nome] = { noticias:0, novas:0, fontes:0,
@@ -930,7 +975,14 @@ function blocoSentimento(linhas){
   const grupos = new Map();
   dias.forEach(d => {
     let p = 0, ne = 0, ng = 0, n = 0, av = 0;
-    Object.entries(d.areas || {}).forEach(([nome, v]) => {
+    /* Sem área nem agrupamento, usa-se o total do dia, que conta notícias
+       distintas: somar as áreas contaria duas vezes a notícia que toca duas
+       áreas, e a distribuição saía inflacionada. */
+    if(contagemDistinta() && d.total){
+      p = d.total.positivo || 0; ne = d.total.neutro || 0;
+      ng = d.total.negativo || 0;
+      n = d.total.nacionais || 0; av = d.total.avaliadas || 0;
+    } else Object.entries(d.areas || {}).forEach(([nome, v]) => {
       if(areaEscolhida && nome !== areaEscolhida) return;
       if(grupoEscolhido && !areasDoGrupo(grupoEscolhido).has(nome)) return;
       p += v.positivo || 0; ne += v.neutro || 0; ng += v.negativo || 0;
@@ -1039,22 +1091,19 @@ function desenhar(){
 
   const pares = agregar(linhas);
   const pontos = pares.map(([chave, d]) => {
-    const origens = { nacionais:0, lusofonas:0, internacionais:0 };
-    let total = 0;
-    Object.values(areasDe(d)).forEach(v => {
-      total += contar(v);
-      Object.entries(v.origens || {}).forEach(([k, n]) => {
-        if(origem === "todas" || origem === k) origens[k] += n;
-      });
-    });
     const curto = agregacao === "mes"
       ? chave.slice(5) + "/" + chave.slice(2, 4)
       : chave.slice(8) + "/" + chave.slice(5, 7);
-    return { rotulo: chave, curto, total, origens };
+    return { rotulo: chave, curto, total: totalDoDia(d),
+             origens: origensDoDia(d), marcacoes: marcacoesDoDia(d) };
   });
 
   const total = pontos.reduce((s, p) => s + p.total, 0);
+  const marcacoes = pontos.reduce((s, p) => s + p.marcacoes, 0);
   const media = total / pontos.length;
+  const ORIGEM_NOME = { nacionais:"Portugal", lusofonas:"Lusofonia",
+                        internacionais:"Internacional" };
+  const daOrigem = origem === "todas" ? "" : ` de ${ORIGEM_NOME[origem]}`;
 
   /* Escolhido um dia, os quadros abaixo passam a ser desse dia */
   const foco = linhasEmFoco(linhas, pares);
@@ -1072,9 +1121,10 @@ function desenhar(){
 
   corpo.innerHTML = `
     ${hojeEmCurso ? `<div class="aviso"><strong>O dia de hoje ainda está a decorrer.</strong>
-      O valor de hoje cresce a cada recolha e fica fixado na das 23h07. E conta apenas o
-      que foi <em>publicado hoje</em> — ao contrário do radar, cujo círculo mostra as
-      últimas 24 horas e inclui, por isso, o serão de ontem.</div>` : ""}
+      O valor de hoje cresce a cada recolha e só fica fechado na primeira recolha de
+      amanhã — a das 23h07 ainda não apanha o que sair depois dela. E conta apenas o
+      que foi <em>publicado hoje</em>, das 00h00 às 24h00 — ao contrário do radar, cujo
+      círculo mostra as últimas 24 horas e inclui, por isso, o serão de ontem.</div>` : ""}
     ${poucos ? `<div class="aviso"><strong>Série ainda curta.</strong> ${linhas.length}
       ${linhas.length === 1 ? "dia registado" : "dias registados"}, a começar em
       ${linhas[0].data}. Os quadros já funcionam, mas só com três ou quatro semanas as
@@ -1082,7 +1132,7 @@ function desenhar(){
       sobre a área.</div>` : ""}
 
     <div class="kpis">
-      <div class="kpi"><b>${num(total)}</b><span>notícias publicadas no período</span></div>
+      <div class="kpi"><b>${num(total)}</b><span>notícias publicadas no período${daOrigem}</span></div>
       <div class="kpi"><b>${num(Math.round(media))}</b><span>média por ${agregacao}</span></div>
       <div class="kpi"><b>${linhas.length}</b><span>${linhas.length === 1 ? "dia registado" : "dias registados"}</span></div>
       <div class="kpi"><b>${areas.length}</b><span>áreas com notícias</span></div>
@@ -1121,7 +1171,14 @@ function desenhar(){
       </div>
       <p class="nota">A barra é proporcional à área mais noticiada; a percentagem
         é a parte de cada área no total ${areaEscolhida || grupoEscolhido
-          ? "do conjunto escolhido" : "das dezassete áreas"} no período.</p>
+          ? "do conjunto escolhido" : "das dezassete áreas"} no período.
+        Aqui conta-se por <strong>marcações</strong>: uma notícia que satisfaz
+        três áreas conta em cada uma delas. Por isso a soma das áreas
+        (${num(marcacoes)}) é maior do que as ${num(total)} notícias do período —
+        são ${(marcacoes / (total || 1)).toFixed(2).replace(".", ",")} áreas por
+        notícia.${grupoEscolhido && !areaEscolhida
+          ? " Com um agrupamento escolhido, também o total acima é de marcações:"
+            + " uma notícia pode tocar duas áreas do mesmo grupo." : ""}</p>
     </div>
 
     ${blocoTempestades(linhas)}
