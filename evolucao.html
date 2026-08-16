@@ -223,6 +223,47 @@ main{padding:1.6rem 0 3rem}
   height:2.2em;overflow:hidden}
 .mini-cx b{font-size:1.15rem;font-weight:600;color:var(--cor);font-variant-numeric:tabular-nums}
 .mini-cx svg{width:100%;height:34px;margin-top:.3rem}
+.mini-rot{display:block;font-size:.64rem;color:var(--texto-ligeiro);line-height:1.25;
+  margin-top:.1rem;min-height:1.6em}
+.h2-foco{font-weight:400;font-size:.72em;color:var(--texto-ligeiro);letter-spacing:0}
+
+/* Comparação de duas áreas */
+.cmp-legenda{display:flex;gap:1.2rem;flex-wrap:wrap;margin:.6rem 0 .2rem;font-size:.78rem}
+.cmp-eti{display:flex;align-items:center;gap:.4rem;color:var(--texto-suave)}
+.cmp-eti i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.cmp-svg{width:100%;height:90px}
+table.cmp{width:100%;border-collapse:collapse;margin-top:.9rem;font-size:.82rem}
+table.cmp th,table.cmp td{padding:.42rem .5rem;border-top:1px solid var(--borda);text-align:right}
+table.cmp th:first-child{text-align:left;font-weight:500;color:var(--texto-suave)}
+table.cmp tr:first-child th{border-top:0;font-size:.76rem}
+table.cmp td{font-variant-numeric:tabular-nums;color:var(--texto)}
+table.cmp small{color:var(--texto-ligeiro);font-size:.86em}
+
+/* Matrizes de cruzamento */
+.mtz-rolo{overflow-x:auto;margin-top:.9rem}
+table.mtz{border-collapse:collapse;font-size:.74rem;min-width:100%}
+table.mtz th{font-weight:500;color:var(--texto-suave);padding:.3rem .35rem;white-space:nowrap}
+table.mtz tr:first-child th{font-size:.68rem;color:var(--texto-ligeiro)}
+table.mtz .mtz-lin{text-align:left;max-width:190px;overflow:hidden;text-overflow:ellipsis}
+table.mtz td{text-align:center;padding:.3rem .35rem;font-variant-numeric:tabular-nums;
+  background:color-mix(in srgb, var(--vermelho) calc(var(--i) * 72%), transparent);
+  color:var(--texto);border-radius:4px}
+table.mtz td[style*="--i:0.6"],table.mtz td[style*="--i:0.7"],
+table.mtz td[style*="--i:0.8"],table.mtz td[style*="--i:0.9"],
+table.mtz td[style*="--i:1.0"]{color:#fff}
+table.mtz .mtz-vazia{color:var(--texto-ligeiro);background:none}
+table.mtz .mtz-foco{outline:2px solid var(--azul);outline-offset:-2px;border-radius:4px}
+table.mtz th.mtz-foco{color:var(--azul);font-weight:600;outline:none}
+table.mtz-pub td{background:color-mix(in srgb, var(--azul) calc(var(--i) * 78%), transparent)}
+table.mtz-pub th span{display:inline-block;max-width:96px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.tp-forca{color:var(--vermelho);font-weight:600;margin-right:.35rem}
+.tp-grupo{border-top:1px solid var(--borda)}
+.tp-cab{display:flex;align-items:center;gap:.7rem;padding:.55rem .2rem;cursor:pointer}
+.tp-cab:hover{background:var(--superficie-alt)}
+.tp-cab .tp-area{flex:1}
+.tp-cab.aberto .tp-seta{transform:rotate(180deg);display:inline-block}
+.tp-lista{padding-left:.6rem;border-left:2px solid var(--borda)}
 
 /* Expressões por área */
 /* Nuvem de palavras */
@@ -348,6 +389,10 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
     <label class="sel-area">
       <span>Área</span>
       <select id="area"><option value="">Todas as áreas</option></select>
+    </label>
+    <label class="sel-area">
+      <span>Comparar</span>
+      <select id="comparar"><option value="">Sem comparação</option></select>
     </label>
     <div class="seg" id="agregacao">
       <button data-a="dia" class="ativo">Por dia</button>
@@ -515,6 +560,11 @@ let TEMPESTADES = [];  // [{data, area, hoje, mediana, limiar}] — do alertas.j
 let RESUMOS_PICOS = {}; // {"data|área": {texto, n}} — do picos-resumos.json
 let SENTIMENTO = [];   // [{data, fechado, areas:{nome:{nacionais, avaliadas, positivo, neutro, negativo}}}]
 let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas", areaEscolhida = "", grupoEscolhido = "";
+/* Quem escolhe a agregação manda: só se ajusta sozinha enquanto ninguém tocou
+   no seletor. Sem isto, uma escolha explícita era desfeita no desenho seguinte. */
+let agregacaoManual = false;
+let areaComparada = "";   // segunda área, para a comparação lado a lado
+let PUBLICACOES = [];     // [{data, areas:{nome:{publicação: n}}}] — publicacoes.json
 
 /* Nomes das áreas de um agrupamento temático, para filtrar por grupo. */
 const areasDoGrupo = g => new Set(AREAS.filter(a => a.grupo === g).map(a => a.nome));
@@ -616,6 +666,20 @@ async function carregarResumosPicos(){
 /* O registo de picos noticiosos vem do alertas.json, escrito pela
    recolha: um registo por área e por dia em que o volume disparou. É
    acessório — sem ficheiro, o painel funciona igual, sem o quadro. */
+/* Publicações por dia e por área. Ficheiro à parte, escrito pelo fecho dos
+   dias, e opcional: sem ele o painel funciona igual, apenas sem o cruzamento. */
+async function carregarPublicacoes(){
+  for(const caminho of ["publicacoes.json", "./publicacoes.json"]){
+    try{
+      const r = await fetch(caminho, { cache: "no-store" });
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(Array.isArray(d.dias)) return d.dias;
+    }catch(e){ /* segue */ }
+  }
+  return [];
+}
+
 async function carregarTempestades(){
   for(const caminho of ["alertas.json", "./alertas.json"]){
     try{
@@ -652,9 +716,31 @@ function janela(){
   return SERIE.filter(d => (d.data || "") >= chave);
 }
 
+/* Com muitos dias, as barras diárias deixam de se ler muito antes de encherem o
+   ecrã: com 90 dias cada barra tem meia dúzia de píxeis. Em vez de deixar o
+   gráfico crescer para fora do ecrã — o que esconderia metade dos dados a quem
+   não soubesse que havia mais à esquerda, e no telemóvel seria pior —, a
+   agregação sobe sozinha para semana ou mês e diz-se que o fez. Quem quiser
+   mesmo o dia a dia carrega em «Por dia» e passa a mandar. */
+function ajustarAgregacao(linhas){
+  if(agregacaoManual) return "";
+  const alvo = linhas.length > 240 ? "mes" : linhas.length > 45 ? "semana" : "dia";
+  if(agregacao !== alvo){
+    agregacao = alvo;
+    diaEscolhido = null;   // a chave do foco muda de forma com a agregação
+    document.querySelectorAll("#agregacao button").forEach(x =>
+      x.classList.toggle("ativo", x.dataset.a === alvo));
+  }
+  return alvo === "dia" ? "" : alvo;
+}
+
 /* Agrega por dia, semana ou mês. A chave devolvida é a etiqueta do período. */
 /* A chave do período a que um dia pertence — a mesma regra para o volume, o
    sentimento e os picos, para os três reagirem de igual modo aos filtros. */
+/* «mes» é a chave interna; ao utilizador escreve-se «mês». */
+const NOME_AGREG = { dia: "dia", semana: "semana", mes: "mês" };
+function agregNome(){ return NOME_AGREG[agregacao] || agregacao; }
+
 function chaveDoPeriodo(dataISO, modo = agregacao){
   if(modo === "dia") return dataISO;
   if(modo === "mes") return dataISO.slice(0, 7);
@@ -690,6 +776,13 @@ function agregar(linhas){
     });
   });
   return [...grupos.entries()].sort((x, y) => x[0].localeCompare(y[0]));
+}
+
+/* O período em foco escrito no título de cada quadro. Sem isto, quem chegasse
+   a meio da página via números restritos a um dia sem nada que o dissesse. */
+function sufixoFoco(){
+  return diaEscolhido
+    ? ` <span class="h2-foco">· ${descreverPeriodo(diaEscolhido)}</span>` : "";
 }
 
 /* Escolhido um dia no gráfico, tudo o que se segue passa a ser desse dia.
@@ -893,17 +986,223 @@ function barrasEmpilhadas(pontos){
   </svg>`;
 }
 
-function faisca(valores, corLinha){
+function faisca(valores, corLinha, iMarca = -1){
   if(valores.length < 2) return "";
   const alto = Math.max(...valores), baixo = Math.min(...valores);
   const esc = v => 30 - ((v - baixo) / ((alto - baixo) || 1)) * 26;
   const passo = 100 / (valores.length - 1);
   const d = valores.map((v, i) => `${i ? "L" : "M"}${(i * passo).toFixed(1)},${esc(v).toFixed(1)}`).join(" ");
+
+  /* Escolhido um período, a linha continua a percorrer o intervalo todo — é
+     isso que faz dela uma trajetória — e o período escolhido é assinalado com
+     um ponto. Vê-se assim onde esse dia cai na história da área, que é a
+     pergunta de quem clica numa barra.
+     O desenho é esticado (preserveAspectRatio="none"), pelo que um círculo
+     sairia oval: o ponto é um segmento de comprimento zero com ponta redonda e
+     traço que não escala, o que o mantém redondo em qualquer largura. */
+  let marca = "";
+  if(iMarca >= 0 && iMarca < valores.length){
+    const x = (iMarca * passo).toFixed(1), y = esc(valores[iMarca]).toFixed(1);
+    marca = `<line x1="${x}" y1="0" x2="${x}" y2="34" stroke="${corLinha}"
+               stroke-width="1" opacity=".4" stroke-dasharray="2 3"
+               vector-effect="non-scaling-stroke"/>
+             <line x1="${x}" y1="${y}" x2="${x}" y2="${y}" stroke="${corLinha}"
+               stroke-width="7" stroke-linecap="round"
+               vector-effect="non-scaling-stroke"/>`;
+  }
   return `<svg viewBox="0 0 100 34" preserveAspectRatio="none">
     <path d="${d} L100,34 L0,34 Z" fill="${corLinha}" opacity=".10"/>
     <path d="${d}" fill="none" stroke="${corLinha}" stroke-width="1.6"
           vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+    ${marca}
   </svg>`;
+}
+
+/* ═══ CRUZAMENTOS ═══════════════════════════════════════════════════════════
+   Até aqui cada quadro respondia a uma pergunta de cada vez: quanto, por área,
+   com que palavras, com que tom. O que faltava era cruzar — comparar duas áreas,
+   ver o tom área a área ao longo do tempo, e saber que publicações sustentam
+   cada área. Os três quadros seguintes fazem isso, com os dados que já existem. */
+
+/* Duas linhas na mesma escala: sem escala comum, comparar era enganador. */
+function duasLinhas(vA, vB, corA, corB){
+  const alto = Math.max(1, ...vA, ...vB);
+  const L = 100, A = 60;
+  const caminho = v => v.map((x, i) =>
+    `${i ? "L" : "M"}${(i * L / Math.max(v.length - 1, 1)).toFixed(1)},${(A - 4 - (x / alto) * (A - 10)).toFixed(1)}`).join(" ");
+  return `<svg class="cmp-svg" viewBox="0 0 ${L} ${A}" preserveAspectRatio="none">
+    <path d="${caminho(vA)}" fill="none" stroke="${corA}" stroke-width="2"
+      vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+    <path d="${caminho(vB)}" fill="none" stroke="${corB}" stroke-width="2"
+      stroke-dasharray="4 3" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+/* Tom negativo de uma área na janela, para a tabela da comparação. */
+function tomDaArea(nome, primeiro, ultimo){
+  let av = 0, neg = 0;
+  SENTIMENTO.filter(d => d.data >= primeiro && d.data <= ultimo).forEach(d => {
+    const v = (d.areas || {})[nome];
+    if(!v) return;
+    av += v.avaliadas || 0; neg += v.negativo || 0;
+  });
+  return av >= 8 ? Math.round(neg / av * 100) : null;
+}
+
+function blocoComparacao(linhas, pares){
+  if(!areaEscolhida || !areaComparada) return "";
+  const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
+  const nomes = [areaEscolhida, areaComparada];
+  const cores = nomes.map(n => cor(grupoDaArea(n)));
+  const vals = nomes.map(n => pares.map(([, d]) => contar(d.areas[n])));
+  const somas = vals.map(v => v.reduce((a, b) => a + b, 0));
+  const maiores = vals.map(v => {
+    const i = v.indexOf(Math.max(...v));
+    return { quando: pares[i] ? pares[i][0] : "", quanto: v[i] || 0 };
+  });
+  const toms = nomes.map(n => tomDaArea(n, primeiro, ultimo));
+  const iM = diaEscolhido ? pares.findIndex(([c]) => c === diaEscolhido) : -1;
+
+  const linha = (rot, f) => `<tr><th>${rot}</th>${nomes.map((n, i) =>
+    `<td>${f(i, n)}</td>`).join("")}</tr>`;
+
+  return `
+    <div class="bloco">
+      <h2>Duas áreas lado a lado <span class="h2-foco">· ${nomes.join(" e ")}</span></h2>
+      <div class="cmp-legenda">
+        ${nomes.map((n, i) => `<span class="cmp-eti">
+          <i style="background:${cores[i]};${i ? "opacity:.75" : ""}"></i>${n}</span>`).join("")}
+      </div>
+      ${duasLinhas(vals[0], vals[1], cores[0], cores[1])}
+      <table class="cmp">
+        <tr><th></th>${nomes.map((n, i) =>
+          `<th style="color:${cores[i]}">${n}</th>`).join("")}</tr>
+        ${linha("Notícias no período", i => num(somas[i]))}
+        ${linha("Média por " + agregNome(), i => num(Math.round(somas[i] / (pares.length || 1))))}
+        ${linha("Maior " + agregNome(), i =>
+          `${num(maiores[i].quanto)} <small>${descreverPeriodo(maiores[i].quando)}</small>`)}
+        ${iM >= 0 ? linha(descreverPeriodo(diaEscolhido), i => num(vals[i][iM] || 0)) : ""}
+        ${linha("Tom negativo <small>(nacional)</small>", i =>
+          toms[i] === null ? "<small>amostra pequena</small>" : toms[i] + "%")}
+      </table>
+      <p class="nota">As duas linhas partilham a mesma escala, para a comparação não
+        enganar: a tracejada é a segunda área. O tom vem da avaliação do Amália sobre a
+        comunicação social nacional e só se mostra com pelo menos oito notícias avaliadas.
+        ${somas[1] ? `No período, ${nomes[0]} teve
+          ${(somas[0] / somas[1]).toFixed(2).replace(".", ",")} vezes o volume de ${nomes[1]}.` : ""}</p>
+    </div>`;
+}
+
+/* Tom por área ao longo do tempo: uma matriz é a única forma de ver dezassete
+   áreas e vários períodos ao mesmo tempo sem dezassete gráficos. */
+function blocoTomPorArea(linhas){
+  /* As linhas vêm do ranking da JANELA, não do período em foco: esta matriz é
+     precisamente para ver a evolução, e trocar-lhe as áreas ao escolher um dia
+     fazia-a saltar sem se perceber porquê. A coluna do período escolhido é que
+     fica assinalada. */
+  const areas = totaisPorArea(linhas);
+  if(!SENTIMENTO.length || !linhas.length) return "";
+  if(origem === "lusofonas" || origem === "internacionais") return "";
+  const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
+  const dias = SENTIMENTO.filter(d => d.data >= primeiro && d.data <= ultimo);
+  if(!dias.length) return "";
+
+  const nomes = areas.slice(0, 12).map(([n]) => n);
+  if(!nomes.length) return "";
+  const chaves = [...new Set(dias.map(d => chaveDoPeriodo(d.data)))].sort().slice(-14);
+  const cel = {};
+  dias.forEach(d => {
+    const k = chaveDoPeriodo(d.data);
+    if(!chaves.includes(k)) return;
+    nomes.forEach(n => {
+      const v = (d.areas || {})[n];
+      if(!v) return;
+      const c = cel[n + "|" + k] || (cel[n + "|" + k] = { av: 0, neg: 0 });
+      c.av += v.avaliadas || 0; c.neg += v.negativo || 0;
+    });
+  });
+
+  const curto = k => k.length === 7 ? k.slice(5) + "/" + k.slice(2, 4)
+                                    : k.slice(8) + "/" + k.slice(5, 7);
+  return `
+    <div class="bloco">
+      <h2>Tom por área ao longo do tempo <span style="font-size:.7em;opacity:.7">(em
+        validação · só comunicação social nacional)</span>
+        <span class="h2-foco">· janela inteira${diaEscolhido
+          ? `, com ${descreverPeriodo(diaEscolhido)} assinalado` : ""}</span></h2>
+      <div class="mtz-rolo">
+        <table class="mtz">
+          <tr><th></th>${chaves.map(k =>
+            `<th class="${k === diaEscolhido ? "mtz-foco" : ""}"
+                 title="${descreverPeriodo(k)}">${curto(k)}</th>`).join("")}</tr>
+          ${nomes.map(n => `<tr>
+            <th class="mtz-lin">${n}</th>
+            ${chaves.map(k => {
+              const c = cel[n + "|" + k];
+              const foco = k === diaEscolhido ? " mtz-foco" : "";
+              if(!c || c.av < 8) return `<td class="mtz-vazia${foco}" title="${n} · ${descreverPeriodo(k)}: amostra pequena">·</td>`;
+              const p = Math.round(c.neg / c.av * 100);
+              return `<td class="${foco.trim()}" style="--i:${(p / 100).toFixed(2)}"
+                title="${n} · ${descreverPeriodo(k)}: ${p}% negativas em ${c.av} avaliadas">${p}</td>`;
+            }).join("")}
+          </tr>`).join("")}
+        </table>
+      </div>
+      <p class="nota">Percentagem de notícias negativas em cada área e período — quanto mais
+        carregado o vermelho, mais negativa a cobertura. As células com um ponto têm menos
+        de oito notícias avaliadas: seriam ruído, não leitura. Mostram-se as
+        ${nomes.length} áreas mais noticiadas da janela e os últimos
+        ${chaves.length} períodos. Ao contrário dos outros quadros, este não se
+        restringe ao período escolhido — mostra a evolução inteira e assinala-o.</p>
+    </div>`;
+}
+
+/* Áreas × publicações: que órgãos sustentam cada área. Vem do publicacoes.json,
+   escrito pelo fecho dos dias; sem ficheiro, o quadro simplesmente não aparece. */
+function blocoPublicacoes(linhas, areas){
+  if(!PUBLICACOES.length || !linhas.length) return "";
+  const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
+  const dias = PUBLICACOES.filter(d => d.data >= primeiro && d.data <= ultimo &&
+    (!diaEscolhido || chaveDoPeriodo(d.data) === diaEscolhido));
+  if(!dias.length) return "";
+
+  const nomes = areas.slice(0, areaEscolhida ? 1 : 10).map(([n]) => n);
+  const porPub = {}, cel = {};
+  dias.forEach(d => nomes.forEach(n => {
+    Object.entries((d.areas || {})[n] || {}).forEach(([pub, q]) => {
+      porPub[pub] = (porPub[pub] || 0) + q;
+      cel[n + "|" + pub] = (cel[n + "|" + pub] || 0) + q;
+    });
+  }));
+  const pubs = Object.entries(porPub).sort((a, b) => b[1] - a[1])
+    .slice(0, areaEscolhida ? 14 : 10).map(([p]) => p);
+  if(!pubs.length) return "";
+  const maior = Math.max(1, ...Object.values(cel));
+
+  return `
+    <div class="bloco">
+      <h2>Áreas e publicações${sufixoFoco()}</h2>
+      <div class="mtz-rolo">
+        <table class="mtz mtz-pub">
+          <tr><th></th>${pubs.map(p => `<th><span>${p}</span></th>`).join("")}</tr>
+          ${nomes.map(n => `<tr>
+            <th class="mtz-lin">${n}</th>
+            ${pubs.map(p => {
+              const q = cel[n + "|" + p] || 0;
+              return q
+                ? `<td style="--i:${(q / maior).toFixed(2)}" title="${n} · ${p}: ${num(q)} notícias">${num(q)}</td>`
+                : `<td class="mtz-vazia">·</td>`;
+            }).join("")}
+          </tr>`).join("")}
+        </table>
+      </div>
+      <p class="nota">Quantas notícias de cada área vieram de cada publicação, no período
+        mostrado. Lê-se por linha — que órgãos sustentam uma área — e por coluna — que
+        áreas cada órgão cobre mais. ${areaEscolhida
+          ? `São as ${pubs.length} publicações que mais noticiaram ${areaEscolhida}.`
+          : `São as ${nomes.length} áreas e as ${pubs.length} publicações com mais volume;
+             o resto fica de fora para a tabela caber.`}</p>
+    </div>`;
 }
 
 /* Picos noticiosos dentro da janela — respeita a área escolhida e o dia
@@ -915,25 +1214,39 @@ function blocoTempestades(linhas){
   const dentro = TEMPESTADES.filter(t =>
     t.data >= primeiro && t.data <= ultimo &&
     (!areaEscolhida || t.area === areaEscolhida) &&
-    /* Com um dia escolhido no gráfico, só esse dia; com semana ou mês em
-       foco, a chave não é uma data e o quadro mantém a janela inteira. */
-    (!diaEscolhido || chaveDoPeriodo(t.data) === diaEscolhido));
+    (!grupoEscolhido || areasDoGrupo(grupoEscolhido).has(t.area)));
   if(!dentro.length) return "";
-  const ordenadas = [...dentro].sort((a, b) =>
-    b.data.localeCompare(a.data) || (b.hoje - b.mediana) - (a.hoje - a.mediana));
-  return `
-    <div class="bloco">
-      <h2>⚡ Picos noticiosos registados</h2>
-      ${ordenadas.map(t => {
+
+  /* INTENSIDADE, não data. Hoje são cinco picos; ao fim de um ano serão
+     centenas, e a ordem cronológica enterrava os grandes debaixo dos pequenos.
+     A intensidade é quanto o dia excedeu o limiar, em proporção dele: assim uma
+     área pequena que triplica pesa como uma grande que triplica. */
+  const forca = t => (t.hoje - (t.limiar || t.mediana)) / ((t.limiar || t.mediana) || 1);
+  const porForca = (a, b) => forca(b) - forca(a) || b.data.localeCompare(a.data);
+
+  /* Escolhido um período, esse abre em lista completa e o resto da janela fica
+     recolhido por área — o registo continua à mão sem afogar o que se pediu. */
+  const noFoco = diaEscolhido
+    ? dentro.filter(t => chaveDoPeriodo(t.data) === diaEscolhido)
+    : dentro.slice().sort(porForca).slice(0, 12);
+  const chavesFoco = new Set(noFoco.map(t => `${t.data}|${t.area}`));
+  const resto = dentro.filter(t => !chavesFoco.has(`${t.data}|${t.area}`)).sort(porForca);
+
+  const porArea = new Map();
+  resto.forEach(t => porArea.set(t.area, [...(porArea.get(t.area) || []), t]));
+
+  const linhaPico = t => {
         const chave = `${t.data}|${t.area}`;
         const resumo = RESUMOS_PICOS[chave];
         const dataPt = `${t.data.slice(8)}/${t.data.slice(5, 7)}/${t.data.slice(0, 4)}`;
+        const acima = Math.round(forca(t) * 100);
         return `
         <div class="tp" data-pico="${chave}" role="button" tabindex="0"
              title="Ver o que motivou este pico">
           <span class="tp-data">${dataPt}</span>
           <span class="tp-area">${t.area}</span>
-          <span class="tp-n">${num(t.hoje)} notícias · mediana ${num(t.mediana)}
+          <span class="tp-n"><b class="tp-forca">+${acima}%</b> ${num(t.hoje)} notícias ·
+            limiar ${num(Math.round(t.limiar || t.mediana))}
             <span class="tp-seta">▾</span></span>
         </div>
         <div class="tp-resumo" id="resumo-${chave.replace(/[^a-zA-Z0-9]/g, "-")}" hidden>
@@ -944,9 +1257,36 @@ function blocoTempestades(linhas){
             : `<p class="tp-fonte">O resumo deste pico ainda não foi gerado —
                 aparece após a próxima passagem do Amália.</p>`}
         </div>`;
-      }).join("")}
+  };
+
+  return `
+    <div class="bloco">
+      <h2>⚡ Picos noticiosos registados${sufixoFoco()}</h2>
+      ${noFoco.length ? noFoco.sort(porForca).map(linhaPico).join("")
+        : `<p class="nota">Sem picos em ${descreverPeriodo(diaEscolhido)}.</p>`}
+      ${porArea.size ? `
+        <div class="tp-mais">
+          <p class="nota" style="margin:.8rem 0 .4rem">
+            ${diaEscolhido ? "Fora do período escolhido" : "Restantes"}, na janela:
+            ${resto.length} ${resto.length === 1 ? "pico" : "picos"} em
+            ${porArea.size} ${porArea.size === 1 ? "área" : "áreas"}.</p>
+          ${[...porArea.entries()]
+            .sort((a, b) => forca(b[1][0]) - forca(a[1][0]))
+            .map(([area, ts], i) => `
+            <div class="tp-grupo">
+              <div class="tp-cab" data-grupo="g${i}" role="button" tabindex="0">
+                <span class="tp-area">${area}</span>
+                <span class="tp-n">${ts.length} ${ts.length === 1 ? "pico" : "picos"} ·
+                  maior +${Math.round(forca(ts[0]) * 100)}%
+                  <span class="tp-seta">▾</span></span>
+              </div>
+              <div class="tp-lista" id="g${i}" hidden>${ts.map(linhaPico).join("")}</div>
+            </div>`).join("")}
+        </div>` : ""}
       <p class="nota">Dias em que uma área teve um volume de notícias muito acima do habitual —
         mediana dos 28 dias anteriores à mesma hora, mais dois desvios robustos.
+        A percentagem é quanto o dia excedeu esse limiar, e é por ela que a lista
+        está ordenada: o maior primeiro, e não o mais recente.
         Clique num pico para ver, em resumo, o que o motivou. O registo acumula
         desde a entrada do método; os dias sem linha são dias normais.
         Os picos contam todas as origens juntas — respondem à área e ao dia
@@ -1015,7 +1355,7 @@ function blocoSentimento(linhas){
     <div class="bloco">
       <h2>Sentimento da cobertura <span style="font-size:.7em;opacity:.7">(em validação
         · só comunicação social nacional)</span>
-        ${areaEscolhida ? `— ${areaEscolhida}` : ""}</h2>
+        ${areaEscolhida ? `— ${areaEscolhida}` : ""}${sufixoFoco()}</h2>
       <p class="nota">A avaliação automática está em curso: ainda não há dias com cobertura
         suficiente (pelo menos ${Math.round(COBERTURA_MINIMA * 100)}% das notícias nacionais
         do dia avaliadas) para mostrar a distribuição sem induzir em erro. Até agora,
@@ -1063,7 +1403,7 @@ function blocoSentimento(linhas){
     <div class="bloco">
       <h2>Sentimento da cobertura <span style="font-size:.7em;opacity:.7">(em validação
         · só comunicação social nacional)</span>
-        ${areaEscolhida ? `— ${areaEscolhida}` : ""}</h2>
+        ${areaEscolhida ? `— ${areaEscolhida}` : ""}${sufixoFoco()}</h2>
       ${filas.slice().reverse().map(barra).join("")}
       <div class="legenda">
         <span style="--cor:var(--verde)"><i></i>Positivas</span>
@@ -1080,6 +1420,7 @@ function blocoSentimento(linhas){
 function desenhar(){
   const linhas = janela();
   const corpo = $("#corpo");
+  const autoAgregado = ajustarAgregacao(linhas);
 
   if(!linhas.length){
     corpo.innerHTML = `<div class="vazio">
@@ -1133,13 +1474,14 @@ function desenhar(){
 
     <div class="kpis">
       <div class="kpi"><b>${num(total)}</b><span>notícias publicadas no período${daOrigem}</span></div>
-      <div class="kpi"><b>${num(Math.round(media))}</b><span>média por ${agregacao}</span></div>
+      <div class="kpi"><b>${num(Math.round(media))}</b><span>média por ${agregNome()}</span></div>
       <div class="kpi"><b>${linhas.length}</b><span>${linhas.length === 1 ? "dia registado" : "dias registados"}</span></div>
       <div class="kpi"><b>${areas.length}</b><span>áreas com notícias</span></div>
     </div>
 
     <div class="bloco">
-      <h2>Volume ao longo do tempo</h2>
+      <h2>Volume ao longo do tempo <span class="h2-foco">· ${linhas.length}
+        ${linhas.length === 1 ? "dia" : "dias"}, por ${agregNome()}</span></h2>
       ${barrasEmpilhadas(pontos)}
       <div class="legenda">
         ${[["nacionais","Portugal","var(--verde)"],["lusofonas","Lusofonia","var(--dourado)"],
@@ -1148,9 +1490,13 @@ function desenhar(){
           .map(([k, rot, c]) => `<span style="--cor:${c}"><i></i>${rot} · ${num(origens[k])}
             (${(origens[k] / soma * 100).toFixed(0)}%)</span>`).join("")}
       </div>
-      <p class="nota">Cada barra é um ${agregacao}, repartido pela origem da comunicação social.
+      <p class="nota">${autoAgregado
+          ? `<strong>São ${linhas.length} dias:</strong> o gráfico passou a
+             ${autoAgregado === "mes" ? "meses" : "semanas"} para continuar legível.
+             Carregue em «Por dia» se quiser mesmo o detalhe diário. ` : ""}Cada
+        barra é um ${agregNome()}, repartido pela origem da comunicação social.
         <strong>Clicar numa barra</strong> passa os quadros seguintes a mostrar apenas
-        esse ${agregacao}.</p>
+        esse ${agregNome()}.</p>
     </div>
 
     <div class="bloco">
@@ -1199,21 +1545,39 @@ function desenhar(){
 
     ${blocoSentimento(linhas)}
 
+    ${blocoComparacao(linhas, pares)}
+
+    ${blocoTomPorArea(linhas)}
+
+    ${blocoPublicacoes(linhas, areas)}
+
     <div class="bloco">
-      <h2>${areaEscolhida ? "Trajetória da área" : "Trajetória de cada área"}</h2>
+      <h2>${areaEscolhida ? "Trajetória da área" : "Trajetória de cada área"}
+        <span class="h2-foco">· período todo${diaEscolhido
+          ? `, com ${descreverPeriodo(diaEscolhido)} assinalado` : ""}</span></h2>
       <div class="mini">
         ${(areaEscolhida ? areas : areas.slice(0, 8)).map(([nome]) => {
           const g = grupoDaArea(nome);
           const vals = pares.map(([, d]) => contar(d.areas[nome]));
+          const iM = diaEscolhido ? pares.findIndex(([c]) => c === diaEscolhido) : -1;
+          const valor = iM >= 0 ? vals[iM] : (vals[vals.length - 1] || 0);
+          const media = vals.reduce((x, y) => x + y, 0) / (vals.length || 1);
+          const desvio = media ? Math.round((valor - media) / media * 100) : 0;
           return `<div class="mini-cx" style="--cor:${cor(g)}">
             <h3>${nome}</h3>
-            <b>${num(vals[vals.length - 1] || 0)}</b>
-            ${faisca(vals, cor(g))}
+            <b>${num(valor)}</b>
+            <small class="mini-rot">${iM >= 0
+              ? `${descreverPeriodo(diaEscolhido)} · ${desvio >= 0 ? "+" : ""}${desvio}%
+                 face à média do período`
+              : `último ${agregNome()} do período`}</small>
+            ${faisca(vals, cor(g), iM)}
           </div>`;
         }).join("")}
       </div>
       <p class="nota">${areaEscolhida ? "A linha percorre" : "As oito áreas mais noticiadas. A linha percorre"}
-        o período todo, mesmo com um ${agregacao} escolhido acima.</p>
+        o período todo, mesmo com um ${agregNome()} escolhido acima — é isso que faz dela uma
+        trajetória.${diaEscolhido ? ` O ponto assinala ${descreverPeriodo(diaEscolhido)}, e o
+        número mostra quanto esse período se afasta da média da área no intervalo.` : ""}</p>
     </div>
 
     <div class="bloco">
@@ -1569,6 +1933,18 @@ catch(e){ aplicarTema("claro"); }
 /* Clique num pico: expande/recolhe o resumo do que o motivou. Delegação no
    documento, porque os picos são redesenhados a cada mudança de filtro. */
 function alternarPico(alvo){
+  /* Os picos fora do período escolhido ficam recolhidos por área: o cabeçalho
+     do grupo abre a lista, e cada pico lá dentro continua a abrir o resumo. */
+  const grupo = alvo.closest && alvo.closest("[data-grupo]");
+  if(grupo){
+    const lista = document.getElementById(grupo.dataset.grupo);
+    if(lista){
+      const abrir = lista.hidden;
+      lista.hidden = !abrir;
+      grupo.classList.toggle("aberto", abrir);
+    }
+    return;
+  }
   const pico = alvo.closest("[data-pico]");
   if(!pico) return;
   const id = "resumo-" + pico.dataset.pico.replace(/[^a-zA-Z0-9]/g, "-");
@@ -1581,7 +1957,7 @@ function alternarPico(alvo){
 document.addEventListener("click", e => alternarPico(e.target));
 document.addEventListener("keydown", e => {
   if((e.key === "Enter" || e.key === " ") && e.target.closest &&
-     e.target.closest("[data-pico]")){
+     (e.target.closest("[data-pico]") || e.target.closest("[data-grupo]"))){
     e.preventDefault();
     alternarPico(e.target);
   }
@@ -1643,7 +2019,25 @@ function encherAreas(){
     .filter(n => vistas.has(n) && (!doGrupo || doGrupo.has(n)));
   sel.innerHTML = `<option value="">${grupoEscolhido ? "Todas as áreas do agrupamento" : "Todas as áreas"}</option>` +
     ordenadas.map(n => `<option value="${n}"${n === areaEscolhida ? " selected" : ""}>${n}</option>`).join("");
+
+  /* A segunda área não pode ser a primeira, e sem primeira escolhida não há
+     comparação possível: o seletor fica lá, desligado, a dizer porquê. */
+  const selC = $("#comparar");
+  if(selC){
+    const podeComparar = !!areaEscolhida;
+    selC.disabled = !podeComparar;
+    selC.title = podeComparar ? "Segunda área, para ver as duas lado a lado"
+                              : "Escolha primeiro uma área";
+    if(!podeComparar) areaComparada = "";
+    selC.innerHTML = `<option value="">${podeComparar ? "Sem comparação" : "Escolha uma área"}</option>` +
+      AREAS.map(a => a.nome).filter(n => vistas.has(n) && n !== areaEscolhida)
+        .map(n => `<option value="${n}"${n === areaComparada ? " selected" : ""}>${n}</option>`).join("");
+  }
 }
+
+$("#comparar").addEventListener("change", e => {
+  areaComparada = e.target.value; desenhar();
+});
 
 $("#grupo").addEventListener("change", e => {
   grupoEscolhido = e.target.value;
@@ -1657,6 +2051,11 @@ $("#grupo").addEventListener("change", e => {
 
 $("#area").addEventListener("change", e => {
   areaEscolhida = e.target.value;
+  /* A segunda área depende da primeira: sem repor a lista, o seletor de
+     comparação ficava desligado depois de se escolher uma área, e podia
+     oferecer a própria área escolhida. */
+  if(areaComparada === areaEscolhida) areaComparada = "";
+  encherAreas();
   desenhar();
 });
 
@@ -1669,11 +2068,12 @@ $("#origem").addEventListener("click", e => {
 $("#agregacao").addEventListener("click", e => {
   const b = e.target.closest("button"); if(!b) return;
   document.querySelectorAll("#agregacao button").forEach(x => x.classList.toggle("ativo", x === b));
-  agregacao = b.dataset.a; desenhar();
+  agregacao = b.dataset.a; agregacaoManual = true; desenhar();
 });
 
 (async () => {
   TEMPESTADES = await carregarTempestades();
+  PUBLICACOES = await carregarPublicacoes();
   RESUMOS_PICOS = await carregarResumosPicos();
   SENTIMENTO = await carregarSentimento();
   SERIE = (await carregar())

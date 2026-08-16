@@ -90,9 +90,16 @@ def ler_arquivo_mensal(pasta):
                         registo = json.loads(linha)
                     except json.JSONDecodeError:
                         continue
-                    identidade = registo.get("ligacao") or (
-                        registo.get("titulo", ""), registo.get("dominio", ""),
-                        registo.get("data", ""))
+                    # A identidade do artigo não é a ligação: o mesmo órgão
+                    # publica a mesma peça em dois endereços (a RTP em /mundo/
+                    # e em /guerra-na-ucrania/), e pela ligação contava duas
+                    # vezes. Título+fonte é a chave que o arquivo de sete dias
+                    # já usa; a data entra para o mesmo título em dias
+                    # diferentes não se fundir.
+                    identidade = ((registo.get("titulo") or "").strip().lower(),
+                                  (registo.get("fonte") or registo.get("dominio")
+                                   or "").strip().lower(),
+                                  (registo.get("data") or "")[:10])
                     chave = (identidade, registo.get("area", ""))
                     if chave in vistas:
                         continue

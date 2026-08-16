@@ -68,6 +68,43 @@ def hoje():
 
 # ── LEITURA DO ARQUIVO ───────────────────────────────────────────────────────
 
+def titulo_fonte(n):
+    return ((n.get("titulo") or "").strip().lower(),
+            (n.get("fonte") or n.get("dominio") or "").strip().lower())
+
+
+class Juntar:
+    """Junta os registos que são o mesmo artigo, por qualquer das duas vias.
+
+    Nenhuma chave sozinha chega:
+      · pela LIGAÇÃO escapam as peças que o mesmo órgão publica em dois
+        endereços — a RTP em /mundo/ e em /guerra-na-ucrania/, o SAPO Tek em
+        /computadores/ e em /mobile/apps/ —, e como o arquivo de sete dias (de
+        onde o Amália trabalha) as junta por título+fonte, só uma era avaliada
+        e a outra ficava eternamente «por avaliar»;
+      · por TÍTULO+FONTE escapam as peças cujo título o órgão corrige ao longo
+        do dia, que passariam a contar duas vezes.
+    Junta-se por ambas: dois registos são o mesmo artigo se partilharem a
+    ligação ou o par título+fonte. É o mesmo que o arquivo faz, mais o caso das
+    ligações repetidas.
+    """
+
+    def __init__(self):
+        self.pai = {}
+
+    def raiz(self, x):
+        self.pai.setdefault(x, x)
+        while self.pai[x] != x:
+            self.pai[x] = self.pai[self.pai[x]]
+            x = self.pai[x]
+        return x
+
+    def unir(self, a, b):
+        ra, rb = self.raiz(a), self.raiz(b)
+        if ra != rb:
+            self.pai[rb] = ra
+
+
 def ler_arquivo_mensal(pasta):
     """Devolve, por dia: as marcações (par área×notícia) e as notícias distintas.
 
@@ -76,7 +113,27 @@ def ler_arquivo_mensal(pasta):
     (área vazia), que existem para futuros retroativos mas não contam para
     nenhuma série: essas ficam de fora.
     """
-    dias = defaultdict(lambda: {"pares": {}, "distintas": {}})
+    # Primeira passagem: descobrir que registos são o mesmo artigo.
+    grupos = defaultdict(Juntar)
+    for caminho in sorted(glob.glob(os.path.join(pasta, "*.jsonl.gz"))):
+        with gzip.open(caminho, "rt", encoding="utf-8") as origem:
+            for linha in origem:
+                linha = linha.strip()
+                if not linha:
+                    continue
+                try:
+                    n = json.loads(linha)
+                except json.JSONDecodeError:
+                    continue
+                if not (n.get("area") and n.get("ligacao")):
+                    continue
+                data = (n.get("data") or "")[:10]
+                if len(data) != 10:
+                    continue
+                grupos[data].unir(("l", n["ligacao"]), ("t", titulo_fonte(n)))
+
+    dias = defaultdict(lambda: {"pares": {}, "distintas": {},
+                                "ligacoes": defaultdict(set)})
     for caminho in sorted(glob.glob(os.path.join(pasta, "*.jsonl.gz"))):
         with gzip.open(caminho, "rt", encoding="utf-8") as origem:
             for linha in origem:
@@ -93,8 +150,10 @@ def ler_arquivo_mensal(pasta):
                 if not area or not lig or len(data) != 10:
                     continue
                 d = dias[data]
-                d["pares"][(lig, area)] = n
-                d["distintas"][lig] = origem_da_fonte(n.get("dominio"))
+                ident = grupos[data].raiz(("l", lig))
+                d["pares"][(ident, area)] = n
+                d["distintas"][ident] = origem_da_fonte(n.get("dominio"))
+                d["ligacoes"][ident].add(lig)
     return dias
 
 
@@ -121,7 +180,7 @@ def ler_sentimento_arquivado(pasta):
 def dia_da_serie(data, registo):
     """Um dia do historico.json, recontado do arquivo."""
     areas = {}
-    for (lig, area), n in registo["pares"].items():
+    for (_, area), n in registo["pares"].items():
         a = areas.setdefault(area, {
             "noticias": 0, "novas": 0, "fontes": set(),
             "origens": {"nacionais": 0, "lusofonas": 0, "internacionais": 0},
@@ -162,6 +221,28 @@ def dia_da_serie(data, registo):
     }
 
 
+# Quantas publicações se guardam por área e por dia. O cruzamento área ×
+# publicação precisa de uma tabela por dia, mas a cauda longa não interessa a
+# ninguém: guardam-se as que mais noticiaram e o ficheiro fica sob controlo.
+PUBS_POR_AREA = 12
+
+
+def dia_das_publicacoes(data, registo):
+    """Que publicações sustentaram cada área nesse dia."""
+    contagem = {}
+    for (_, area), n in registo["pares"].items():
+        fonte = n.get("fonte") or n.get("dominio") or ""
+        if not fonte:
+            continue
+        contagem.setdefault(area, {})
+        contagem[area][fonte] = contagem[area].get(fonte, 0) + 1
+    areas = {}
+    for area, pubs in sorted(contagem.items()):
+        melhores = sorted(pubs.items(), key=lambda kv: (-kv[1], kv[0]))[:PUBS_POR_AREA]
+        areas[area] = dict(melhores)
+    return {"data": data, "areas": areas}
+
+
 def dia_do_sentimento(data, registo, tom):
     """Um dia do sentimento-serie.json, recontado do arquivo.
 
@@ -173,23 +254,36 @@ def dia_do_sentimento(data, registo, tom):
         return {"nacionais": 0, "avaliadas": 0,
                 "positivo": 0, "neutro": 0, "negativo": 0}
 
+    def tom_de(ident):
+        """O tom do artigo, por qualquer um dos endereços em que saiu.
+
+        As ligações são percorridas por ordem, e não pela do conjunto: o mesmo
+        artigo em dois endereços pode ter sido avaliado duas vezes com
+        resultados diferentes, e sem ordem fixa a série mudava de uma execução
+        para a outra sem nada ter mudado nos dados.
+        """
+        for lig in sorted(registo["ligacoes"].get(ident, ())):
+            if tom.get(lig):
+                return tom[lig]
+        return None
+
     areas = {}
-    for (lig, area), n in registo["pares"].items():
+    for (ident, area), n in registo["pares"].items():
         if origem_da_fonte(n.get("dominio")) != "nacionais":
             continue
         a = areas.setdefault(area, vazio())
         a["nacionais"] += 1
-        s = tom.get(lig)
+        s = tom_de(ident)
         if s in ("positivo", "neutro", "negativo"):
             a["avaliadas"] += 1
             a[s] += 1
 
     total = vazio()
-    for lig, o in registo["distintas"].items():
+    for ident, o in registo["distintas"].items():
         if o != "nacionais":
             continue
         total["nacionais"] += 1
-        s = tom.get(lig)
+        s = tom_de(ident)
         if s in ("positivo", "neutro", "negativo"):
             total["avaliadas"] += 1
             total[s] += 1
@@ -222,6 +316,9 @@ def principal():
     ap.add_argument("--mensal-sentimento", default="sentimento-meses")
     ap.add_argument("--historico", default="historico.json")
     ap.add_argument("--serie-sentimento", default="sentimento-serie.json")
+    ap.add_argument("--publicacoes", default="publicacoes.json")
+    ap.add_argument("--dias-publicacoes", type=int, default=120,
+                    help="quantos dias de publicações guardar (0 = todos)")
     ap.add_argument("--desde", default=None,
                     help="primeira data a reconstruir (AAAA-MM-DD)")
     ap.add_argument("--simular", action="store_true",
@@ -256,6 +353,7 @@ def principal():
 
     novos_h = [dia_da_serie(d, arquivo[d]) for d in datas]
     novos_s = [dia_do_sentimento(d, arquivo[d], tom) for d in datas]
+    novos_p = [dia_das_publicacoes(d, arquivo[d]) for d in datas]
 
     print(f"\n{'dia':12}{'marcações':>11}{'antes':>8}{'notícias':>10}"
           f"{'nac. aval.':>12}")
@@ -290,7 +388,16 @@ def principal():
     with open(args.serie_sentimento, "w", encoding="utf-8") as saida:
         json.dump(sent, saida, ensure_ascii=False, indent=1)
 
-    print(f"\nGravados {args.historico} e {args.serie_sentimento}.")
+    pub = carregar(args.publicacoes, {"atualizado": None, "dias": []})
+    pub["dias"], _ = juntar(pub.get("dias", []), novos_p, corte)
+    if args.dias_publicacoes > 0:
+        pub["dias"] = pub["dias"][-args.dias_publicacoes:]
+    pub["atualizado"] = corte
+    with open(args.publicacoes, "w", encoding="utf-8") as saida:
+        json.dump(pub, saida, ensure_ascii=False, indent=1)
+
+    print(f"\nGravados {args.historico}, {args.serie_sentimento} "
+          f"e {args.publicacoes} ({len(pub['dias'])} dias).")
 
 
 if __name__ == "__main__":

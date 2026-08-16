@@ -148,6 +148,7 @@ fora do período.
 | `sentimento_ia.py` + `.github/workflows/sentimento-amalia.yml` | **Sentimento em validação.** A cada recolha, o Amália classifica o tom (positivo, neutro, negativo) das notícias da comunicação social nacional ainda sem avaliação — e só dessas —, em lotes, e grava sentimentos.json e a série sentimento-serie.json (agregados por área e dia). O critério de arranque é o trabalho pendente, não a hora: sem pelo menos quinze notícias por avaliar, o modelo nem chega a ser carregado. As avaliações aparecem no radar (ponto junto a cada notícia, distribuição da consulta, e o tom por publicação e por assunto na síntese), na evolução (barras por dia, semana ou mês) e no Excel (coluna própria e secções na folha de síntese), sempre com o rótulo «em validação» até a leitura humana estar concluída — a funcionalidade é definitiva; o rótulo é temporário. |
 | `sentimento-meses/AAAA-MM.jsonl.gz` | **Arquivo permanente das avaliações.** Uma linha por notícia avaliada (ligação, tom, dia), acumulada por mês e nunca podada — ao contrário do `sentimentos.json`, que é o ficheiro de trabalho e guarda só a janela recente. Uma avaliação é um facto que não muda, pelo que fica guardada de vez: é isto que permitirá alargar a janela do painel, ou repescar meses inteiros, sem mandar o Amália reclassificar o que já classificou. Cerca de 70 KB por dois mil registos. |
 | `resumo_picos.py` + `.github/workflows/resumo-picos.yml` | **Porquê de cada pico.** Para cada pico registado no alertas.json, recupera as notícias reais desse dia e dessa área do arquivo mensal — que guarda tudo, para lá dos sete dias do corpus — e pede ao Amália um resumo de três ou quatro frases do que aconteceu. Grava picos-resumos.json, que a evolução mostra ao clicar num pico. Incremental: um pico já resumido não volta a ser tratado, e o modelo só é carregado havendo picos por explicar. O resumo é sempre sobre notícias que existem; não havendo, o painel di-lo em vez de inventar. |
+| `publicacoes.json` | **Publicações por dia e por área.** As doze que mais noticiaram cada área em cada dia, escritas pelo fecho dos dias. Cerca de 3,5 KB por dia, e só se guardam os últimos 120 dias — o cruzamento área × publicação não precisa de mais. Sem este ficheiro o painel funciona igual, apenas sem esse quadro. |
 | `reconstruir_series.py` | **Fecho dos dias passados.** Corre a seguir a cada recolha e reconta todos os dias anteriores a hoje a partir do `meses/` e do `sentimento-meses/`, que são permanentes e refletem sempre as expressões em vigor. Sem isto, um dia que saísse da janela de sete dias ficava congelado com o número que tinha nesse momento: não acompanhava a revalidação das expressões nem as notícias do fim da noite, que só entram na recolha da manhã seguinte. Idempotente e não toca no dia em curso. |
 | `retroativo_pm.py` + `.github/workflows/retroativo-pm.yml` | **Passo retroativo, execução única.** Revalida todas as marcações existentes sob as regras atuais (retirando pares de expressões entretanto removidas, como «empresas») e reclassifica o corpus de 7 dias com as áreas e expressões novas, injetando o resultado no arquivo, no retrato, no arquivo mensal, na série diária e nos alertas. Idempotente: correr duas vezes não duplica nem retira mais nada. |
 | `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente e integral.** Um ficheiro comprimido por mês com todas as notícias desse mês — as marcadas com a sua área, e as não marcadas com área vazia (guardadas para que os passos retroativos futuros tenham meses de profundidade, e não apenas os sete dias do corpus). A área vazia é ignorada por tudo o que conta por área. ~2–3 MB/mês. |
@@ -618,6 +619,18 @@ recolhida"** em vez de "arquivo de 7 dias".
   pico abre o resumo do Amália sobre o que o motivou.
 - **Sentimento da cobertura**, em barras por dia, semana ou mês, apenas da comunicação
   social nacional e sujeito ao patamar de cobertura.
+- **Cruzamentos**: duas áreas lado a lado, na mesma escala e com totais, médias, maior
+  período e tom comparados; uma matriz do **tom por área ao longo do tempo**; e uma matriz
+  **áreas × publicações**, que se lê por linha (que órgãos sustentam uma área) e por coluna
+  (que áreas cada órgão cobre mais).
+- **Legibilidade com muitos dias**: acima de 45 dias na janela o gráfico passa sozinho a
+  semanas, acima de 240 a meses, dizendo que o fez — quem carregar num botão de agregação
+  passa a mandar. Os picos noticiosos ordenam-se pela intensidade (quanto excederam o
+  limiar) e não pela data; os que caem fora do período escolhido ficam recolhidos por área.
+- **Um período escolhido vale para tudo**: cada quadro escreve no título o período a que
+  responde. As duas exceções dizem-no: a trajetória percorre sempre o intervalo inteiro e
+  assinala o período com um ponto, e a matriz do tom mostra a evolução toda com a coluna
+  escolhida em destaque.
 - Seletores de janela (30 dias, 90, um ano, tudo), de agregação (dia, semana, mês), de
   origem (Portugal, lusofonia, internacional, todas), de **agrupamento temático** e de
   **área governativa**, que reduzem todos os quadros ao que se escolheu. Escolhido um
