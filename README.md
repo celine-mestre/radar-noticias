@@ -142,12 +142,13 @@ fora do período.
 | `.github/workflows/relatorio-diario.yml` | Tarefa agendada que envia um relatório por área. |
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
 | `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
-| `historico.json` | **Série diária.** Por dia e por área: notícias, publicações distintas, repartição por origem e contagem de cada palavra-chave. Cada notícia conta uma só vez, no dia em que foi publicada. Agregados, não notícias. (O ficheiro guarda ainda um campo `novas`, vestígio de quando a série era construída recolha a recolha; hoje é igual a `notícias` e não é usado.) |
+| `historico.json` | **Série diária.** Por dia e por área: marcações, publicações distintas, repartição por origem e contagem de cada palavra-chave — e, por dia, quantas notícias DISTINTAS houve. A distinção importa: uma notícia que satisfaz três áreas deixa três marcações e é contada em cada uma delas, pelo que somar as áreas dá marcações e não notícias (cerca de 1,3 áreas por notícia). Cada notícia conta uma só vez, no dia em que foi publicada. Agregados, não notícias. (O ficheiro guarda ainda um campo `novas`, vestígio de quando a série era construída recolha a recolha; hoje é igual a `notícias` e não é usado.) |
 | `alertas.json` | **Picos noticiosos e momentum.** Escrito pelo `alertas.py` após cada recolha: compara o volume do dia, por área, com a mediana dos últimos 28 dias *à mesma hora* (desvio robusto, mínimo de 8 notícias de subida, piso de 12). Guarda os picos do dia, o top 5 do momentum e o histórico acumulado de alertas por área e por dia. |
 | `corpus.json` | **Comunicação social em bruto, sete dias.** Todos os artigos lidos dos feeds, marcados ou não. Serve a pesquisa por termo livre; o painel só o carrega quando alguém pesquisa. |
 | `sentimento_ia.py` + `.github/workflows/sentimento-amalia.yml` | **Sentimento em validação.** A cada recolha, o Amália classifica o tom (positivo, neutro, negativo) das notícias da comunicação social nacional ainda sem avaliação — e só dessas —, em lotes, e grava sentimentos.json e a série sentimento-serie.json (agregados por área e dia). O critério de arranque é o trabalho pendente, não a hora: sem pelo menos quinze notícias por avaliar, o modelo nem chega a ser carregado. As avaliações aparecem no radar (ponto junto a cada notícia, distribuição da consulta, e o tom por publicação e por assunto na síntese), na evolução (barras por dia, semana ou mês) e no Excel (coluna própria e secções na folha de síntese), sempre com o rótulo «em validação» até a leitura humana estar concluída — a funcionalidade é definitiva; o rótulo é temporário. |
 | `sentimento-meses/AAAA-MM.jsonl.gz` | **Arquivo permanente das avaliações.** Uma linha por notícia avaliada (ligação, tom, dia), acumulada por mês e nunca podada — ao contrário do `sentimentos.json`, que é o ficheiro de trabalho e guarda só a janela recente. Uma avaliação é um facto que não muda, pelo que fica guardada de vez: é isto que permitirá alargar a janela do painel, ou repescar meses inteiros, sem mandar o Amália reclassificar o que já classificou. Cerca de 70 KB por dois mil registos. |
 | `resumo_picos.py` + `.github/workflows/resumo-picos.yml` | **Porquê de cada pico.** Para cada pico registado no alertas.json, recupera as notícias reais desse dia e dessa área do arquivo mensal — que guarda tudo, para lá dos sete dias do corpus — e pede ao Amália um resumo de três ou quatro frases do que aconteceu. Grava picos-resumos.json, que a evolução mostra ao clicar num pico. Incremental: um pico já resumido não volta a ser tratado, e o modelo só é carregado havendo picos por explicar. O resumo é sempre sobre notícias que existem; não havendo, o painel di-lo em vez de inventar. |
+| `reconstruir_series.py` | **Fecho dos dias passados.** Corre a seguir a cada recolha e reconta todos os dias anteriores a hoje a partir do `meses/` e do `sentimento-meses/`, que são permanentes e refletem sempre as expressões em vigor. Sem isto, um dia que saísse da janela de sete dias ficava congelado com o número que tinha nesse momento: não acompanhava a revalidação das expressões nem as notícias do fim da noite, que só entram na recolha da manhã seguinte. Idempotente e não toca no dia em curso. |
 | `retroativo_pm.py` + `.github/workflows/retroativo-pm.yml` | **Passo retroativo, execução única.** Revalida todas as marcações existentes sob as regras atuais (retirando pares de expressões entretanto removidas, como «empresas») e reclassifica o corpus de 7 dias com as áreas e expressões novas, injetando o resultado no arquivo, no retrato, no arquivo mensal, na série diária e nos alertas. Idempotente: correr duas vezes não duplica nem retira mais nada. |
 | `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente e integral.** Um ficheiro comprimido por mês com todas as notícias desse mês — as marcadas com a sua área, e as não marcadas com área vazia (guardadas para que os passos retroativos futuros tenham meses de profundidade, e não apenas os sete dias do corpus). A área vazia é ignorada por tudo o que conta por área. ~2–3 MB/mês. |
 
@@ -358,9 +359,14 @@ quando o anterior termina.
 | a seguir à síntese | Envio dos relatórios | Quando a síntese termina, em dias úteis |
 
 São **oito recolhas por dia**: de duas em duas horas entre as 07h07 e as 19h07, mais uma
-às 23h07 que fecha o dia — sem ela, o que a comunicação social publica ao serão ficaria de fora da
-série, porque a linha do dia já não é reescrita no dia seguinte. Cada recolha demora
-cerca de um minuto.
+às 23h07, que apanha o que a comunicação social publica ao serão. Cada recolha demora cerca
+de um minuto.
+
+**Quando um dia fecha.** Não às 23h07: essa recolha não chega às 23h59, e o que sai depois
+dela só é lido na manhã seguinte — cerca de 2% das marcações, com dias a chegar aos 5%. O dia
+D fica selado na **primeira recolha de D+1**, quando o `reconstruir_series.py` o reconta do
+arquivo mensal já com tudo o que foi publicado entre as 00h00 e as 24h00 desse dia. A
+arrumação é sempre pela data de publicação, em hora de Lisboa, e nunca pela hora da recolha.
 
 **Porque é encadeado e não agendado.** Com três horários independentes, bastava a
 recolha atrasar-se dez minutos para a síntese trabalhar sobre as notícias da véspera, e
@@ -601,10 +607,11 @@ recolhida"** em vez de "arquivo de 7 dias".
 `evolucao.html`, ao lado do painel principal e ligado a ele pelo ícone de gráfico. Lê o
 `historico.json` e mostra a série ao longo do tempo:
 
-- Volume por período, repartido por origem da comunicação social. Clicar numa barra passa os
-  quadros seguintes a mostrar apenas esse período.
-- Volume por área governativa, com a contagem e a parte de cada área no total do conjunto
-  mostrado; trajetória das oito mais noticiadas; e uma nuvem com as expressões que
+- Volume por período, repartido por origem da comunicação social, em **notícias**. Clicar
+  numa barra passa os quadros seguintes a mostrar apenas esse período.
+- Volume por área governativa, em **marcações** — porque aqui uma notícia conta em cada
+  área que satisfaz —, com a contagem e a parte de cada área no total do conjunto
+  mostrado, e uma nota que dá o rácio entre marcações e notícias do período; trajetória das oito mais noticiadas; e uma nuvem com as expressões que
   trouxeram notícias no período — o tamanho vale pela quantidade, e as que não aparecem
   ficaram a zero, sendo candidatas a revisão.
 - **Picos noticiosos registados**, com o volume do dia e a mediana da área. Clicar num
