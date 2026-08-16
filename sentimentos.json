@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-16 19:51",
+ "gerado": "2026-08-16 23:35",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "estado": "em validação — avaliações automáticas, leitura humana em curso",
  "criterio": "Tom do acontecimento noticiado (positivo, neutro, negativo), comunicação social nacional apenas, uma avaliação por notícia.",
@@ -12301,6 +12301,110 @@
    "d": "2026-08-16"
   },
   "https://www.publico.pt/2026/08/16/economia/noticia/portugal-espanha-recusam-mudar-rede-ferroviaria-bitola-europeia-2184766": {
+   "s": "neutro",
+   "d": "2026-08-16"
+  },
+  "https://www.rtp.pt/noticias/pais/mais-de-470-casos-de-abandono-e-maus-tratos-de-animais-em-seis-meses_v1759868": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.rtp.pt/noticias/pais/regressar-a-portugal-milhares-de-emigrantes-voltam-todos-os-anos_v1759867": {
+   "s": "positivo",
+   "d": "2026-08-16"
+  },
+  "https://cnnportugal.iol.pt/videos/moradores-de-ceuta-queixam-se-do-aumento-da-criminalidade-e-da-sobrecarga-do-unico-hospital-do-territorio/6a8230060cf2f6a1a1e7423f": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.rtp.pt/noticias/politica/rentree-do-ps-carneiro-aponta-para-pais-sem-rumo-estrategico-e-governo-desligado-da-realidade_n1759864": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.publico.pt/2026/08/16/politica/noticia/carneiro-entra-ataque-rentree-alguem-dizer-primeiroministro-rei-vai-nu-2185206": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.rtp.pt/noticias/outras-modalidades/patricia-silva-conquista-bronze-nos-1500-metros_d1759861": {
+   "s": "positivo",
+   "d": "2026-08-16"
+  },
+  "https://www.jornaldenegocios.pt/economia/conjuntura/detalhe/apos-recorde-de-2025-exportacoes-de-alta-tecnologia-continuam-a-somar-ate-junho": {
+   "s": "neutro",
+   "d": "2026-08-16"
+  },
+  "https://observador.pt/especiais/pedro-duarte-tem-um-milhao-em-acoes-da-microsoft-e-abdicou-de-90-mil-euros-por-ano-para-regressar-a-politica/": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.publico.pt/2026/08/16/sociedade/noticia/utentes-ivg-descontinuadas-garcia-orta-hospital-fala-suspensao-2185210": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.jornaldenegocios.pt/economia/detalhe/carneiro-acusa-montenegro-de-censura-aos-jornalistas-e-diz-que-o-rei-vai-mesmo-nu": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.rtp.pt/noticias/mundo/ceuta-migrantes-protestam-e-reclamam-asilo_v1759855": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://cnnportugal.iol.pt/videos/revisao-constitucional-e-defesa-das-pensoes-sao-linhas-vermelhas-do-ps-para-aprovar-o-proximo-orcamento-do-estado/6a821de80cf2f6a1a1e74228": {
+   "s": "neutro",
+   "d": "2026-08-16"
+  },
+  "https://www.publico.pt/2026/08/16/opiniao/editorial/montenegro-corrige-passos-ren-2185205": {
+   "s": "neutro",
+   "d": "2026-08-16"
+  },
+  "https://www.jornaldenegocios.pt/opiniao/colunistas/camilo-lourenco/detalhe/e-porque-nao-padarias": {
+   "s": "neutro",
+   "d": "2026-08-16"
+  },
+  "https://jornaleconomico.sapo.pt/noticias/carneiro-critica-montenegro-e-afirma-que-alguem-tem-de-lhe-dizer-que-o-rei-vai-mesmo-nu/": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.rtp.pt/noticias/pais/hospitais-com-longas-horas-de-espera-nas-urgencias-por-falta-de-profissionais_v1759851": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.publico.pt/2026/08/16/desporto/noticia/patricia-silva-conquista-bronze-europeus-atletismo-2185209": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.rtp.pt/noticias/outras-modalidades/francisca-soares-martins-quarta-nos-400-metros-livres-com-novo-recorde-nacional_d1759848": {
+   "s": "positivo",
+   "d": "2026-08-16"
+  },
+  "https://www.jornaldenegocios.pt/empresas/energia/detalhe/montenegro-soma-criticas-por-regresso-do-estado-ao-capital-da-ren": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://eco.sapo.pt/2026/08/16/carneiro-pede-a-montenegro-para-revelar-razao-valor-e-financiamento-da-compra-de-137-da-ren/": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://observador.pt/2026/08/16/autoridades-marroquinas-detem-quase-300-migrantes-que-tentavam-chegar-a-ceuta/": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.rtp.pt/noticias/cultura/italia-quatro-obras-renascentistas-roubadas-em-museu-na-sicilia_n1759836": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://www.jornaldenegocios.pt/empresas/energia/detalhe/13-7-da-ren-nao-garantem-a-determinacao-da-politica-de-investimentos-avisa-o-ps": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-19h-2150/": {
+   "s": "negativo",
+   "d": "2026-08-16"
+  },
+  "https://observador.pt/2026/08/16/nao-conseguiu-medalha-mas-estabeleceu-um-novo-recorde-nacional-diogo-ribeiro-e-sexto-na-final-europeia-de-50-metros-livres/": {
+   "s": "positivo",
+   "d": "2026-08-16"
+  },
+  "https://www.publico.pt/2026/08/16/desporto/noticia/cristiano-ronaldo-provavelmente-ultimo-ano-futebol-2185190": {
    "s": "neutro",
    "d": "2026-08-16"
   }
