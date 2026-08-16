@@ -887,8 +887,13 @@ body.sem-radar #conteudo{display:block !important}
   .cartao h3{font-size:.86rem;line-height:1.25;overflow:hidden;text-overflow:ellipsis;
     white-space:nowrap}
   .cartao .sub{display:none}
-  .cartao-n{position:static;top:auto;right:auto;font-size:1.05rem;min-width:2.2rem;
-    text-align:right}
+  /* O número vem antes do título no HTML (é ali que fica bem no cartão
+     ilustrado); na lista, a ordem visual é outra — símbolo, nome, valor —,
+     e é a propriedade `order` que a repõe sem mexer no HTML. */
+  .cartao .simbolo{order:1}
+  .cartao h3{order:2}
+  .cartao-n{order:3;position:static;top:auto;right:auto;font-size:1.05rem;
+    min-width:2.6rem;text-align:right}
   .cartao-n.zero{font-size:.95rem}
 }
 
