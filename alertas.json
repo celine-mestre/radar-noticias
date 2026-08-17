@@ -1,19 +1,59 @@
 {
- "atualizado": "2026-08-17 03:24",
+ "atualizado": "2026-08-17 08:13",
  "dia": "2026-08-17",
- "corte": "03:24",
- "dias_base": 12,
- "regra": "Tempestade quando a contagem do dia, até às 03:24, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "corte": "08:13",
+ "dias_base": 13,
+ "regra": "Tempestade quando a contagem do dia, até às 08:13, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [],
  "momentum": [
   {
-   "area": "Defesa Nacional",
-   "hoje": 3,
-   "mediana": 2.0,
-   "limiar": 10.0,
-   "excesso": 1.0,
-   "variacao_pct": 50,
+   "area": "Primeiro-Ministro",
+   "hoje": 5,
+   "mediana": 1.0,
+   "limiar": 9.0,
+   "excesso": 4.0,
+   "variacao_pct": 400,
    "dias_base": 12,
+   "tempestade": false
+  },
+  {
+   "area": "Defesa Nacional",
+   "hoje": 10,
+   "mediana": 7,
+   "limiar": 18.9,
+   "excesso": 3,
+   "variacao_pct": 43,
+   "dias_base": 13,
+   "tempestade": false
+  },
+  {
+   "area": "Reforma do Estado",
+   "hoje": 4,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 2,
+   "variacao_pct": 100,
+   "dias_base": 13,
+   "tempestade": false
+  },
+  {
+   "area": "Economia e Coesão Territorial",
+   "hoje": 8,
+   "mediana": 7,
+   "limiar": 15.9,
+   "excesso": 1,
+   "variacao_pct": 14,
+   "dias_base": 13,
+   "tempestade": false
+  },
+  {
+   "area": "Ambiente e Energia",
+   "hoje": 5,
+   "mediana": 4,
+   "limiar": 12,
+   "excesso": 1,
+   "variacao_pct": 25,
+   "dias_base": 13,
    "tempestade": false
   }
  ],
