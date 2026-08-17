@@ -466,6 +466,23 @@ def bloco_alertas(alertas):
   </td></tr>"""
 
 
+def endereco_logo(endereco_painel):
+    """Onde o cliente de correio vai buscar o logótipo.
+
+    Tem de ser um endereço público: os clientes de correio ignoram imagens
+    embutidas em base64 (o Gmail e o Outlook removem-nas) e a ação que envia o
+    correio não permite anexar imagens em linha. Fica então o ficheiro
+    publicado ao lado do painel, no GitHub Pages, que é onde o painel já o vai
+    buscar. Quem tiver as imagens bloqueadas vê o texto alternativo, e o
+    cabeçalho continua a identificar-se pela palavra escrita.
+    """
+    base = (endereco_painel or "").split("?")[0]
+    if base.endswith(".html"):
+        base = base.rsplit("/", 1)[0]
+    base = base.rstrip("/")
+    return f"{base}/logo-sggov.png" if base else ""
+
+
 def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None, escrita_em=""):
     agora = agora_lisboa()
     data_extenso = f"{agora.day} de {MESES[agora.month - 1]} de {agora.year}"
@@ -478,6 +495,19 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
         sintese = (sinteses or {}).get(nome)
         seccoes.append(bloco_area(nome, noticias, COR_GRUPO.get(grupo, AZUL),
                                   sintese, escrita_em, origens))
+
+    # O símbolo é colorido e vai sobre fundo azul: assenta numa pastilha branca,
+    # como manda o manual de normas gráficas. Os clientes que não desenham
+    # cantos redondos mostram um quadrado branco, que continua correto.
+    logo = endereco_logo(endereco_painel)
+    logo_html = (f"""<td valign="middle" style="padding-right:14px">
+        <table cellpadding="0" cellspacing="0" role="presentation"
+               style="background:#ffffff;border-radius:8px"><tr>
+          <td style="padding:7px;line-height:0">
+            <img src="{esc(logo)}" width="34" height="33" alt="Secretaria-Geral do Governo"
+                 style="display:block;border:0"></td>
+        </tr></table>
+      </td>""" if logo else "")
 
     criterios = f"{ROTULO_PERIODO.get(periodo, periodo)} · " + (
         ROTULO_ORIGENS.get(frozenset(origens), "OCS selecionados")
@@ -496,6 +526,7 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
 
   <tr><td style="background:{AZUL};padding:20px 24px">
     <table cellpadding="0" cellspacing="0" role="presentation"><tr>
+      {logo_html}
       <td valign="middle">
         <div style="font:600 10px Arial,sans-serif;color:#ffffff;opacity:.8;letter-spacing:1.4px;
                     text-transform:uppercase">Secretaria-Geral do Governo</div>
