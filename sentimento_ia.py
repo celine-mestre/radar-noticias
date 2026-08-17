@@ -316,6 +316,13 @@ def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias,
 
     limite = (agora_lisboa() - timedelta(days=dias)).strftime("%Y-%m-%d")
     por_dia = {}
+    # Além das áreas, um bloco "total" por dia com as notícias DISTINTAS: uma
+    # peça que satisfaz três áreas conta em cada uma delas, pelo que somar as
+    # áreas dá marcações e inflacionava a distribuição do painel. A identidade
+    # é título+fonte, a mesma do arquivo e do reconstruir_series.py — sem este
+    # bloco, os dias que o sentimento reescreve ficavam noutra base que os dias
+    # fechados pelo reconstruir, e o mesmo gráfico misturava as duas contagens.
+    distintas = {}
     for n in noticias:
         dia = (n.get("data") or "")[:10]
         area = n.get("area")
@@ -333,10 +340,22 @@ def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias,
             registo["avaliadas"] += 1
             registo[avaliacao["s"]] += 1
 
+        chave = ((n.get("titulo") or "").strip().lower(),
+                 (n.get("fonte") or n.get("dominio") or "").strip().lower())
+        distintas.setdefault(dia, {})[chave] = (
+            avaliacao.get("s") if avaliacao and avaliacao.get("s") in VALORES else None)
+
     recontados = set(por_dia)
     serie["dias"] = [d for d in serie["dias"] if d.get("data") not in recontados]
     for dia, areas in por_dia.items():
-        serie["dias"].append({"data": dia, "areas": areas})
+        total = {"nacionais": 0, "avaliadas": 0,
+                 "positivo": 0, "neutro": 0, "negativo": 0}
+        for tom in distintas.get(dia, {}).values():
+            total["nacionais"] += 1
+            if tom:
+                total["avaliadas"] += 1
+                total[tom] += 1
+        serie["dias"].append({"data": dia, "total": total, "areas": areas})
     serie["dias"].sort(key=lambda d: d.get("data", ""))
     serie["atualizado"] = agora_lisboa().strftime("%Y-%m-%d %H:%M")
 

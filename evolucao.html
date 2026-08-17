@@ -227,6 +227,26 @@ main{padding:1.6rem 0 3rem}
   margin-top:.1rem;min-height:1.6em}
 .h2-foco{font-weight:400;font-size:.72em;color:var(--texto-ligeiro);letter-spacing:0}
 
+/* O «i» que guarda a explicação de cada quadro */
+.btn-nota{width:18px;height:18px;flex:none;margin-left:.5rem;padding:0;
+  border:1px solid var(--borda);border-radius:50%;background:transparent;
+  color:var(--texto-ligeiro);font-family:var(--fonte);font-size:.68rem;
+  font-weight:600;font-style:italic;line-height:1;cursor:pointer;
+  vertical-align:middle;transition:.15s}
+.btn-nota:hover{border-color:var(--azul);color:var(--azul)}
+.btn-nota.aberto{background:var(--azul);border-color:var(--azul);color:#fff}
+.notas{margin:.6rem 0 .2rem;padding:.7rem .9rem;border-left:3px solid var(--borda);
+  background:var(--superficie-alt);border-radius:0 8px 8px 0}
+.notas .nota{margin:0}
+.notas .nota + .nota{margin-top:.5rem}
+/* No papel não há botões para carregar: as explicações voltam todas à vista,
+   senão o PDF saía com os quadros e sem o método. */
+@media print{
+  .notas[hidden]{display:block!important}
+  .btn-nota{display:none!important}
+  .notas{background:none;border-left:2px solid #ccc}
+}
+
 /* Comparação de duas áreas */
 .cmp-sel{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.7rem 0 .2rem;
   font-size:.8rem;color:var(--texto-suave)}
@@ -616,17 +636,18 @@ function totalDoDia(d){
   return origem === "todas" ? (d.distintas.total || 0) : (d.distintas[origem] || 0);
 }
 
-function origensDoDia(d){
+function origensDoDia(d, semFiltro = false){
   const o = { nacionais:0, lusofonas:0, internacionais:0 };
+  const conta = k => semFiltro || origem === "todas" || origem === k;
   if(contagemDistinta() && d.distintas){
     ["nacionais", "lusofonas", "internacionais"].forEach(k => {
-      if(origem === "todas" || origem === k) o[k] = d.distintas[k] || 0;
+      if(conta(k)) o[k] = d.distintas[k] || 0;
     });
     return o;
   }
   Object.values(areasDe(d)).forEach(v =>
     Object.entries(v.origens || {}).forEach(([k, x]) => {
-      if(origem === "todas" || origem === k) o[k] += x;
+      if(conta(k)) o[k] += x;
     }));
   return o;
 }
@@ -1464,6 +1485,57 @@ function blocoSentimento(linhas){
     </div>`;
 }
 
+/* As notas explicativas de cada quadro passam a viver atrás de um «i» no
+   título. São textos longos — a do sentimento tem oito linhas — e no telemóvel
+   empurravam o quadro seguinte para fora do ecrã, a ponto de a explicação pesar
+   mais do que o número que explicava. Quem precisa lê-a uma vez; quem não
+   precisa não devia ter de a saltar todas as vezes.
+
+   Faz-se aqui, depois de o corpo estar escrito, e não em cada quadro: apanha
+   todas as notas de uma vez, incluindo as dos quadros que vierem a existir, sem
+   ter de tocar em nenhum deles.
+
+   O aviso de série incompleta é a exceção e fica à vista: não é uma explicação
+   de como ler, é uma reserva sobre os próprios números. */
+function arrumarNotas(corpo){
+  corpo.querySelectorAll(".bloco").forEach((bloco, i) => {
+    const titulo = bloco.querySelector("h2");
+    if(!titulo) return;
+    const notas = [...bloco.querySelectorAll(":scope > .nota")]
+      .filter(n => !(n.getAttribute("style") || "").includes("vermelho"));
+    if(!notas.length) return;
+
+    const id = `nota-q${i}`;
+    const caixa = document.createElement("div");
+    caixa.className = "notas";
+    caixa.id = id;
+    caixa.hidden = true;
+    notas.forEach(n => caixa.appendChild(n));
+
+    const botao = document.createElement("button");
+    botao.className = "btn-nota";
+    botao.type = "button";
+    botao.dataset.nota = id;
+    botao.setAttribute("aria-expanded", "false");
+    botao.setAttribute("aria-controls", id);
+    botao.title = "Como ler este quadro";
+    botao.textContent = "i";
+    titulo.appendChild(botao);
+
+    titulo.insertAdjacentElement("afterend", caixa);
+  });
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest && e.target.closest("[data-nota]");
+  if(!b) return;
+  const caixa = document.getElementById(b.dataset.nota);
+  if(!caixa) return;
+  caixa.hidden = !caixa.hidden;
+  b.setAttribute("aria-expanded", String(!caixa.hidden));
+  b.classList.toggle("aberto", !caixa.hidden);
+});
+
 function desenhar(){
   const linhas = janela();
   const corpo = $("#corpo");
@@ -1483,7 +1555,8 @@ function desenhar(){
       ? chave.slice(5) + "/" + chave.slice(2, 4)
       : chave.slice(8) + "/" + chave.slice(5, 7);
     return { rotulo: chave, curto, total: totalDoDia(d),
-             origens: origensDoDia(d), marcacoes: marcacoesDoDia(d) };
+             origens: origensDoDia(d), todas: origensDoDia(d, true),
+             marcacoes: marcacoesDoDia(d) };
   });
 
   const total = pontos.reduce((s, p) => s + p.total, 0);
@@ -1496,8 +1569,21 @@ function desenhar(){
   /* Escolhido um dia, os quadros abaixo passam a ser desse dia */
   const foco = linhasEmFoco(linhas, pares);
   const areas = totaisPorArea(foco);
-  const origens = totaisPorOrigem(foco);
-  const soma = Object.values(origens).reduce((a, b) => a + b, 0) || 1;
+
+  /* A legenda descreve o gráfico que está por cima dela, e por isso soma
+     exatamente o que as barras desenham: as mesmas NOTÍCIAS do KPI e a mesma
+     janela. Antes vinha do totaisPorOrigem(foco), que somava as áreas — ou
+     seja, marcações — e ainda por cima só do período em foco: dava sempre mais
+     do que o KPI e mudava de âmbito ao clicar numa barra, sem o dizer.
+     A percentagem é que se calcula sobre TODAS as origens, mesmo com o filtro
+     ligado, senão a origem escolhida daria sempre 100%. */
+  const somar = (campo) => pontos.reduce((acc, p) => {
+    ["nacionais", "lusofonas", "internacionais"].forEach(k => acc[k] += p[campo][k] || 0);
+    return acc;
+  }, { nacionais:0, lusofonas:0, internacionais:0 });
+  const origens = somar("origens");
+  const soma = Object.values(somar("todas")).reduce((a, b) => a + b, 0) || 1;
+  const pontoFoco = diaEscolhido ? pontos.find(p => p.rotulo === diaEscolhido) : null;
   const expressoes = expressoesPorArea(foco);
   const poucos = linhas.length < 10;
   const hojeEmCurso = linhas.length &&
@@ -1537,6 +1623,13 @@ function desenhar(){
           .map(([k, rot, c]) => `<span style="--cor:${c}"><i></i>${rot} · ${num(origens[k])}
             (${(origens[k] / soma * 100).toFixed(0)}%)</span>`).join("")}
       </div>
+      ${pontoFoco ? `<p class="nota" style="margin-top:.45rem">
+        Em <strong>${descreverPeriodo(diaEscolhido)}</strong>: ${
+          [["nacionais","Portugal"],["lusofonas","Lusofonia"],["internacionais","Internacional"]]
+            .filter(([k]) => origem === "todas" || origem === k)
+            .map(([k, rot]) => `${rot} ${num(pontoFoco.origens[k])}`).join(" · ")
+        } — ${num(pontoFoco.total)} no total. Os números acima são da janela inteira,
+        que é o que o gráfico mostra.</p>` : ""}
       <p class="nota">${autoAgregado
           ? `<strong>São ${linhas.length} dias:</strong> o gráfico passou a
              ${autoAgregado === "mes" ? "meses" : "semanas"} para continuar legível.
@@ -1644,6 +1737,8 @@ function desenhar(){
         ? " Com uma origem escolhida, os valores são estimados pela proporção dessa origem na área."
         : ""}</p>
     </div>`;
+
+  arrumarNotas(corpo);
 
   /* Clicar numa barra escolhe o período; clicar outra vez desfaz */
   const g = document.getElementById("graficoTempo");
