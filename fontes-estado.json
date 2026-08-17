@@ -1,0 +1,672 @@
+{
+ "gerado": "2026-08-17T22:54:59+00:00",
+ "a_responder": 43,
+ "recuperaveis": 2,
+ "sem_resposta": 28,
+ "resultados": [
+  {
+   "nome": "Público",
+   "origem": "nacionais",
+   "dominio": "publico.pt",
+   "url": "https://feeds.feedburner.com/PublicoRSS",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "Público · Política",
+   "origem": "nacionais",
+   "dominio": "publico.pt",
+   "url": "https://www.publico.pt/rss/politica",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "nome": "Público · Economia",
+   "origem": "nacionais",
+   "dominio": "publico.pt",
+   "url": "https://www.publico.pt/rss/economia",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "nome": "Público · Sociedade",
+   "origem": "nacionais",
+   "dominio": "publico.pt",
+   "url": "https://www.publico.pt/rss/sociedade",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "nome": "Expresso",
+   "origem": "nacionais",
+   "dominio": "expresso.pt",
+   "url": "https://expresso.pt/arc/outboundfeeds/rss/?outputType=xml",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 403: HTTP Forbidden"
+  },
+  {
+   "nome": "Observador",
+   "origem": "nacionais",
+   "dominio": "observador.pt",
+   "url": "https://observador.pt/feed/",
+   "estado": "ok",
+   "itens": 51,
+   "detalhe": ""
+  },
+  {
+   "nome": "Jornal de Notícias",
+   "origem": "nacionais",
+   "dominio": "jn.pt",
+   "url": "https://www.jn.pt/rss/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 403: Forbidden"
+  },
+  {
+   "nome": "Diário de Notícias",
+   "origem": "nacionais",
+   "dominio": "dn.pt",
+   "url": "https://www.dn.pt/rss/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "nome": "Correio da Manhã",
+   "origem": "nacionais",
+   "dominio": "cmjornal.pt",
+   "url": "https://www.cmjornal.pt/rss",
+   "estado": "ok",
+   "itens": 20,
+   "detalhe": ""
+  },
+  {
+   "nome": "Jornal de Negócios",
+   "origem": "nacionais",
+   "dominio": "jornaldenegocios.pt",
+   "url": "https://www.jornaldenegocios.pt/rss",
+   "estado": "ok",
+   "itens": 20,
+   "detalhe": ""
+  },
+  {
+   "nome": "Jornal Económico",
+   "origem": "nacionais",
+   "dominio": "jornaleconomico.pt",
+   "url": "https://jornaleconomico.sapo.pt/feed",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "ECO",
+   "origem": "nacionais",
+   "dominio": "eco.sapo.pt",
+   "url": "https://eco.sapo.pt/feed/",
+   "estado": "ok",
+   "itens": 22,
+   "detalhe": ""
+  },
+  {
+   "nome": "RTP Notícias",
+   "origem": "nacionais",
+   "dominio": "rtp.pt",
+   "url": "https://www.rtp.pt/noticias/rss",
+   "estado": "ok",
+   "itens": 50,
+   "detalhe": ""
+  },
+  {
+   "nome": "SIC Notícias",
+   "origem": "nacionais",
+   "dominio": "sicnoticias.pt",
+   "url": "https://sicnoticias.pt/arc/outboundfeeds/rss/?outputType=xml",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 403: HTTP Forbidden"
+  },
+  {
+   "nome": "CNN Portugal",
+   "origem": "nacionais",
+   "dominio": "cnnportugal.iol.pt",
+   "url": "https://cnnportugal.iol.pt/rss",
+   "estado": "ok",
+   "itens": 50,
+   "detalhe": ""
+  },
+  {
+   "nome": "TSF",
+   "origem": "nacionais",
+   "dominio": "tsf.pt",
+   "url": "https://www.tsf.pt/rss/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 403: Forbidden"
+  },
+  {
+   "nome": "Renascença",
+   "origem": "nacionais",
+   "dominio": "rr.sapo.pt",
+   "url": "https://rr.sapo.pt/rss",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 410: Gone"
+  },
+  {
+   "nome": "Notícias ao Minuto",
+   "origem": "nacionais",
+   "dominio": "noticiasaominuto.com",
+   "url": "https://www.noticiasaominuto.com/rss/ultima-hora",
+   "estado": "ok",
+   "itens": 490,
+   "detalhe": ""
+  },
+  {
+   "nome": "Diário de Notícias da Madeira",
+   "origem": "nacionais",
+   "dominio": "dnoticias.pt",
+   "url": "https://www.dnoticias.pt/rss",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "nome": "Sábado",
+   "origem": "nacionais",
+   "dominio": "sabado.pt",
+   "url": "https://www.sabado.pt/rss",
+   "estado": "ok",
+   "itens": 20,
+   "detalhe": ""
+  },
+  {
+   "nome": "Visão",
+   "origem": "nacionais",
+   "dominio": "visao.pt",
+   "url": "https://visao.pt/feed/",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "Dinheiro Vivo",
+   "origem": "nacionais",
+   "dominio": "dinheirovivo.pt",
+   "url": "https://www.dinheirovivo.pt/rss/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found",
+   "alternativa_ok": "https://www.dinheirovivo.pt/feed",
+   "alternativa_itens": 10
+  },
+  {
+   "nome": "Executive Digest",
+   "origem": "nacionais",
+   "dominio": "executivedigest.sapo.pt",
+   "url": "https://executivedigest.sapo.pt/feed/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "resposta não é um feed (ParseError)"
+  },
+  {
+   "nome": "Ambiente Magazine",
+   "origem": "nacionais",
+   "dominio": "ambientemagazine.com",
+   "url": "https://www.ambientemagazine.com/feed/",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "Agroportal",
+   "origem": "nacionais",
+   "dominio": "agroportal.pt",
+   "url": "https://www.agroportal.pt/feed/",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "Lusa",
+   "origem": "nacionais",
+   "dominio": "lusa.pt",
+   "url": "https://www.lusa.pt/rss",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "resposta não é um feed (ParseError)",
+   "nota": "A Lusa é agência por assinatura e pode não ter feed RSS público; se nenhum endereço responder, o título deve sair da lista."
+  },
+  {
+   "nome": "Nascer do SOL",
+   "origem": "nacionais",
+   "dominio": "sol.sapo.pt",
+   "url": "https://sol.sapo.pt/rss",
+   "estado": "ok",
+   "itens": 50,
+   "detalhe": ""
+  },
+  {
+   "nome": "Jornal i",
+   "origem": "nacionais",
+   "dominio": "ionline.sapo.pt",
+   "url": "https://ionline.sapo.pt/feed/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "resposta não é um feed (ParseError)"
+  },
+  {
+   "nome": "Açoriano Oriental",
+   "origem": "nacionais",
+   "dominio": "acorianooriental.pt",
+   "url": "https://www.acorianooriental.pt/rss",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "nome": "JM Madeira",
+   "origem": "nacionais",
+   "dominio": "jm-madeira.pt",
+   "url": "https://www.jm-madeira.pt/rss",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "resposta não é um feed (ParseError)"
+  },
+  {
+   "nome": "Vida Económica",
+   "origem": "nacionais",
+   "dominio": "vidaeconomica.pt",
+   "url": "https://www.vidaeconomica.pt/feed",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "nome": "SAPO Tek",
+   "origem": "nacionais",
+   "dominio": "tek.sapo.pt",
+   "url": "https://tek.sapo.pt/rss",
+   "estado": "ok",
+   "itens": 24,
+   "detalhe": ""
+  },
+  {
+   "nome": "Healthnews",
+   "origem": "nacionais",
+   "dominio": "healthnews.pt",
+   "url": "https://healthnews.pt/feed/",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "Construir",
+   "origem": "nacionais",
+   "dominio": "construir.pt",
+   "url": "https://www.construir.pt/feed/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "nome": "Público · Ciência",
+   "origem": "nacionais",
+   "dominio": "publico.pt",
+   "url": "https://www.publico.pt/rss/ciencia",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "nome": "Jornal de Angola",
+   "origem": "lusofonas",
+   "dominio": "jornaldeangola.ao",
+   "url": "https://www.jornaldeangola.ao/ao/rss/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "resposta não é um feed (ParseError)"
+  },
+  {
+   "nome": "Novo Jornal (Angola)",
+   "origem": "lusofonas",
+   "dominio": "novojornal.co.ao",
+   "url": "https://www.novojornal.co.ao/rss",
+   "estado": "vazio",
+   "itens": 0,
+   "detalhe": "feed lido mas sem artigos"
+  },
+  {
+   "nome": "Angop",
+   "origem": "lusofonas",
+   "dominio": "angop.ao",
+   "url": "https://www.angop.ao/rss/ultimas.xml",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "RemoteDisconnected: Remote end closed connection without response"
+  },
+  {
+   "nome": "O País (Moçambique)",
+   "origem": "lusofonas",
+   "dominio": "opais.co.mz",
+   "url": "https://opais.co.mz/feed/",
+   "estado": "ok",
+   "itens": 5,
+   "detalhe": ""
+  },
+  {
+   "nome": "Carta de Moçambique",
+   "origem": "lusofonas",
+   "dominio": "cartamz.com",
+   "url": "https://cartamz.com/index.php/component/obrss/rss-noticias",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "resposta não é um feed (ParseError)"
+  },
+  {
+   "nome": "Expresso das Ilhas (Cabo Verde)",
+   "origem": "lusofonas",
+   "dominio": "expressodasilhas.cv",
+   "url": "https://expressodasilhas.cv/rss",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "Inforpress (Cabo Verde)",
+   "origem": "lusofonas",
+   "dominio": "inforpress.cv",
+   "url": "https://inforpress.cv/feed/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 500: Internal Server Error"
+  },
+  {
+   "nome": "Tatoli (Timor-Leste)",
+   "origem": "lusofonas",
+   "dominio": "tatoli.tl",
+   "url": "https://tatoli.tl/pt/feed/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "resposta não é um feed (ParseError)",
+   "alternativa_ok": "https://tatoli.tl/feed/",
+   "alternativa_itens": 10
+  },
+  {
+   "nome": "STP-Press (São Tomé)",
+   "origem": "lusofonas",
+   "dominio": "stp-press.st",
+   "url": "https://www.stp-press.st/feed/",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "Agência Brasil",
+   "origem": "lusofonas",
+   "dominio": "agenciabrasil.ebc.com.br",
+   "url": "https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "Folha de S.Paulo · Mundo",
+   "origem": "lusofonas",
+   "dominio": "folha.uol.com.br",
+   "url": "https://feeds.folha.uol.com.br/mundo/rss091.xml",
+   "estado": "ok",
+   "itens": 100,
+   "detalhe": ""
+  },
+  {
+   "nome": "Euronews (português)",
+   "origem": "internacionais",
+   "dominio": "pt.euronews.com",
+   "url": "https://pt.euronews.com/rss",
+   "estado": "ok",
+   "itens": 50,
+   "detalhe": ""
+  },
+  {
+   "nome": "Politico Europe",
+   "origem": "internacionais",
+   "dominio": "politico.eu",
+   "url": "https://www.politico.eu/feed/",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
+  },
+  {
+   "nome": "EURACTIV",
+   "origem": "internacionais",
+   "dominio": "euractiv.com",
+   "url": "https://www.euractiv.com/feed/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 403: Forbidden"
+  },
+  {
+   "nome": "El País",
+   "origem": "internacionais",
+   "dominio": "elpais.com",
+   "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
+   "estado": "ok",
+   "itens": 151,
+   "detalhe": ""
+  },
+  {
+   "nome": "El País · Internacional",
+   "origem": "internacionais",
+   "dominio": "elpais.com",
+   "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/internacional/portada",
+   "estado": "ok",
+   "itens": 24,
+   "detalhe": ""
+  },
+  {
+   "nome": "Le Monde",
+   "origem": "internacionais",
+   "dominio": "lemonde.fr",
+   "url": "https://www.lemonde.fr/rss/une.xml",
+   "estado": "ok",
+   "itens": 16,
+   "detalhe": ""
+  },
+  {
+   "nome": "BBC Mundo",
+   "origem": "internacionais",
+   "dominio": "bbc.com",
+   "url": "https://feeds.bbci.co.uk/mundo/rss.xml",
+   "estado": "ok",
+   "itens": 35,
+   "detalhe": ""
+  },
+  {
+   "nome": "Deutsche Welle (português)",
+   "origem": "internacionais",
+   "dominio": "dw.com",
+   "url": "https://rss.dw.com/xml/rss-br-all",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 500: Internal Server Error"
+  },
+  {
+   "nome": "France 24 (inglês)",
+   "origem": "internacionais",
+   "dominio": "france24.com",
+   "url": "https://www.france24.com/en/europe/rss",
+   "estado": "ok",
+   "itens": 30,
+   "detalhe": ""
+  },
+  {
+   "nome": "RFI (português)",
+   "origem": "internacionais",
+   "dominio": "rfi.fr",
+   "url": "https://www.rfi.fr/pt/rss",
+   "estado": "ok",
+   "itens": 22,
+   "detalhe": ""
+  },
+  {
+   "nome": "The Guardian · Europe",
+   "origem": "internacionais",
+   "dominio": "theguardian.com",
+   "url": "https://www.theguardian.com/world/europe-news/rss",
+   "estado": "ok",
+   "itens": 19,
+   "detalhe": ""
+  },
+  {
+   "nome": "Agência Lusa · Internacional",
+   "origem": "internacionais",
+   "dominio": "lusa.pt",
+   "url": "https://www.lusa.pt/rss/internacional",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "resposta não é um feed (ParseError)",
+   "nota": "Mesma reserva da Lusa."
+  },
+  {
+   "nome": "BBC News · Mundo",
+   "origem": "internacionais",
+   "dominio": "bbc.co.uk",
+   "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+   "estado": "ok",
+   "itens": 30,
+   "detalhe": ""
+  },
+  {
+   "nome": "The Guardian · Mundo",
+   "origem": "internacionais",
+   "dominio": "theguardian.com",
+   "url": "https://www.theguardian.com/world/rss",
+   "estado": "ok",
+   "itens": 45,
+   "detalhe": ""
+  },
+  {
+   "nome": "Le Figaro",
+   "origem": "internacionais",
+   "dominio": "lefigaro.fr",
+   "url": "https://www.lefigaro.fr/rss/figaro_actualites.xml",
+   "estado": "ok",
+   "itens": 19,
+   "detalhe": ""
+  },
+  {
+   "nome": "France Info",
+   "origem": "internacionais",
+   "dominio": "francetvinfo.fr",
+   "url": "https://www.francetvinfo.fr/titres.rss",
+   "estado": "ok",
+   "itens": 32,
+   "detalhe": ""
+  },
+  {
+   "nome": "El Mundo",
+   "origem": "internacionais",
+   "dominio": "elmundo.es",
+   "url": "https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml",
+   "estado": "ok",
+   "itens": 29,
+   "detalhe": ""
+  },
+  {
+   "nome": "La Vanguardia",
+   "origem": "internacionais",
+   "dominio": "lavanguardia.com",
+   "url": "https://www.lavanguardia.com/rss/home.xml",
+   "estado": "ok",
+   "itens": 139,
+   "detalhe": ""
+  },
+  {
+   "nome": "ABC",
+   "origem": "internacionais",
+   "dominio": "abc.es",
+   "url": "https://www.abc.es/rss/2.0/portada/",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 500: Internal Server Error"
+  },
+  {
+   "nome": "ANSA",
+   "origem": "internacionais",
+   "dominio": "ansa.it",
+   "url": "https://www.ansa.it/sito/ansait_rss.xml",
+   "estado": "ok",
+   "itens": 28,
+   "detalhe": ""
+  },
+  {
+   "nome": "Corriere della Sera",
+   "origem": "internacionais",
+   "dominio": "corriere.it",
+   "url": "https://www.corriere.it/rss/homepage.xml",
+   "estado": "ok",
+   "itens": 69,
+   "detalhe": ""
+  },
+  {
+   "nome": "La Repubblica",
+   "origem": "internacionais",
+   "dominio": "repubblica.it",
+   "url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
+   "estado": "ok",
+   "itens": 30,
+   "detalhe": ""
+  },
+  {
+   "nome": "The New York Times · Mundo",
+   "origem": "internacionais",
+   "dominio": "nytimes.com",
+   "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+   "estado": "ok",
+   "itens": 54,
+   "detalhe": ""
+  },
+  {
+   "nome": "The Washington Post · Mundo",
+   "origem": "internacionais",
+   "dominio": "washingtonpost.com",
+   "url": "https://feeds.washingtonpost.com/rss/world",
+   "estado": "ok",
+   "itens": 6,
+   "detalhe": ""
+  },
+  {
+   "nome": "Politico",
+   "origem": "internacionais",
+   "dominio": "politico.com",
+   "url": "https://rss.politico.com/politics-news.xml",
+   "estado": "ok",
+   "itens": 30,
+   "detalhe": ""
+  },
+  {
+   "nome": "Associated Press",
+   "origem": "internacionais",
+   "dominio": "apnews.com",
+   "url": "https://apnews.com/index.rss",
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "HTTPError: HTTP Error 401: Unauthorized",
+   "nota": "A AP retirou os feeds públicos durante anos; os endereços .rss dos hubs são a hipótese mais recente."
+  },
+  {
+   "nome": "Der Spiegel · Internacional",
+   "origem": "internacionais",
+   "dominio": "spiegel.de",
+   "url": "https://www.spiegel.de/international/index.rss",
+   "estado": "ok",
+   "itens": 20,
+   "detalhe": ""
+  }
+ ]
+}
