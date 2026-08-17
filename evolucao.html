@@ -271,6 +271,16 @@ table.cmp tr:first-child th{border-top:0;font-size:.76rem}
 table.cmp td{font-variant-numeric:tabular-nums;color:var(--texto)}
 table.cmp small{color:var(--texto-ligeiro);font-size:.86em}
 
+/* Publicações especializadas */
+table.esp{width:100%;border-collapse:collapse;margin-top:.9rem;font-size:.8rem}
+table.esp th,table.esp td{padding:.42rem .5rem;border-top:1px solid var(--borda);text-align:left}
+table.esp tr:first-child th{border-top:0;font-size:.72rem;color:var(--texto-ligeiro);font-weight:500}
+table.esp th{font-weight:500;color:var(--texto)}
+table.esp .num{text-align:right;font-variant-numeric:tabular-nums}
+table.esp .esp-area{color:var(--texto-suave)}
+table.esp .esp-fraco{color:var(--texto-ligeiro)}
+table.esp .esp-ind{font-weight:600;color:var(--azul)}
+
 /* Matrizes de cruzamento */
 .mtz-rolo{overflow-x:auto;margin-top:.9rem}
 table.mtz{border-collapse:collapse;font-size:.74rem;min-width:100%}
@@ -1238,43 +1248,80 @@ function blocoPublicacoes(linhas, areas){
     (!diaEscolhido || chaveDoPeriodo(d.data) === diaEscolhido));
   if(!dias.length) return "";
 
+  /* A matriz de contagens que aqui estava não dizia quase nada: medido nesta
+     série, 3,5 das 5 publicações mais presentes em cada área eram as mesmas 5
+     do conjunto — o Observador, a RTP e a Agência Brasil enchiam todas as
+     linhas por publicarem muito, não por cobrirem aquela área. Era uma tabela
+     sobre a lista de feeds disfarçada de tabela sobre cobertura.
+     O que tem sinal é a ESPECIALIZAÇÃO: quanto uma publicação pesa numa área
+     comparado com o que pesa no total. O Agroportal vale 3% de tudo e 31% da
+     Agricultura; a CNN vale 7% de tudo e 19% do Primeiro-Ministro. Isso é uma
+     escolha editorial, e é o que se mostra. */
+  /* O termo de comparação é SEMPRE o conjunto das dezassete áreas, mesmo com
+     uma área escolhida: se o peso global fosse calculado só dentro da área, a
+     comparação era da área consigo própria e dava um índice de 1 para toda a
+     gente. */
   const nomes = areas.map(([n]) => n);
-  const porPub = {}, cel = {};
-  dias.forEach(d => nomes.forEach(n => {
-    Object.entries((d.areas || {})[n] || {}).forEach(([pub, q]) => {
+  const porPub = {}, cel = {}, totalArea = {};
+  let geral = 0;
+  dias.forEach(d => Object.entries(d.areas || {}).forEach(([n, pubs]) => {
+    Object.entries(pubs).forEach(([pub, q]) => {
       porPub[pub] = (porPub[pub] || 0) + q;
+      geral += q;
+      if(!nomes.includes(n)) return;
       cel[n + "|" + pub] = (cel[n + "|" + pub] || 0) + q;
+      totalArea[n] = (totalArea[n] || 0) + q;
     });
   }));
-  const pubs = Object.entries(porPub).sort((a, b) => b[1] - a[1])
-    .slice(0, areaEscolhida ? 14 : 10).map(([p]) => p);
-  if(!pubs.length) return "";
-  const maior = Math.max(1, ...Object.values(cel));
+  if(!geral) return "";
+
+  const MINIMO = areaEscolhida ? 5 : 8;
+  const VEZES = areaEscolhida ? 1.5 : 2;
+  const linhasTab = [];
+  nomes.forEach(n => Object.keys(porPub).forEach(pub => {
+    const q = cel[n + "|" + pub] || 0;
+    if(q < MINIMO) return;
+    const naArea = q / totalArea[n];
+    const noTodo = porPub[pub] / geral;
+    const indice = naArea / (noTodo || 1);
+    if(indice >= VEZES) linhasTab.push({ n, pub, q, naArea, noTodo, indice });
+  }));
+  linhasTab.sort((a, b) => b.indice - a.indice);
+
+  const pct = v => (v * 100).toFixed(0) + "%";
+  const corpo = linhasTab.slice(0, areaEscolhida ? 12 : 14);
 
   return `
     <div class="bloco">
-      <h2>Áreas e publicações${sufixoFoco()}</h2>
-      <div class="mtz-rolo">
-        <table class="mtz mtz-pub">
-          <tr><th></th>${pubs.map(p => `<th><span>${p}</span></th>`).join("")}</tr>
-          ${nomes.map(n => `<tr>
-            <th class="mtz-lin">${n}</th>
-            ${pubs.map(p => {
-              const q = cel[n + "|" + p] || 0;
-              return q
-                ? `<td style="--i:${(q / maior).toFixed(2)}" title="${n} · ${p}: ${num(q)} notícias">${num(q)}</td>`
-                : `<td class="mtz-vazia">·</td>`;
-            }).join("")}
-          </tr>`).join("")}
-        </table>
-      </div>
-      <p class="nota">Quantas notícias de cada área vieram de cada publicação, no período
-        mostrado. Lê-se por linha — que órgãos sustentam uma área — e por coluna — que
-        áreas cada órgão cobre mais. ${areaEscolhida
-          ? `São as ${pubs.length} publicações que mais noticiaram ${areaEscolhida}.`
-          : `Estão as ${nomes.length} áreas com notícias no período; das publicações,
-             as ${pubs.length} com mais volume — essas ficam limitadas porque são
-             colunas, e a tabela tem de caber no ecrã.`}</p>
+      <h2>Publicações especializadas${sufixoFoco()}</h2>
+      ${corpo.length ? `
+      <table class="esp">
+        <tr><th>Publicação</th>${areaEscolhida ? "" : "<th>Área</th>"}
+          <th class="num">Notícias</th><th class="num">Da área</th>
+          <th class="num">Do total</th><th class="num">Peso</th></tr>
+        ${corpo.map(r => `<tr>
+          <th>${r.pub}</th>
+          ${areaEscolhida ? "" : `<td class="esp-area">${r.n}</td>`}
+          <td class="num">${num(r.q)}</td>
+          <td class="num">${pct(r.naArea)}</td>
+          <td class="num esp-fraco">${pct(r.noTodo)}</td>
+          <td class="num esp-ind">${r.indice.toFixed(1).replace(".", ",")}×</td>
+        </tr>`).join("")}
+      </table>`
+      : `<p class="nota">Nenhuma publicação se destaca ${diaEscolhido
+          ? `em ${descreverPeriodo(diaEscolhido)} — um período curto tem poucas notícias
+             por área e o desvio não se distingue do acaso`
+          : "no período escolhido"}.</p>`}
+      <p class="nota">Publicações que cobrem uma área <strong>acima do seu peso
+        habitual</strong>. «Da área» é a parte das notícias dessa área que vieram deste
+        órgão; «do total» é a parte que ele representa em todo o período; o peso é o
+        quociente entre as duas. Um peso de 2× quer dizer que o órgão está nessa área com
+        o dobro da presença que tem no conjunto — é escolha editorial, não volume.
+        Mostram-se as ${corpo.length} maiores, com um mínimo de ${MINIMO} notícias e
+        ${VEZES.toFixed(1).replace(".", ",")}× de peso, para não elevar a regra o que é
+        acaso. Nota: esta contagem inclui todas as origens, porque o registo das
+        publicações não as separa — não segue o seletor de Portugal, Lusofonia e
+        Internacional.</p>
     </div>`;
 }
 
