@@ -27,6 +27,12 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Instalar dependencias
+        # O verificador importa as listas de fontes do extrair_noticias.py, que
+        # por sua vez importa o openpyxl logo no topo — sem esta instalação, a
+        # importação rebenta antes de qualquer feed ser testado.
+        run: pip install --quiet openpyxl
+
       - name: Verificar as fontes
         run: python verificar_fontes.py --saida fontes-estado.json
 
