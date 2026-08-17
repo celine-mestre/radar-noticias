@@ -46,8 +46,9 @@ LISBOA = ZoneInfo("Europe/Lisbon")
 # As mesmas regras de origem do painel, do relatório e da recolha. Ficam aqui
 # repetidas de propósito: este programa tem de poder correr sozinho, sem
 # importar o extrair_noticias.py, que é pesado e traz o classificador todo.
-DOMINIOS_PT = ("noticiasaominuto.com", "cnnportugal.iol.pt", "eco.sapo.pt",
-               "sapo.pt", "impresa.pt", "medialivre.pt", "lusa.pt")
+DOMINIOS_PT = ("noticiasaominuto.com", "theportugalnews.com", "portugalresident.com",
+               "agencialusa.com", "cnnportugal.iol.pt", "iol.pt", "eco.sapo.pt",
+               "sapo.pt", "aeiou.pt", "impresa.pt", "medialivre.pt", "lusa.pt")
 DOMINIOS_LUSOFONOS = (".ao", ".mz", ".cv", ".st", ".gw", ".tl", ".br")
 
 

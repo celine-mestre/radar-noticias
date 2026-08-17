@@ -76,10 +76,9 @@ COR_GRUPO = {
     "Ambiente, energia e recursos naturais": TEAL,
 }
 
-DOMINIOS_NACIONAIS = (
-    "noticiasaominuto.com", "theportugalnews.com", "lusa.pt", "cnnportugal.iol.pt",
-    "iol.pt", "eco.sapo.pt", "sapo.pt", "impresa.pt", "medialivre.pt",
-)
+DOMINIOS_NACIONAIS = ("noticiasaominuto.com", "theportugalnews.com", "portugalresident.com",
+               "agencialusa.com", "cnnportugal.iol.pt", "iol.pt", "eco.sapo.pt",
+               "sapo.pt", "aeiou.pt", "impresa.pt", "medialivre.pt", "lusa.pt")
 
 
 def sem_acentos(t):

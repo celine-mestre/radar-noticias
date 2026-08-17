@@ -1504,8 +1504,9 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
 
 
 # Publicações portuguesas cujo domínio não termina em .pt
-DOMINIOS_PT = ("noticiasaominuto.com", "cnnportugal.iol.pt", "eco.sapo.pt",
-               "sapo.pt", "impresa.pt", "medialivre.pt", "lusa.pt")
+DOMINIOS_PT = ("noticiasaominuto.com", "theportugalnews.com", "portugalresident.com",
+               "agencialusa.com", "cnnportugal.iol.pt", "iol.pt", "eco.sapo.pt",
+               "sapo.pt", "aeiou.pt", "impresa.pt", "medialivre.pt", "lusa.pt")
 DOMINIOS_LUSOFONOS = (".ao", ".mz", ".cv", ".st", ".gw", ".tl", ".br")
 
 
