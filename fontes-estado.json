@@ -1,8 +1,8 @@
 {
- "gerado": "2026-08-17T22:54:59+00:00",
- "a_responder": 43,
- "recuperaveis": 2,
- "sem_resposta": 28,
+ "gerado": "2026-08-17T23:23:26+00:00",
+ "a_responder": 44,
+ "recuperaveis": 3,
+ "sem_resposta": 26,
  "resultados": [
   {
    "nome": "Público",
@@ -47,7 +47,8 @@
    "url": "https://expresso.pt/arc/outboundfeeds/rss/?outputType=xml",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "HTTPError: HTTP Error 403: HTTP Forbidden"
+   "detalhe": "HTTPError: HTTP Error 403: HTTP Forbidden",
+   "nota": "O 403 é o servidor a recusar o pedido, não um endereço errado: estes órgãos bloqueiam os IPs de centros de dados como os do GitHub. Outro URL não resolve; a via é outra forma de recolha."
   },
   {
    "nome": "Observador",
@@ -65,7 +66,8 @@
    "url": "https://www.jn.pt/rss/",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "HTTPError: HTTP Error 403: Forbidden"
+   "detalhe": "HTTPError: HTTP Error 403: Forbidden",
+   "nota": "O 403 é o servidor a recusar o pedido, não um endereço errado: estes órgãos bloqueiam os IPs de centros de dados como os do GitHub. Outro URL não resolve; a via é outra forma de recolha."
   },
   {
    "nome": "Diário de Notícias",
@@ -128,7 +130,8 @@
    "url": "https://sicnoticias.pt/arc/outboundfeeds/rss/?outputType=xml",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "HTTPError: HTTP Error 403: HTTP Forbidden"
+   "detalhe": "HTTPError: HTTP Error 403: HTTP Forbidden",
+   "nota": "O 403 é o servidor a recusar o pedido, não um endereço errado: estes órgãos bloqueiam os IPs de centros de dados como os do GitHub. Outro URL não resolve; a via é outra forma de recolha."
   },
   {
    "nome": "CNN Portugal",
@@ -146,7 +149,8 @@
    "url": "https://www.tsf.pt/rss/",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "HTTPError: HTTP Error 403: Forbidden"
+   "detalhe": "HTTPError: HTTP Error 403: Forbidden",
+   "nota": "O 403 é o servidor a recusar o pedido, não um endereço errado: estes órgãos bloqueiam os IPs de centros de dados como os do GitHub. Outro URL não resolve; a via é outra forma de recolha."
   },
   {
    "nome": "Renascença",
@@ -197,12 +201,10 @@
    "nome": "Dinheiro Vivo",
    "origem": "nacionais",
    "dominio": "dinheirovivo.pt",
-   "url": "https://www.dinheirovivo.pt/rss/",
-   "estado": "falha",
-   "itens": 0,
-   "detalhe": "HTTPError: HTTP Error 404: Not Found",
-   "alternativa_ok": "https://www.dinheirovivo.pt/feed",
-   "alternativa_itens": 10
+   "url": "https://www.dinheirovivo.pt/feed",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
   },
   {
    "nome": "Executive Digest",
@@ -211,7 +213,11 @@
    "url": "https://executivedigest.sapo.pt/feed/",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "resposta não é um feed (ParseError)"
+   "detalhe": "resposta não é um feed (ParseError)",
+   "descobertos": [
+    "https://executivedigest.sapo.pt/feed/",
+    "https://executivedigest.sapo.pt/comments/feed/"
+   ]
   },
   {
    "nome": "Ambiente Magazine",
@@ -257,7 +263,10 @@
    "url": "https://ionline.sapo.pt/feed/",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "resposta não é um feed (ParseError)"
+   "detalhe": "resposta não é um feed (ParseError)",
+   "descobertos": [
+    "https://ionline.sapo.pt/rss.xml"
+   ]
   },
   {
    "nome": "Açoriano Oriental",
@@ -266,7 +275,14 @@
    "url": "https://www.acorianooriental.pt/rss",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "HTTPError: HTTP Error 404: Not Found"
+   "detalhe": "HTTPError: HTTP Error 404: Not Found",
+   "descobertos": [
+    "https://www.acorianooriental.pt/feed/rss.xml",
+    "https://www.acorianooriental.pt/feed/atom.xml"
+   ],
+   "alternativa_ok": "https://www.acorianooriental.pt/feed/rss.xml",
+   "alternativa_itens": 25,
+   "alternativa_origem": "autodescoberta"
   },
   {
    "nome": "JM Madeira",
@@ -347,7 +363,8 @@
    "url": "https://www.angop.ao/rss/ultimas.xml",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "RemoteDisconnected: Remote end closed connection without response"
+   "detalhe": "URLError: <urlopen error timed out>",
+   "nota": "A ligação cai sem resposta — comportamento típico de bloqueio de IPs de centros de dados, como os 403."
   },
   {
    "nome": "O País (Moçambique)",
@@ -365,7 +382,14 @@
    "url": "https://cartamz.com/index.php/component/obrss/rss-noticias",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "resposta não é um feed (ParseError)"
+   "detalhe": "resposta não é um feed (ParseError)",
+   "descobertos": [
+    "https://cartamz.com/feed/",
+    "https://cartamz.com/comments/feed/"
+   ],
+   "alternativa_ok": "https://cartamz.com/feed/",
+   "alternativa_itens": 10,
+   "alternativa_origem": "autodescoberta"
   },
   {
    "nome": "Expresso das Ilhas (Cabo Verde)",
@@ -389,21 +413,19 @@
    "nome": "Tatoli (Timor-Leste)",
    "origem": "lusofonas",
    "dominio": "tatoli.tl",
-   "url": "https://tatoli.tl/pt/feed/",
-   "estado": "falha",
-   "itens": 0,
-   "detalhe": "resposta não é um feed (ParseError)",
-   "alternativa_ok": "https://tatoli.tl/feed/",
-   "alternativa_itens": 10
+   "url": "https://tatoli.tl/feed/",
+   "estado": "ok",
+   "itens": 10,
+   "detalhe": ""
   },
   {
    "nome": "STP-Press (São Tomé)",
    "origem": "lusofonas",
    "dominio": "stp-press.st",
    "url": "https://www.stp-press.st/feed/",
-   "estado": "ok",
-   "itens": 10,
-   "detalhe": ""
+   "estado": "falha",
+   "itens": 0,
+   "detalhe": "URLError: <urlopen error timed out>"
   },
   {
    "nome": "Agência Brasil",
@@ -448,7 +470,8 @@
    "url": "https://www.euractiv.com/feed/",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "HTTPError: HTTP Error 403: Forbidden"
+   "detalhe": "HTTPError: HTTP Error 403: Forbidden",
+   "nota": "O 403 é o servidor a recusar o pedido, não um endereço errado: estes órgãos bloqueiam os IPs de centros de dados como os do GitHub. Outro URL não resolve; a via é outra forma de recolha."
   },
   {
    "nome": "El País",
@@ -574,7 +597,7 @@
    "dominio": "elmundo.es",
    "url": "https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml",
    "estado": "ok",
-   "itens": 29,
+   "itens": 26,
    "detalhe": ""
   },
   {
@@ -583,7 +606,7 @@
    "dominio": "lavanguardia.com",
    "url": "https://www.lavanguardia.com/rss/home.xml",
    "estado": "ok",
-   "itens": 139,
+   "itens": 133,
    "detalhe": ""
   },
   {
@@ -593,7 +616,14 @@
    "url": "https://www.abc.es/rss/2.0/portada/",
    "estado": "falha",
    "itens": 0,
-   "detalhe": "HTTPError: HTTP Error 500: Internal Server Error"
+   "detalhe": "HTTPError: HTTP Error 500: Internal Server Error",
+   "descobertos": [
+    "https://www.abc.es/rss/2.0/portada/",
+    "https://www.abc.es/rss/2.0/ultima-hora/"
+   ],
+   "alternativa_ok": "https://www.abc.es/rss/2.0/ultima-hora/",
+   "alternativa_itens": 25,
+   "alternativa_origem": "autodescoberta"
   },
   {
    "nome": "ANSA",
@@ -657,7 +687,10 @@
    "estado": "falha",
    "itens": 0,
    "detalhe": "HTTPError: HTTP Error 401: Unauthorized",
-   "nota": "A AP retirou os feeds públicos durante anos; os endereços .rss dos hubs são a hipótese mais recente."
+   "nota": "A AP retirou os feeds públicos (o hub .rss responde 401, autenticação exigida); sem assinatura, o título deve sair da lista.",
+   "descobertos": [
+    "https://apnews.com/index.rss"
+   ]
   },
   {
    "nome": "Der Spiegel · Internacional",
