@@ -27,6 +27,7 @@ import time
 from datetime import datetime, timezone
 
 from extrair_noticias import (FONTES, FONTES_LUSOFONAS, FONTES_INTERNACIONAIS,
+                              VIA_GOOGLE, url_via_google,
                               ler_feed, extrair_itens)
 
 # ---------------------------------------------------------------------------
@@ -108,23 +109,20 @@ ALTERNATIVAS = {
 }
 
 # Notas de contexto que o quadro deve mostrar mesmo antes de qualquer teste.
-NOTA_403 = ("O 403 é o servidor a recusar o pedido, não um endereço errado: "
-            "estes órgãos bloqueiam os IPs de centros de dados como os do "
-            "GitHub. Outro URL não resolve; a via é outra forma de recolha.")
 NOTAS = {
-    "Expresso": NOTA_403,
-    "SIC Notícias": NOTA_403,
-    "Jornal de Notícias": NOTA_403,
-    "TSF": NOTA_403,
-    "EURACTIV": NOTA_403,
-    "Angop": "A ligação cai sem resposta — comportamento típico de bloqueio "
-             "de IPs de centros de dados, como os 403.",
-    "Lusa": "A Lusa é agência por assinatura e pode não ter feed RSS público; "
-            "se nenhum endereço responder, o título deve sair da lista.",
-    "Agência Lusa · Internacional": "Mesma reserva da Lusa.",
-    "Associated Press": "A AP retirou os feeds públicos (o hub .rss responde "
-                        "401, autenticação exigida); sem assinatura, o título "
-                        "deve sair da lista.",
+    "Angop": "A ligação direta cai sem resposta (bloqueio de IPs de centros "
+             "de dados); recolhida via Google Notícias.",
+    "Agência Lusa · Internacional": "Sem feed público e redundante com a "
+                                    "Lusa via Google Notícias — candidata a "
+                                    "sair da lista.",
+    "Associated Press": "A AP retirou os feeds públicos (401, autenticação "
+                        "exigida) e a edição portuguesa do Google quase não "
+                        "a indexa — candidata a sair da lista.",
+    "Público · Política": "Redundante com o feed principal do Público "
+                          "enquanto não houver feed próprio da secção.",
+    "Público · Economia": "Idem.",
+    "Público · Sociedade": "Idem.",
+    "Público · Ciência": "Idem.",
 }
 
 
@@ -217,11 +215,18 @@ def principal():
 
     resultados = []
     for i, (origem, nome, dominio, url) in enumerate(lista, 1):
-        print(f"[{i}/{len(lista)}] {nome}…", end=" ", flush=True)
+        via_google = nome in VIA_GOOGLE
+        if via_google:
+            url = url_via_google(dominio)
+        print(f"[{i}/{len(lista)}] {nome}"
+              f"{' (via Google Notícias)' if via_google else ''}…",
+              end=" ", flush=True)
         estado, itens, detalhe = testar_com_repeticao(url, args.tempo_limite)
         registo = {"nome": nome, "origem": origem, "dominio": dominio,
                    "url": url, "estado": estado, "itens": itens,
                    "detalhe": detalhe}
+        if via_google:
+            registo["via"] = "google-noticias"
         if nome in NOTAS:
             registo["nota"] = NOTAS[nome]
 
@@ -230,7 +235,8 @@ def principal():
         else:
             print(f"{estado.upper()} — {detalhe}")
             # Falhando o configurado, experimentam-se as alternativas por ordem.
-            for alternativa in ALTERNATIVAS.get(nome, []):
+            # Nas publicações via Google não há alternativas: o endereço é um só.
+            for alternativa in [] if via_google else ALTERNATIVAS.get(nome, []):
                 time.sleep(args.pausa)
                 e2, n2, d2 = testar(alternativa, args.tempo_limite)
                 print(f"    alternativa {alternativa} → "
@@ -239,8 +245,9 @@ def principal():
                     registo["alternativa_ok"] = alternativa
                     registo["alternativa_itens"] = n2
                     break
-            # Sem alternativa viva, pergunta-se ao próprio sítio que feeds anuncia.
-            if not registo.get("alternativa_ok"):
+            # Sem alternativa viva, pergunta-se ao próprio sítio que feeds anuncia
+            # — exceto na via Google, onde não há página a consultar.
+            if not registo.get("alternativa_ok") and not via_google:
                 descobertos = descobrir_feeds(dominio, args.tempo_limite)
                 if descobertos:
                     registo["descobertos"] = descobertos

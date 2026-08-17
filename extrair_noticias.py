@@ -446,6 +446,42 @@ AREAS = [
 AZUL, CINZA = "2B5683", "F2F5F8"
 
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# Publicações recolhidas VIA GOOGLE NOTÍCIAS (pesquisa site:domínio)
+#
+# A verificação de agosto de 2026 mostrou dois becos sem saída: órgãos que
+# bloqueiam pedidos vindos de IPs de centros de dados como os do GitHub
+# (Expresso, SIC, JN, TSF respondem 403 faça-se o que se fizer ao endereço) e
+# órgãos sem feed encontrável — nem nos caminhos conhecidos nem no que a
+# própria página anuncia. Para estes, o feed lê-se ao Google Notícias restrito
+# ao domínio da publicação, reaproveitando o circuito da era Google que o
+# projeto guarda: o <source> traz o nome e o domínio do órgão, a cauda
+# « - Fonte» do título é retirada, e as ligações de reencaminhamento
+# resolvem-se para o endereço do jornal no fim da recolha.
+#
+# A janela é de um dia (when:1d) para ficar aquém do teto de 100 resultados
+# por consulta — acima disso o Google escolhe por relevância e a cronologia
+# deixa de ser garantida; com oito recolhas diárias, nada se perde.
+# ---------------------------------------------------------------------------
+VIA_GOOGLE = {
+    # Bloqueiam IPs de centros de dados (403 comprovado em duas verificações)
+    "Expresso", "SIC Notícias", "Jornal de Notícias", "TSF", "EURACTIV",
+    # Sem feed encontrável (verificação com autodescoberta, agosto de 2026)
+    "Diário de Notícias", "Renascença", "Diário de Notícias da Madeira",
+    "Jornal i", "JM Madeira", "Vida Económica", "Construir",
+    "Executive Digest", "Jornal de Angola", "Novo Jornal (Angola)",
+    "Angop", "Inforpress (Cabo Verde)", "Deutsche Welle (português)",
+    # Sem feed público (agência por assinatura); via Google, o sítio aberto
+    # da Lusa volta a contar
+    "Lusa",
+}
+
+
+def url_via_google(dominio, periodo="1d"):
+    """Endereço do feed do Google Notícias restrito a uma publicação."""
+    return url_feed(f"site:{dominio} when:{periodo}")
+
+
 # FONTES — os feeds das próprias publicações
 #
 # Em vez de interrogar um motor de pesquisa, subscreve-se o feed de cada publicação
@@ -1036,9 +1072,12 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         lista += FONTES_INTERNACIONAIS
 
     for i, (nome_fonte, dominio, url) in enumerate(lista, 1):
-        print(f"[{i}/{len(lista)}] {nome_fonte}…", end=" ", flush=True)
+        via_google = nome_fonte in VIA_GOOGLE
+        print(f"[{i}/{len(lista)}] {nome_fonte}"
+              f"{' (via Google Notícias)' if via_google else ''}…",
+              end=" ", flush=True)
         try:
-            itens = extrair_itens(ler_feed(url))
+            itens = extrair_itens(ler_feed(url_via_google(dominio) if via_google else url))
         except Exception as erro:                              # noqa: BLE001
             print(f"falhou ({erro})")
             falhas.append((nome_fonte, str(erro)))
@@ -1095,6 +1134,26 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
 
     print(f"\n{lidos} artigos lidos · {len(todos)} distintos · "
           f"{len(encontrados)} marcados por área")
+
+    # As ligações das publicações lidas via Google Notícias são
+    # reencaminhamentos; resolvem-se aqui para o endereço do jornal, com o
+    # resolvedor da era Google. Só se tenta uma vez por ligação, em paralelo,
+    # e o que não resolver fica com o reencaminhamento — que também abre.
+    pendentes = sorted({d["ligacao"]
+                        for d in list(encontrados.values()) + list(todos.values())
+                        if d["ligacao"] and "news.google." in d["ligacao"]})
+    if pendentes:
+        print(f"A resolver {len(pendentes)} ligações do Google Notícias…",
+              end=" ", flush=True)
+        with ThreadPoolExecutor(max_workers=8) as piscina:
+            mapa = dict(zip(pendentes, piscina.map(endereco_do_artigo, pendentes)))
+        trocadas = 0
+        for d in list(encontrados.values()) + list(todos.values()):
+            novo = mapa.get(d["ligacao"])
+            if novo and novo != d["ligacao"]:
+                d["ligacao"] = novo
+                trocadas += 1
+        print(f"{trocadas} convertidas em endereço do jornal")
 
     if sem_ligacao_por_fonte:
         total = sum(sem_ligacao_por_fonte.values())
