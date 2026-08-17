@@ -21,6 +21,7 @@ Uso:
 import argparse
 import json
 import os
+import re
 import sys
 import time
 from datetime import datetime, timezone
@@ -34,10 +35,14 @@ from extrair_noticias import (FONTES, FONTES_LUSOFONAS, FONTES_INTERNACIONAIS,
 # responder com artigos é o candidato a substituir o configurado.
 # ---------------------------------------------------------------------------
 ALTERNATIVAS = {
-    "Público · Política": ["https://feeds.feedburner.com/publico-politica"],
-    "Público · Economia": ["https://feeds.feedburner.com/publico-economia"],
-    "Público · Sociedade": ["https://feeds.feedburner.com/publico-sociedade"],
-    "Público · Ciência": ["https://feeds.feedburner.com/publico-ciencia"],
+    "Público · Política": ["https://www.publico.pt/politica/rss",
+                           "https://feeds.feedburner.com/publico-politica"],
+    "Público · Economia": ["https://www.publico.pt/economia/rss",
+                           "https://feeds.feedburner.com/publico-economia"],
+    "Público · Sociedade": ["https://www.publico.pt/sociedade/rss",
+                            "https://feeds.feedburner.com/publico-sociedade"],
+    "Público · Ciência": ["https://www.publico.pt/ciencia/rss",
+                          "https://feeds.feedburner.com/publico-ciencia"],
     "Expresso": ["https://expresso.pt/rss",
                  "https://expresso.pt/rss/feed"],
     "SIC Notícias": ["https://sicnoticias.pt/rss",
@@ -62,9 +67,8 @@ ALTERNATIVAS = {
                                       "https://www.dnoticias.pt/rss/ultimas"],
     "Sábado": ["https://www.sabado.pt/rss/ultimas",
                "https://www.sabado.pt/rss/portugal"],
-    "Dinheiro Vivo": ["https://www.dinheirovivo.pt/rss.xml",
-                      "https://www.dinheirovivo.pt/feed",
-                      "https://www.dinheirovivo.pt/arc/outboundfeeds/rss/?outputType=xml"],
+    "Dinheiro Vivo": ["https://www.dinheirovivo.pt/rss/",
+                      "https://www.dinheirovivo.pt/rss.xml"],
     "Executive Digest": ["https://executivedigest.sapo.pt/feed"],
     "Lusa": ["https://www.lusa.pt/rss/geral",
              "https://www.lusa.pt/Services/Rss"],
@@ -88,11 +92,11 @@ ALTERNATIVAS = {
     "Carta de Moçambique": ["https://cartamz.com/?format=feed&type=rss",
                             "https://cartamz.com/index.php?format=feed&type=rss"],
     "Inforpress (Cabo Verde)": ["https://inforpress.cv/feed"],
-    "Tatoli (Timor-Leste)": ["https://tatoli.tl/pt/feed",
-                             "https://tatoli.tl/feed/"],
+    "Tatoli (Timor-Leste)": ["https://tatoli.tl/pt/feed/"],
     "EURACTIV": ["https://www.euractiv.com/feed",
                  "https://www.euractiv.com/sections/politics/feed/"],
     "Deutsche Welle (português)": ["https://rss.dw.com/rdf/rss-br-all",
+                                   "https://rss.dw.com/atom/rss-br-all",
                                    "https://rss.dw.com/xml/rss-pt-all"],
     "France 24 (inglês)": ["https://www.france24.com/en/rss"],
     "Agência Lusa · Internacional": ["https://www.lusa.pt/rss/internacional"],
@@ -104,12 +108,23 @@ ALTERNATIVAS = {
 }
 
 # Notas de contexto que o quadro deve mostrar mesmo antes de qualquer teste.
+NOTA_403 = ("O 403 é o servidor a recusar o pedido, não um endereço errado: "
+            "estes órgãos bloqueiam os IPs de centros de dados como os do "
+            "GitHub. Outro URL não resolve; a via é outra forma de recolha.")
 NOTAS = {
+    "Expresso": NOTA_403,
+    "SIC Notícias": NOTA_403,
+    "Jornal de Notícias": NOTA_403,
+    "TSF": NOTA_403,
+    "EURACTIV": NOTA_403,
+    "Angop": "A ligação cai sem resposta — comportamento típico de bloqueio "
+             "de IPs de centros de dados, como os 403.",
     "Lusa": "A Lusa é agência por assinatura e pode não ter feed RSS público; "
             "se nenhum endereço responder, o título deve sair da lista.",
     "Agência Lusa · Internacional": "Mesma reserva da Lusa.",
-    "Associated Press": "A AP retirou os feeds públicos durante anos; os "
-                        "endereços .rss dos hubs são a hipótese mais recente.",
+    "Associated Press": "A AP retirou os feeds públicos (o hub .rss responde "
+                        "401, autenticação exigida); sem assinatura, o título "
+                        "deve sair da lista.",
 }
 
 
@@ -126,6 +141,63 @@ def testar(url, tempo_limite):
     if not itens:
         return "vazio", 0, "feed lido mas sem artigos"
     return "ok", len(itens), ""
+
+
+TRANSITORIOS = ("500", "502", "503", "RemoteDisconnected", "timed out",
+                "ConnectionReset", "IncompleteRead")
+
+
+def testar_com_repeticao(url, tempo_limite):
+    """Como testar(), mas repete uma vez os erros com ar de transitórios.
+
+    Na 1.ª ronda o ABC respondeu 500 — e o arquivo mostra que recolhe
+    normalmente todos os dias. Um servidor engasgado num segundo não é um
+    feed morto, e uma repetição espaçada distingue as duas coisas.
+    """
+    estado, itens, detalhe = testar(url, tempo_limite)
+    if estado == "falha" and any(t in detalhe for t in TRANSITORIOS):
+        time.sleep(4)
+        estado2, itens2, detalhe2 = testar(url, tempo_limite)
+        if estado2 == "ok":
+            return "ok", itens2, "respondeu à 2.ª tentativa (erro transitório)"
+        return estado2, itens2, detalhe2
+    return estado, itens, detalhe
+
+
+def descobrir_feeds(dominio, tempo_limite, bases=None):
+    """Autodescoberta: os feeds que a própria publicação anuncia.
+
+    A norma manda os sítios declararem os seus feeds na página inicial, em
+    <link rel="alternate" type="application/rss+xml" href="…">. Quando todos
+    os endereços que conhecemos falham, perguntar ao próprio sítio é mais
+    fiável do que continuar a adivinhar caminhos.
+    """
+    candidatos = []
+    for base in bases or (f"https://www.{dominio}/", f"https://{dominio}/"):
+        try:
+            texto = ler_feed(base, tempo_limite=tempo_limite).decode("utf-8", "replace")
+        except Exception:                                      # noqa: BLE001
+            continue
+        for etiqueta in re.findall(r"<link\b[^>]*>", texto, re.IGNORECASE):
+            if "alternate" not in etiqueta.lower():
+                continue
+            if not re.search(r"application/(rss|atom)\+xml", etiqueta, re.IGNORECASE):
+                continue
+            achado = re.search(r'href=["\']([^"\']+)["\']', etiqueta, re.IGNORECASE)
+            if not achado:
+                continue
+            url = achado.group(1).strip()
+            if url.startswith("//"):
+                url = "https:" + url
+            elif url.startswith("/"):
+                url = base.rstrip("/") + url
+            elif not url.startswith("http"):
+                continue
+            if url not in candidatos:
+                candidatos.append(url)
+        if candidatos:
+            break
+    return candidatos[:6]
 
 
 def principal():
@@ -146,7 +218,7 @@ def principal():
     resultados = []
     for i, (origem, nome, dominio, url) in enumerate(lista, 1):
         print(f"[{i}/{len(lista)}] {nome}…", end=" ", flush=True)
-        estado, itens, detalhe = testar(url, args.tempo_limite)
+        estado, itens, detalhe = testar_com_repeticao(url, args.tempo_limite)
         registo = {"nome": nome, "origem": origem, "dominio": dominio,
                    "url": url, "estado": estado, "itens": itens,
                    "detalhe": detalhe}
@@ -154,7 +226,7 @@ def principal():
             registo["nota"] = NOTAS[nome]
 
         if estado == "ok":
-            print(f"OK ({itens} artigos)")
+            print(f"OK ({itens} artigos)" + (f" — {detalhe}" if detalhe else ""))
         else:
             print(f"{estado.upper()} — {detalhe}")
             # Falhando o configurado, experimentam-se as alternativas por ordem.
@@ -167,6 +239,21 @@ def principal():
                     registo["alternativa_ok"] = alternativa
                     registo["alternativa_itens"] = n2
                     break
+            # Sem alternativa viva, pergunta-se ao próprio sítio que feeds anuncia.
+            if not registo.get("alternativa_ok"):
+                descobertos = descobrir_feeds(dominio, args.tempo_limite)
+                if descobertos:
+                    registo["descobertos"] = descobertos
+                for candidato in descobertos:
+                    time.sleep(args.pausa)
+                    e3, n3, d3 = testar(candidato, args.tempo_limite)
+                    print(f"    descoberto {candidato} → "
+                          f"{'OK (' + str(n3) + ' artigos)' if e3 == 'ok' else e3.upper()}")
+                    if e3 == "ok":
+                        registo["alternativa_ok"] = candidato
+                        registo["alternativa_itens"] = n3
+                        registo["alternativa_origem"] = "autodescoberta"
+                        break
         resultados.append(registo)
         time.sleep(args.pausa)
 
