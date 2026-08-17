@@ -622,9 +622,11 @@ recolhida"** em vez de "arquivo de 7 dias".
   social nacional e sujeito ao patamar de cobertura.
 - **Trajetória de cada área**, com o volume em linha — a cheia é o total, a tracejada é só
   a parte de Portugal, que é a que o tom diz respeito — e, por baixo, uma faixa com o **tom
-  da cobertura** no mesmo eixo de tempo: verde abaixo de 40% de notícias negativas, vermelho
-  acima de 60%, cinzento no meio, vazado quando o período não tem massa que sustente a
-  proporção. Volume e tom leem-se juntos, área a área, sem sair do cartão.
+  da cobertura** no mesmo eixo de tempo. Cada tijolo é repartido pelas proporções de
+  positivas, neutras e negativas do período, e não resumido a uma cor: a média destrói o
+  sinal ao agregar — nesta série, ao passar de dia para semana o vermelho cai de 17% das
+  células para 3%. Fica vazado quando o período não tem massa que sustente a proporção.
+  Volume e tom leem-se juntos, área a área, sem sair do cartão.
 - **Cruzamentos**: duas áreas lado a lado, na mesma escala e com totais, médias, maior
   período e tom comparados; e uma matriz **áreas × publicações**, que se lê por linha (que
   órgãos sustentam uma área) e por coluna (que áreas cada órgão cobre mais).
