@@ -1,0 +1,46 @@
+name: Verificar fontes
+
+# Corre à mão, no botão "Run workflow": testa os 73 feeds configurados e, para
+# os que falham, os endereços alternativos conhecidos. O resultado fica em dois
+# sítios — o resumo da própria execução (Summary) e o fontes-estado.json no
+# repositório, para o painel um dia o poder mostrar.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gravacao-repositorio
+  cancel-in-progress: false
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        # O verificador importa as listas de fontes do extrair_noticias.py, que
+        # por sua vez importa o openpyxl logo no topo — sem esta instalação, a
+        # importação rebenta antes de qualquer feed ser testado.
+        run: pip install --quiet openpyxl
+
+      - name: Verificar as fontes
+        run: python verificar_fontes.py --saida fontes-estado.json
+
+      - name: Gravar o estado das fontes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add fontes-estado.json
+          git diff --cached --quiet || git commit -m "Estado das fontes"
+          git pull --rebase --autostash
+          git push
