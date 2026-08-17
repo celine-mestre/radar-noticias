@@ -165,7 +165,7 @@ def endereco_logo(painel):
     if base.endswith(".html"):
         base = base.rsplit("/", 1)[0]
     base = base.rstrip("/")
-    return f"{base}/logo-sggov.png" if base else ""
+    return f"{base}/logo-sggov-email.png" if base else ""
 
 
 def mensagem_confirmacao(email, areas, acao, painel):
@@ -200,13 +200,8 @@ def mensagem_confirmacao(email, areas, acao, painel):
     # relatório diário e no painel. É a mesma marca nos três sítios.
     logo = endereco_logo(painel)
     logo_html = (f"""<td valign="middle" style="padding-right:14px">
-        <table cellpadding="0" cellspacing="0" role="presentation"
-               style="background:#ffffff;border-radius:8px"><tr>
-          <td style="padding:7px;line-height:0">
-            <img src="{logo}" width="34" height="33" alt="Secretaria-Geral do Governo"
-                 style="display:block;border:0"></td>
-        </tr></table>
-      </td>""" if logo else "")
+        <img src="{logo}" width="40" height="40" alt="Secretaria-Geral do Governo"
+             style="display:block;border:0"></td>""" if logo else "")
 
     return f"""<!DOCTYPE html>
 <html lang="pt-PT"><head><meta charset="UTF-8"></head>

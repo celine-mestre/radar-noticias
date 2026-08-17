@@ -479,7 +479,7 @@ def endereco_logo(endereco_painel):
     if base.endswith(".html"):
         base = base.rsplit("/", 1)[0]
     base = base.rstrip("/")
-    return f"{base}/logo-sggov.png" if base else ""
+    return f"{base}/logo-sggov-email.png" if base else ""
 
 
 def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None, escrita_em=""):
@@ -500,13 +500,8 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
     # cantos redondos mostram um quadrado branco, que continua correto.
     logo = endereco_logo(endereco_painel)
     logo_html = (f"""<td valign="middle" style="padding-right:14px">
-        <table cellpadding="0" cellspacing="0" role="presentation"
-               style="background:#ffffff;border-radius:8px"><tr>
-          <td style="padding:7px;line-height:0">
-            <img src="{esc(logo)}" width="34" height="33" alt="Secretaria-Geral do Governo"
-                 style="display:block;border:0"></td>
-        </tr></table>
-      </td>""" if logo else "")
+        <img src="{logo}" width="40" height="40" alt="Secretaria-Geral do Governo"
+             style="display:block;border:0"></td>""" if logo else "")
 
     criterios = f"{ROTULO_PERIODO.get(periodo, periodo)} · " + (
         ROTULO_ORIGENS.get(frozenset(origens), "OCS selecionados")

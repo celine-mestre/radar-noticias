@@ -788,6 +788,13 @@ def extrair_itens(xml_bruto):
         titulo = limpar(item.findtext("title"))
         ligacao = endereco_do_item(item)
 
+        # O <source> do item só é de fiar em feeds de agregador, onde cada
+        # artigo vem de um órgão diferente. Nos feeds próprios de cada órgão —
+        # que são todos os nossos — muitos publicadores usam esse campo para
+        # outra coisa: a RFI mete lá o crédito da fotografia («© Reuters»,
+        # «AFP - HENRY NICHOLLS») e o Expresso das Ilhas mete o título de outra
+        # peça. Isso enchia a lista de publicações de nomes que não são
+        # publicações. O nome do feed, que é o do órgão, é o que vale.
         fonte_no = item.find("source")
         fonte = limpar(fonte_no.text) if fonte_no is not None else ""
         dominio = ""
@@ -1032,7 +1039,7 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
             if chave_geral and chave_geral not in todos:
                 todos[chave_geral] = {
                     "data": it["data"],
-                    "fonte": it["fonte"] or nome_fonte,
+                    "fonte": nome_fonte or it["fonte"],
                     "dominio": it["dominio"] or dominio,
                     "titulo": it["titulo"],
                     "resumo": (it["resumo"] or "")[:240],
@@ -1052,7 +1059,7 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
                     continue
                 encontrados[chave] = {
                     "area": nome_area, "grupo": grupo_nome, "data": it["data"],
-                    "fonte": it["fonte"] or nome_fonte, "dominio": it["dominio"] or dominio,
+                    "fonte": nome_fonte or it["fonte"], "dominio": it["dominio"] or dominio,
                     "titulo": it["titulo"], "resumo": it["resumo"],
                     "ligacao": it["ligacao"], "imagem": it.get("imagem", ""),
                     "palavras": set(palavras),
