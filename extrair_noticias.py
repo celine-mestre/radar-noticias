@@ -455,10 +455,14 @@ AZUL, CINZA = "2B5683", "F2F5F8"
 # ---------------------------------------------------------------------------
 FONTES = [
     ("Público", "publico.pt", "https://feeds.feedburner.com/PublicoRSS"),
-    ("Público · Política", "publico.pt", "https://feeds.feedburner.com/publico-politica"),
-    ("Público · Economia", "publico.pt", "https://feeds.feedburner.com/publico-economia"),
-    ("Público · Sociedade", "publico.pt", "https://feeds.feedburner.com/publico-sociedade"),
-    ("Expresso", "expresso.pt", "https://expresso.pt/rss"),
+    # Os feeds temáticos do FeedBurner foram descontinuados; o Público serve-os
+    # hoje no próprio sítio, em publico.pt/rss/<secção>.
+    ("Público · Política", "publico.pt", "https://www.publico.pt/rss/politica"),
+    ("Público · Economia", "publico.pt", "https://www.publico.pt/rss/economia"),
+    ("Público · Sociedade", "publico.pt", "https://www.publico.pt/rss/sociedade"),
+    # A Impresa (Expresso, SIC) publica no padrão da plataforma Arc:
+    # /arc/outboundfeeds/rss/ — os caminhos /rss antigos deixaram de responder.
+    ("Expresso", "expresso.pt", "https://expresso.pt/arc/outboundfeeds/rss/?outputType=xml"),
     ("Observador", "observador.pt", "https://observador.pt/feed/"),
     ("Jornal de Notícias", "jn.pt", "https://www.jn.pt/rss/"),
     ("Diário de Notícias", "dn.pt", "https://www.dn.pt/rss/"),
@@ -467,7 +471,7 @@ FONTES = [
     ("Jornal Económico", "jornaleconomico.pt", "https://jornaleconomico.sapo.pt/feed"),
     ("ECO", "eco.sapo.pt", "https://eco.sapo.pt/feed/"),
     ("RTP Notícias", "rtp.pt", "https://www.rtp.pt/noticias/rss"),
-    ("SIC Notícias", "sicnoticias.pt", "https://sicnoticias.pt/rss"),
+    ("SIC Notícias", "sicnoticias.pt", "https://sicnoticias.pt/arc/outboundfeeds/rss/?outputType=xml"),
     ("CNN Portugal", "cnnportugal.iol.pt", "https://cnnportugal.iol.pt/rss"),
     ("TSF", "tsf.pt", "https://www.tsf.pt/rss/"),
     ("Renascença", "rr.sapo.pt", "https://rr.sapo.pt/rss"),
@@ -496,7 +500,7 @@ FONTES = [
     ("SAPO Tek", "tek.sapo.pt", "https://tek.sapo.pt/rss"),
     ("Healthnews", "healthnews.pt", "https://healthnews.pt/feed/"),
     ("Construir", "construir.pt", "https://www.construir.pt/feed/"),
-    ("Público · Ciência", "publico.pt", "https://feeds.feedburner.com/publico-ciencia")
+    ("Público · Ciência", "publico.pt", "https://www.publico.pt/rss/ciencia")
 ]
 
 # Imprensa dos restantes países de língua portuguesa. Matéria da CPLP, cooperação,
@@ -525,8 +529,11 @@ FONTES_INTERNACIONAIS = [
     ("El País · Internacional", "elpais.com", "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/internacional/portada"),
     ("Le Monde", "lemonde.fr", "https://www.lemonde.fr/rss/une.xml"),
     ("BBC Mundo", "bbc.com", "https://feeds.bbci.co.uk/mundo/rss.xml"),
-    ("Deutsche Welle (português)", "dw.com", "https://rss.dw.com/rdf/rss-br-all"),
-    ("France 24 (português)", "france24.com", "https://www.france24.com/pt/rss"),
+    # O endpoint /rdf/ da DW foi descontinuado; o formato atual é /xml/.
+    ("Deutsche Welle (português)", "dw.com", "https://rss.dw.com/xml/rss-br-all"),
+    # A France 24 não tem edição em português (é a RFI que a tem, e já cá está);
+    # fica a edição inglesa da Europa, que serve o propósito do clipping.
+    ("France 24 (inglês)", "france24.com", "https://www.france24.com/en/europe/rss"),
     ("RFI (português)", "rfi.fr", "https://www.rfi.fr/pt/rss"),
     ("The Guardian · Europe", "theguardian.com", "https://www.theguardian.com/world/europe-news/rss"),
     ("Agência Lusa · Internacional", "lusa.pt", "https://www.lusa.pt/rss/internacional"),
@@ -546,7 +553,7 @@ FONTES_INTERNACIONAIS = [
 
     # Itália
     ("ANSA", "ansa.it", "https://www.ansa.it/sito/ansait_rss.xml"),
-    ("Corriere della Sera", "corriere.it", "https://xml2.corriereobjects.it/rss/homepage.xml"),
+    ("Corriere della Sera", "corriere.it", "https://www.corriere.it/rss/homepage.xml"),
     ("La Repubblica", "repubblica.it", "https://www.repubblica.it/rss/homepage/rss2.0.xml"),
 
     # Estados Unidos da América
@@ -683,7 +690,19 @@ def resolver_ligacoes(linhas, trabalhadores=8):
 
 
 def ler_feed(url, tempo_limite=30):
-    pedido = Request(url, headers={"User-Agent": "SGGov-UPE-Radar/1.0"})
+    # A identificação «SGGov-UPE-Radar/1.0» era recusada pelas proteções
+    # anti-robô de vários órgãos (Expresso, JN, CM, TSF, entre outros): o
+    # servidor respondia 403 e o feed parecia morto sem o estar. Os cabeçalhos
+    # passam a ser os de um navegador corrente, com o Accept dos formatos de
+    # feed — que é o que qualquer leitor de RSS envia.
+    pedido = Request(url, headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/126.0.0.0 Safari/537.36",
+        "Accept": "application/rss+xml, application/atom+xml, "
+                  "application/xml;q=0.9, text/xml;q=0.8, */*;q=0.7",
+        "Accept-Language": "pt-PT,pt;q=0.9,en;q=0.6",
+    })
     with urlopen(pedido, timeout=tempo_limite) as resposta:
         return resposta.read()
 
