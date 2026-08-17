@@ -1323,26 +1323,27 @@ function blocoPublicacoes(linhas, areas){
   const tabelaArea = () => `
     <table class="esp">
       <tr><th>Publicação</th><th class="num">Notícias</th><th class="num">Da área</th>
-        <th class="num">Do total</th><th class="num">Peso</th></tr>
+        <th class="num">Peso</th><th class="num">Do total</th></tr>
       ${linhasTab.slice(0, 12).map(r => `<tr>
         <th>${r.pub}</th>
         <td class="num">${num(r.q)}</td>
         <td class="num">${pct(r.naArea)}</td>
-        <td class="num esp-fraco">${pct(r.noTodo)}</td>
         <td class="num esp-ind">${vezes(r.indice)}</td>
+        <td class="num esp-fraco">${pct(r.noTodo)}</td>
       </tr>`).join("")}
     </table>`;
 
   const tabelaGeral = () => `
     <table class="esp">
-      <tr><th>Publicação</th><th class="num">Do total</th>
-        <th>Acompanha de perto</th></tr>
+      <tr><th>Publicação</th><th>Acompanha de perto</th>
+        <th class="num">Notícias</th><th class="num">Do total</th></tr>
       ${grupos.map(g => `<tr>
         <th>${g.pub}</th>
-        <td class="num esp-fraco">${pct(g.noTodo)}</td>
         <td>${g.areas.map(r => `<span class="esp-chip"
           title="${r.n}: ${num(r.q)} notícias, ${pct(r.naArea)} da área">${r.n}
           <b>${vezes(r.indice)}</b></span>`).join("")}</td>
+        <td class="num">${num(porPub[g.pub])}</td>
+        <td class="num esp-fraco">${pct(g.noTodo)}</td>
       </tr>`).join("")}
     </table>`;
 
@@ -1353,15 +1354,17 @@ function blocoPublicacoes(linhas, areas){
       <h2>Publicações especializadas${sufixoFoco()}</h2>
       ${corpo.length ? (areaEscolhida ? tabelaArea() : tabelaGeral()) : vazio}
       <p class="nota">Publicações que cobrem uma área <strong>acima do seu peso
-        habitual</strong>. «Do total» é a parte que o órgão representa em todo o período;
-        o número ao lado de cada área é o quociente entre a presença que tem nessa área e
-        essa parte. Um peso de 2× quer dizer que o órgão está ali com o dobro da presença
+        habitual</strong>. «Do total» é a parte que o órgão representa nas
+        <strong>${num(geral)} marcações</strong> registadas no período — marcações, e não
+        notícias, porque uma peça que satisfaz três áreas conta em cada uma; o número ao
+        lado de cada área é o quociente entre a presença que tem nessa área e essa parte. Um peso de 2× quer dizer que o órgão está ali com o dobro da presença
         que tem no conjunto — é escolha editorial, não volume. Uma publicação aparece uma
         só vez, com todas as áreas em que se destaca, pela ordem da mais forte.
         Exigem-se ${MINIMO} notícias e ${vezes(VEZES)} de peso, para não elevar a regra o
-        que é acaso. Esta contagem inclui todas as origens, porque o registo das
-        publicações não as separa — não segue o seletor de Portugal, Lusofonia e
-        Internacional.</p>
+        que é acaso. Dois limites do registo: guardam-se as doze publicações com mais
+        volume em cada área e dia, o que deixa de fora uma cauda longa de cerca de 5%; e a
+        contagem inclui todas as origens, porque o registo não as separa — não segue o
+        seletor de Portugal, Lusofonia e Internacional.</p>
     </div>`;
 }
 
@@ -1802,8 +1805,6 @@ function desenhar(){
 
     ${blocoComparacao(linhas, pares)}
 
-    ${blocoPublicacoes(linhas, areas)}
-
     <div class="bloco">
       <h2>${areaEscolhida ? "Trajetória da área" : "Trajetória de cada área"}
         <span class="h2-foco">· período todo${diaEscolhido
@@ -1869,6 +1870,8 @@ function desenhar(){
         uma linha que conta também a Lusofonia e o estrangeiro. Com a origem já filtrada em
         Portugal as duas linhas coincidem e desenha-se uma só.</p>
     </div>
+
+    ${blocoPublicacoes(linhas, areas)}
 
     <div class="bloco">
       <h2>${areaEscolhida ? "Palavras da área" : "Palavras do período"} ${rotuloFoco}</h2>
