@@ -1,11 +1,22 @@
 {
- "atualizado": "2026-08-16 23:27",
- "dia": "2026-08-16",
- "corte": "23:27",
+ "atualizado": "2026-08-17 03:16",
+ "dia": "2026-08-17",
+ "corte": "03:16",
  "dias_base": 12,
- "regra": "Tempestade quando a contagem do dia, até às 23:27, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 03:16, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [],
- "momentum": [],
+ "momentum": [
+  {
+   "area": "Defesa Nacional",
+   "hoje": 3,
+   "mediana": 2.0,
+   "limiar": 10.0,
+   "excesso": 1.0,
+   "variacao_pct": 50,
+   "dias_base": 12,
+   "tempestade": false
+  }
+ ],
  "historico": [
   {
    "data": "2026-08-11",
