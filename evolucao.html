@@ -165,6 +165,9 @@ main{padding:1.6rem 0 3rem}
 .legenda{display:flex;gap:1.1rem;flex-wrap:wrap;margin-top:.8rem}
 .legenda span{display:inline-flex;align-items:center;gap:.4rem;font-size:.76rem;color:var(--texto-suave)}
 .legenda i{width:10px;height:10px;border-radius:3px;background:var(--cor);display:block}
+.legenda .lgd-per{font-weight:600;color:var(--texto)}
+.legenda .lgd-tot{font-weight:600;color:var(--texto);padding-left:.6rem;
+  border-left:1px solid var(--borda)}
 
 .ranking{display:grid;gap:.45rem;margin-top:1rem}
 .rk{display:grid;grid-template-columns:190px 1fr auto;gap:.7rem;align-items:center;font-size:.82rem}
@@ -1058,30 +1061,24 @@ function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null){
      cada tijolo fica centrado no ponto da linha que lhe corresponde, e não
      apenas «por baixo, mais ou menos». Os períodos sem massa que sustente
      proporções ficam vazados, como no quadro do sentimento. */
-  /* Cada tijolo é uma micro-barra repartida, e não uma cor só. Uma cor única
-     obrigava a resumir o período a uma média, e a média destrói o sinal quando
-     se agrega: medido nos dados reais, ao passar de dia para semana o vermelho
-     caiu de 17% das células para 3% e a amplitude encolheu de 0–89% para
-     10–66%. Ao mês seria uma tira cinzenta de ponta a ponta. Repartido, um mês
-     com 30% de cobertura negativa mostra 30% de vermelho, seja qual for a
-     agregação — e usa o mesmo vocabulário das barras do quadro do sentimento. */
+  /* Uma cor por período, e não uma micro-barra repartida: a repartida guardava
+     mais informação, mas em sete píxeis de altura e doze de largura não se lia.
+     Aqui a legibilidade ganha à completude — quem quiser as proporções tem-nas
+     no quadro do sentimento, em tamanho de gente. Fica a ressalva de método:
+     ao agregar por semana ou mês a cor é a média do período, e a média achata
+     as diferenças. */
   let faixa = "";
   if(tons && tons.some(x => x !== null)){
     faixa = tons.map((c, i) => {
       const meio = i * passo;
       const x = Math.max(0, meio - passo / 2);
       const larg = Math.min(100, meio + passo / 2) - x - 0.6;
-      if(!c) return `<rect x="${x.toFixed(1)}" y="37" width="${larg.toFixed(1)}"
-             height="7" fill="none" stroke="var(--borda)" stroke-width="1"
-             stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/>`;
-      let corrido = x;
-      return ["positivo", "neutro", "negativo"].map(k => {
-        const w = larg * (c[k] / (c.av || 1));
-        const seg = `<rect x="${corrido.toFixed(2)}" y="37" width="${w.toFixed(2)}"
-          height="7" fill="${COR_TOM[k]}"/>`;
-        corrido += w;
-        return w > 0 ? seg : "";
-      }).join("");
+      return c
+        ? `<rect x="${x.toFixed(1)}" y="37" width="${larg.toFixed(1)}" height="7"
+             fill="${corDoTom(Math.round(c.negativo / c.av * 100))}" rx="1"/>`
+        : `<rect x="${x.toFixed(1)}" y="37" width="${larg.toFixed(1)}" height="7"
+             fill="none" stroke="var(--borda)" stroke-width="1"
+             stroke-dasharray="2 2" vector-effect="non-scaling-stroke" rx="1"/>`;
     }).join("");
   }
 
@@ -1639,26 +1636,34 @@ function desenhar(){
       <h2>Volume ao longo do tempo <span class="h2-foco">· ${linhas.length}
         ${linhas.length === 1 ? "dia" : "dias"}, por ${agregNome()}</span></h2>
       ${barrasEmpilhadas(pontos)}
-      <div class="legenda">
-        ${[["nacionais","Portugal","var(--verde)"],["lusofonas","Lusofonia","var(--dourado)"],
-           ["internacionais","Internacional","var(--teal)"]]
-          .filter(([k]) => origem === "todas" || origem === k)
-          .map(([k, rot, c]) => `<span style="--cor:${c}"><i></i>${rot} · ${num(origens[k])}
-            (${(origens[k] / soma * 100).toFixed(0)}%)</span>`).join("")}
-      </div>
-      ${pontoFoco ? `<p class="nota" style="margin-top:.45rem">
-        Em <strong>${descreverPeriodo(diaEscolhido)}</strong>: ${
-          [["nacionais","Portugal"],["lusofonas","Lusofonia"],["internacionais","Internacional"]]
+      ${(() => {
+        /* Escolhido um período, a legenda passa a ser desse período — é o que se
+           está a olhar — e diz no princípio a que período se refere, para não
+           haver dúvida sobre o âmbito. O total vem sempre ao fim: é a soma das
+           três origens, e serve de prova de que a repartição fecha com o número
+           grande lá em cima quando nada está escolhido. */
+        const v = pontoFoco ? pontoFoco.origens : origens;
+        const todas = pontoFoco
+          ? Object.values(pontoFoco.todas).reduce((a, b) => a + b, 0) || 1
+          : soma;
+        const tot = pontoFoco ? pontoFoco.total : total;
+        return `<div class="legenda">
+          ${pontoFoco ? `<span class="lgd-per">${descreverPeriodo(diaEscolhido)}</span>` : ""}
+          ${[["nacionais","Portugal","var(--verde)"],["lusofonas","Lusofonia","var(--dourado)"],
+             ["internacionais","Internacional","var(--teal)"]]
             .filter(([k]) => origem === "todas" || origem === k)
-            .map(([k, rot]) => `${rot} ${num(pontoFoco.origens[k])}`).join(" · ")
-        } — ${num(pontoFoco.total)} no total. Os números acima são da janela inteira,
-        que é o que o gráfico mostra.</p>` : ""}
+            .map(([k, rot, c]) => `<span style="--cor:${c}"><i></i>${rot} · ${num(v[k])}
+              (${(v[k] / todas * 100).toFixed(0)}%)</span>`).join("")}
+          <span class="lgd-tot">Total · ${num(tot)}</span>
+        </div>`;
+      })()}
       <p class="nota">${autoAgregado
           ? `<strong>São ${linhas.length} dias:</strong> o gráfico passou a
              ${autoAgregado === "mes" ? "meses" : "semanas"} para continuar legível.
              Carregue em «Por dia» se quiser mesmo o detalhe diário. ` : ""}Cada
         barra é um ${agregNome()}, repartido pela origem da comunicação social.
-        <strong>Clicar numa barra</strong> passa os quadros seguintes a mostrar apenas
+        A repartição por origem ao lado é do período escolhido, quando há um, e da janela
+        inteira quando não há. <strong>Clicar numa barra</strong> passa os quadros seguintes a mostrar apenas
         esse ${agregNome()}.</p>
     </div>
 
@@ -1717,9 +1722,9 @@ function desenhar(){
         <span class="h2-foco">· período todo${diaEscolhido
           ? `, com ${descreverPeriodo(diaEscolhido)} assinalado` : ""}</span></h2>
       ${Object.keys(TOM_PERIODO).length ? `<div class="legenda">
-        <span style="--cor:var(--verde)"><i></i>Positivas</span>
-        <span style="--cor:#9aa1a8"><i></i>Neutras</span>
-        <span style="--cor:var(--vermelho,#B23A3A)"><i></i>Negativas</span>
+        <span style="--cor:var(--verde)"><i></i>Cobertura sobretudo positiva</span>
+        <span style="--cor:#9aa1a8"><i></i>Equilibrada</span>
+        <span style="--cor:var(--vermelho,#B23A3A)"><i></i>Sobretudo negativa</span>
         <span style="--cor:transparent"><i style="border:1px dashed var(--borda)"></i>Amostra pequena</span>
       </div>
       ${origem === "todas" ? `<p class="nota" style="margin:.1rem 0 .6rem">
@@ -1768,12 +1773,11 @@ function desenhar(){
         número mostra quanto esse período se afasta da média da área no intervalo.` : ""}</p>
       <p class="nota">A faixa por baixo de cada linha é o <strong>tom da cobertura</strong>
         no mesmo período — avaliação do Amália, em validação, só sobre a comunicação social
-        nacional. Cada tijolo é repartido pelas proporções de positivas, neutras e negativas
-        desse período, como as barras do quadro do sentimento em ponto pequeno; fica vazado
-        quando o período não chega a ${MINIMO_AVALIADAS} notícias avaliadas e a proporção
-        seria ruído. Reparte-se em vez de se resumir a uma cor porque a média destrói o
-        sinal ao agregar: medido nesta série, ao passar de dia para semana o vermelho caiu
-        de 17% das células para 3%, e ao mês seria uma tira cinzenta de ponta a ponta. Como o tom só se aplica à comunicação social nacional, a linha
+        nacional. Verde abaixo de 40% de notícias negativas, vermelho acima de 60%, cinzento
+        no meio; vazado quando o período não chega a ${MINIMO_AVALIADAS} notícias avaliadas e
+        a proporção seria ruído. Ao agregar por semana ou mês a cor é a média do período, e a
+        média achata as diferenças — para ver as proporções exatas, o quadro do sentimento
+        mostra-as por inteiro. Como o tom só se aplica à comunicação social nacional, a linha
         tracejada mostra quantas dessas notícias havia: sem ela, a faixa ficaria debaixo de
         uma linha que conta também a Lusofonia e o estrangeiro. Com a origem já filtrada em
         Portugal as duas linhas coincidem e desenha-se uma só.</p>
