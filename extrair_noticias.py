@@ -492,7 +492,7 @@ FONTES = [
     ("Jornal i", "ionline.sapo.pt", "https://ionline.sapo.pt/feed/"),
 
     # Regionais das regiões autónomas
-    ("Açoriano Oriental", "acorianooriental.pt", "https://www.acorianooriental.pt/rss"),
+    ("Açoriano Oriental", "acorianooriental.pt", "https://www.acorianooriental.pt/feed/rss.xml"),
     ("JM Madeira", "jm-madeira.pt", "https://www.jm-madeira.pt/rss"),
 
     # Especializadas, por matéria de área governativa
@@ -510,7 +510,7 @@ FONTES_LUSOFONAS = [
     ("Novo Jornal (Angola)", "novojornal.co.ao", "https://www.novojornal.co.ao/rss"),
     ("Angop", "angop.ao", "https://www.angop.ao/rss/ultimas.xml"),
     ("O País (Moçambique)", "opais.co.mz", "https://opais.co.mz/feed/"),
-    ("Carta de Moçambique", "cartamz.com", "https://cartamz.com/index.php/component/obrss/rss-noticias"),
+    ("Carta de Moçambique", "cartamz.com", "https://cartamz.com/feed/"),
     ("Expresso das Ilhas (Cabo Verde)", "expressodasilhas.cv", "https://expressodasilhas.cv/rss"),
     ("Inforpress (Cabo Verde)", "inforpress.cv", "https://inforpress.cv/feed/"),
     ("Tatoli (Timor-Leste)", "tatoli.tl", "https://tatoli.tl/feed/"),
@@ -549,7 +549,7 @@ FONTES_INTERNACIONAIS = [
     # Espanha
     ("El Mundo", "elmundo.es", "https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml"),
     ("La Vanguardia", "lavanguardia.com", "https://www.lavanguardia.com/rss/home.xml"),
-    ("ABC", "abc.es", "https://www.abc.es/rss/2.0/portada/"),
+    ("ABC", "abc.es", "https://www.abc.es/rss/2.0/ultima-hora/"),
 
     # Itália
     ("ANSA", "ansa.it", "https://www.ansa.it/sito/ansait_rss.xml"),
