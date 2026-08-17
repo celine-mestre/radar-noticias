@@ -222,7 +222,7 @@ main{padding:1.6rem 0 3rem}
 .mini-cx h3{font-size:.72rem;font-weight:500;color:var(--texto-suave);line-height:1.3;
   height:2.2em;overflow:hidden}
 .mini-cx b{font-size:1.15rem;font-weight:600;color:var(--cor);font-variant-numeric:tabular-nums}
-.mini-cx svg{width:100%;height:34px;margin-top:.3rem}
+.mini-cx svg{width:100%;height:45px;margin-top:.3rem}
 .mini-rot{display:block;font-size:.64rem;color:var(--texto-ligeiro);line-height:1.25;
   margin-top:.1rem;min-height:1.6em}
 .h2-foco{font-weight:400;font-size:.72em;color:var(--texto-ligeiro);letter-spacing:0}
@@ -256,7 +256,10 @@ main{padding:1.6rem 0 3rem}
 .bloco-convite{border-style:dashed}
 .cmp-legenda{display:flex;gap:1.2rem;flex-wrap:wrap;margin:.6rem 0 .2rem;font-size:.78rem}
 .cmp-eti{display:flex;align-items:center;gap:.4rem;color:var(--texto-suave)}
-.cmp-eti i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.cmp-eti i{width:18px;height:3px;border-radius:2px;display:inline-block}
+/* A segunda área desenha-se a tracejado no gráfico: a legenda tem de o dizer,
+   senão os dois quadradinhos iguais mandam procurar duas linhas contínuas. */
+.cmp-eti i.tracejada{border-radius:0}
 .cmp-svg{width:100%;height:90px}
 table.cmp{width:100%;border-collapse:collapse;margin-top:.9rem;font-size:.82rem}
 table.cmp th,table.cmp td{padding:.42rem .5rem;border-top:1px solid var(--borda);text-align:right}
@@ -580,6 +583,10 @@ const num = n => n.toLocaleString("pt-PT");
 let SERIE = [];        // [{data, areas:{nome:{noticias, novas, fontes, origens, palavras}}}]
 let TEMPESTADES = [];  // [{data, area, hoje, mediana, limiar}] — do alertas.json
 let RESUMOS_PICOS = {}; // {"data|área": {texto, n}} — do picos-resumos.json
+/* Patamar de leitura, partilhado pelo quadro do sentimento e pela faixa de tom
+   das trajetórias: abaixo disto uma proporção é ruído, não leitura. */
+const MINIMO_AVALIADAS = 8;
+
 let SENTIMENTO = [];   // [{data, fechado, areas:{nome:{nacionais, avaliadas, positivo, neutro, negativo}}}]
 let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas", areaEscolhida = "", grupoEscolhido = "";
 /* Quem escolhe a agregação manda: só se ajusta sozinha enquanto ninguém tocou
@@ -587,6 +594,7 @@ let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas", areaEsc
 let agregacaoManual = false;
 let areaComparada = "";   // segunda área, para a comparação lado a lado
 let PUBLICACOES = [];     // [{data, areas:{nome:{publicação: n}}}] — publicacoes.json
+let TOM_PERIODO = {};     // {área|período: {av, neg}} — a faixa de tom das trajetórias
 let AREAS_VISTAS = [];    // as áreas que aparecem na série, para o seletor da comparação
 
 /* Nomes das áreas de um agrupamento temático, para filtrar por grupo. */
@@ -1010,8 +1018,21 @@ function barrasEmpilhadas(pontos){
   </svg>`;
 }
 
-function faisca(valores, corLinha, iMarca = -1){
+/* Três cores e cortes fixos, não um degradé: as percentagens vêm de vinte ou
+   trinta notícias por dia e um degradé contínuo dava-lhes uma precisão que não
+   têm. Abaixo de 40% de negativas a cobertura é sobretudo positiva, acima de
+   60% sobretudo negativa, no meio equilibrada. */
+function corDoTom(pct){
+  if(pct === null) return null;
+  if(pct < 40) return "var(--verde)";
+  if(pct > 60) return "var(--vermelho, #B23A3A)";
+  return "#9aa1a8";
+}
+
+function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null){
   if(valores.length < 2) return "";
+  /* As duas linhas partilham a escala, senão a de Portugal parecia maior do que
+     é. A escala é a do total, que é sempre o maior dos dois. */
   const alto = Math.max(...valores), baixo = Math.min(...valores);
   const esc = v => 30 - ((v - baixo) / ((alto - baixo) || 1)) * 26;
   const passo = 100 / (valores.length - 1);
@@ -1034,12 +1055,68 @@ function faisca(valores, corLinha, iMarca = -1){
                stroke-width="7" stroke-linecap="round"
                vector-effect="non-scaling-stroke"/>`;
   }
-  return `<svg viewBox="0 0 100 34" preserveAspectRatio="none">
+  /* A faixa do tom vive dentro do mesmo desenho para partilhar o eixo do tempo:
+     cada tijolo fica centrado no ponto da linha que lhe corresponde, e não
+     apenas «por baixo, mais ou menos». Os períodos sem massa que sustente
+     proporções ficam vazados, como no quadro do sentimento. */
+  let faixa = "";
+  if(tons && tons.some(x => x !== null)){
+    faixa = tons.map((pct, i) => {
+      const meio = i * passo;
+      const x = Math.max(0, meio - passo / 2);
+      const larg = Math.min(100, meio + passo / 2) - x;
+      const cor = corDoTom(pct);
+      return cor
+        ? `<rect x="${x.toFixed(1)}" y="37" width="${(larg - 0.6).toFixed(1)}"
+             height="7" fill="${cor}" rx="1"/>`
+        : `<rect x="${x.toFixed(1)}" y="37" width="${(larg - 0.6).toFixed(1)}"
+             height="7" fill="none" stroke="var(--borda)" stroke-width="1"
+             stroke-dasharray="2 2" vector-effect="non-scaling-stroke" rx="1"/>`;
+    }).join("");
+  }
+
+  /* O tom só existe para a comunicação social nacional. Sem esta segunda linha,
+     a faixa ficava debaixo de uma linha que conta também a Lusofonia e o
+     estrangeiro — duas contagens diferentes empilhadas no mesmo eixo. Com ela,
+     a faixa tem a sua própria linha por cima e vê-se de quanto estamos a falar.
+     Quando a origem escolhida já é Portugal as duas coincidem e desenha-se uma. */
+  let linhaPT = "";
+  if(valoresPT && faixa){
+    const dPT = valoresPT.map((v, i) =>
+      `${i ? "L" : "M"}${(i * passo).toFixed(1)},${esc(v).toFixed(1)}`).join(" ");
+    if(dPT !== d){
+      linhaPT = `<path d="${dPT}" fill="none" stroke="${corLinha}" stroke-width="1.1"
+        opacity=".55" stroke-dasharray="3 2.5" vector-effect="non-scaling-stroke"
+        stroke-linejoin="round"/>`;
+    }
+  }
+
+  return `<svg viewBox="0 0 100 ${faixa ? 45 : 34}" preserveAspectRatio="none">
     <path d="${d} L100,34 L0,34 Z" fill="${corLinha}" opacity=".10"/>
     <path d="${d}" fill="none" stroke="${corLinha}" stroke-width="1.6"
           vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+    ${linhaPT}
     ${marca}
+    ${faixa}
   </svg>`;
+}
+
+/* Tom por área e por período, na chave que o gráfico usa. Calcula-se uma vez
+   por desenho e serve os dezassete cartões. */
+function tomPorAreaPeriodo(linhas){
+  const m = {};
+  if(!SENTIMENTO.length || !linhas.length) return m;
+  if(origem === "lusofonas" || origem === "internacionais") return m;
+  const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
+  SENTIMENTO.filter(d => d.data >= primeiro && d.data <= ultimo).forEach(d => {
+    const k = chaveDoPeriodo(d.data);
+    Object.entries(d.areas || {}).forEach(([nome, v]) => {
+      const c = m[nome + "|" + k] || (m[nome + "|" + k] = { av: 0, neg: 0 });
+      c.av += v.avaliadas || 0;
+      c.neg += v.negativo || 0;
+    });
+  });
+  return m;
 }
 
 /* ═══ CRUZAMENTOS ═══════════════════════════════════════════════════════════
@@ -1118,7 +1195,9 @@ function blocoComparacao(linhas, pares){
       ${seletorComparar()}
       <div class="cmp-legenda">
         ${nomes.map((n, i) => `<span class="cmp-eti">
-          <i style="background:${cores[i]};${i ? "opacity:.75" : ""}"></i>${n}</span>`).join("")}
+          <i class="${i ? "tracejada" : ""}" style="${i
+            ? `background:repeating-linear-gradient(90deg,${cores[i]} 0 4px,transparent 4px 7px)`
+            : `background:${cores[i]}`}"></i>${n}</span>`).join("")}
       </div>
       ${duasLinhas(vals[0], vals[1], cores[0], cores[1])}
       <table class="cmp">
@@ -1137,75 +1216,6 @@ function blocoComparacao(linhas, pares){
         comunicação social nacional e só se mostra com pelo menos oito notícias avaliadas.
         ${somas[1] ? `No período, ${nomes[0]} teve
           ${(somas[0] / somas[1]).toFixed(2).replace(".", ",")} vezes o volume de ${nomes[1]}.` : ""}</p>
-    </div>`;
-}
-
-/* Tom por área ao longo do tempo: uma matriz é a única forma de ver dezassete
-   áreas e vários períodos ao mesmo tempo sem dezassete gráficos. */
-function blocoTomPorArea(linhas){
-  /* As linhas vêm do ranking da JANELA, não do período em foco: esta matriz é
-     precisamente para ver a evolução, e trocar-lhe as áreas ao escolher um dia
-     fazia-a saltar sem se perceber porquê. A coluna do período escolhido é que
-     fica assinalada. */
-  const areas = totaisPorArea(linhas);
-  if(!SENTIMENTO.length || !linhas.length) return "";
-  if(origem === "lusofonas" || origem === "internacionais") return "";
-  const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
-  const dias = SENTIMENTO.filter(d => d.data >= primeiro && d.data <= ultimo);
-  if(!dias.length) return "";
-
-  /* Todas as áreas, não as mais noticiadas: o corte que eu tinha posto era só
-     por comodidade de largura, e escondia justamente as pequenas — que são as
-     que mais interessa vigiar quando disparam. As linhas não custam espaço; o
-     que custa são as colunas, e essas continuam limitadas aos últimos períodos. */
-  const nomes = areas.map(([n]) => n);
-  if(!nomes.length) return "";
-  const chaves = [...new Set(dias.map(d => chaveDoPeriodo(d.data)))].sort().slice(-14);
-  const cel = {};
-  dias.forEach(d => {
-    const k = chaveDoPeriodo(d.data);
-    if(!chaves.includes(k)) return;
-    nomes.forEach(n => {
-      const v = (d.areas || {})[n];
-      if(!v) return;
-      const c = cel[n + "|" + k] || (cel[n + "|" + k] = { av: 0, neg: 0 });
-      c.av += v.avaliadas || 0; c.neg += v.negativo || 0;
-    });
-  });
-
-  const curto = k => k.length === 7 ? k.slice(5) + "/" + k.slice(2, 4)
-                                    : k.slice(8) + "/" + k.slice(5, 7);
-  return `
-    <div class="bloco">
-      <h2>Tom por área ao longo do tempo <span style="font-size:.7em;opacity:.7">(em
-        validação · só comunicação social nacional)</span>
-        <span class="h2-foco">· janela inteira${diaEscolhido
-          ? `, com ${descreverPeriodo(diaEscolhido)} assinalado` : ""}</span></h2>
-      <div class="mtz-rolo">
-        <table class="mtz">
-          <tr><th></th>${chaves.map(k =>
-            `<th class="${k === diaEscolhido ? "mtz-foco" : ""}"
-                 title="${descreverPeriodo(k)}">${curto(k)}</th>`).join("")}</tr>
-          ${nomes.map(n => `<tr>
-            <th class="mtz-lin">${n}</th>
-            ${chaves.map(k => {
-              const c = cel[n + "|" + k];
-              const foco = k === diaEscolhido ? " mtz-foco" : "";
-              if(!c || c.av < 8) return `<td class="mtz-vazia${foco}" title="${n} · ${descreverPeriodo(k)}: amostra pequena">·</td>`;
-              const p = Math.round(c.neg / c.av * 100);
-              return `<td class="${foco.trim()}" style="--i:${(p / 100).toFixed(2)}"
-                title="${n} · ${descreverPeriodo(k)}: ${p}% negativas em ${c.av} avaliadas">${p}</td>`;
-            }).join("")}
-          </tr>`).join("")}
-        </table>
-      </div>
-      <p class="nota">Percentagem de notícias negativas em cada área e período — quanto mais
-        carregado o vermelho, mais negativa a cobertura. As células com um ponto têm menos
-        de oito notícias avaliadas: seriam ruído, não leitura — é o que sucede quase
-        sempre nas áreas de pouco volume, que por isso aparecem quase todas a ponto.
-        Estão as ${nomes.length} áreas com notícias na janela, da mais noticiada para a
-        menos, e os últimos ${chaves.length} períodos. Ao contrário dos outros quadros, este não se
-        restringe ao período escolhido — mostra a evolução inteira e assinala-o.</p>
     </div>`;
 }
 
@@ -1413,7 +1423,6 @@ function blocoSentimento(linhas){
      Os dias abaixo do patamar aparecem em espera, e acendem-se sozinhos à
      medida que a classificação avança. */
   const COBERTURA_MINIMA = 0.60;
-  const MINIMO_AVALIADAS = 8;
   const suficiente = f => f.av >= MINIMO_AVALIADAS && f.av >= COBERTURA_MINIMA * f.n;
 
   const cobertura = nacionais ? Math.round(100 * avaliadas / nacionais) : 0;
@@ -1567,6 +1576,7 @@ function desenhar(){
   const daOrigem = origem === "todas" ? "" : ` de ${ORIGEM_NOME[origem]}`;
 
   /* Escolhido um dia, os quadros abaixo passam a ser desse dia */
+  TOM_PERIODO = tomPorAreaPeriodo(linhas);
   const foco = linhasEmFoco(linhas, pares);
   const areas = totaisPorArea(foco);
 
@@ -1687,14 +1697,21 @@ function desenhar(){
 
     ${blocoComparacao(linhas, pares)}
 
-    ${blocoTomPorArea(linhas)}
-
     ${blocoPublicacoes(linhas, areas)}
 
     <div class="bloco">
       <h2>${areaEscolhida ? "Trajetória da área" : "Trajetória de cada área"}
         <span class="h2-foco">· período todo${diaEscolhido
           ? `, com ${descreverPeriodo(diaEscolhido)} assinalado` : ""}</span></h2>
+      ${Object.keys(TOM_PERIODO).length ? `<div class="legenda">
+        <span style="--cor:var(--verde)"><i></i>Cobertura sobretudo positiva</span>
+        <span style="--cor:#9aa1a8"><i></i>Equilibrada</span>
+        <span style="--cor:var(--vermelho,#B23A3A)"><i></i>Sobretudo negativa</span>
+        <span style="--cor:transparent"><i style="border:1px dashed var(--borda)"></i>Amostra pequena</span>
+      </div>
+      ${origem === "todas" ? `<p class="nota" style="margin:.1rem 0 .6rem">
+        A linha cheia é o volume total; a tracejada é só a parte de Portugal, que é a
+        que o tom diz respeito.</p>` : ""}` : ""}
       <div class="mini">
         ${/* Todas as áreas, e não as oito mais noticiadas: o corte era meu e
              escondia as pequenas, que são precisamente aquelas onde uma subida
@@ -1702,7 +1719,15 @@ function desenhar(){
           areas.map(([nome]) => {
           const g = grupoDaArea(nome);
           const vals = pares.map(([, d]) => contar(d.areas[nome]));
+          const valsPT = pares.map(([, d]) =>
+            (d.areas[nome] && d.areas[nome].origens
+              ? d.areas[nome].origens.nacionais : 0) || 0);
           const iM = diaEscolhido ? pares.findIndex(([c]) => c === diaEscolhido) : -1;
+          const tons = pares.map(([k]) => {
+            const c = TOM_PERIODO[nome + "|" + k];
+            return c && c.av >= MINIMO_AVALIADAS ? Math.round(c.neg / c.av * 100) : null;
+          });
+          const tomAgora = iM >= 0 ? tons[iM] : tons.filter(x => x !== null).pop();
           const valor = iM >= 0 ? vals[iM] : (vals[vals.length - 1] || 0);
           const media = vals.reduce((x, y) => x + y, 0) / (vals.length || 1);
           const desvio = media ? Math.round((valor - media) / media * 100) : 0;
@@ -1712,8 +1737,11 @@ function desenhar(){
             <small class="mini-rot">${iM >= 0
               ? `${descreverPeriodo(diaEscolhido)} · ${desvio >= 0 ? "+" : ""}${desvio}%
                  face à média do período`
-              : `último ${agregNome()} do período`}</small>
-            ${faisca(vals, cor(g), iM)}
+              : `último ${agregNome()} do período`}${
+              tomAgora === undefined || tomAgora === null ? ""
+              : ` · <span style="color:${corDoTom(tomAgora)}">${tomAgora}% negativas</span>`
+            }</small>
+            ${faisca(vals, cor(g), iM, tons, valsPT)}
           </div>`;
         }).join("")}
       </div>
@@ -1724,6 +1752,16 @@ function desenhar(){
         o período todo, mesmo com um ${agregNome()} escolhido acima — é isso que faz dela uma
         trajetória.${diaEscolhido ? ` O ponto assinala ${descreverPeriodo(diaEscolhido)}, e o
         número mostra quanto esse período se afasta da média da área no intervalo.` : ""}</p>
+      <p class="nota">A faixa por baixo de cada linha é o <strong>tom da cobertura</strong>
+        no mesmo período — avaliação do Amália, em validação, só sobre a comunicação social
+        nacional. Verde abaixo de 40% de notícias negativas, vermelho acima de 60%, cinzento
+        no meio; vazado quando o período não chega a ${MINIMO_AVALIADAS} notícias avaliadas e
+        a proporção seria ruído. São três cores e não um degradé de propósito: as
+        percentagens saem de algumas dezenas de notícias e um degradé dava-lhes uma precisão
+        que não têm. Como o tom só se aplica à comunicação social nacional, a linha
+        tracejada mostra quantas dessas notícias havia: sem ela, a faixa ficaria debaixo de
+        uma linha que conta também a Lusofonia e o estrangeiro. Com a origem já filtrada em
+        Portugal as duas linhas coincidem e desenha-se uma só.</p>
     </div>
 
     <div class="bloco">

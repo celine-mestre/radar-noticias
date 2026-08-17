@@ -620,10 +620,16 @@ recolhida"** em vez de "arquivo de 7 dias".
   primeiro. Clicar num pico abre o resumo do Amália sobre o que o motivou.
 - **Sentimento da cobertura**, em barras por dia, semana ou mês, apenas da comunicação
   social nacional e sujeito ao patamar de cobertura.
+- **Trajetória de cada área**, com o volume em linha — a cheia é o total, a tracejada é só
+  a parte de Portugal, que é a que o tom diz respeito — e, por baixo, uma faixa com o **tom
+  da cobertura** no mesmo eixo de tempo: verde abaixo de 40% de notícias negativas, vermelho
+  acima de 60%, cinzento no meio, vazado quando o período não tem massa que sustente a
+  proporção. Volume e tom leem-se juntos, área a área, sem sair do cartão.
 - **Cruzamentos**: duas áreas lado a lado, na mesma escala e com totais, médias, maior
-  período e tom comparados; uma matriz do **tom por área ao longo do tempo**; e uma matriz
-  **áreas × publicações**, que se lê por linha (que órgãos sustentam uma área) e por coluna
-  (que áreas cada órgão cobre mais).
+  período e tom comparados; e uma matriz **áreas × publicações**, que se lê por linha (que
+  órgãos sustentam uma área) e por coluna (que áreas cada órgão cobre mais).
+- **As explicações vivem atrás de um «i»** ao lado do título de cada quadro, para não
+  encherem o ecrã no telemóvel; na impressão voltam todas à vista.
 - **Legibilidade com muitos dias**: acima de 45 dias na janela o gráfico passa sozinho a
   semanas, acima de 240 a meses, dizendo que o fez — quem carregar num botão de agregação
   passa a mandar. Os picos noticiosos ordenam-se pela intensidade (quanto excederam o
