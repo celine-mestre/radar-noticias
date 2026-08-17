@@ -1353,6 +1353,30 @@ function blocoPublicacoes(linhas, areas){
     <div class="bloco">
       <h2>Publicações especializadas${sufixoFoco()}</h2>
       ${corpo.length ? (areaEscolhida ? tabelaArea() : tabelaGeral()) : vazio}
+      ${(() => {
+        /* Quem fica de fora conta tanto como quem entra, à maneira das expressões
+           que não trouxeram notícias: sem esta lista, um órgão ausente tanto podia
+           não ter publicado nada como publicar muito sem se especializar em nada. */
+        const dentro = new Set((areaEscolhida ? linhasTab : grupos).map(x => x.pub));
+        const fora = Object.entries(porPub)
+          .filter(([p]) => !dentro.has(p))
+          .sort((a, b) => b[1] - a[1]);
+        if(!fora.length) return "";
+        const transversais = fora.filter(([, q]) => q >= 20);
+        return `<details class="sem-render">
+          <summary>Ver as ${num(fora.length)} publicações que não se destacam em nenhuma área</summary>
+          <div class="sr-lista">
+            ${transversais.length ? `<div class="sr-area" style="--cor:var(--azul)">
+              <h4>Transversais — publicam muito e repartem-se por todas as áreas</h4>
+              <p>${transversais.map(([p, q]) => `${p} (${num(q)})`).join(" · ")}</p>
+            </div>` : ""}
+            ${fora.length > transversais.length ? `<div class="sr-area" style="--cor:var(--borda)">
+              <h4>De pouco volume — abaixo do mínimo para se poder afirmar seja o que for</h4>
+              <p>${fora.filter(([, q]) => q < 20).map(([p, q]) => `${p} (${num(q)})`).join(" · ")}</p>
+            </div>` : ""}
+          </div>
+        </details>`;
+      })()}
       <p class="nota">Publicações que cobrem uma área <strong>acima do seu peso
         habitual</strong>. «Do total» é a parte que o órgão representa nas
         <strong>${num(geral)} marcações</strong> registadas no período — marcações, e não

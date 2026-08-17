@@ -190,16 +190,81 @@ def arquivar_sentimento(pasta, avaliacoes, ja_arquivadas):
     return total
 
 
+PALAVRAS_VAZIAS = frozenset("""
+    para com que dos das nos nas pelo pela pelos pelas este esta estes estas
+    aquele aquela seu sua seus suas mais menos como sobre entre desde apos
+    ainda apenas tambem porque quando onde depois antes contra sem uma uns
+    umas nao foi ser tem ter vai vao diz disse hoje ontem novo nova
+""".split())
+
+
+def palavras(titulo):
+    """Palavras significativas de um título, sem acentos nem gramática vazia."""
+    limpo = unicodedata.normalize("NFD", (titulo or "").lower())
+    limpo = "".join(c for c in limpo if unicodedata.category(c) != "Mn")
+    return {p for p in re.findall(r"[a-z0-9]+", limpo)
+            if len(p) > 3 and p not in PALAVRAS_VAZIAS}
+
+
+def agrupar_por_acontecimento(noticias, limiar=0.6):
+    """Junta as peças do mesmo dia que contam o mesmo acontecimento.
+
+    Porquê: metade das notícias recolhidas são o mesmo facto contado por vários
+    órgãos, e classificá-las uma a uma produzia contradições visíveis no painel
+    — «Tempos de espera nas urgências ultrapassam as 11 horas» saiu positivo no
+    Público e negativo na RTP, com o mesmo título e no mesmo dia. Medido no
+    arquivo: de 249 pares quase idênticos, só 65% tinham a mesma classificação.
+
+    Agrupando, o acontecimento é avaliado UMA vez e o resultado vale para todas
+    as peças que o contam. Ganha-se coerência, apanham-se de caminho as
+    republicações do mesmo órgão com o título reescrito, e o modelo passa a ter
+    menos cerca de um terço do trabalho.
+
+    A semelhança é a de Jaccard entre as palavras significativas do título, no
+    mesmo dia. O limiar de 0,6 foi escolhido por medição: abaixo disso começam
+    a juntar-se peças sobre assuntos diferentes que partilham o vocabulário.
+    """
+    por_dia = {}
+    for n in noticias:
+        por_dia.setdefault((n.get("data") or "")[:10], []).append(n)
+
+    grupos = []
+    for _, itens in sorted(por_dia.items()):
+        pendentes_dia = [(n, palavras(n.get("titulo"))) for n in itens]
+        usados = [False] * len(pendentes_dia)
+        for i, (n, w) in enumerate(pendentes_dia):
+            if usados[i]:
+                continue
+            usados[i] = True
+            grupo = [n]
+            if w:
+                for j in range(i + 1, len(pendentes_dia)):
+                    if usados[j]:
+                        continue
+                    outro, w2 = pendentes_dia[j]
+                    if not w2:
+                        continue
+                    if len(w & w2) / len(w | w2) >= limiar:
+                        usados[j] = True
+                        grupo.append(outro)
+            grupos.append(grupo)
+    return grupos
+
+
+def ligacao(n):
+    return n.get("ligacao") or (n.get("titulo") or "").lower()
+
+
 def pendentes(noticias, avaliacoes, origem_da_fonte, dias, datas_extra=frozenset()):
     """Notícias nacionais ainda sem avaliação, uma por ligação, recentes
     primeiro. A ligação é a identidade: a mesma notícia marcada em duas
     áreas classifica-se uma só vez. As datas em `datas_extra` entram mesmo
     estando fora da janela — é por aí que se repescam dias antigos."""
     limite = (agora_lisboa() - timedelta(days=dias)).strftime("%Y-%m-%d")
-    vistas, fila = set(), []
+    elegiveis, vistas = [], set()
     for n in sorted(noticias, key=lambda x: x.get("data", ""), reverse=True):
-        lig = n.get("ligacao") or (n.get("titulo") or "").lower()
-        if not lig or lig in vistas or lig in avaliacoes:
+        lig = ligacao(n)
+        if not lig or lig in vistas:
             continue
         vistas.add(lig)
         dia = (n.get("data") or "")[:10]
@@ -207,7 +272,17 @@ def pendentes(noticias, avaliacoes, origem_da_fonte, dias, datas_extra=frozenset
             continue
         if origem_da_fonte(n.get("dominio") or "") != "nacionais":
             continue
-        fila.append(n)
+        elegiveis.append(n)
+
+    # Um pedido por ACONTECIMENTO: se qualquer peça do grupo já está avaliada,
+    # o grupo inteiro herda essa avaliação e não volta ao modelo.
+    fila = []
+    for grupo in agrupar_por_acontecimento(elegiveis):
+        if any(ligacao(x) in avaliacoes for x in grupo):
+            continue
+        principal_do_grupo = grupo[0]
+        principal_do_grupo["_grupo"] = [ligacao(x) for x in grupo]
+        fila.append(principal_do_grupo)
     return fila
 
 
@@ -364,6 +439,66 @@ def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias,
     return len(serie["dias"])
 
 
+def auditar(args, sintese, repo, ficheiro, noticias, conhecidas, recolha):
+    """Mede quanto o modelo concorda CONSIGO PRÓPRIO.
+
+    Sem isto não se sabe se as classificações divergentes vêm de o critério ser
+    ambíguo ou de o modelo variar entre corridas — e são problemas diferentes:
+    o primeiro corrige-se no prompt, o segundo só com uma segunda opinião ou
+    com um modelo melhor. Reavalia uma amostra do que já está classificado, com
+    o mesmo prompt e a mesma temperatura, e compara. Não grava nada.
+    """
+    amostra = [n for n in noticias
+               if recolha.origem_da_fonte(n.get("dominio") or "") == "nacionais"
+               and ligacao(n) in conhecidas]
+    vistos, unicos = set(), []
+    for n in sorted(amostra, key=lambda x: x.get("data", ""), reverse=True):
+        if ligacao(n) in vistos:
+            continue
+        vistos.add(ligacao(n))
+        unicos.append(n)
+    amostra = unicos[:args.auditar]
+    if not amostra:
+        print("auditoria: nada classificado para reavaliar")
+        return
+
+    print(f"auditoria: a reavaliar {len(amostra)} notícias já classificadas, "
+          f"em lotes de {args.lote}")
+    iguais, diferentes, mudanca = 0, 0, {}
+    for inicio in range(0, len(amostra), args.lote):
+        lote = amostra[inicio:inicio + args.lote]
+        try:
+            resposta = perguntar_local(sintese, lote, repo, ficheiro) if args.local \
+                else perguntar_servico(args.endereco, os.environ.get("AMALIA_CHAVE", ""),
+                                       lote, sintese.MODELO)
+        except Exception as erro:                              # noqa: BLE001
+            print(f"  lote falhou ({type(erro).__name__}: {erro})")
+            continue
+        lidas = interpretar(resposta, len(lote))
+        for i, n in enumerate(lote, start=1):
+            if i not in lidas:
+                continue
+            antes = conhecidas[ligacao(n)]["s"]
+            agora = lidas[i]
+            if antes == agora:
+                iguais += 1
+            else:
+                diferentes += 1
+                mudanca[(antes, agora)] = mudanca.get((antes, agora), 0) + 1
+                if diferentes <= 8:
+                    print(f"    {antes} → {agora}: {(n.get('titulo') or '')[:66]}")
+
+    total = iguais + diferentes
+    if not total:
+        print("auditoria: nenhuma resposta legível")
+        return
+    print(f"\nauditoria: {iguais} de {total} iguais "
+          f"({100 * iguais / total:.0f}% de concordância consigo próprio)")
+    for (a, b), q in sorted(mudanca.items(), key=lambda kv: -kv[1]):
+        print(f"  {a} → {b}: {q}")
+    print("Nada foi gravado.")
+
+
 def principal():
     ap = argparse.ArgumentParser(
         description="Sentimento das notícias nacionais, pelo Amália.")
@@ -385,6 +520,9 @@ def principal():
     ap.add_argument("--arquivo-sentimento", default="sentimento-meses",
                     dest="arquivo_sentimento",
                     help="pasta do arquivo permanente das avaliações, por mês")
+    ap.add_argument("--auditar", type=int, default=0, metavar="N",
+                    help="reavalia N notícias já classificadas e mede quanto o "
+                         "modelo concorda consigo próprio; não grava nada")
     ap.add_argument("--reter", type=int, default=35,
                     help="dias de avaliações a guardar (a janela do arquivo é "
                          "menor; guarda-se mais para o painel poder alargar)")
@@ -445,6 +583,10 @@ def principal():
     conhecidas = dict(arquivadas)
     conhecidas.update(avaliacoes)
 
+    if args.auditar:
+        auditar(args, sintese, repo, ficheiro, noticias, conhecidas, recolha)
+        return
+
     fila = pendentes(noticias, conhecidas, recolha.origem_da_fonte, args.dias,
                      datas_extra)
     por_fazer = len(fila)
@@ -482,6 +624,25 @@ def principal():
             atualizar_serie(args.serie, noticias, conhecidas,
                             recolha.origem_da_fonte, args.dias, datas_extra)
 
+    # Peças que chegaram depois de o acontecimento já ter sido avaliado herdam
+    # a avaliação sem passar pelo modelo — é a mesma coerência, aplicada ao que
+    # a recolha traz mais tarde.
+    herdadas = 0
+    for grupo in agrupar_por_acontecimento(
+            [n for n in noticias
+             if recolha.origem_da_fonte(n.get("dominio") or "") == "nacionais"]):
+        conhecido = next((conhecidas[ligacao(x)] for x in grupo
+                          if ligacao(x) in conhecidas), None)
+        if not conhecido:
+            continue
+        for x in grupo:
+            if ligacao(x) not in conhecidas:
+                avaliacoes[ligacao(x)] = conhecido
+                conhecidas[ligacao(x)] = conhecido
+                herdadas += 1
+    if herdadas:
+        print(f"  {herdadas} peças herdaram a avaliação do seu acontecimento")
+
     novas, falhas = 0, 0
     total_lotes = (len(fila) + args.lote - 1) // args.lote
     for indice, inicio in enumerate(range(0, len(fila), args.lote)):
@@ -501,10 +662,11 @@ def principal():
         for i, n in enumerate(lote, start=1):
             if i not in lidas:
                 continue
-            lig = n.get("ligacao") or (n.get("titulo") or "").lower()
-            avaliacoes[lig] = {"s": lidas[i], "d": (n.get("data") or "")[:10]}
-            conhecidas[lig] = avaliacoes[lig]
-            novas += 1
+            valor = {"s": lidas[i], "d": (n.get("data") or "")[:10]}
+            for lig in n.get("_grupo") or [ligacao(n)]:
+                avaliacoes[lig] = valor
+                conhecidas[lig] = valor
+                novas += 1
         print(f"  lote {indice + 1}/{total_lotes}: "
               f"{len(lidas)}/{len(lote)} avaliadas (acumulado: {len(avaliacoes)})")
         # Grava o progresso de tempos a tempos: se a corrida for cortada a

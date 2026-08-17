@@ -566,6 +566,8 @@ body.escuro .momentum .alvo:hover{background:rgba(255,255,255,.14)}
 .alertas .nota-regra{font-size:.68rem;color:var(--cinza,#8a9098);opacity:.85;
   padding-top:6px}
 /* Sentimento em ensaio: um ponto discreto junto ao título da notícia */
+.sent.fora{background:none;border:1px dotted var(--texto-ligeiro);opacity:.45}
+.sent.espera{background:none;border:1px dashed var(--texto-ligeiro);opacity:.7}
 .sent{display:inline-block;width:9px;height:9px;border-radius:50%;
   margin-right:6px;vertical-align:baseline;flex:none}
 .sent.pos{background:var(--verde,#2E7D5B)}
@@ -4009,10 +4011,20 @@ async function lerSentimentos(){
 function pontoSentimento(n){
   if(!SENTIMENTOS) return "";
   const a = SENTIMENTOS[n.ligacao || (n.titulo || "").toLowerCase()];
-  if(!a) return "";
-  const classe = { positivo:"pos", neutro:"neu", negativo:"neg" }[a.s];
-  if(!classe) return "";
-  return `<span class="sent ${classe}" title="Sentimento (em validação, Amália · comunicação social nacional): ${a.s}"></span>`;
+  const classe = a && { positivo:"pos", neutro:"neu", negativo:"neg" }[a.s];
+  if(classe){
+    return `<span class="sent ${classe}" title="Sentimento (em validação, Amália · comunicação social nacional): ${a.s}"></span>`;
+  }
+  /* Sem ponto de cor, a ausência era muda e lia-se como avaria. Agora diz-se
+     porquê, e os três motivos são diferentes: uma notícia estrangeira nunca é
+     avaliada (decisão de método), uma notícia que só apareceu por pesquisa
+     livre nunca foi marcada numa área e por isso nunca entrou na fila, e uma
+     notícia nacional recém-recolhida ainda está à espera da próxima passagem
+     do Amália. */
+  if(origemDaFonte(n) !== "nacionais"){
+    return `<span class="sent fora" title="Não avaliada: o Amália só classifica a comunicação social nacional"></span>`;
+  }
+  return `<span class="sent espera" title="Ainda por avaliar — ou porque a notícia só apareceu numa pesquisa livre e não está marcada numa área, ou porque foi recolhida depois da última passagem do Amália"></span>`;
 }
 
 async function lerAlertas(){
