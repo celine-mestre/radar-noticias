@@ -609,6 +609,7 @@ let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas", areaEsc
 let agregacaoManual = false;
 let areaComparada = "";   // segunda área, para a comparação lado a lado
 let PUBLICACOES = [];     // [{data, areas:{nome:{publicação: n}}}] — publicacoes.json
+let ORIGEM_PUB = {};      // {publicação: origem} — para o quadro seguir o seletor
 let TOM_PERIODO = {};     // {área|período: {av, neg}} — a faixa de tom das trajetórias
 let AREAS_VISTAS = [];    // as áreas que aparecem na série, para o seletor da comparação
 
@@ -721,7 +722,10 @@ async function carregarPublicacoes(){
       const r = await fetch(caminho, { cache: "no-store" });
       if(!r.ok) continue;
       const d = await r.json();
-      if(Array.isArray(d.dias)) return d.dias;
+      if(Array.isArray(d.dias)){
+        ORIGEM_PUB = d.origens || {};
+        return d.dias;
+      }
     }catch(e){ /* segue */ }
   }
   return [];
@@ -1033,6 +1037,9 @@ function barrasEmpilhadas(pontos){
   </svg>`;
 }
 
+const ORIGEM_NOME_PUB = { nacionais: "Portugal", lusofonas: "Lusofonia",
+                          internacionais: "imprensa internacional" };
+
 const COR_TOM = { positivo: "var(--verde)", neutro: "#9aa1a8",
                   negativo: "var(--vermelho, #B23A3A)" };
 
@@ -1268,8 +1275,14 @@ function blocoPublicacoes(linhas, areas){
   const nomes = areas.map(([n]) => n);
   const porPub = {}, cel = {}, totalArea = {};
   let geral = 0;
+  /* O quadro passa a seguir o seletor de origem: cada publicação tem sempre a
+     mesma, e a tabela do topo do ficheiro diz qual. Enquanto o publicacoes.json
+     não trouxer essa tabela — a versão anterior não a tinha —, conta tudo, como
+     antes, e a nota avisa. */
+  const seguirOrigem = origem !== "todas" && Object.keys(ORIGEM_PUB).length > 0;
   dias.forEach(d => Object.entries(d.areas || {}).forEach(([n, pubs]) => {
     Object.entries(pubs).forEach(([pub, q]) => {
+      if(seguirOrigem && ORIGEM_PUB[pub] !== origem) return;
       porPub[pub] = (porPub[pub] || 0) + q;
       geral += q;
       if(!nomes.includes(n)) return;
@@ -1385,10 +1398,15 @@ function blocoPublicacoes(linhas, areas){
         que tem no conjunto — é escolha editorial, não volume. Uma publicação aparece uma
         só vez, com todas as áreas em que se destaca, pela ordem da mais forte.
         Exigem-se ${MINIMO} notícias e ${vezes(VEZES)} de peso, para não elevar a regra o
-        que é acaso. Dois limites do registo: guardam-se as doze publicações com mais
-        volume em cada área e dia, o que deixa de fora uma cauda longa de cerca de 5%; e a
-        contagem inclui todas as origens, porque o registo não as separa — não segue o
-        seletor de Portugal, Lusofonia e Internacional.</p>
+        que é acaso. ${seguirOrigem
+          ? `Estão só as publicações de ${ORIGEM_NOME_PUB[origem]}, como o seletor pede.`
+          : (Object.keys(ORIGEM_PUB).length
+             ? "Estão todas as origens, porque nenhuma está escolhida no seletor."
+             : `Esta contagem inclui todas as origens: o ficheiro das publicações ainda é
+                da versão que não as distinguia, e passa a distingui-las na próxima
+                recolha.`)}
+        Um limite do registo: guardam-se as doze publicações com mais volume em cada área
+        e dia, o que deixa de fora uma cauda longa de cerca de 5%.</p>
     </div>`;
 }
 

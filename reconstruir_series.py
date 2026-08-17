@@ -227,13 +227,19 @@ def dia_da_serie(data, registo):
 PUBS_POR_AREA = 12
 
 
-def dia_das_publicacoes(data, registo):
-    """Que publicações sustentaram cada área nesse dia."""
+def dia_das_publicacoes(data, registo, origens):
+    """Que publicações sustentaram cada área nesse dia.
+
+    A origem não se grava por dia: cada publicação tem sempre a mesma, e uma
+    tabela no topo do ficheiro chega para o painel poder filtrar. Guardá-la em
+    cada linha engordava o ficheiro para dizer sempre o mesmo.
+    """
     contagem = {}
     for (_, area), n in registo["pares"].items():
         fonte = n.get("fonte") or n.get("dominio") or ""
         if not fonte:
             continue
+        origens.setdefault(fonte, origem_da_fonte(n.get("dominio")))
         contagem.setdefault(area, {})
         contagem[area][fonte] = contagem[area].get(fonte, 0) + 1
     areas = {}
@@ -353,7 +359,8 @@ def principal():
 
     novos_h = [dia_da_serie(d, arquivo[d]) for d in datas]
     novos_s = [dia_do_sentimento(d, arquivo[d], tom) for d in datas]
-    novos_p = [dia_das_publicacoes(d, arquivo[d]) for d in datas]
+    origens_pub = {}
+    novos_p = [dia_das_publicacoes(d, arquivo[d], origens_pub) for d in datas]
 
     print(f"\n{'dia':12}{'marcações':>11}{'antes':>8}{'notícias':>10}"
           f"{'nac. aval.':>12}")
@@ -392,6 +399,9 @@ def principal():
     pub["dias"], _ = juntar(pub.get("dias", []), novos_p, corte)
     if args.dias_publicacoes > 0:
         pub["dias"] = pub["dias"][-args.dias_publicacoes:]
+    # A tabela de origens acumula-se: uma publicação que deixe de aparecer nos
+    # dias recentes continua a ter origem conhecida para os dias antigos.
+    pub["origens"] = {**(pub.get("origens") or {}), **origens_pub}
     pub["atualizado"] = corte
     with open(args.publicacoes, "w", encoding="utf-8") as saida:
         json.dump(pub, saida, ensure_ascii=False, indent=1)

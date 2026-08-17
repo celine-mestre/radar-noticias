@@ -439,6 +439,96 @@ def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias,
     return len(serie["dias"])
 
 
+def harmonizar(args, sintese, repo, ficheiro, noticias, avaliacoes,
+               conhecidas, arquivadas, recolha):
+    """Repõe a coerência no que já foi classificado.
+
+    O agrupamento por acontecimento evita contradições NOVAS, mas não desfaz as
+    antigas: um grupo cujas peças já estão todas avaliadas nunca volta à fila.
+    Isto passa por esse passivo. Onde há maioria, aplica-se a maioria — não é
+    preciso o modelo. Onde há empate (a maioria dos casos, porque quase todos
+    os grupos são pares), pergunta-se uma vez e o resultado vale para o grupo.
+    """
+    nacionais = [n for n in noticias
+                 if recolha.origem_da_fonte(n.get("dominio") or "") == "nacionais"]
+    vistos, unicos = set(), []
+    for n in nacionais:
+        if ligacao(n) not in vistos:
+            vistos.add(ligacao(n))
+            unicos.append(n)
+
+    divergentes, corrigidos, porModelo = [], 0, []
+    for grupo in agrupar_por_acontecimento(unicos):
+        toms = [conhecidas[ligacao(x)]["s"] for x in grupo if ligacao(x) in conhecidas]
+        if len(set(toms)) <= 1:
+            continue
+        divergentes.append(grupo)
+        contagem = {}
+        for tom in toms:
+            contagem[tom] = contagem.get(tom, 0) + 1
+        ordenado = sorted(contagem.items(), key=lambda kv: -kv[1])
+        if len(ordenado) > 1 and ordenado[0][1] > ordenado[1][1]:
+            aplicar(grupo, ordenado[0][0], avaliacoes, conhecidas, arquivadas)
+            corrigidos += 1
+        else:
+            porModelo.append(grupo)
+
+    print(f"harmonizar: {len(divergentes)} acontecimentos com avaliações "
+          f"divergentes; {corrigidos} resolvidos por maioria, "
+          f"{len(porModelo)} empatados")
+
+    for inicio in range(0, len(porModelo), args.lote):
+        bloco = porModelo[inicio:inicio + args.lote]
+        lote = [g[0] for g in bloco]
+        try:
+            resposta = perguntar_local(sintese, lote, repo, ficheiro) if args.local \
+                else perguntar_servico(args.endereco, os.environ.get("AMALIA_CHAVE", ""),
+                                       lote, sintese.MODELO)
+        except Exception as erro:                              # noqa: BLE001
+            print(f"  lote falhou ({type(erro).__name__}: {erro}) — fica como está")
+            continue
+        lidas = interpretar(resposta, len(lote))
+        for i, grupo in enumerate(bloco, start=1):
+            if i in lidas:
+                aplicar(grupo, lidas[i], avaliacoes, conhecidas, arquivadas)
+                corrigidos += 1
+
+    if not corrigidos:
+        print("harmonizar: nada a corrigir")
+        return
+
+    agora = agora_lisboa()
+    with open(args.saida, "w", encoding="utf-8") as destino:
+        json.dump({
+            "gerado": agora.strftime("%Y-%m-%d %H:%M"),
+            "modelo": sintese.MODELO,
+            "estado": "em validação — avaliações automáticas, leitura humana em curso",
+            "criterio": ("Tom do acontecimento noticiado (positivo, neutro, "
+                         "negativo), comunicação social nacional apenas, uma avaliação "
+                         "por acontecimento."),
+            "avaliacoes": avaliacoes,
+        }, destino, ensure_ascii=False, indent=1)
+
+    # O arquivo é acrescentado, nunca reescrito: a linha nova fica depois da
+    # antiga e a leitura fica com a última, que é a corrigida.
+    if args.arquivo_sentimento:
+        arquivar_sentimento(args.arquivo_sentimento, conhecidas, {})
+    if args.serie:
+        atualizar_serie(args.serie, noticias, conhecidas,
+                        recolha.origem_da_fonte, args.dias)
+    print(f"harmonizar: {corrigidos} acontecimentos passaram a ter uma só avaliação")
+
+
+def aplicar(grupo, tom, avaliacoes, conhecidas, arquivadas):
+    """Escreve o mesmo tom em todas as peças do acontecimento."""
+    for x in grupo:
+        lig = ligacao(x)
+        valor = {"s": tom, "d": (x.get("data") or "")[:10]}
+        avaliacoes[lig] = valor
+        conhecidas[lig] = valor
+        arquivadas.pop(lig, None)
+
+
 def auditar(args, sintese, repo, ficheiro, noticias, conhecidas, recolha):
     """Mede quanto o modelo concorda CONSIGO PRÓPRIO.
 
@@ -520,6 +610,10 @@ def principal():
     ap.add_argument("--arquivo-sentimento", default="sentimento-meses",
                     dest="arquivo_sentimento",
                     help="pasta do arquivo permanente das avaliações, por mês")
+    ap.add_argument("--harmonizar", action="store_true",
+                    help="repõe a coerência no que JÁ está classificado: "
+                         "acontecimentos com avaliações divergentes passam a ter "
+                         "uma só (a maioria; empates voltam ao modelo)")
     ap.add_argument("--auditar", type=int, default=0, metavar="N",
                     help="reavalia N notícias já classificadas e mede quanto o "
                          "modelo concorda consigo próprio; não grava nada")
@@ -582,6 +676,11 @@ def principal():
     # sabe: a janela de trabalho mais o arquivo de sempre.
     conhecidas = dict(arquivadas)
     conhecidas.update(avaliacoes)
+
+    if args.harmonizar:
+        harmonizar(args, sintese, repo, ficheiro, noticias, avaliacoes,
+                   conhecidas, arquivadas, recolha)
+        return
 
     if args.auditar:
         auditar(args, sintese, repo, ficheiro, noticias, conhecidas, recolha)
