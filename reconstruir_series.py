@@ -36,6 +36,7 @@ import glob
 import gzip
 import json
 import os
+import re
 import sys
 from collections import defaultdict
 from datetime import datetime
@@ -227,8 +228,43 @@ def dia_da_serie(data, registo):
 # ninguém: guardam-se as que mais noticiaram e o ficheiro fica sob controlo.
 PUBS_POR_AREA = 12
 
+# Nomes que não são publicações: créditos de fotografia e restos de título que
+# alguns publicadores metem no campo <source> do artigo. A recolha já deixou de
+# os aceitar, mas o arquivo é permanente e guarda os que entraram — e o painel
+# de evolução lê o arquivo, pelo que sem isto ficariam à vista para sempre.
+CREDITO = re.compile(r"^(AFP|REUTERS|AP|EPA|LUSA|DPA|ASSOCIATED PRESS)\b[\s\-]", re.I)
 
-def dia_das_publicacoes(data, registo, origens):
+
+def parece_credito(nome):
+    return (not nome or len(nome) > 38 or "©" in nome or "/" in nome
+            or nome.count(" ") > 5 or CREDITO.match(nome) is not None)
+
+
+def nomes_por_dominio(dias):
+    """O nome verdadeiro de cada órgão, deduzido do próprio arquivo.
+
+    Para cada domínio, o nome mais frequente que não pareça um crédito. Funciona
+    porque o erro é minoritário: o Expresso das Ilhas aparece 297 vezes com o
+    seu nome e 8 vezes com o título de outra peça. Onde nem isso resolve — o
+    caso do s.rfi.fr, em que quase todos os registos são créditos —, fica o
+    domínio, que é feio mas verdadeiro, e corrige-se sozinho à medida que as
+    recolhas novas trazem o nome certo.
+    """
+    contagem = defaultdict(lambda: defaultdict(int))
+    for registo in dias.values():
+        for n in registo["pares"].values():
+            dominio = (n.get("dominio") or "").lower()
+            if dominio:
+                contagem[dominio][n.get("fonte") or ""] += 1
+    mapa = {}
+    for dominio, nomes in contagem.items():
+        bons = sorted(((q, nome) for nome, q in nomes.items()
+                       if not parece_credito(nome)), reverse=True)
+        mapa[dominio] = bons[0][1] if bons else dominio
+    return mapa
+
+
+def dia_das_publicacoes(data, registo, origens, nomes):
     """Que publicações sustentaram cada área nesse dia.
 
     A origem não se grava por dia: cada publicação tem sempre a mesma, e uma
@@ -237,7 +273,10 @@ def dia_das_publicacoes(data, registo, origens):
     """
     contagem = {}
     for (_, area), n in registo["pares"].items():
-        fonte = n.get("fonte") or n.get("dominio") or ""
+        # O nome vem da tabela do domínio, não do registo: assim um crédito de
+        # fotografia que tenha entrado num dia solto não vira publicação.
+        fonte = nomes.get((n.get("dominio") or "").lower()) \
+            or n.get("fonte") or n.get("dominio") or ""
         if not fonte:
             continue
         origens.setdefault(fonte, origem_da_fonte(n.get("dominio")))
@@ -361,7 +400,8 @@ def principal():
     novos_h = [dia_da_serie(d, arquivo[d]) for d in datas]
     novos_s = [dia_do_sentimento(d, arquivo[d], tom) for d in datas]
     origens_pub = {}
-    novos_p = [dia_das_publicacoes(d, arquivo[d], origens_pub) for d in datas]
+    nomes = nomes_por_dominio(arquivo)
+    novos_p = [dia_das_publicacoes(d, arquivo[d], origens_pub, nomes) for d in datas]
 
     print(f"\n{'dia':12}{'marcações':>11}{'antes':>8}{'notícias':>10}"
           f"{'nac. aval.':>12}")
