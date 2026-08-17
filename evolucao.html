@@ -130,7 +130,17 @@ header .accoes{margin-left:auto;display:flex;gap:.45rem;flex-wrap:wrap;justify-c
   body{background:#fff}
   .bloco,.kpi{break-inside:avoid;box-shadow:none;border-color:#ccc}
   header{background:#2B5683 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .expr-b i,.rk-barra i,rect{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* Sem esta regra universal, o navegador retira os fundos ao imprimir e as
+     barras do sentimento, as matrizes coloridas e as legendas saíam em branco
+     no PDF — o quadro parecia não existir. */
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  /* O que no ecrã se abre ao clique — resumos dos picos, listas por área,
+     expressões e publicações «de fora» — vai aberto para o papel: num PDF
+     não há clique que o abra. O JS de beforeprint trata dos <details>. */
+  .tp-resumo[hidden], .tp-lista[hidden]{display:block !important}
+  .tp-seta{display:none !important}
+  details.sem-render > *{display:block !important}
+  details.sem-render summary{list-style:none;font-weight:600}
 }
 
 main{padding:1.6rem 0 3rem}
@@ -2104,7 +2114,53 @@ function descarregarXLSX(){
     e.topo.forEach(([p, n]) =>
       expr.push([nomeGrupoDe(e.area), e.area, p, n, pct(n, totaisArea[e.area] || 0)])));
 
-  /* ── 6. Retrato por área ────────────────────────────────────────────────
+  /* ── 6. Publicações, por dia e área ─────────────────────────────────────
+     O mesmo material do quadro «Publicações especializadas», mas em formato
+     tidy: uma linha por dia, área e publicação, com a origem ao lado. Quem
+     receber isto cruza publicações com áreas, dias e origens em tabela
+     dinâmica. Atenção ao alcance: o ficheiro de origem guarda, por área e por
+     dia, as 12 publicações com mais marcações — não é o universo completo. */
+  const publicacoes = [["Data", "Agrupamento temático", "Área governativa",
+                        "Publicação", "Origem da publicação", "Marcações"]];
+  if(PUBLICACOES.length){
+    const seguirOrigem = origem !== "todas" && Object.keys(ORIGEM_PUB).length > 0;
+    const nomeOrigem = { nacionais:"Portugal", lusofonas:"Lusofonia",
+                         internacionais:"Internacional" };
+    PUBLICACOES.filter(d => d.data >= linhas[0].data &&
+                            d.data <= linhas[linhas.length - 1].data &&
+                            (!diaEscolhido || chaveDoPeriodo(d.data) === diaEscolhido))
+      .forEach(d => Object.entries(d.areas || {}).forEach(([nome, pubs]) => {
+        if(areaEscolhida && nome !== areaEscolhida) return;
+        if(grupoEscolhido && !areasDoGrupo(grupoEscolhido).has(nome)) return;
+        Object.entries(pubs).forEach(([pub, q]) => {
+          if(seguirOrigem && ORIGEM_PUB[pub] !== origem) return;
+          publicacoes.push([d.data, nomeGrupoDe(nome), nome, pub,
+            nomeOrigem[ORIGEM_PUB[pub]] || "", q]);
+        });
+      }));
+  }
+
+  /* ── 7. Tom por área e período ──────────────────────────────────────────
+     A matriz do painel, em números: áreas em linha, períodos em coluna, e em
+     cada célula a percentagem de negativas — vazia quando as avaliações não
+     chegam para sustentar uma proporção, como no ecrã. */
+  const tomMatriz = [];
+  if(SENTIMENTO.length && origem !== "lusofonas" && origem !== "internacionais"){
+    const tons = tomPorAreaPeriodo(linhas);
+    const chaves = [...new Set(pares.map(([k]) => k))].sort();
+    tomMatriz.push(["Área governativa \\ Período (% negativas)",
+                    ...chaves.map(k => descreverPeriodo(k))]);
+    nomesAreas.forEach(nome => {
+      const fila = chaves.map(k => {
+        const c = tons[nome + "|" + k];
+        return c && c.av >= MINIMO_AVALIADAS
+          ? pct(c.negativo, c.positivo + c.neutro + c.negativo) : "";
+      });
+      if(fila.some(v => v !== "")) tomMatriz.push([nome, ...fila]);
+    });
+  }
+
+  /* ── 8. Retrato por área ────────────────────────────────────────────────
      Uma linha por área, com tudo o que se pode dizer dela no período: volume,
      peso, ritmo, dia mais forte, repartição por origem, picos e tom. É a
      folha para quem quer a leitura pronta, sem cruzar nada. */
@@ -2154,7 +2210,16 @@ function descarregarXLSX(){
     ["Folhas deste ficheiro",
      "Série detalhada (uma linha por dia e área, para tabelas dinâmicas); " +
      "Matriz (períodos em linha, áreas em coluna); Sentimento; Picos noticiosos; " +
-     "Expressões; Retrato por área."],
+     "Expressões; Publicações; Tom por área e período; Retrato por área."],
+    ["Publicações",
+     "Uma linha por dia, área e publicação, com a origem e as marcações. O " +
+     "ficheiro de origem guarda, por área e por dia, as 12 publicações com " +
+     "mais marcações — as restantes não constam, pelo que os totais por " +
+     "publicação são um mínimo, não o universo completo."],
+    ["Tom por área e período",
+     "Percentagem de notícias negativas, por área e período, como na matriz do " +
+     "painel. Uma célula só tem valor com pelo menos oito avaliadas no período; " +
+     "vazia quer dizer avaliações insuficientes, não ausência de notícias."],
     ["Contagens",
      "As contagens medem o que as publicações subscritas noticiaram no período, " +
      "não o total noticiado. Nenhuma área é truncada, pelo que a comparação entre " +
@@ -2179,6 +2244,8 @@ function descarregarXLSX(){
     { nome:"Sentimento", linhas:sentimento },
     { nome:"Picos", linhas:picos },
     { nome:"Expressões", linhas:expr },
+    { nome:"Publicações", linhas:publicacoes },
+    { nome:"Tom por área e período", linhas:tomMatriz },
     { nome:"Retrato por área", linhas:retrato },
     { nome:"Especificações", linhas:espec },
   ].filter(f => f.linhas.length > 1 || f.nome === "Especificações");
@@ -2304,6 +2371,31 @@ $("#btnTema").addEventListener("click", () =>
   aplicarTema(document.documentElement.getAttribute("data-tema") === "escuro" ? "claro" : "escuro"));
 
 $("#btnPDF").addEventListener("click", () => window.print());
+
+/* Impressão: o PDF não tem cliques, pelo que tudo o que vive atrás de um
+   clique — <details> das expressões e publicações que ficam de fora, resumos
+   dos picos, listas por área — abre antes de imprimir e volta ao que estava
+   depois. E imprime-se sempre no tema claro: no escuro, texto claro sobre
+   papel branco desaparecia. */
+let estadoImpressao = null;
+window.addEventListener("beforeprint", () => {
+  if(estadoImpressao) return;
+  estadoImpressao = {
+    tema: document.documentElement.getAttribute("data-tema"),
+    detalhes: [...document.querySelectorAll("details.sem-render")].map(d => [d, d.open]),
+    escondidos: [...document.querySelectorAll(".tp-resumo[hidden], .tp-lista[hidden]")]
+  };
+  document.documentElement.setAttribute("data-tema", "claro");
+  estadoImpressao.detalhes.forEach(([d]) => d.open = true);
+  estadoImpressao.escondidos.forEach(e => e.hidden = false);
+});
+window.addEventListener("afterprint", () => {
+  if(!estadoImpressao) return;
+  document.documentElement.setAttribute("data-tema", estadoImpressao.tema || "claro");
+  estadoImpressao.detalhes.forEach(([d, aberto]) => d.open = aberto);
+  estadoImpressao.escondidos.forEach(e => e.hidden = true);
+  estadoImpressao = null;
+});
 
 $("#btnManual").addEventListener("click", () => $("#veu").hidden = false);
 $("#fecharAjuda").addEventListener("click", () => $("#veu").hidden = true);
