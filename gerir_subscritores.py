@@ -153,6 +153,21 @@ def quando_recebe(agora=None):
             f"a partir de {DIAS_SEMANA[seguinte.weekday()]}, de manhã")
 
 
+def endereco_logo(painel):
+    """Onde o cliente de correio vai buscar o logótipo.
+
+    A mesma regra do relatório diário: os clientes removem imagens embutidas em
+    base64, pelo que o ficheiro tem de estar publicado ao lado do painel. Sem
+    endereço de painel não se põe imagem nenhuma — melhor nada do que um
+    quadrado partido.
+    """
+    base = (painel or "").split("?")[0]
+    if base.endswith(".html"):
+        base = base.rsplit("/", 1)[0]
+    base = base.rstrip("/")
+    return f"{base}/logo-sggov.png" if base else ""
+
+
 def mensagem_confirmacao(email, areas, acao, painel):
     """Mensagem enviada a quem subscreve ou cancela."""
     agora = datetime.now()
@@ -181,6 +196,18 @@ def mensagem_confirmacao(email, areas, acao, painel):
     <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:10px">{painel}</div>
   </td></tr>""" if painel else ""
 
+    # Símbolo colorido sobre fundo azul: assenta em pastilha branca, como no
+    # relatório diário e no painel. É a mesma marca nos três sítios.
+    logo = endereco_logo(painel)
+    logo_html = (f"""<td valign="middle" style="padding-right:14px">
+        <table cellpadding="0" cellspacing="0" role="presentation"
+               style="background:#ffffff;border-radius:8px"><tr>
+          <td style="padding:7px;line-height:0">
+            <img src="{logo}" width="34" height="33" alt="Secretaria-Geral do Governo"
+                 style="display:block;border:0"></td>
+        </tr></table>
+      </td>""" if logo else "")
+
     return f"""<!DOCTYPE html>
 <html lang="pt-PT"><head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#f4f6f8">
@@ -191,6 +218,7 @@ def mensagem_confirmacao(email, areas, acao, painel):
 
   <tr><td style="background:{AZUL};padding:20px 24px">
     <table cellpadding="0" cellspacing="0" role="presentation"><tr>
+      {logo_html}
       <td valign="middle">
         <div style="font:600 10px Arial,sans-serif;color:#ffffff;opacity:.8;letter-spacing:1.4px;
                     text-transform:uppercase">Secretaria-Geral do Governo</div>
