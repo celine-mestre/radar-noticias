@@ -1505,23 +1505,44 @@ function blocoPublicacoes(linhas, areas){
       ${(() => {
         /* Quem fica de fora conta tanto como quem entra, à maneira das expressões
            que não trouxeram notícias: sem esta lista, um órgão ausente tanto podia
-           não ter publicado nada como publicar muito sem se especializar em nada. */
-        const dentro = new Set((areaEscolhida ? linhasTab : grupos).map(x => x.pub));
-        const fora = Object.entries(porPub)
+           não ter publicado nada como publicar muito sem se especializar em nada.
+
+           Com uma ÁREA ESCOLHIDA, porém, a pergunta é outra: interessa quem
+           cobriu essa área sem se destacar nela, e não a lista de todas as
+           publicações do corpus — muitas das quais nem sequer noticiaram a área.
+           Por isso o universo passa a ser as publicações com marcações na área,
+           e as contagens são as dessa área, não as do conjunto. */
+        const soDaArea = !!areaEscolhida;
+        const universo = soDaArea
+          ? Object.fromEntries(Object.keys(porPub)
+              .map(p => [p, cel[areaEscolhida + "|" + p] || 0])
+              .filter(([, q]) => q > 0))
+          : porPub;
+        const dentro = new Set((soDaArea ? linhasTab : grupos).map(x => x.pub));
+        const fora = Object.entries(universo)
           .filter(([p]) => !dentro.has(p))
           .sort((a, b) => b[1] - a[1]);
         if(!fora.length) return "";
-        const transversais = fora.filter(([, q]) => q >= 20);
+        /* O corte dos «transversais» é sobre o volume no universo em causa: no
+           conjunto são as 20 marcações que já cá estavam; dentro de uma área,
+           esse patamar deixaria quase tudo do lado do pouco volume, e usa-se o
+           mínimo da própria regra da especialização. */
+        const CORTE = soDaArea ? MINIMO : 20;
+        const transversais = fora.filter(([, q]) => q >= CORTE);
         return `<details class="sem-render">
-          <summary>Ver as ${num(fora.length)} publicações que não se destacam em nenhuma área</summary>
+          <summary>Ver as ${num(fora.length)} publicações que ${soDaArea
+            ? `noticiaram ${areaEscolhida} sem se destacarem nela`
+            : "não se destacam em nenhuma área"}</summary>
           <div class="sr-lista">
             ${transversais.length ? `<div class="sr-area" style="--cor:var(--azul)">
-              <h4>Transversais — publicam muito e repartem-se por todas as áreas</h4>
+              <h4>${soDaArea
+                ? "Cobrem a área com regularidade, mas ao nível do seu peso habitual"
+                : "Transversais — publicam muito e repartem-se por todas as áreas"}</h4>
               <p>${transversais.map(([p, q]) => `${p} (${num(q)})`).join(" · ")}</p>
             </div>` : ""}
             ${fora.length > transversais.length ? `<div class="sr-area" style="--cor:var(--borda)">
               <h4>De pouco volume — abaixo do mínimo para se poder afirmar seja o que for</h4>
-              <p>${fora.filter(([, q]) => q < 20).map(([p, q]) => `${p} (${num(q)})`).join(" · ")}</p>
+              <p>${fora.filter(([, q]) => q < CORTE).map(([p, q]) => `${p} (${num(q)})`).join(" · ")}</p>
             </div>` : ""}
           </div>
         </details>`;
@@ -1574,9 +1595,14 @@ function blocoTempestades(linhas){
   /* Escolhido um período, esse abre em lista completa e o resto da janela fica
      recolhido por área — o registo continua à mão sem afogar o que se pediu. */
   const noFoco = diaEscolhido
-    ? dentro.filter(t => chaveDoPeriodo(t.data) === diaEscolhido)
+    ? dentro.filter(t => chaveDoPeriodo(t.data) === diaEscolhido).sort(porForca)
     : dentro.slice().sort(porForca).slice(0, 12);
-  const chavesFoco = new Set(noFoco.map(t => `${t.data}|${t.area}`));
+  /* Com um dia escolhido a lista era toda a do dia — o que basta para um dia,
+     mas com agregação por mês o «período em foco» é um mês inteiro e podiam vir
+     dezenas. O teto é o mesmo dos restantes; o que sobra cai no grupo recolhido
+     por área, logo abaixo. */
+  const noFocoTopo = noFoco.slice(0, 12);
+  const chavesFoco = new Set(noFocoTopo.map(t => `${t.data}|${t.area}`));
   const resto = dentro.filter(t => !chavesFoco.has(`${t.data}|${t.area}`)).sort(porForca);
 
   const porArea = new Map();
@@ -1614,7 +1640,7 @@ function blocoTempestades(linhas){
   return `
     <div class="bloco">
       <h2>⚡ Picos noticiosos registados${sufixoFoco()}</h2>
-      ${noFoco.length ? noFoco.sort(porForca).map(linhaPico).join("")
+      ${noFocoTopo.length ? noFocoTopo.map(linhaPico).join("")
         : `<p class="nota">Sem picos em ${descreverPeriodo(diaEscolhido)}.</p>`}
       ${porArea.size ? `
         <div class="tp-mais">
@@ -1762,7 +1788,21 @@ function blocoSentimento(linhas){
       <h2>Sentimento da cobertura <span style="font-size:.7em;opacity:.7">(em validação
         · só comunicação social nacional)</span>
         ${areaEscolhida ? `— ${areaEscolhida}` : ""}${sufixoFoco()}</h2>
-      ${filas.slice().reverse().map(barra).join("")}
+      ${(() => {
+        /* A lista cresce um período por dia: ao fim de três meses com agregação
+           diária seriam noventa barras, e ao fim de um ano trezentas e sessenta
+           e cinco. Mostram-se as mais recentes e o resto fica recolhido — quem
+           quiser a série toda tem a agregação por semana ou por mês, e o Excel. */
+        const TETO = 21;
+        const ordem = filas.slice().reverse();
+        if(ordem.length <= TETO) return ordem.map(barra).join("");
+        return ordem.slice(0, TETO).map(barra).join("")
+          + `<details class="sem-render mais-periodos">
+              <summary>Ver ${num(ordem.length - TETO)} ${
+                ordem.length - TETO === 1 ? "período anterior" : "períodos anteriores"}</summary>
+              <div>${ordem.slice(TETO).map(barra).join("")}</div>
+            </details>`;
+      })()}
       <div class="legenda">
         <span style="--cor:var(--verde)"><i></i>Positivas</span>
         <span style="--cor:#9aa1a8"><i></i>Neutras</span>

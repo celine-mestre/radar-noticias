@@ -1648,10 +1648,15 @@ async function desenharRadar(){
     : "Soma das áreas mostradas: uma notícia que toque duas delas conta em ambas";
   mostrarUltimaRecolha(atualizado);
 
+  /* As duas medidas ficam ambas à vista, porque respondem a perguntas
+     diferentes: quantas peças saíram (notícias) e quanto trabalho de área elas
+     representam (marcações). Mostrar só uma delas obriga a adivinhar qual é. */
   $("#radarNota").textContent = total
-    ? `${lista.length} ${lista.length === 1 ? "área" : "áreas"} · ` +
-      `${ROTULO_FONTES[filtroFontes].toLowerCase()} · ` +
-      `quanto mais noticiada, mais perto do centro`
+    ? `${lista.length} ${lista.length === 1 ? "área" : "áreas"} · `
+      + (todasAsAreas && marcacoes !== total
+          ? `${marcacoes.toLocaleString("pt-PT")} marcações por área · ` : "")
+      + `${ROTULO_FONTES[filtroFontes].toLowerCase()} · `
+      + `quanto mais noticiada, mais perto do centro`
     : `Sem notícias para ${ROTULO_PERIODO[periodo]} nesta origem`;
 
   const ordenadas = [...lista].sort((x, y) => (por[y.nome] || 0) - (por[x.nome] || 0));
@@ -1762,7 +1767,9 @@ async function ordenarCartoes(){
     $("#kpiMovelR").textContent =
       `${todasAsAreas ? (total === 1 ? "notícia" : "notícias")
                       : (total === 1 ? "marcação" : "marcações")} `
-      + `${rotuloPeriodo()} · ${ROTULO_FONTES[filtroFontes].toLowerCase()}`;
+      + `${rotuloPeriodo()} · ${ROTULO_FONTES[filtroFontes].toLowerCase()}`
+      + (todasAsAreas && marcacoes !== total
+          ? ` · ${marcacoes.toLocaleString("pt-PT")} marcações por área` : "");
     caixa.title = todasAsAreas
       ? `${total.toLocaleString("pt-PT")} notícias distintas, que deixaram `
         + `${marcacoes.toLocaleString("pt-PT")} marcações — uma notícia pode tocar mais do que uma área`
