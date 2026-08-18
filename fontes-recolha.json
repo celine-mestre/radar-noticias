@@ -1,9 +1,17 @@
 {
- "recolhido": "2026-08-19 00:42",
+ "recolhido": "2026-08-19 00:53",
  "fontes": 73,
- "sem_artigos": 6,
- "por_recurso": 5,
+ "sem_artigos": 11,
+ "por_recurso": 1,
  "detalhe": [
+  {
+   "fonte": "Agência Lusa · Internacional",
+   "dominio": "lusa.pt",
+   "via": "direta",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "no element found: line 1, column 0"
+  },
   {
    "fonte": "Associated Press",
    "dominio": "apnews.com",
@@ -35,6 +43,38 @@
    "lidos": 0,
    "marcados": 0,
    "erro": ""
+  },
+  {
+   "fonte": "Público · Ciência",
+   "dominio": "publico.pt",
+   "via": "direta",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 404: Not Found"
+  },
+  {
+   "fonte": "Público · Economia",
+   "dominio": "publico.pt",
+   "via": "direta",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 404: Not Found"
+  },
+  {
+   "fonte": "Público · Política",
+   "dominio": "publico.pt",
+   "via": "direta",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 404: Not Found"
+  },
+  {
+   "fonte": "Público · Sociedade",
+   "dominio": "publico.pt",
+   "via": "direta",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 404: Not Found"
   },
   {
    "fonte": "Renascença",
@@ -189,6 +229,14 @@
    "erro": ""
   },
   {
+   "fonte": "Le Figaro",
+   "dominio": "lefigaro.fr",
+   "via": "direta",
+   "lidos": 19,
+   "marcados": 0,
+   "erro": ""
+  },
+  {
    "fonte": "The Guardian · Europe",
    "dominio": "theguardian.com",
    "via": "direta",
@@ -218,14 +266,6 @@
    "via": "direta",
    "lidos": 20,
    "marcados": 7,
-   "erro": ""
-  },
-  {
-   "fonte": "Le Figaro",
-   "dominio": "lefigaro.fr",
-   "via": "direta",
-   "lidos": 20,
-   "marcados": 0,
    "erro": ""
   },
   {
@@ -309,14 +349,6 @@
    "erro": ""
   },
   {
-   "fonte": "Angop",
-   "dominio": "angop.ao",
-   "via": "google",
-   "lidos": 30,
-   "marcados": 3,
-   "erro": ""
-  },
-  {
    "fonte": "France 24 (inglês)",
    "dominio": "france24.com",
    "via": "direta",
@@ -338,6 +370,14 @@
    "via": "direta",
    "lidos": 30,
    "marcados": 0,
+   "erro": ""
+  },
+  {
+   "fonte": "Angop",
+   "dominio": "angop.ao",
+   "via": "google",
+   "lidos": 31,
+   "marcados": 4,
    "erro": ""
   },
   {
@@ -368,7 +408,7 @@
    "fonte": "Inforpress (Cabo Verde)",
    "dominio": "inforpress.cv",
    "via": "google",
-   "lidos": 35,
+   "lidos": 37,
    "marcados": 1,
    "erro": ""
   },
@@ -386,14 +426,6 @@
    "via": "direta",
    "lidos": 50,
    "marcados": 19,
-   "erro": ""
-  },
-  {
-   "fonte": "Euronews (português)",
-   "dominio": "pt.euronews.com",
-   "via": "direta",
-   "lidos": 50,
-   "marcados": 24,
    "erro": ""
   },
   {
@@ -440,8 +472,8 @@
    "fonte": "JM Madeira",
    "dominio": "jm-madeira.pt",
    "via": "google",
-   "lidos": 72,
-   "marcados": 8,
+   "lidos": 73,
+   "marcados": 7,
    "erro": ""
   },
   {
@@ -453,27 +485,27 @@
    "erro": ""
   },
   {
-   "fonte": "Jornal de Angola",
-   "dominio": "jornaldeangola.ao",
-   "via": "google",
-   "lidos": 89,
-   "marcados": 7,
-   "erro": ""
-  },
-  {
    "fonte": "TSF",
    "dominio": "tsf.pt",
    "via": "google",
-   "lidos": 90,
-   "marcados": 24,
+   "lidos": 89,
+   "marcados": 25,
    "erro": ""
   },
   {
-   "fonte": "Agência Lusa · Internacional",
-   "dominio": "lusa.pt",
+   "fonte": "Jornal de Angola",
+   "dominio": "jornaldeangola.ao",
+   "via": "google",
+   "lidos": 91,
+   "marcados": 9,
+   "erro": ""
+  },
+  {
+   "fonte": "Euronews (português)",
+   "dominio": "pt.euronews.com",
    "via": "google (recurso)",
-   "lidos": 100,
-   "marcados": 0,
+   "lidos": 98,
+   "marcados": 28,
    "erro": ""
   },
   {
@@ -497,7 +529,7 @@
    "dominio": "executivedigest.sapo.pt",
    "via": "google",
    "lidos": 100,
-   "marcados": 13,
+   "marcados": 14,
    "erro": ""
   },
   {
@@ -513,7 +545,7 @@
    "dominio": "jn.pt",
    "via": "google",
    "lidos": 100,
-   "marcados": 16,
+   "marcados": 15,
    "erro": ""
   },
   {
@@ -525,43 +557,11 @@
    "erro": ""
   },
   {
-   "fonte": "Público · Ciência",
-   "dominio": "publico.pt",
-   "via": "google (recurso)",
-   "lidos": 100,
-   "marcados": 0,
-   "erro": ""
-  },
-  {
-   "fonte": "Público · Economia",
-   "dominio": "publico.pt",
-   "via": "google (recurso)",
-   "lidos": 100,
-   "marcados": 0,
-   "erro": ""
-  },
-  {
-   "fonte": "Público · Política",
-   "dominio": "publico.pt",
-   "via": "google (recurso)",
-   "lidos": 100,
-   "marcados": 13,
-   "erro": ""
-  },
-  {
-   "fonte": "Público · Sociedade",
-   "dominio": "publico.pt",
-   "via": "google (recurso)",
-   "lidos": 100,
-   "marcados": 0,
-   "erro": ""
-  },
-  {
    "fonte": "SIC Notícias",
    "dominio": "sicnoticias.pt",
    "via": "google",
    "lidos": 100,
-   "marcados": 28,
+   "marcados": 29,
    "erro": ""
   },
   {
