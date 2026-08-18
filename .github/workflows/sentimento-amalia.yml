@@ -149,7 +149,7 @@ jobs:
             git add sentimentos.json sentimento-serie.json sentimento-meses 2>/dev/null || true
             git diff --cached --quiet && { echo "Nada a gravar."; break; }
             git commit -m "Sentimento das noticias" || true
-            git pull --rebase --autostash origin main || true
+            git pull --rebase --autostash -X theirs origin main || { git rebase --abort 2>/dev/null || true; }
             if git push origin HEAD:main; then
               echo "Gravado na tentativa $tentativa."
               break

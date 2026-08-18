@@ -82,9 +82,18 @@ jobs:
           if [ -d sentimento-meses ]; then git add sentimento-meses/; fi
           git diff --cached --quiet || git commit -m "Recolha de noticias"
           # Três fluxos gravam no mesmo repositório e podem cruzar-se: puxa-se
-          # primeiro o que houver, para o envio não ser recusado.
-          git pull --rebase --autostash
-          git push
+          # primeiro o que houver, para o envio não ser recusado. Nos ficheiros
+          # de dados, reescritos por inteiro a cada recolha, um rebase simples
+          # entra em conflito — a opção -X theirs resolve-o ficando com a
+          # versão desta recolha, que é a mais fresca. E porque outro fluxo
+          # pode gravar exatamente entre o puxar e o enviar, tenta-se até três
+          # vezes; um rebase que ainda assim encalhe é abortado antes de repetir.
+          for tentativa in 1 2 3; do
+            git pull --rebase --autostash -X theirs || { git rebase --abort 2>/dev/null || true; }
+            if git push; then break; fi
+            if [ "$tentativa" = "3" ]; then echo "Gravação falhou após 3 tentativas."; exit 1; fi
+            sleep $((tentativa * 10))
+          done
 
       - name: Disponibilizar o Excel do dia
         uses: actions/upload-artifact@v4

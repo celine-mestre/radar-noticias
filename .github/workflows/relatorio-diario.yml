@@ -196,8 +196,15 @@ jobs:
           git config user.email "actions@github.com"
           git add ultimo-relatorio.txt
           git diff --cached --quiet || git commit -m "relatório do dia enviado"
-          git pull --rebase --autostash
-          git push
+          # Nos ficheiros reescritos por inteiro, um rebase simples entra em
+          # conflito; -X theirs fica com a versão deste fluxo, a mais fresca,
+          # e tenta-se até três vezes por causa dos cruzamentos de gravação.
+          for tentativa in 1 2 3; do
+            git pull --rebase --autostash -X theirs || { git rebase --abort 2>/dev/null || true; }
+            if git push; then break; fi
+            if [ "$tentativa" = "3" ]; then echo "Gravação falhou após 3 tentativas."; exit 1; fi
+            sleep $((tentativa * 10))
+          done
 
       - name: Guardar os relatorios
         uses: actions/upload-artifact@v4
