@@ -1067,6 +1067,11 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
     """
     limite = agora_lisboa() - timedelta(days=dias)
     encontrados, lidos, falhas = {}, 0, []
+    # Relatório por fonte de CADA recolha: quantos artigos deu, quantos marcou,
+    # por que via e com que erro. Sem isto, uma publicação que deixa de
+    # responder desaparece em silêncio — só se via o efeito, semanas depois, ao
+    # dar pela falta dela nos quadros.
+    relatorio = []
     sem_ligacao_por_fonte = {}
     # Todos os artigos lidos, marcados ou não: é este o corpus que a pesquisa
     # por termo livre percorre. Sem ele, procurar "Ceuta" só encontraria o que
@@ -1083,12 +1088,36 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         print(f"[{i}/{len(lista)}] {nome_fonte}"
               f"{' (via Google Notícias)' if via_google else ''}…",
               end=" ", flush=True)
+        recurso = ""
         try:
             itens = extrair_itens(ler_feed(url_via_google(dominio) if via_google else url))
         except Exception as erro:                              # noqa: BLE001
-            print(f"falhou ({erro})")
-            falhas.append((nome_fonte, str(erro)))
+            itens, falha = None, str(erro)
+
+        # RECURSO AUTOMÁTICO. Um feed direto pode falhar hoje e responder
+        # amanhã: há órgãos que aceitam um pedido isolado e recusam quem os
+        # visita de duas em duas horas. Quando a leitura direta falha ou vem
+        # vazia, tenta-se de imediato a via Google para o mesmo domínio, em vez
+        # de perder o dia inteiro dessa publicação — foi assim que o Correio da
+        # Manhã, o Notícias ao Minuto e a Sábado passaram semanas a responder
+        # ao verificador e a não deixar uma única notícia na recolha.
+        if not via_google and not itens:
+            try:
+                alternativos = extrair_itens(ler_feed(url_via_google(dominio)))
+            except Exception:                                  # noqa: BLE001
+                alternativos = []
+            if alternativos:
+                itens, recurso = alternativos, "google"
+
+        if itens is None:
+            print(f"falhou ({falha})")
+            falhas.append((nome_fonte, falha))
+            relatorio.append({"fonte": nome_fonte, "dominio": dominio,
+                              "via": "google" if via_google else "direta",
+                              "lidos": 0, "marcados": 0, "erro": falha[:160]})
             continue
+        if recurso:
+            print("(direta sem resultado; via Google)", end=" ", flush=True)
 
         lidos += len(itens)
         marcados = 0
@@ -1134,6 +1163,10 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         # sem isto, só se via o efeito — notícias sem ligação — e não a causa.
         aviso = f", {sem_endereco} SEM ENDEREÇO" if sem_endereco else ""
         print(f"{len(itens)} artigos, {marcados} marcados{aviso}")
+        relatorio.append({"fonte": nome_fonte, "dominio": dominio,
+                          "via": "google" if via_google else
+                                 ("google (recurso)" if recurso else "direta"),
+                          "lidos": len(itens), "marcados": marcados, "erro": ""})
         if sem_endereco:
             sem_ligacao_por_fonte[nome_fonte] = sem_endereco
         if i < len(lista):
@@ -1168,6 +1201,25 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         for nome, quantos in sorted(sem_ligacao_por_fonte.items(), key=lambda x: -x[1]):
             print(f"   {nome}: {quantos}")
         print("Estas notícias entram na mesma, mas sem ligação para o artigo.")
+    # O relatório por fonte fica em ficheiro, não só no registo da execução:
+    # é a diferença entre saber e ter de ir procurar.
+    try:
+        mudas = [r for r in relatorio if not r["lidos"]]
+        with open("fontes-recolha.json", "w", encoding="utf-8") as destino:
+            json.dump({"recolhido": agora_lisboa().strftime("%Y-%m-%d %H:%M"),
+                       "fontes": len(relatorio),
+                       "sem_artigos": len(mudas),
+                       "por_recurso": len([r for r in relatorio
+                                           if r["via"] == "google (recurso)"]),
+                       "detalhe": sorted(relatorio,
+                                         key=lambda r: (r["lidos"], r["fonte"]))},
+                      destino, ensure_ascii=False, indent=1)
+        if mudas:
+            print("Sem um único artigo nesta recolha: "
+                  + ", ".join(r["fonte"] for r in mudas))
+    except OSError:
+        pass
+
     return list(encontrados.values()), falhas, list(todos.values())
 
 
