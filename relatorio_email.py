@@ -429,16 +429,25 @@ def carregar_alertas(caminho="alertas.json"):
     return alertas
 
 
-def bloco_alertas(alertas):
-    """Faixa de «tempestade política» a abrir o relatório.
+def bloco_alertas(alertas, areas=None):
+    """Faixa de pico noticioso a abrir o relatório.
 
-    Só aparece havendo tempestades: o momentum fica para o painel, para que o
-    email não ganhe peso em dias normais.
+    Só aparece havendo picos NAS ÁREAS deste relatório: quem subscreve a Saúde
+    não tem que abrir o email e encontrar, antes da sua síntese, um alerta sobre
+    a Justiça — é ruído para quem o recebe, e empurra para baixo aquilo que
+    pediu. Não havendo picos das suas áreas, nada se interpõe entre o cabeçalho
+    e a síntese. O momentum continua a ficar para o painel.
     """
     if not alertas or not alertas.get("tempestades"):
         return ""
+    tempestades = alertas["tempestades"]
+    if areas:
+        nomes = {a["nome"] if isinstance(a, dict) else a for a in areas}
+        tempestades = [t for t in tempestades if t.get("area") in nomes]
+    if not tempestades:
+        return ""
     linhas = []
-    for t in alertas["tempestades"]:
+    for t in tempestades:
         variacao = (f" · +{t['variacao_pct']}% face ao habitual"
                     if t.get("variacao_pct") is not None else "")
         linhas.append(
@@ -538,7 +547,7 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
       {len(areas)} {'área' if len(areas) == 1 else 'áreas'}</span>
   </td></tr>
 
-  {bloco_alertas(carregar_alertas())}
+  {bloco_alertas(carregar_alertas(), areas)}
 
   {''.join(seccoes)}
 

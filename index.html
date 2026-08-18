@@ -454,8 +454,25 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .passo-corpo > p{font-size:.84rem;color:var(--texto-suave);margin-bottom:.8rem;line-height:1.5}
 .passo-estado{font-size:.86rem;color:var(--texto-suave);margin:.9rem 0 0}
 .passo-accoes{display:flex;gap:.5rem;flex-wrap:wrap}
-.sin-teto{display:flex;gap:.85rem;align-items:flex-start;margin:1.2rem 0 0;padding:.85rem 1rem;
+.sin-teto{display:flex;gap:.85rem;align-items:flex-start;margin:.6rem 0 0;padding:.85rem 1rem;
   border-radius:var(--raio-s);background:rgba(190,156,84,.09);border-left:3px solid var(--dourado)}
+/* Cabeçalho da secção dos números, com o «i» que abre a explicação */
+.sin-cab{display:flex;align-items:center;margin:1.2rem 0 .2rem}
+.sin-cab h4{margin:0;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--texto-ligeiro);font-weight:600}
+.btn-nota{width:18px;height:18px;flex:none;margin-left:.5rem;padding:0;
+  border:1px solid var(--borda);border-radius:50%;background:transparent;
+  color:var(--texto-ligeiro);font-family:var(--fonte);font-size:.68rem;
+  font-weight:600;font-style:italic;line-height:1;cursor:pointer;
+  vertical-align:middle;transition:.15s}
+.btn-nota:hover{border-color:var(--azul);color:var(--azul)}
+.btn-nota.aberto{background:var(--azul);border-color:var(--azul);color:#fff}
+/* No papel não há botões para carregar: a explicação volta à vista, senão o
+   PDF saía com os números e sem o método. */
+@media print{
+  .sin-teto[hidden]{display:flex!important}
+  .btn-nota{display:none!important}
+}
 .sin-teto svg{width:19px;height:19px;flex:none;stroke:var(--dourado);fill:none;stroke-width:1.8;
   stroke-linecap:round;stroke-linejoin:round;margin-top:.1rem}
 .sin-teto p{font-size:.82rem;color:var(--texto-suave);line-height:1.55}
@@ -1209,8 +1226,9 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <small>Suporte à Decisão · Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas</small>
     </div>
     <div class="fontes">
-      Fontes: 73 feeds de 66 órgãos de comunicação social (OCS) — imprensa, rádio e televisão, de Portugal, da lusofonia e internacionais.
-      Recolha diária em dias úteis. Versão de <span id="rodapeVersao">—</span>.
+      Fontes: 66 órgãos de comunicação social (OCS) — imprensa, rádio e televisão, de Portugal,
+      da lusofonia e internacionais — lidos em 73 entradas, umas pelo feed próprio e outras
+      via Google Notícias. Recolha diária, todos os dias. Versão de <span id="rodapeVersao">—</span>.
     </div>
   </div>
 </footer>
@@ -2000,6 +2018,18 @@ function mostrarVista(qual){
   const alvo = $("#conteudoRes");
   if(!alvo) return;
   alvo.innerHTML = qual === "sintese" ? corpoSintese() : corpoLista();
+
+  /* O «i» dos números da síntese: alterna a explicação, como na evolução. */
+  const btnN = alvo.querySelector("#btnNumeros");
+  if(btnN){
+    btnN.addEventListener("click", () => {
+      const caixa = alvo.querySelector("#notaNumeros");
+      if(!caixa) return;
+      caixa.hidden = !caixa.hidden;
+      btnN.classList.toggle("aberto", !caixa.hidden);
+      btnN.setAttribute("aria-expanded", String(!caixa.hidden));
+    });
+  }
   /* Sentimento (ensaio): as avaliações chegam em fundo; a lista redesenha-se
      uma vez quando estiverem disponíveis, para os pontos aparecerem. */
   if(qual !== "sintese" && SENTIMENTOS === null){
@@ -2177,7 +2207,7 @@ const MANUAL = [
     <p>Um painel que reúne o que a comunicação social noticiou sobre cada uma das <strong>17 áreas
     governativas</strong>, com sete dias de arquivo.</p>
     <div class="man-fichas">
-      <div class="man-ficha"><b>66 publicações</b><span>portuguesas, lusófonas e internacionais</span></div>
+      <div class="man-ficha"><b>66 publicações</b><span>73 entradas de leitura; 45 escrevem em português e são classificadas por área</span></div>
       <div class="man-ficha"><b>276 expressões</b><span>é o que classifica cada notícia por área</span></div>
       <div class="man-ficha"><b>7 dias</b><span>o que o painel consulta</span></div>
       <div class="man-ficha"><b>De 2 em 2 horas</b><span>ritmo da recolha, das 07h07 às 19h07, mais as 23h07</span></div>
@@ -2283,9 +2313,21 @@ const MANUAL = [
     <p>O painel não vai buscar notícias enquanto o consulta: lê o resultado de uma recolha
     automática, que corre <strong>de duas em duas horas, todos os dias</strong>, das 07h07
     às 19h07, mais uma recolha às 23h07. O dia só fica fechado na primeira recolha da manhã seguinte, que é quando já lá está tudo o que foi publicado entre as 00h00 e as 24h00 desse dia.</p>
-    <p>A recolha lê os feeds das publicações subscritas, marca cada artigo com as áreas cujas
-    expressões ele satisfaz, e deixa o resultado ao lado do painel. Depois da recolha da
-    manhã, escreve-se a síntese e enviam-se os relatórios.</p>
+    <p>A recolha lê as publicações subscritas por <strong>duas vias</strong>: a maior parte
+    pelo seu próprio endereço de feed; as que bloqueiam pedidos automáticos ou não publicam
+    feed — Expresso, SIC Notícias, Jornal de Notícias, Diário de Notícias, TSF, Lusa e mais
+    uma dúzia — por pesquisa ao Google Notícias restrita ao domínio de cada uma, com as
+    ligações resolvidas para o endereço do jornal. Cada artigo é marcado com as áreas cujas
+    expressões satisfaz, e o resultado fica ao lado do painel. Depois da recolha da manhã,
+    escreve-se a síntese e enviam-se os relatórios.</p>
+    <p>Das 66 publicações, <strong>45 escrevem em português</strong> e só essas são
+    classificadas por área; num dia útil marcam tipicamente 35 a 40, porque as
+    especializadas só marcam quando têm matéria da sua área. As 21 restantes são imprensa
+    estrangeira em língua estrangeira, que entra apenas na pesquisa por termo.</p>
+    <p class="man-aviso">A 17 de agosto de 2026 o conjunto de fontes efetivamente lidas
+    alargou-se: recuperaram-se feeds que estavam em falha silenciosa e entrou a segunda via
+    de leitura. Comparações que atravessem essa data medem também esse alargamento, e não
+    apenas a atualidade — o painel de evolução assinala-a nos seus quadros.</p>
     <p>Cada recolha deixa também registado o retrato do dia. O <strong>painel de
     evolução</strong>, no ícone de gráfico da barra do topo, mostra essa série ao longo do
     tempo: volume por período e por origem, trajetória de cada área e expressões que mais
@@ -2698,7 +2740,17 @@ function corpoSintese(){
 
   return `
 
-      <div class="sin-teto">
+      <!-- A explicação do que os números medem é longa e repetia-se em todas as
+           consultas, empurrando os KPI para baixo da dobra no telemóvel. Passa
+           a viver atrás de um «i», como os quadros da evolução: quem precisa lê
+           uma vez, quem não precisa não tem de a saltar sempre. -->
+      <div class="sin-cab">
+        <h4>Números da consulta</h4>
+        <button class="btn-nota" type="button" id="btnNumeros"
+                aria-expanded="false" aria-controls="notaNumeros"
+                title="O que estes números medem">i</button>
+      </div>
+      <div class="sin-teto" id="notaNumeros" hidden>
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
         <p><strong>O que estes números medem.</strong> As notícias vêm dos feeds das publicações subscritas, marcadas pelas palavras-chave da área. Medem o que essas publicações noticiaram no período, não o total do que foi noticiado. Como nenhuma área é truncada e o método é igual para todas, a comparação entre áreas é legítima.</p>
       </div>
