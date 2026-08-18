@@ -1,9 +1,9 @@
 {
- "atualizado": "2026-08-18 01:17",
+ "atualizado": "2026-08-18 01:56",
  "dia": "2026-08-18",
- "corte": "01:17",
- "dias_base": 14,
- "regra": "Tempestade quando a contagem do dia, até às 01:17, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "corte": "01:56",
+ "dias_base": 12,
+ "regra": "Tempestade quando a contagem do dia, até às 01:56, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [],
  "momentum": [
   {
@@ -13,47 +13,47 @@
    "limiar": 8,
    "excesso": 6,
    "variacao_pct": null,
-   "dias_base": 11,
+   "dias_base": 9,
    "tempestade": false
   },
   {
    "area": "Economia e Coesão Territorial",
-   "hoje": 6,
-   "mediana": 1.0,
-   "limiar": 9.0,
-   "excesso": 5.0,
-   "variacao_pct": 500,
-   "dias_base": 14,
+   "hoje": 7,
+   "mediana": 1.5,
+   "limiar": 9.5,
+   "excesso": 5.5,
+   "variacao_pct": 367,
+   "dias_base": 12,
    "tempestade": false
   },
   {
    "area": "Defesa Nacional",
    "hoje": 4,
-   "mediana": 1.0,
-   "limiar": 9.0,
-   "excesso": 3.0,
-   "variacao_pct": 300,
-   "dias_base": 14,
-   "tempestade": false
-  },
-  {
-   "area": "Cultura, Juventude e Desporto",
-   "hoje": 2,
-   "mediana": 1.0,
-   "limiar": 9.0,
-   "excesso": 1.0,
+   "mediana": 2.0,
+   "limiar": 10.0,
+   "excesso": 2.0,
    "variacao_pct": 100,
    "dias_base": 12,
    "tempestade": false
   },
   {
-   "area": "Educação, Ciência e Inovação",
+   "area": "Cultura, Juventude e Desporto",
+   "hoje": 3,
+   "mediana": 2.0,
+   "limiar": 10.0,
+   "excesso": 1.0,
+   "variacao_pct": 50,
+   "dias_base": 10,
+   "tempestade": false
+  },
+  {
+   "area": "Negócios Estrangeiros",
    "hoje": 1,
    "mediana": 0.0,
    "limiar": 8.0,
    "excesso": 1.0,
    "variacao_pct": null,
-   "dias_base": 14,
+   "dias_base": 12,
    "tempestade": false
   }
  ],
