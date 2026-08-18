@@ -283,6 +283,10 @@ table.cmp th:first-child{text-align:left;font-weight:500;color:var(--texto-suave
 table.cmp tr:first-child th{border-top:0;font-size:.76rem}
 table.cmp td{font-variant-numeric:tabular-nums;color:var(--texto)}
 table.cmp small{color:var(--texto-ligeiro);font-size:.86em}
+/* Separador do período em foco dentro da tabela: as linhas abaixo dizem
+   respeito só a esse período, e sem marca liam-se como mais totais. */
+table.cmp tr.cmp-foco th{text-align:left;font-weight:600;color:var(--texto-suave);
+  font-size:.78rem;padding-top:.8rem;border-top:2px solid var(--borda)}
 
 /* Publicações especializadas */
 table.esp{width:100%;border-collapse:collapse;margin-top:.9rem;font-size:.8rem}
@@ -844,7 +848,11 @@ function ajustarAgregacao(linhas){
    sentimento e os picos, para os três reagirem de igual modo aos filtros. */
 /* «mes» é a chave interna; ao utilizador escreve-se «mês». */
 const NOME_AGREG = { dia: "dia", semana: "semana", mes: "mês" };
-function agregNome(){ return NOME_AGREG[agregacao] || agregacao; }
+const PLURAL_AGREG = { dia:"Dias", semana:"Semanas", mes:"Meses" };
+function agregNome(plural){
+  return plural ? (PLURAL_AGREG[agregacao] || agregacao + "s")
+                : (NOME_AGREG[agregacao] || agregacao);
+}
 
 function chaveDoPeriodo(dataISO, modo = agregacao){
   if(modo === "dia") return dataISO;
@@ -1238,9 +1246,10 @@ function duasLinhas(vA, vB, corA, corB){
 }
 
 /* Tom negativo de uma área na janela, para a tabela da comparação. */
-function tomDaArea(nome, primeiro, ultimo){
+function tomDaArea(nome, primeiro, ultimo, chaveFoco){
   let av = 0, neg = 0;
-  SENTIMENTO.filter(d => d.data >= primeiro && d.data <= ultimo).forEach(d => {
+  SENTIMENTO.filter(d => d.data >= primeiro && d.data <= ultimo &&
+    (!chaveFoco || chaveDoPeriodo(d.data) === chaveFoco)).forEach(d => {
     const v = (d.areas || {})[nome];
     if(!v) return;
     av += v.avaliadas || 0; neg += v.negativo || 0;
@@ -1284,6 +1293,51 @@ function blocoComparacao(linhas, pares){
   const toms = nomes.map(n => tomDaArea(n, primeiro, ultimo));
   const iM = diaEscolhido ? pares.findIndex(([c]) => c === diaEscolhido) : -1;
 
+  /* Repartição por origem, no período: duas áreas com o mesmo volume podem ter
+     origens muito diferentes — a Defesa vive do internacional, a Saúde não. */
+  const origens = nomes.map(n => {
+    const o = { nacionais:0, lusofonas:0, internacionais:0 };
+    linhas.forEach(d => {
+      const v = (d.areas || {})[n];
+      Object.entries((v || {}).origens || {}).forEach(([k, q]) => { o[k] += q; });
+    });
+    const t = o.nacionais + o.lusofonas + o.internacionais;
+    return { ...o, total: t };
+  });
+
+  /* Picos registados de cada área no período — a comparação de intensidade que
+     o gráfico sozinho não dá. */
+  const picos = nomes.map(n => TEMPESTADES.filter(t => t.area === n &&
+    t.data >= primeiro && t.data <= ultimo).length);
+
+  /* Quem mais cobre cada uma, do ficheiro das publicações. Diz de onde vem o
+     volume: duas áreas com números iguais podem ser sustentadas por órgãos
+     diferentes. */
+  const principal = nomes.map(n => {
+    if(!PUBLICACOES.length) return null;
+    const c = {};
+    PUBLICACOES.filter(d => d.data >= primeiro && d.data <= ultimo)
+      .forEach(d => Object.entries((d.areas || {})[n] || {})
+        .forEach(([pub, q]) => { c[pub] = (c[pub] || 0) + q; }));
+    const topo = Object.entries(c).sort((a, b) => b[1] - a[1])[0];
+    return topo ? { pub: topo[0], n: topo[1] } : null;
+  });
+
+  /* Em quantos períodos cada uma esteve à frente da outra */
+  const frente = [0, 0];
+  vals[0].forEach((v, i) => {
+    if(v > vals[1][i]) frente[0]++;
+    else if(vals[1][i] > v) frente[1]++;
+  });
+
+  const pctOrigem = i => {
+    const o = origens[i];
+    if(!o.total) return "—";
+    const p = k => Math.round(100 * o[k] / o.total);
+    return `${p("nacionais")}% <small>PT</small> · ${p("lusofonas")}% <small>lus.</small>`
+         + ` · ${p("internacionais")}% <small>int.</small>`;
+  };
+
   const linha = (rot, f) => `<tr><th>${rot}</th>${nomes.map((n, i) =>
     `<td>${f(i, n)}</td>`).join("")}</tr>`;
 
@@ -1305,13 +1359,28 @@ function blocoComparacao(linhas, pares){
         ${linha("Média por " + agregNome(), i => num(Math.round(somas[i] / (pares.length || 1))))}
         ${linha("Maior " + agregNome(), i =>
           `${num(maiores[i].quanto)} <small>${descreverPeriodo(maiores[i].quando)}</small>`)}
-        ${iM >= 0 ? linha(descreverPeriodo(diaEscolhido), i => num(vals[i][iM] || 0)) : ""}
-        ${linha("Tom negativo <small>(nacional)</small>", i =>
+        ${linha(`${agregNome(true)} à frente`, i =>
+          `${frente[i]} <small>de ${pares.length}</small>`)}
+        ${linha("Origem das notícias", i => pctOrigem(i))}
+        ${linha("Picos no período", i => picos[i] ? num(picos[i]) : "—")}
+        ${PUBLICACOES.length ? linha("Quem mais a cobre", i => principal[i]
+          ? `${principal[i].pub} <small>(${num(principal[i].n)})</small>` : "—") : ""}
+        ${linha("Tom negativo <small>(nacional, período)</small>", i =>
           toms[i] === null ? "<small>amostra pequena</small>" : toms[i] + "%")}
+        ${iM >= 0 ? `
+          <tr class="cmp-foco"><th colspan="3">${descreverPeriodo(diaEscolhido)}</th></tr>
+          ${linha("Notícias", i => num(vals[i][iM] || 0))}
+          ${linha("Tom negativo <small>(nacional)</small>", i => {
+            const t = tomDaArea(nomes[i], primeiro, ultimo, diaEscolhido);
+            return t === null ? "<small>amostra pequena</small>" : t + "%";
+          })}` : ""}
       </table>
       <p class="nota">As duas linhas partilham a mesma escala, para a comparação não
         enganar: a tracejada é a segunda área. O tom vem da avaliação do Amália sobre a
-        comunicação social nacional e só se mostra com pelo menos oito notícias avaliadas.
+        comunicação social nacional e só se mostra com pelo menos oito notícias avaliadas —
+        é por isso que num único ${agregNome()} costuma aparecer «amostra pequena», mesmo
+        estando tudo avaliado. «Quem mais a cobre» conta todas as origens, porque o ficheiro
+        das publicações não as separa.
         ${somas[1] ? `No período, ${nomes[0]} teve
           ${(somas[0] / somas[1]).toFixed(2).replace(".", ",")} vezes o volume de ${nomes[1]}.` : ""}</p>
     </div>`;

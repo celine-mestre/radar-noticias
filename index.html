@@ -309,6 +309,11 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .evo-grafico{display:flex;align-items:flex-end;gap:2px;height:110px;padding-top:.3rem}
 .evo-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
 .evo-haste{width:100%;max-width:16px;border-radius:3px 3px 1px 1px;display:block;transition:.2s}
+/* O dia que ainda decorre distingue-se à vista: sem isto, uma barra pequena
+   por ser madrugada lia-se como uma quebra na área. */
+.evo-col.em-curso .evo-haste{opacity:.5;outline:1px dashed var(--borda);outline-offset:1px}
+.evo-col.em-curso .evo-dia{font-style:italic;opacity:.75}
+.evo-curso{font-size:.76rem;color:var(--texto-ligeiro);margin:-.4rem 0 .7rem;line-height:1.5}
 .evo-dia{font-size:.6rem;color:var(--texto-ligeiro);margin-top:.3rem;white-space:nowrap;height:.9rem}
 .barra-criterios{
   display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;flex:none;
@@ -877,6 +882,18 @@ body.sem-radar #conteudo{display:block !important}
   font-size:1.5rem;font-weight:700;line-height:1;color:var(--cor);
   font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .cartao-n.zero{color:var(--texto-ligeiro);font-weight:600;font-size:1.15rem}
+
+/* O total das notícias, para os ecrãs onde o radar circular não cabe. Em ecrã
+   largo fica escondido: lá o número está ao centro do círculo. */
+.kpi-movel{display:none}
+@media(max-width:860px){
+  .kpi-movel{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;
+    background:var(--superficie);border:1px solid var(--borda);border-radius:12px;
+    padding:.7rem .9rem;margin-bottom:.7rem}
+  .kpi-movel strong{font-size:1.6rem;font-weight:600;color:var(--azul);line-height:1;
+    letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .kpi-movel span{font-size:.74rem;color:var(--texto-ligeiro);line-height:1.35}
+}
 
 /* No telemóvel o cartão ilustrado ocupa meio ecrã cada, e ver dezassete áreas
    obriga a rolar muito. Abaixo dos 700px passa a linha de lista: símbolo,
@@ -1515,6 +1532,7 @@ async function apurarContagens(){
        de duplicados. Qualquer critério a menos faria o radar anunciar um número
        que a área depois não mostra. */
     const vistos = new Set();
+    const distintas = new Set();
     const chaves = {};
     AREAS.forEach(x => { chaves[x.nome] = x.palavras; });
 
@@ -1533,10 +1551,16 @@ async function apurarContagens(){
       if(vistos.has(k)) return;
       vistos.add(k);
       c[n.area] = (c[n.area] || 0) + 1;
+      /* Somar as áreas dá MARCAÇÕES: uma notícia que satisfaz três áreas
+         conta em cada uma delas. Para o total do centro do radar — e para o
+         KPI do telemóvel — o que interessa é o número de notícias distintas,
+         e por isso conta-se à parte, pela identidade da notícia. */
+      distintas.add(chaveNoticia(n));
     });
-    contagens = { por: c, dias: a.dias || 7, atualizado: a.atualizado || "" };
+    contagens = { por: c, distintas: distintas.size,
+                  dias: a.dias || 7, atualizado: a.atualizado || "" };
   }catch(e){
-    contagens = { por: {}, dias: 0 };
+    contagens = { por: {}, distintas: 0, dias: 0 };
   }
   return contagens;
 }
@@ -1587,9 +1611,15 @@ async function desenharRadar(){
     : window.innerWidth <= 860;
   if(!alvo || estreito) return;
 
-  const { por, dias, atualizado } = await apurarContagens();
+  const { por, distintas, dias, atualizado } = await apurarContagens();
   const lista = areasVisiveis();
-  const total = lista.reduce((s, a) => s + (por[a.nome] || 0), 0);
+  const marcacoes = lista.reduce((s, a) => s + (por[a.nome] || 0), 0);
+  /* Com todas as áreas à vista, o total é o das notícias distintas, que é o
+     que a palavra «notícias» promete. Filtrado a um agrupamento, as distintas
+     do conjunto todo já não servem, e usa-se a soma das áreas mostradas —
+     dizendo-o na legenda, para ninguém somar peras com maçãs. */
+  const todasAsAreas = lista.length === AREAS.length;
+  const total = todasAsAreas ? distintas : marcacoes;
 
   /* Só se esconde quando não há arquivo nenhum para ler — aberto do disco sem
      ligação, por exemplo. Havendo arquivo, mostra-se mesmo com zero notícias:
@@ -1609,7 +1639,13 @@ async function desenharRadar(){
                        internacionais:"OCS internacionais",
                        todas:"OCS de todas as origens" }[filtroFontes];
   $("#radarLegenda").textContent =
-    `${total === 1 ? "notícia" : "notícias"} · ${ROTULO_PERIODO[periodo]} · ${ondeOrigem}`;
+    `${todasAsAreas ? (total === 1 ? "notícia" : "notícias")
+                    : (total === 1 ? "marcação" : "marcações")}`
+    + ` · ${ROTULO_PERIODO[periodo]} · ${ondeOrigem}`;
+  $(".centro").title = todasAsAreas
+    ? `${total.toLocaleString("pt-PT")} notícias distintas, que deixaram `
+      + `${marcacoes.toLocaleString("pt-PT")} marcações — uma notícia pode tocar mais do que uma área`
+    : "Soma das áreas mostradas: uma notícia que toque duas delas conta em ambas";
   mostrarUltimaRecolha(atualizado);
 
   $("#radarNota").textContent = total
@@ -1670,6 +1706,13 @@ function desenhar(){
       <h2>XXV Governo Constitucional</h2>
       <span>${lista.length} ${lista.length === 1 ? "área" : "áreas"}</span>
     </div>
+    <!-- No telemóvel não há círculo, e com ele desaparecia o total que está ao
+         centro do radar no computador. Este cartão repõe-no antes da lista,
+         com os mesmos filtros; em ecrã largo fica escondido pelo CSS. -->
+    <div class="kpi-movel" id="kpiMovel" hidden>
+      <strong id="kpiMovelN">—</strong>
+      <span id="kpiMovelR"></span>
+    </div>
     <div class="grelha">${lista.map(cartao).join("")}</div>
   </section>`;
 
@@ -1706,6 +1749,26 @@ async function ordenarCartoes(){
       marca.title = `${c.n} ${c.n === 1 ? "notícia" : "notícias"} ${rotuloPeriodo()}`;
     }
   });
+
+  /* O total, para o telemóvel. Com todas as áreas à vista são notícias
+     distintas — o mesmo número do centro do radar; filtrado a um agrupamento,
+     é a soma das áreas mostradas, que são marcações, e o rótulo di-lo. */
+  const caixa = $("#kpiMovel");
+  if(caixa){
+    const todasAsAreas = cartoes.length === AREAS.length;
+    const marcacoes = comN.reduce((s, c) => s + c.n, 0);
+    const total = todasAsAreas ? (dados.distintas || marcacoes) : marcacoes;
+    $("#kpiMovelN").textContent = total.toLocaleString("pt-PT");
+    $("#kpiMovelR").textContent =
+      `${todasAsAreas ? (total === 1 ? "notícia" : "notícias")
+                      : (total === 1 ? "marcação" : "marcações")} `
+      + `${rotuloPeriodo()} · ${ROTULO_FONTES[filtroFontes].toLowerCase()}`;
+    caixa.title = todasAsAreas
+      ? `${total.toLocaleString("pt-PT")} notícias distintas, que deixaram `
+        + `${marcacoes.toLocaleString("pt-PT")} marcações — uma notícia pode tocar mais do que uma área`
+      : "Soma das áreas mostradas: uma notícia que toque duas delas conta em ambas";
+    caixa.hidden = false;
+  }
 }
 
 /* O rótulo do período tal como aparece nos filtros, para a contagem do cartão
@@ -2445,8 +2508,21 @@ function blocoEvolucao(area){
      publicação e as duas contagens são a mesma — o campo «novas» ficou no
      ficheiro por compatibilidade, mas não é uma leitura distinta. */
   const valor = d => d.noticias;
-  const ultimo = recentes[recentes.length - 1];
-  const anteriores = recentes.slice(0, -1);
+
+  /* O dia em curso está incompleto por definição: às duas da manhã tem as
+     notícias de duas horas, e comparado com a média dos dias inteiros dá
+     sempre uma queda enorme — «-91%» que nada diz sobre a área. A referência
+     passa a ser o último dia COMPLETO; o dia de hoje mostra-se à parte, e no
+     gráfico fica assinalado como ainda a decorrer. */
+  const HOJE = new Intl.DateTimeFormat("sv-SE", { timeZone:"Europe/Lisbon" })
+    .format(new Date());
+  const emCurso = recentes[recentes.length - 1].data === HOJE
+    ? recentes[recentes.length - 1] : null;
+  const fechados = emCurso ? recentes.slice(0, -1) : recentes;
+  if(fechados.length < 2) return "";
+
+  const ultimo = fechados[fechados.length - 1];
+  const anteriores = fechados.slice(0, -1);
   const media = anteriores.reduce((soma, d) => soma + valor(d), 0) / anteriores.length;
   const variacao = media ? Math.round((valor(ultimo) - media) / media * 100) : 0;
   const sinal = variacao > 0 ? "+" : "";
@@ -2458,19 +2534,26 @@ function blocoEvolucao(area){
     return a === anoCorrente ? `${x}/${m}` : `${x}/${m}/${a.slice(2)}`;
   };
   const passo = Math.ceil(recentes.length / 10);
+  const dataPt = d => `${d.slice(8)}/${d.slice(5, 7)}`;
 
   return `
     <div class="bloco">
       <h4>Evolução da área</h4>
       <div class="evo-topo">
-        <div><strong>${valor(ultimo)}</strong><span>publicadas no último dia</span></div>
+        <div><strong>${valor(ultimo)}</strong><span>publicadas em ${dataPt(ultimo.data)}${
+          emCurso ? " (último dia completo)" : ""}</span></div>
         <div><strong>${media.toFixed(1).replace(".", ",")}</strong><span>média dos ${anteriores.length} dias anteriores</span></div>
         <div><strong style="color:${corVar}">${sinal}${variacao}%</strong><span>face a essa média</span></div>
       </div>
+      ${emCurso ? `<p class="evo-curso">Hoje, ${dataPt(emCurso.data)}, vão
+        <strong>${valor(emCurso)}</strong> ${valor(emCurso) === 1 ? "notícia" : "notícias"} —
+        o dia ainda decorre e por isso não entra na comparação.</p>` : ""}
       <div class="evo-grafico">${recentes.map((d, i) => `
-        <div class="evo-col" title="${d.data}: ${d.noticias} notícias, ${d.fontes} publicações">
+        <div class="evo-col${d === emCurso ? " em-curso" : ""}"
+             title="${d.data}: ${d.noticias} notícias, ${d.fontes} publicações${
+               d === emCurso ? " — dia ainda a decorrer" : ""}">
           <span class="evo-haste" style="height:${Math.max(4, Math.round(valor(d) / maximo * 88))}px;
-            background:${i === recentes.length - 1 ? cor(area.grupo) : "color-mix(in srgb, " + cor(area.grupo) + " 40%, transparent)"}"></span>
+            background:${d === ultimo ? cor(area.grupo) : "color-mix(in srgb, " + cor(area.grupo) + " 40%, transparent)"}"></span>
           <span class="evo-dia">${i % passo === 0 || i === recentes.length - 1 ? etiqueta(d.data) : ""}</span>
         </div>`).join("")}</div>
       <p class="sin-nota">A série conta cada notícia uma só vez, no dia em que foi
