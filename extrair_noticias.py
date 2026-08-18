@@ -1018,8 +1018,15 @@ DOMINIOS_PORTUGUES = (
     "noticiasaominuto.com", "cnnportugal.iol.pt", "eco.sapo.pt", "sapo.pt",
     "impresa.pt", "medialivre.pt", "lusa.pt", "novojornal.co.ao", "cartamz.com",
     "agenciabrasil.ebc.com.br", "folha.uol.com.br",
-    # Edições em português de publicações estrangeiras
-    "pt.euronews.com", "dw.com", "france24.com", "rfi.fr",
+    # Publicação portuguesa em domínio .com — sem isto, o Ambiente Magazine era
+    # lido mas nunca classificado, e o Ambiente e Energia perdia a única fonte
+    # especializada que tem.
+    "ambientemagazine.com",
+    # Edições em português de publicações estrangeiras. A France 24 saiu desta
+    # lista quando a fonte passou a ser a edição inglesa (a portuguesa não
+    # existe): manter-la aqui mandava aplicar palavras-chave portuguesas a
+    # texto inglês, que é exatamente o que produz coincidências falsas.
+    "pt.euronews.com", "dw.com", "rfi.fr",
 )
 
 

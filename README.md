@@ -241,8 +241,17 @@ lido). O estado de cada fonte pode ser verificado a qualquer momento com o fluxo
 **Verificar fontes** (Actions), que testa as 73 entradas e grava o resultado em
 `fontes-estado.json`.
 
-Só as publicações que escrevem em português são classificadas por área. As restantes
-entram no corpus da pesquisa por termo — ver a secção seguinte.
+### Quantas publicações marcam, de facto
+
+Das **66 publicações**, só as que escrevem em português são classificadas por área — são
+**45**. As outras 21 são a imprensa estrangeira em língua estrangeira, que entra apenas no
+corpus da pesquisa por termo. Destas 45, num dia útil marcam tipicamente **35 a 40**: as
+de nicho (Construir, Vida Económica, Ambiente Magazine) só marcam quando têm matéria da
+sua área, e ao fim de semana o número desce. É por isso que o quadro das publicações do
+painel de evolução mostra menos nomes do que a lista de fontes — e não porque falte
+alguma.
+
+As restantes entram no corpus da pesquisa por termo — ver a secção seguinte.
 
 ### Língua das fontes estrangeiras
 

@@ -283,9 +283,14 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .sin-nota{font-size:.78rem;color:var(--texto-ligeiro);margin-top:.7rem;line-height:1.5}
 .sa-sub{font-size:.8rem;font-weight:600;color:var(--texto-suave);margin:.9rem 0 .45rem;
   text-transform:uppercase;letter-spacing:.04em}
-.sa-lista{display:flex;flex-direction:column;gap:.35rem}
-.sa-linha{display:grid;grid-template-columns:minmax(90px,1.1fr) 2fr auto;gap:.6rem;
-  align-items:center;font-size:.8rem}
+/* A grelha vive na LISTA e não em cada linha: sendo cada linha uma grelha
+   própria, a coluna da direita — «92% neg. +32 p.p.» ou só «63% neg.» — media
+   o seu conteúdo linha a linha, e as barras começavam e acabavam em sítios
+   diferentes. Com a grelha na lista, as três colunas são as mesmas para todas
+   as linhas e as barras alinham à esquerda e à direita. */
+.sa-lista{display:grid;grid-template-columns:minmax(90px,1.1fr) 2fr auto;
+  gap:.35rem .6rem;align-items:center;font-size:.8rem}
+.sa-linha{display:contents}
 .sa-rot{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--texto)}
 .sa-barra{display:flex;height:14px;border-radius:4px;overflow:hidden;background:var(--superficie-alt)}
 .sa-barra i{display:block;height:100%}
@@ -294,7 +299,7 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .sa-barra .neg{background:var(--vermelho,#B23A3A)}
 .sa-n{font-variant-numeric:tabular-nums;color:var(--texto-suave);white-space:nowrap;font-size:.76rem}
 .sa-desvio{color:var(--c);font-weight:600}
-@media(max-width:620px){.sa-linha{grid-template-columns:minmax(70px,1fr) 1.4fr auto;font-size:.74rem}}
+@media(max-width:620px){.sa-lista{grid-template-columns:minmax(70px,1fr) 1.4fr auto;font-size:.74rem}}
 
 /* --- Síntese: elementos gráficos --- */
 .evo-topo{display:flex;gap:1.8rem;flex-wrap:wrap;margin:.3rem 0 .9rem}
