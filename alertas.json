@@ -1,101 +1,91 @@
 {
- "atualizado": "2026-08-18 09:51",
+ "atualizado": "2026-08-18 11:43",
  "dia": "2026-08-18",
- "corte": "09:51",
+ "corte": "11:43",
  "dias_base": 14,
- "regra": "Tempestade quando a contagem do dia, até às 09:51, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 11:43, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "tempestades": [
   {
-   "area": "Economia e Coesão Territorial",
-   "hoje": 28,
-   "mediana": 10.5,
-   "limiar": 26.8,
-   "excesso": 17.5,
-   "variacao_pct": 167,
-   "dias_base": 14,
-   "tempestade": true
-  },
-  {
-   "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 16,
-   "mediana": 4.0,
-   "limiar": 12.0,
-   "excesso": 12.0,
-   "variacao_pct": 300,
-   "dias_base": 14,
-   "tempestade": true
-  },
-  {
    "area": "Primeiro-Ministro",
-   "hoje": 12,
+   "hoje": 29,
    "mediana": 2,
    "limiar": 10,
-   "excesso": 10,
-   "variacao_pct": 500,
+   "excesso": 27,
+   "variacao_pct": 1350,
    "dias_base": 13,
    "tempestade": true
   },
   {
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 25,
+   "mediana": 7.0,
+   "limiar": 15.9,
+   "excesso": 18.0,
+   "variacao_pct": 257,
+   "dias_base": 14,
+   "tempestade": true
+  },
+  {
    "area": "Infraestruturas e Habitação",
-   "hoje": 14,
-   "mediana": 4.5,
-   "limiar": 12.5,
-   "excesso": 9.5,
-   "variacao_pct": 211,
+   "hoje": 20,
+   "mediana": 7.5,
+   "limiar": 15.5,
+   "excesso": 12.5,
+   "variacao_pct": 167,
    "dias_base": 14,
    "tempestade": true
   }
  ],
  "momentum": [
   {
+   "area": "Primeiro-Ministro",
+   "hoje": 29,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 27,
+   "variacao_pct": 1350,
+   "dias_base": 13,
+   "tempestade": true
+  },
+  {
    "area": "Economia e Coesão Territorial",
-   "hoje": 28,
-   "mediana": 10.5,
-   "limiar": 26.8,
-   "excesso": 17.5,
+   "hoje": 35,
+   "mediana": 16.5,
+   "limiar": 37.3,
+   "excesso": 18.5,
+   "variacao_pct": 112,
+   "dias_base": 14,
+   "tempestade": false
+  },
+  {
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 25,
+   "mediana": 7.0,
+   "limiar": 15.9,
+   "excesso": 18.0,
+   "variacao_pct": 257,
+   "dias_base": 14,
+   "tempestade": true
+  },
+  {
+   "area": "Infraestruturas e Habitação",
+   "hoje": 20,
+   "mediana": 7.5,
+   "limiar": 15.5,
+   "excesso": 12.5,
    "variacao_pct": 167,
    "dias_base": 14,
    "tempestade": true
   },
   {
-   "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 16,
-   "mediana": 4.0,
-   "limiar": 12.0,
-   "excesso": 12.0,
-   "variacao_pct": 300,
-   "dias_base": 14,
-   "tempestade": true
-  },
-  {
    "area": "Defesa Nacional",
-   "hoje": 23,
-   "mediana": 12.0,
-   "limiar": 29.8,
-   "excesso": 11.0,
-   "variacao_pct": 92,
+   "hoje": 32,
+   "mediana": 20.0,
+   "limiar": 48.2,
+   "excesso": 12.0,
+   "variacao_pct": 60,
    "dias_base": 14,
    "tempestade": false
-  },
-  {
-   "area": "Primeiro-Ministro",
-   "hoje": 12,
-   "mediana": 2,
-   "limiar": 10,
-   "excesso": 10,
-   "variacao_pct": 500,
-   "dias_base": 13,
-   "tempestade": true
-  },
-  {
-   "area": "Infraestruturas e Habitação",
-   "hoje": 14,
-   "mediana": 4.5,
-   "limiar": 12.5,
-   "excesso": 9.5,
-   "variacao_pct": 211,
-   "dias_base": 14,
-   "tempestade": true
   }
  ],
  "historico": [
@@ -171,31 +161,24 @@
   },
   {
    "data": "2026-08-18",
-   "area": "Economia e Coesão Territorial",
-   "hoje": 28,
-   "mediana": 10.5,
-   "limiar": 26.8
-  },
-  {
-   "data": "2026-08-18",
    "area": "Infraestruturas e Habitação",
-   "hoje": 14,
-   "mediana": 4.5,
-   "limiar": 12.5
+   "hoje": 20,
+   "mediana": 7.5,
+   "limiar": 15.5
   },
   {
    "data": "2026-08-18",
    "area": "Primeiro-Ministro",
-   "hoje": 12,
+   "hoje": 29,
    "mediana": 2,
    "limiar": 10
   },
   {
    "data": "2026-08-18",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 16,
-   "mediana": 4.0,
-   "limiar": 12.0
+   "hoje": 25,
+   "mediana": 7.0,
+   "limiar": 15.9
   }
  ]
 }
