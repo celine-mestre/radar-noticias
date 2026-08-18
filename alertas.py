@@ -61,6 +61,31 @@ TOPO_MOMENTUM = 5     # áreas no ranking do momentum
 # comparável começa aqui — a mesma convenção do painel de evolução.
 INICIO_SERIE = "2026-08-04"
 
+# ---------------------------------------------------------------------------
+# ALARGAMENTO DAS FONTES a 17 de agosto de 2026: recuperaram-se feeds em falha
+# e entrou a via Google Notícias (Expresso, SIC, JN, DN, TSF, Lusa…). O volume
+# diário das áreas subiu por o corpus ter crescido, não por a atualidade ter
+# mudado — e comparar o dia de hoje, contado com as fontes novas, com medianas
+# de dias que não as tinham dispara picos falsos.
+#
+# A regra é comparar igual com igual: enquanto a janela da linha de base ainda
+# contiver dias anteriores ao marco, a contagem — a de hoje E a de cada dia da
+# base — restringe-se às publicações que já marcavam antes do marco (o
+# «conjunto antigo», apurado dos próprios dados). Quando a janela ficar toda
+# dentro do regime novo, a restrição desaparece sozinha e passa a contar-se
+# tudo: com a base de 28 dias, isso acontece a 14 de setembro de 2026, sem
+# intervenção de ninguém.
+# ---------------------------------------------------------------------------
+MARCO_FONTES = "2026-08-17"
+
+
+def conjunto_antigo(linhas, marco=MARCO_FONTES):
+    """As publicações que já marcavam notícias antes do alargamento."""
+    return {(r.get("fonte") or "").strip().lower()
+            for r in linhas
+            if r.get("area") and (r.get("data") or "")[:10] < marco
+            and (r.get("fonte") or "").strip()}
+
 
 def agora_lisboa():
     """Hora de Lisboa sem depender de bibliotecas externas (UTC+1 no verão)."""
@@ -110,15 +135,20 @@ def ler_arquivo_mensal(pasta):
     return linhas
 
 
-def contagens_ate_ao_corte(linhas, corte):
+def contagens_ate_ao_corte(linhas, corte, so_fontes=None):
     """{dia: {área: nº de notícias publicadas até à hora de corte}}.
 
-    Uma notícia sem hora conta sempre: na dúvida, inclui-se.
+    Uma notícia sem hora conta sempre: na dúvida, inclui-se. Com so_fontes,
+    contam apenas as publicações desse conjunto — é o que torna a comparação
+    igual-com-igual durante a transição do alargamento das fontes.
     """
     dias = {}
     for r in linhas:
         data = (r.get("data") or "").strip()
         if len(data) < 10:
+            continue
+        if so_fontes is not None and \
+           (r.get("fonte") or "").strip().lower() not in so_fontes:
             continue
         dia, hora = data[:10], data[11:16]
         if hora and hora > corte:
@@ -239,7 +269,19 @@ def principal():
         print(f"alertas: sem arquivo mensal em {args.mensal}/ — nada a avaliar")
         return
 
-    dias = contagens_ate_ao_corte(linhas, corte)
+    # Igual com igual: se a janela da base ainda apanha dias anteriores ao
+    # alargamento das fontes, conta-se só o conjunto antigo — hoje e base.
+    inicio_janela = (datetime.strptime(hoje, "%Y-%m-%d")
+                     - timedelta(days=args.dias)).strftime("%Y-%m-%d")
+    em_transicao = inicio_janela < MARCO_FONTES <= hoje
+    fontes_base = conjunto_antigo(linhas) if em_transicao else None
+    fim_transicao = (datetime.strptime(MARCO_FONTES, "%Y-%m-%d")
+                     + timedelta(days=args.dias)).strftime("%Y-%m-%d")
+    if em_transicao:
+        print(f"alertas: transição do alargamento das fontes — a contar só as "
+              f"{len(fontes_base)} publicações do conjunto antigo, até {fim_transicao}")
+
+    dias = contagens_ate_ao_corte(linhas, corte, fontes_base)
     tempestades, momentum, n_base = avaliar(dias, hoje, args.dias, args.inicio)
 
     anterior = {}
@@ -249,6 +291,23 @@ def principal():
                 anterior = json.load(origem)
         except (json.JSONDecodeError, OSError):
             anterior = {}
+
+    # Os dias entre o marco e hoje foram julgados, na altura, com a régua
+    # errada — a contagem cheia contra medianas do conjunto antigo — e os picos
+    # falsos ficaram no registo. Reavaliam-se aqui, fechados (dia inteiro) e
+    # com a mesma régua igual-com-igual; os que sobreviverem eram picos reais.
+    historico = [r for r in (anterior.get("historico") or [])
+                 if not (MARCO_FONTES <= r.get("data", "") < hoje)]
+    dias_fechados = contagens_ate_ao_corte(linhas, "23:59", fontes_base)
+    d = datetime.strptime(MARCO_FONTES, "%Y-%m-%d")
+    while d.strftime("%Y-%m-%d") < hoje:
+        dia_passado = d.strftime("%Y-%m-%d")
+        t_dia, _, _ = avaliar(dias_fechados, dia_passado, args.dias, args.inicio)
+        for t in t_dia:
+            historico.append({"data": dia_passado, "area": t["area"],
+                              "hoje": t["hoje"], "mediana": t["mediana"],
+                              "limiar": t["limiar"]})
+        d += timedelta(days=1)
 
     resultado = {
         "atualizado": agora.strftime("%Y-%m-%d %H:%M"),
@@ -260,11 +319,18 @@ def principal():
                   f"máx({FATOR_DESVIO:g} desvios robustos, {SUBIDA_MINIMA} notícias) "
                   f"e atinge pelo menos {PISO_ABSOLUTO} notícias; "
                   f"sem alertas com menos de {MINIMO_DIAS} dias de série, "
-                  f"contada desde {args.inicio} (método de recolha atual)."),
+                  f"contada desde {args.inicio} (método de recolha atual)."
+                  + (f" Em transição do alargamento das fontes de {MARCO_FONTES}: "
+                     f"até {fim_transicao}, hoje e a base contam apenas as "
+                     f"{len(fontes_base)} publicações que já marcavam antes do "
+                     f"marco, para a comparação ser igual com igual."
+                     if em_transicao else "")),
+        "transicao_fontes": ({"marco": MARCO_FONTES, "fim": fim_transicao,
+                              "publicacoes_contadas": len(fontes_base)}
+                             if em_transicao else None),
         "tempestades": tempestades,
         "momentum": momentum,
-        "historico": atualizar_historico(anterior.get("historico"),
-                                         hoje, tempestades),
+        "historico": atualizar_historico(historico, hoje, tempestades),
     }
 
     with open(args.saida, "w", encoding="utf-8") as destino:
