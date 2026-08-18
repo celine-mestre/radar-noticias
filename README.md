@@ -12,8 +12,9 @@ Unidade de Pesquisa e Estatísticas
 
 ## Como funciona
 
-A recolha lê, de duas em duas horas, **73 feeds de 66 órgãos de comunicação social** — imprensa, rádio e televisão, portugueses,
-lusófonas e internacionais — e marca cada artigo com as áreas governativas cujas
+A recolha lê, de duas em duas horas, **66 órgãos de comunicação social** (73 entradas de leitura) — imprensa, rádio e
+televisão, portugueses, lusófonos e internacionais, uns pelo feed próprio e outros via
+Google Notícias — e marca cada artigo com as áreas governativas cujas
 palavras-chave ele satisfaz. Um artigo é recolhido por ser de uma fonte conhecida, não
 por corresponder a uma pesquisa.
 
@@ -39,8 +40,12 @@ anterior ao arquivo, não aparece — e alargar o âmbito é acrescentar feeds �
    O programa está no repositório e é legível: a lista de publicações está na
    constante `FONTES`, as áreas e palavras-chave na constante `AREAS`, e a marcação
    na função `marcar_por_areas()`.
-2. **Leitura dos feeds.** Cada publicação é lida pelo seu endereço RSS. Cada artigo
-   traz título, resumo, data de publicação, fonte e ligação direta.
+2. **Leitura das fontes, por duas vias.** A maioria das publicações é lida
+   diretamente pelo seu endereço RSS. As que bloqueiam pedidos automáticos ou não
+   publicam feed são lidas ao **Google Notícias, por pesquisa restrita ao domínio**
+   (`site:expresso.pt`), com as ligações de reencaminhamento resolvidas para o
+   endereço do jornal no fim da recolha. Em ambas as vias, cada artigo traz título,
+   resumo, data de publicação, fonte e ligação direta.
 3. **Marcação.** Para cada artigo, o programa procura literalmente as expressões de
    cada área no título e no resumo. Encontrando, marca o artigo com essa área e com
    as expressões que a acionaram. Um artigo pode ficar em mais de uma área.
@@ -152,6 +157,8 @@ fora do período.
 | `reconstruir_series.py` | **Fecho dos dias passados.** Corre a seguir a cada recolha e reconta todos os dias anteriores a hoje a partir do `meses/` e do `sentimento-meses/`, que são permanentes e refletem sempre as expressões em vigor. Sem isto, um dia que saísse da janela de sete dias ficava congelado com o número que tinha nesse momento: não acompanhava a revalidação das expressões nem as notícias do fim da noite, que só entram na recolha da manhã seguinte. Idempotente e não toca no dia em curso. |
 | `retroativo_pm.py` + `.github/workflows/retroativo-pm.yml` | **Passo retroativo, execução única.** Revalida todas as marcações existentes sob as regras atuais (retirando pares de expressões entretanto removidas, como «empresas») e reclassifica o corpus de 7 dias com as áreas e expressões novas, injetando o resultado no arquivo, no retrato, no arquivo mensal, na série diária e nos alertas. Idempotente: correr duas vezes não duplica nem retira mais nada. |
 | `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente e integral.** Um ficheiro comprimido por mês com todas as notícias desse mês — as marcadas com a sua área, e as não marcadas com área vazia (guardadas para que os passos retroativos futuros tenham meses de profundidade, e não apenas os sete dias do corpus). A área vazia é ignorada por tudo o que conta por área. ~2–3 MB/mês. |
+| `verificar_fontes.py` + `.github/workflows/verificar-fontes.yml` | **Estado das fontes, a pedido.** Testa as 73 entradas — as diretas pelo seu endereço, as da via Google pelo endereço da pesquisa — e, para as que falham, experimenta endereços alternativos conhecidos e a autodescoberta (os feeds que a própria página inicial anuncia). Grava `fontes-estado.json` e um quadro legível no Summary da execução. Nasceu da auditoria de agosto de 2026, em que 34 das 73 entradas estavam em falha silenciosa; corre à mão, no botão *Run workflow*. |
+| `fontes-estado.json` | **Resultado da última verificação de fontes**: entrada a entrada, se responde, com quantos artigos, e que endereço alternativo responde quando o configurado falha. |
 
 Os três ficheiros de dados são gerados pela recolha. Não devem ser editados à mão.
 
@@ -191,7 +198,8 @@ Timor-Leste: Tatoli. Brasil: Agência Brasil e Folha de S.Paulo.
 Matéria de CPLP, cooperação e diáspora é frequentemente tratada primeiro nestes títulos.
 
 **Internacionais — 27 feeds de 25 publicações.**
-Em português: Euronews, Deutsche Welle, France 24, RFI e Lusa Internacional.
+Em português: Euronews, Deutsche Welle e RFI. Em inglês: France 24 (a edição
+portuguesa não existe — é a RFI que a tem).
 União Europeia: Politico Europe e EURACTIV.
 Espanha: El País (geral e internacional), El Mundo, La Vanguardia e ABC.
 Reino Unido: BBC News, BBC Mundo e The Guardian (Europa e mundo).
@@ -201,10 +209,37 @@ Estados Unidos da América: Associated Press, The New York Times, The Washington
 Politico.
 Alemanha: Der Spiegel.
 
-**São 73 feeds de 66 publicações.** A diferença são sete publicações com mais do que um
-feed — o Público tem cinco, a Lusa, o El País e o The Guardian têm dois cada. O feed
-geral de um jornal tem teto de itens, e as secções trazem peças que ele já empurrou para
-fora; as repetições são descartadas na recolha.
+**São 73 entradas de 66 publicações.** A diferença são sete publicações com mais do que
+uma entrada — o Público tem cinco, a Lusa, o El País e o The Guardian têm duas cada. O
+feed geral de um jornal tem teto de itens, e as secções trazem peças que ele já empurrou
+para fora; as repetições são descartadas na recolha.
+
+### Duas vias de leitura
+
+A verificação de agosto de 2026 (`verificar_fontes.py`) mostrou que nem todas as
+publicações se deixam ler pelo feed: umas bloqueiam pedidos vindos de infraestruturas
+de nuvem como a do GitHub, outras deixaram de publicar feed ou nunca o tiveram. A
+recolha usa por isso duas vias:
+
+- **Leitura direta do RSS** — a via principal, para a maioria das publicações.
+- **Google Notícias, por pesquisa restrita ao domínio** (`site:expresso.pt`) — para as
+  19 publicações da constante `VIA_GOOGLE` do `extrair_noticias.py`: Expresso,
+  SIC Notícias, Jornal de Notícias, Diário de Notícias, TSF, Renascença, Diário de
+  Notícias da Madeira, Jornal i, JM Madeira, Vida Económica, Construir, Executive
+  Digest, Lusa, Jornal de Angola, Novo Jornal, Angop, Inforpress, EURACTIV e
+  Deutsche Welle. A janela é de um dia por consulta, para ficar aquém do teto de 100
+  resultados do Google — acima disso a ordenação deixa de ser cronológica —, e com
+  oito recolhas diárias nada se perde. O nome e o domínio vêm do próprio Google, a
+  cauda « - Fonte» do título é retirada e as ligações são resolvidas para o endereço
+  do jornal.
+
+Três entradas estão hoje sem via de leitura funcional e a aguardar decisão: a
+**Associated Press** (retirou os feeds públicos e a edição portuguesa do Google quase
+não a indexa), a **Lusa · Internacional** (redundante com a Lusa via Google) e os
+**quatro feeds temáticos do Público** (descontinuados; o feed geral continua a ser
+lido). O estado de cada fonte pode ser verificado a qualquer momento com o fluxo
+**Verificar fontes** (Actions), que testa as 73 entradas e grava o resultado em
+`fontes-estado.json`.
 
 Só as publicações que escrevem em português são classificadas por área. As restantes
 entram no corpus da pesquisa por termo — ver a secção seguinte.
@@ -213,7 +248,7 @@ entram no corpus da pesquisa por termo — ver a secção seguinte.
 
 As palavras-chave estão em português. A classificação por área funciona, portanto, sobre
 as publicações que escrevem em português: as nacionais, as lusófonas e as edições
-portuguesas da Euronews, da Deutsche Welle, da France 24 e da RFI.
+portuguesas da Euronews, da Deutsche Welle e da RFI.
 
 As restantes estrangeiras — britânicas, francesas, espanholas, italianas, norte-americanas
 e alemãs — **não são classificadas por área**, e entram apenas no corpus da **pesquisa por
@@ -335,6 +370,14 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
 - **Comparação entre áreas.** Legítima dentro do corpus: nenhuma área é truncada e o
   método é o mesmo para todas. As contagens medem o que as publicações subscritas
   noticiaram, não o total do que foi noticiado.
+- **Quebra de série a 17–18 de agosto de 2026.** Nessa data o conjunto de fontes
+  efetivamente lidas alargou-se de forma substancial: a correção dos endereços dos
+  feeds recuperou títulos que estavam em falha silenciosa (Correio da Manhã, Notícias
+  ao Minuto, Sábado, Açoriano Oriental, entre outros) e a via Google Notícias trouxe
+  de volta o Expresso, a SIC, o JN, o DN, a TSF e a Lusa. As comparações que
+  atravessem essa data — incluindo os **alertas de pico**, cuja mediana de referência
+  vem dos 28 dias anteriores — medem também a expansão das fontes, e não apenas a
+  atualidade; leiam-se com essa reserva até a base de comparação renovar.
 - **Imprensa apenas.** As plataformas sociais não publicam feeds e estão fora do
   âmbito da aplicação.
 - **Responsabilidade editorial.** O painel é um instrumento de acesso e triagem: a
