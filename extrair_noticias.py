@@ -865,18 +865,35 @@ def extrair_itens(xml_bruto):
                 titulo = cabeca
 
         data = None
-        bruta = item.findtext("pubDate") or item.findtext("published") or item.findtext("updated")
+        # As etiquetas de data variam com a plataforma. Além das três do costume,
+        # muitos feeds portugueses (o Notícias ao Minuto, entre outros) datam os
+        # artigos em <dc:date>, do Dublin Core — que o ElementTree devolve com o
+        # espaço de nomes à cabeça. Sem esta linha, esses artigos ficavam SEM
+        # DATA: eram lidos e marcados, entravam no retrato do dia, mas o arquivo,
+        # que arruma por dia, descartava-os. Setecentos artigos por recolha a
+        # desaparecerem em silêncio, e a publicação a parecer morta no painel.
+        bruta = (item.findtext("pubDate") or item.findtext("published")
+                 or item.findtext("updated") or item.findtext("date")
+                 or item.findtext("{http://purl.org/dc/elements/1.1/}date"))
         if bruta:
+            bruta = bruta.strip()
             try:
                 data = para_lisboa(parsedate_to_datetime(bruta))
+            except (TypeError, ValueError):
+                # O Dublin Core usa ISO 8601 («2026-08-19T00:12:00Z»), que o
+                # leitor de datas de correio não entende.
+                try:
+                    data = para_lisboa(datetime.fromisoformat(
+                        bruta.replace("Z", "+00:00")))
+                except ValueError:
+                    data = None
+            if data:
                 # Algumas publicações datam artigos alguns minutos à frente do
                 # relógio. Sem isto, o painel mostrava notícias com hora
                 # posterior à atual, o que faz duvidar de tudo o resto.
                 agora_ = agora_lisboa()
-                if data and data > agora_:
+                if data > agora_:
                     data = agora_
-            except (TypeError, ValueError):
-                data = None
 
         resumo = limpar(item.findtext("description") or item.findtext("summary")
                         or item.findtext("content"))
@@ -1072,6 +1089,9 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
     # responder desaparece em silêncio — só se via o efeito, semanas depois, ao
     # dar pela falta dela nos quadros.
     relatorio = []
+    # Domínios já lidos com êxito nesta recolha, para o recurso não duplicar
+    # publicações que têm mais do que uma entrada na lista.
+    dominios_lidos = set()
     sem_ligacao_por_fonte = {}
     # Todos os artigos lidos, marcados ou não: é este o corpus que a pesquisa
     # por termo livre percorre. Sem ele, procurar "Ceuta" só encontraria o que
@@ -1098,10 +1118,16 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         # amanhã: há órgãos que aceitam um pedido isolado e recusam quem os
         # visita de duas em duas horas. Quando a leitura direta falha ou vem
         # vazia, tenta-se de imediato a via Google para o mesmo domínio, em vez
-        # de perder o dia inteiro dessa publicação — foi assim que o Correio da
-        # Manhã, o Notícias ao Minuto e a Sábado passaram semanas a responder
-        # ao verificador e a não deixar uma única notícia na recolha.
-        if not via_google and not itens:
+        # de perder o dia inteiro dessa publicação.
+        #
+        # Só que o recurso é por DOMÍNIO, e há domínios com mais do que uma
+        # entrada: as quatro secções do Público e a Lusa Internacional. Sendo
+        # os feeds das secções endereços descontinuados, o recurso ia buscar ao
+        # Google a mesma pesquisa site:publico.pt quatro vezes, e o jornal
+        # passava a aparecer no painel como cinco publicações diferentes. Se o
+        # domínio já foi lido com êxito nesta recolha, não se recorre: o que
+        # essa pesquisa traria já lá está.
+        if not via_google and not itens and dominio.lower() not in dominios_lidos:
             try:
                 alternativos = extrair_itens(ler_feed(url_via_google(dominio)))
             except Exception:                                  # noqa: BLE001
@@ -1163,6 +1189,8 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         # sem isto, só se via o efeito — notícias sem ligação — e não a causa.
         aviso = f", {sem_endereco} SEM ENDEREÇO" if sem_endereco else ""
         print(f"{len(itens)} artigos, {marcados} marcados{aviso}")
+        if itens:
+            dominios_lidos.add(dominio.lower())
         relatorio.append({"fonte": nome_fonte, "dominio": dominio,
                           "via": "google" if via_google else
                                  ("google (recurso)" if recurso else "direta"),
