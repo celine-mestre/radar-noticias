@@ -62,38 +62,66 @@ TOPO_MOMENTUM = 5     # áreas no ranking do momentum
 INICIO_SERIE = "2026-08-04"
 
 # ---------------------------------------------------------------------------
-# ALARGAMENTO DA LEITURA, concluído a 19 de agosto de 2026. Em três dias mudaram
-# duas coisas: entraram publicações que estavam em falha silenciosa e passou a
-# ler-se mais fundo em cada uma — os feeds curtos, que só mostram as últimas dez
-# notícias, passaram a ser completados pela pesquisa ao domínio. O volume diário
-# subiu porque o radar passou a ver mais, não porque tenha havido mais notícias,
-# e comparar o dia de hoje com medianas do regime anterior dispara picos falsos.
+# ALARGAMENTO DA LEITURA, entre 17 e 19 de agosto de 2026. Mudaram duas coisas:
+# entraram publicações que estavam em falha silenciosa (Expresso, SIC, JN, DN,
+# TSF, Lusa, entre outras) e passou a ler-se mais fundo em algumas das que já lá
+# estavam — os feeds curtos, que só mostram as últimas notícias, passam a ser
+# completados pela pesquisa ao domínio quando não chegam para o intervalo entre
+# recolhas. O volume diário subiu porque o radar vê mais, não porque tenha
+# havido mais notícias.
 #
-# A regra é comparar igual com igual: enquanto a janela da linha de base ainda
-# contiver dias anteriores ao marco, a contagem — a de hoje E a de cada dia da
-# base — restringe-se às publicações que já marcavam antes do marco (o
-# «conjunto antigo», apurado dos próprios dados). Quando a janela ficar toda
-# dentro do regime novo, a restrição desaparece sozinha e passa a contar-se
-# tudo: com a base de 28 dias, isso acontece a 14 de setembro de 2026, sem
-# intervenção de ninguém.
+# Calar os alertas durante semanas seria pagar caro por isso, e um pico é
+# precisamente aquilo que ninguém quer perder. A solução é medir num terreno que
+# não mudou: um CONJUNTO DE REFERÊNCIA de publicações lidas hoje exatamente como
+# eram antes do marco — as que já marcavam antes dele, tirando as que passaram a
+# ser lidas pelo Google e as que passaram a ser completadas por ele. Nesse
+# subconjunto, um dia de agosto e um dia de setembro são comparáveis, e um pico
+# é um pico.
+#
+# A contagem restrita vale para o dia de hoje E para toda a linha de base, e
+# dura enquanto a base ainda apanhar dias anteriores ao marco — com 28 dias de
+# base, até 16 de setembro de 2026. Depois disso conta-se tudo, sem intervenção.
+# O painel diz sempre em que regime está.
 # ---------------------------------------------------------------------------
 MARCO_FONTES = "2026-08-19"
 # O alargamento não foi instantâneo: começou a 17 e ficou completo a 19. Os dias
-# pelo meio foram medidos em regime híbrido — nem o antigo nem o novo — e os
-# picos que então se registaram não são comparáveis com nada. Saem do registo.
+# pelo meio foram medidos em regime híbrido, e por isso são reavaliados com a
+# régua do conjunto de referência, como todos os outros.
 INICIO_ALARGAMENTO = "2026-08-17"
 
 
-# A primeira tentativa de lidar com a transição foi contar, de um lado e do
-# outro, apenas as publicações que já existiam antes do marco. Deixou de chegar
-# quando a leitura passou a ser também mais funda: o Público está no conjunto
-# antigo e mesmo assim passou a render mais notícias por dia. Comparar as mesmas
-# publicações não garante comparar a mesma cobertura.
-#
-# A regra passou a ser mais simples e mais segura: a partir do marco, a linha de
-# base é feita SÓ de dias do regime novo. Enquanto não houver dias suficientes,
-# não se emite pico nenhum — vale mais uma semana em silêncio do que uma semana
-# de alarmes falsos. Ao fim desse prazo os alertas voltam, e voltam certos.
+def conjunto_de_referencia(linhas, marco=MARCO_FONTES, relatorio="fontes-recolha.json"):
+    """Publicações cuja leitura não mudou com o alargamento.
+
+    Três exclusões, por esta ordem:
+      1. as que não marcavam antes do marco — não há com que as comparar;
+      2. as que são lidas pela pesquisa ao Google (constante VIA_GOOGLE) —
+         entraram ou mudaram de via com o alargamento;
+      3. as que a recolha assinala como completadas ou recuperadas pelo Google
+         no relatório da última passagem — o Público é o caso típico: já cá
+         estava, mas passou a render mais por dia.
+    O que sobra é terreno estável: nem ganhou fontes, nem ganhou profundidade.
+    """
+    antes = {(r.get("fonte") or "").strip()
+             for r in linhas
+             if r.get("area") and (r.get("data") or "")[:10] < marco
+             and (r.get("fonte") or "").strip()}
+
+    mexidas = set()
+    try:
+        from extrair_noticias import VIA_GOOGLE
+        mexidas |= set(VIA_GOOGLE)
+    except Exception:                                          # noqa: BLE001
+        pass
+    try:
+        with open(relatorio, encoding="utf-8") as origem:
+            for r in json.load(origem).get("detalhe", []):
+                if (r.get("via") or "") != "direta":
+                    mexidas.add(r.get("fonte"))
+    except (json.JSONDecodeError, OSError):
+        pass
+
+    return {f for f in antes if f not in mexidas}
 
 
 def agora_lisboa():
@@ -101,7 +129,7 @@ def agora_lisboa():
     try:
         from zoneinfo import ZoneInfo
         return datetime.now(ZoneInfo("Europe/Lisbon"))
-    except Exception:
+    except Exception:                                          # noqa: BLE001
         return datetime.now(timezone.utc) + timedelta(hours=1)
 
 
@@ -157,7 +185,7 @@ def contagens_ate_ao_corte(linhas, corte, so_fontes=None):
         if len(data) < 10:
             continue
         if so_fontes is not None and \
-           (r.get("fonte") or "").strip().lower() not in so_fontes:
+           (r.get("fonte") or "").strip() not in so_fontes:
             continue
         dia, hora = data[:10], data[11:16]
         if hora and hora > corte:
@@ -278,19 +306,25 @@ def principal():
         print(f"alertas: sem arquivo mensal em {args.mensal}/ — nada a avaliar")
         return
 
-    # A base só usa dias comparáveis com o de hoje: depois do marco, só dias do
-    # regime novo. É isso que o «início» passa a ser.
-    inicio = max(args.inicio, MARCO_FONTES) if hoje >= MARCO_FONTES else args.inicio
-    em_transicao = inicio == MARCO_FONTES
+    # Enquanto a base ainda apanhar dias anteriores ao marco, mede-se no
+    # conjunto de referência — as publicações lidas hoje como eram então. A
+    # série continua a começar onde sempre começou.
+    inicio = args.inicio
+    inicio_janela = (datetime.strptime(hoje, "%Y-%m-%d")
+                     - timedelta(days=args.dias)).strftime("%Y-%m-%d")
+    # A transição abre no INÍCIO do alargamento, não no seu fim: os dias 17 e 18
+    # já tinham parte das fontes novas e medi-los com a contagem cheia produzia
+    # os picos falsos que se viram.
+    em_transicao = inicio_janela < MARCO_FONTES and hoje >= INICIO_ALARGAMENTO
     fim_transicao = (datetime.strptime(MARCO_FONTES, "%Y-%m-%d")
-                     + timedelta(days=MINIMO_DIAS)).strftime("%Y-%m-%d")
+                     + timedelta(days=args.dias)).strftime("%Y-%m-%d")
+    referencia = conjunto_de_referencia(linhas) if em_transicao else None
+    if em_transicao:
+        print(f"alertas: alargamento da leitura em {MARCO_FONTES} — a medir nas "
+              f"{len(referencia)} publicações cuja leitura não mudou, até {fim_transicao}")
 
-    dias = contagens_ate_ao_corte(linhas, corte)
+    dias = contagens_ate_ao_corte(linhas, corte, referencia)
     tempestades, momentum, n_base = avaliar(dias, hoje, args.dias, inicio)
-    if em_transicao and n_base < MINIMO_DIAS:
-        print(f"alertas: base de {n_base} dias desde o alargamento da leitura em "
-              f"{MARCO_FONTES} — sem juízo até {fim_transicao}, para não comparar "
-              f"dias de regimes diferentes")
 
     anterior = {}
     if os.path.exists(args.saida):
@@ -300,14 +334,14 @@ def principal():
         except (json.JSONDecodeError, OSError):
             anterior = {}
 
-    # Os dias entre o marco e hoje foram julgados, na altura, com a régua
-    # errada — a contagem cheia contra medianas do conjunto antigo — e os picos
-    # falsos ficaram no registo. Reavaliam-se aqui, fechados (dia inteiro) e
-    # com a mesma régua igual-com-igual; os que sobreviverem eram picos reais.
+    # Os dias desde o início do alargamento foram julgados, na altura, com a
+    # régua errada — contagem cheia contra medianas do regime anterior. São
+    # reavaliados aqui, fechados (dia inteiro) e com a régua do conjunto de
+    # referência; os que sobreviverem eram picos reais e voltam ao registo.
     historico = [r for r in (anterior.get("historico") or [])
                  if not (INICIO_ALARGAMENTO <= r.get("data", "") < hoje)]
-    dias_fechados = contagens_ate_ao_corte(linhas, "23:59")
-    d = datetime.strptime(MARCO_FONTES, "%Y-%m-%d")
+    dias_fechados = contagens_ate_ao_corte(linhas, "23:59", referencia)
+    d = datetime.strptime(INICIO_ALARGAMENTO, "%Y-%m-%d")
     while d.strftime("%Y-%m-%d") < hoje:
         dia_passado = d.strftime("%Y-%m-%d")
         t_dia, _, _ = avaliar(dias_fechados, dia_passado, args.dias, inicio)
@@ -328,13 +362,13 @@ def principal():
                   f"e atinge pelo menos {PISO_ABSOLUTO} notícias; "
                   f"sem alertas com menos de {MINIMO_DIAS} dias de série, "
                   f"contada desde {inicio} (método de recolha atual)."
-                  + (f" A leitura alargou-se a {MARCO_FONTES} — mais publicações e "
-                     f"leitura mais funda em cada uma —, pelo que a base só usa dias "
-                     f"a partir dessa data; até {fim_transicao} pode não haver dias "
-                     f"suficientes para emitir picos."
+                  + (f" A leitura alargou-se a {MARCO_FONTES}; até {fim_transicao}, "
+                     f"hoje e a base são contados apenas nas {len(referencia)} "
+                     f"publicações cuja leitura não mudou, para a comparação ser "
+                     f"entre iguais."
                      if em_transicao else "")),
         "transicao_fontes": ({"marco": MARCO_FONTES, "fim": fim_transicao,
-                              "dias_de_base": n_base}
+                              "publicacoes_de_referencia": len(referencia)}
                              if em_transicao else None),
         "tempestades": tempestades,
         "momentum": momentum,
