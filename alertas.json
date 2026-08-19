@@ -1,16 +1,78 @@
 {
- "atualizado": "2026-08-19 02:50",
+ "atualizado": "2026-08-19 08:01",
  "dia": "2026-08-19",
- "corte": "02:50",
- "dias_base": 0,
- "regra": "Tempestade quando a contagem do dia, até às 02:50, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-19 (método de recolha atual). A leitura alargou-se a 2026-08-19 — mais publicações e leitura mais funda em cada uma —, pelo que a base só usa dias a partir dessa data; até 2026-08-26 pode não haver dias suficientes para emitir picos.",
+ "corte": "08:01",
+ "dias_base": 15,
+ "regra": "Tempestade quando a contagem do dia, até às 08:01, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 85 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
-  "fim": "2026-08-26",
-  "dias_de_base": 0
+  "fim": "2026-09-16",
+  "publicacoes_de_referencia": 85
  },
- "tempestades": [],
- "momentum": [],
+ "tempestades": [
+  {
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 13,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 11,
+   "variacao_pct": 550,
+   "dias_base": 15,
+   "tempestade": true
+  }
+ ],
+ "momentum": [
+  {
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 13,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 11,
+   "variacao_pct": 550,
+   "dias_base": 15,
+   "tempestade": true
+  },
+  {
+   "area": "Ambiente e Energia",
+   "hoje": 7,
+   "mediana": 4,
+   "limiar": 12,
+   "excesso": 3,
+   "variacao_pct": 75,
+   "dias_base": 15,
+   "tempestade": false
+  },
+  {
+   "area": "Defesa Nacional",
+   "hoje": 10,
+   "mediana": 8,
+   "limiar": 16.9,
+   "excesso": 2,
+   "variacao_pct": 25,
+   "dias_base": 15,
+   "tempestade": false
+  },
+  {
+   "area": "Justiça",
+   "hoje": 6,
+   "mediana": 4,
+   "limiar": 12,
+   "excesso": 2,
+   "variacao_pct": 50,
+   "dias_base": 15,
+   "tempestade": false
+  },
+  {
+   "area": "Saúde",
+   "hoje": 5,
+   "mediana": 3,
+   "limiar": 11,
+   "excesso": 2,
+   "variacao_pct": 67,
+   "dias_base": 15,
+   "tempestade": false
+  }
+ ],
  "historico": [
   {
    "data": "2026-08-11",
@@ -74,6 +136,62 @@
    "hoje": 28,
    "mediana": 7,
    "limiar": 24.8
+  },
+  {
+   "data": "2026-08-17",
+   "area": "Finanças",
+   "hoje": 31,
+   "mediana": 11,
+   "limiar": 28.8
+  },
+  {
+   "data": "2026-08-17",
+   "area": "Infraestruturas e Habitação",
+   "hoje": 32,
+   "mediana": 15,
+   "limiar": 23.9
+  },
+  {
+   "data": "2026-08-18",
+   "area": "Ambiente e Energia",
+   "hoje": 45,
+   "mediana": 27.5,
+   "limiar": 43.8
+  },
+  {
+   "data": "2026-08-18",
+   "area": "Cultura, Juventude e Desporto",
+   "hoje": 56,
+   "mediana": 30.5,
+   "limiar": 46.8
+  },
+  {
+   "data": "2026-08-18",
+   "area": "Finanças",
+   "hoje": 34,
+   "mediana": 11.5,
+   "limiar": 27.8
+  },
+  {
+   "data": "2026-08-18",
+   "area": "Infraestruturas e Habitação",
+   "hoje": 28,
+   "mediana": 16.5,
+   "limiar": 25.4
+  },
+  {
+   "data": "2026-08-18",
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 79,
+   "mediana": 21.0,
+   "limiar": 38.8
+  },
+  {
+   "data": "2026-08-19",
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 13,
+   "mediana": 2,
+   "limiar": 10
   }
  ]
 }
