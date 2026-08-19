@@ -465,7 +465,7 @@ AZUL, CINZA = "2B5683", "F2F5F8"
 # ---------------------------------------------------------------------------
 VIA_GOOGLE = {
     # Bloqueiam IPs de centros de dados (403 comprovado em duas verificações)
-    "Expresso", "SIC Notícias", "Jornal de Notícias", "TSF", "EURACTIV",
+    "Expresso", "SIC Notícias", "Jornal de Notícias", "TSF",
     # Sem feed encontrável (verificação com autodescoberta, agosto de 2026)
     "Diário de Notícias", "Renascença", "Diário de Notícias da Madeira",
     "Jornal i", "JM Madeira", "Vida Económica", "Construir",
@@ -493,9 +493,6 @@ FONTES = [
     ("Público", "publico.pt", "https://feeds.feedburner.com/PublicoRSS"),
     # Os feeds temáticos do FeedBurner foram descontinuados; o Público serve-os
     # hoje no próprio sítio, em publico.pt/rss/<secção>.
-    ("Público · Política", "publico.pt", "https://www.publico.pt/rss/politica"),
-    ("Público · Economia", "publico.pt", "https://www.publico.pt/rss/economia"),
-    ("Público · Sociedade", "publico.pt", "https://www.publico.pt/rss/sociedade"),
     # A Impresa (Expresso, SIC) publica no padrão da plataforma Arc:
     # /arc/outboundfeeds/rss/ — os caminhos /rss antigos deixaram de responder.
     ("Expresso", "expresso.pt", "https://expresso.pt/arc/outboundfeeds/rss/?outputType=xml"),
@@ -510,7 +507,7 @@ FONTES = [
     ("SIC Notícias", "sicnoticias.pt", "https://sicnoticias.pt/arc/outboundfeeds/rss/?outputType=xml"),
     ("CNN Portugal", "cnnportugal.iol.pt", "https://cnnportugal.iol.pt/rss"),
     ("TSF", "tsf.pt", "https://www.tsf.pt/rss/"),
-    ("Renascença", "rr.sapo.pt", "https://rr.sapo.pt/rss"),
+    ("Renascença", "rr.pt", "https://rr.pt/rss"),
     ("Notícias ao Minuto", "noticiasaominuto.com", "https://www.noticiasaominuto.com/rss/ultima-hora"),
     ("Diário de Notícias da Madeira", "dnoticias.pt", "https://www.dnoticias.pt/rss"),
     ("Sábado", "sabado.pt", "https://www.sabado.pt/rss"),
@@ -525,7 +522,7 @@ FONTES = [
 
     # Generalistas e semanários
     ("Nascer do SOL", "sol.sapo.pt", "https://sol.sapo.pt/rss"),
-    ("Jornal i", "ionline.sapo.pt", "https://ionline.sapo.pt/feed/"),
+    ("Jornal i", "ionline.pt", "https://ionline.pt/feed/"),
 
     # Regionais das regiões autónomas
     ("Açoriano Oriental", "acorianooriental.pt", "https://www.acorianooriental.pt/feed/rss.xml"),
@@ -536,7 +533,6 @@ FONTES = [
     ("SAPO Tek", "tek.sapo.pt", "https://tek.sapo.pt/rss"),
     ("Healthnews", "healthnews.pt", "https://healthnews.pt/feed/"),
     ("Construir", "construir.pt", "https://www.construir.pt/feed/"),
-    ("Público · Ciência", "publico.pt", "https://www.publico.pt/rss/ciencia")
 ]
 
 # Imprensa dos restantes países de língua portuguesa. Matéria da CPLP, cooperação,
@@ -560,7 +556,6 @@ FONTES_LUSOFONAS = [
 FONTES_INTERNACIONAIS = [
     ("Euronews (português)", "pt.euronews.com", "https://pt.euronews.com/rss"),
     ("Politico Europe", "politico.eu", "https://www.politico.eu/feed/"),
-    ("EURACTIV", "euractiv.com", "https://www.euractiv.com/feed/"),
     ("El País", "elpais.com", "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada"),
     ("El País · Internacional", "elpais.com", "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/internacional/portada"),
     ("Le Monde", "lemonde.fr", "https://www.lemonde.fr/rss/une.xml"),
@@ -572,7 +567,6 @@ FONTES_INTERNACIONAIS = [
     ("France 24 (inglês)", "france24.com", "https://www.france24.com/en/europe/rss"),
     ("RFI (português)", "rfi.fr", "https://www.rfi.fr/pt/rss"),
     ("The Guardian · Europe", "theguardian.com", "https://www.theguardian.com/world/europe-news/rss"),
-    ("Agência Lusa · Internacional", "lusa.pt", "https://www.lusa.pt/rss/internacional"),
 
     # Reino Unido
     ("BBC News · Mundo", "bbc.co.uk", "https://feeds.bbci.co.uk/news/world/rss.xml"),
@@ -596,7 +590,6 @@ FONTES_INTERNACIONAIS = [
     ("The New York Times · Mundo", "nytimes.com", "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"),
     ("The Washington Post · Mundo", "washingtonpost.com", "https://feeds.washingtonpost.com/rss/world"),
     ("Politico", "politico.com", "https://rss.politico.com/politics-news.xml"),
-    ("Associated Press", "apnews.com", "https://apnews.com/index.rss"),
 
     # Alemanha
     ("Der Spiegel · Internacional", "spiegel.de", "https://www.spiegel.de/international/index.rss")

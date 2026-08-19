@@ -1226,8 +1226,8 @@ footer.fim .fontes{font-size:.74rem;opacity:.65;max-width:46ch;text-align:right}
       <small>Suporte à Decisão · Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas</small>
     </div>
     <div class="fontes">
-      Fontes: 66 órgãos de comunicação social (OCS) — imprensa, rádio e televisão, de Portugal,
-      da lusofonia e internacionais — lidos em 73 entradas, umas pelo feed próprio e outras
+      Fontes: 64 órgãos de comunicação social (OCS) — imprensa, rádio e televisão, de Portugal,
+      da lusofonia e internacionais — lidos em 66 entradas, umas pelo feed próprio e outras
       via Google Notícias. Recolha diária, todos os dias. Versão de <span id="rodapeVersao">—</span>.
     </div>
   </div>
@@ -2207,7 +2207,7 @@ const MANUAL = [
     <p>Um painel que reúne o que a comunicação social noticiou sobre cada uma das <strong>17 áreas
     governativas</strong>, com sete dias de arquivo.</p>
     <div class="man-fichas">
-      <div class="man-ficha"><b>66 publicações</b><span>73 entradas de leitura; 45 escrevem em português e são classificadas por área</span></div>
+      <div class="man-ficha"><b>64 publicações</b><span>45 escrevem em português e são classificadas por área; as outras entram na pesquisa por termo</span></div>
       <div class="man-ficha"><b>276 expressões</b><span>é o que classifica cada notícia por área</span></div>
       <div class="man-ficha"><b>7 dias</b><span>o que o painel consulta</span></div>
       <div class="man-ficha"><b>De 2 em 2 horas</b><span>ritmo da recolha, das 07h07 às 19h07, mais as 23h07</span></div>
@@ -2243,7 +2243,7 @@ const MANUAL = [
       <dt>Pesquisa por termo</dt><dd>Para o que as palavras-chave não cobrem — um nome,
         um acontecimento. Procura em <strong>todos os artigos que a recolha leu</strong>,
         incluindo os que nenhuma área classificou. Não sai do corpus: só encontra o que as
-        66 publicações subscritas publicaram nos últimos sete dias. Não encontrando nada,
+        64 publicações subscritas publicaram nos últimos sete dias. Não encontrando nada,
         é porque nenhuma delas usou essa palavra nesse período.</dd>
       <dt>Período, OCS e área</dt><dd>Na barra abaixo. O seletor de área troca de área
         sem fechar a janela.</dd>
@@ -2291,7 +2291,7 @@ const MANUAL = [
 
   { n:"7", titulo:"O que fica de fora", cor:"var(--vermelho)", icone:"aviso", corpo:`
     <dl>
-      <dt>O que não foi publicado nestas 66 fontes</dt><dd>E o que for anterior a sete dias.</dd>
+      <dt>O que não foi publicado nestas 64 fontes</dt><dd>E o que for anterior a sete dias.</dd>
       <dt>Redes sociais</dt><dd>Não publicam feeds. Isto é comunicação social — imprensa, rádio e televisão.</dd>
       <dt>O que não usa a expressão</dt><dd>Um artigo pode tratar do tema sem a conter.</dd>
     </dl>
@@ -2320,9 +2320,9 @@ const MANUAL = [
     ligações resolvidas para o endereço do jornal. Cada artigo é marcado com as áreas cujas
     expressões satisfaz, e o resultado fica ao lado do painel. Depois da recolha da manhã,
     escreve-se a síntese e enviam-se os relatórios.</p>
-    <p>Das 66 publicações, <strong>45 escrevem em português</strong> e só essas são
+    <p>Das 64 publicações, <strong>45 escrevem em português</strong> e só essas são
     classificadas por área; num dia útil marcam tipicamente 35 a 40, porque as
-    especializadas só marcam quando têm matéria da sua área. As 21 restantes são imprensa
+    especializadas só marcam quando têm matéria da sua área. As 19 restantes são imprensa
     estrangeira em língua estrangeira, que entra apenas na pesquisa por termo.</p>
     <p class="man-aviso">A 17 de agosto de 2026 o conjunto de fontes efetivamente lidas
     alargou-se: recuperaram-se feeds que estavam em falha silenciosa e entrou a segunda via
@@ -3807,7 +3807,7 @@ function descarregarXLSX(){
       todas: "OCS de todas as origens"
     }[filtroFontes]],
     ["Tipo de fonte", "Órgãos de comunicação social — jornais, rádios, televisões e agências"],
-    ["Origem", "Feeds de 66 órgãos de comunicação social — Portugal, lusofonia e internacional"],
+    ["Origem", "64 órgãos de comunicação social — Portugal, lusofonia e internacional — lidos por feed próprio ou via Google Notícias"],
     ["Notícias exportadas", String(recolha.length)],
     ["Data da exportação", new Date().toLocaleString("pt-PT")],
     ["Versão do painel", CONFIG.versao],

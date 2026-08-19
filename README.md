@@ -12,7 +12,7 @@ Unidade de Pesquisa e Estatísticas
 
 ## Como funciona
 
-A recolha lê, de duas em duas horas, **66 órgãos de comunicação social** (73 entradas de leitura) — imprensa, rádio e
+A recolha lê, de duas em duas horas, **64 órgãos de comunicação social** (66 entradas de leitura) — imprensa, rádio e
 televisão, portugueses, lusófonos e internacionais, uns pelo feed próprio e outros via
 Google Notícias — e marca cada artigo com as áreas governativas cujas
 palavras-chave ele satisfaz. Um artigo é recolhido por ser de uma fonte conhecida, não
@@ -157,7 +157,7 @@ fora do período.
 | `reconstruir_series.py` | **Fecho dos dias passados.** Corre a seguir a cada recolha e reconta todos os dias anteriores a hoje a partir do `meses/` e do `sentimento-meses/`, que são permanentes e refletem sempre as expressões em vigor. Sem isto, um dia que saísse da janela de sete dias ficava congelado com o número que tinha nesse momento: não acompanhava a revalidação das expressões nem as notícias do fim da noite, que só entram na recolha da manhã seguinte. Idempotente e não toca no dia em curso. |
 | `retroativo_pm.py` + `.github/workflows/retroativo-pm.yml` | **Passo retroativo, execução única.** Revalida todas as marcações existentes sob as regras atuais (retirando pares de expressões entretanto removidas, como «empresas») e reclassifica o corpus de 7 dias com as áreas e expressões novas, injetando o resultado no arquivo, no retrato, no arquivo mensal, na série diária e nos alertas. Idempotente: correr duas vezes não duplica nem retira mais nada. |
 | `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente e integral.** Um ficheiro comprimido por mês com todas as notícias desse mês — as marcadas com a sua área, e as não marcadas com área vazia (guardadas para que os passos retroativos futuros tenham meses de profundidade, e não apenas os sete dias do corpus). A área vazia é ignorada por tudo o que conta por área. ~2–3 MB/mês. |
-| `verificar_fontes.py` + `.github/workflows/verificar-fontes.yml` | **Estado das fontes, a pedido.** Testa as 73 entradas — as diretas pelo seu endereço, as da via Google pelo endereço da pesquisa — e, para as que falham, experimenta endereços alternativos conhecidos e a autodescoberta (os feeds que a própria página inicial anuncia). Grava `fontes-estado.json` e um quadro legível no Summary da execução. Nasceu da auditoria de agosto de 2026, em que 34 das 73 entradas estavam em falha silenciosa; corre à mão, no botão *Run workflow*. |
+| `verificar_fontes.py` + `.github/workflows/verificar-fontes.yml` | **Estado das fontes, a pedido.** Testa as 66 entradas — as diretas pelo seu endereço, as da via Google pelo endereço da pesquisa — e, para as que falham, experimenta endereços alternativos conhecidos e a autodescoberta (os feeds que a própria página inicial anuncia). Grava `fontes-estado.json` e um quadro legível no Summary da execução. Nasceu da auditoria de agosto de 2026, em que 34 das então 73 entradas estavam em falha silenciosa; corre à mão, no botão *Run workflow*. |
 | `fontes-estado.json` | **Resultado da última verificação de fontes**: entrada a entrada, se responde, com quantos artigos, e que endereço alternativo responde quando o configurado falha. |
 
 Os três ficheiros de dados são gerados pela recolha. Não devem ser editados à mão.
@@ -177,7 +177,7 @@ um trimestre, para os fundamentar.
 
 ## Fontes subscritas
 
-**Portugal — 35 feeds de 31 publicações.**
+**Portugal — 31 entradas de 31 publicações.**
 Agência: Lusa (geral e internacional).
 Diários e semanários: Público (geral, política, economia, sociedade e ciência), Expresso,
 Observador, Jornal de Notícias, Diário de Notícias, Correio da Manhã, Nascer do SOL,
@@ -190,29 +190,27 @@ Açoriano Oriental.
 Especializadas, por matéria de tutela: Agroportal (agricultura), Ambiente Magazine
 (ambiente), Construir (obras e habitação), Healthnews (saúde) e SAPO Tek (digital).
 
-**Lusofonia — 11 feeds de 11 publicações.**
+**Lusofonia — 11 entradas de 11 publicações.**
 Angola: Jornal de Angola, Novo Jornal e Angop. Moçambique: O País e Carta de Moçambique.
 Cabo Verde: Expresso das Ilhas e Inforpress. São Tomé e Príncipe: STP-Press.
 Timor-Leste: Tatoli. Brasil: Agência Brasil e Folha de S.Paulo.
 
 Matéria de CPLP, cooperação e diáspora é frequentemente tratada primeiro nestes títulos.
 
-**Internacionais — 27 feeds de 25 publicações.**
+**Internacionais — 24 entradas de 22 publicações.**
 Em português: Euronews, Deutsche Welle e RFI. Em inglês: France 24 (a edição
 portuguesa não existe — é a RFI que a tem).
-União Europeia: Politico Europe e EURACTIV.
+União Europeia: Politico Europe.
 Espanha: El País (geral e internacional), El Mundo, La Vanguardia e ABC.
 Reino Unido: BBC News, BBC Mundo e The Guardian (Europa e mundo).
 França: Le Monde, Le Figaro e France Info.
 Itália: ANSA, Corriere della Sera e La Repubblica.
-Estados Unidos da América: Associated Press, The New York Times, The Washington Post e
-Politico.
+Estados Unidos da América: The New York Times, The Washington Post e Politico.
 Alemanha: Der Spiegel.
 
-**São 73 entradas de 66 publicações.** A diferença são sete publicações com mais do que
-uma entrada — o Público tem cinco, a Lusa, o El País e o The Guardian têm duas cada. O
-feed geral de um jornal tem teto de itens, e as secções trazem peças que ele já empurrou
-para fora; as repetições são descartadas na recolha.
+**São 66 entradas de 64 publicações.** A diferença são duas publicações com duas entradas
+cada — o El País e o The Guardian, que publicam feeds separados para a secção internacional.
+As repetições, quando as há, são descartadas na recolha.
 
 ### Duas vias de leitura
 
@@ -223,28 +221,33 @@ recolha usa por isso duas vias:
 
 - **Leitura direta do RSS** — a via principal, para a maioria das publicações.
 - **Google Notícias, por pesquisa restrita ao domínio** (`site:expresso.pt`) — para as
-  19 publicações da constante `VIA_GOOGLE` do `extrair_noticias.py`: Expresso,
+  18 publicações da constante `VIA_GOOGLE` do `extrair_noticias.py`: Expresso,
   SIC Notícias, Jornal de Notícias, Diário de Notícias, TSF, Renascença, Diário de
   Notícias da Madeira, Jornal i, JM Madeira, Vida Económica, Construir, Executive
-  Digest, Lusa, Jornal de Angola, Novo Jornal, Angop, Inforpress, EURACTIV e
+  Digest, Lusa, Jornal de Angola, Novo Jornal, Angop, Inforpress e
   Deutsche Welle. A janela é de um dia por consulta, para ficar aquém do teto de 100
   resultados do Google — acima disso a ordenação deixa de ser cronológica —, e com
   oito recolhas diárias nada se perde. O nome e o domínio vêm do próprio Google, a
   cauda « - Fonte» do título é retirada e as ligações são resolvidas para o endereço
   do jornal.
 
-Três entradas estão hoje sem via de leitura funcional e a aguardar decisão: a
-**Associated Press** (retirou os feeds públicos e a edição portuguesa do Google quase
-não a indexa), a **Lusa · Internacional** (redundante com a Lusa via Google) e os
-**quatro feeds temáticos do Público** (descontinuados; o feed geral continua a ser
-lido). O estado de cada fonte pode ser verificado a qualquer momento com o fluxo
-**Verificar fontes** (Actions), que testa as 73 entradas e grava o resultado em
-`fontes-estado.json`.
+A 19 de agosto de 2026 saíram da lista sete entradas que não produziam uma única
+notícia por via nenhuma: os **quatro feeds temáticos do Público** (descontinuados; o
+feed geral continua a ser lido), a **Lusa · Internacional** (redundante com a Lusa via
+Google), a **Associated Press** (retirou os feeds públicos — o hub responde 401) e o
+**EURACTIV** (bloqueia a leitura direta e escreve em inglês, pelo que a pesquisa
+portuguesa do Google não o alcança). Manter entradas mudas só inflacionava a contagem
+das fontes.
+
+O estado das fontes fica registado em dois sítios: o `fontes-recolha.json`, escrito por
+**cada recolha**, diz por publicação quantos artigos deu, quantos marcou e por que via;
+e o fluxo **Verificar fontes** (Actions), que se corre à mão, testa as 66 entradas e
+grava o `fontes-estado.json` com endereços alternativos para as que falham.
 
 ### Quantas publicações marcam, de facto
 
-Das **66 publicações**, só as que escrevem em português são classificadas por área — são
-**45**. As outras 21 são a imprensa estrangeira em língua estrangeira, que entra apenas no
+Das **64 publicações**, só as que escrevem em português são classificadas por área — são
+**45**. As outras 19 são a imprensa estrangeira em língua estrangeira, que entra apenas no
 corpus da pesquisa por termo. Destas 45, num dia útil marcam tipicamente **35 a 40**: as
 de nicho (Construir, Vida Económica, Ambiente Magazine) só marcam quando têm matéria da
 sua área, e ao fim de semana o número desce. É por isso que o quadro das publicações do
@@ -337,7 +340,7 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
 
 ## Ressalvas metodológicas
 
-- **Cobertura.** O corpus são as 66 publicações subscritas e os últimos sete dias.
+- **Cobertura.** O corpus são as 64 publicações subscritas e os últimos sete dias.
   Uma notícia de um título não subscrito, ou anterior a esse período, não está no
   corpus. A janela do arquivo define-se com `--dias-arquivo` e pode ser alargada
   quando houver espaço para isso.

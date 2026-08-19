@@ -6,7 +6,7 @@ feed, se responde e quantos artigos traz. Para os que falham, experimenta uma
 lista de endereços alternativos conhecidos e indica qual responde — a correção
 no extrair_noticias.py fica então por evidência, e não por adivinha.
 
-Nasceu da auditoria de agosto de 2026: 34 dos 73 feeds não tinham produzido
+Nasceu da auditoria de agosto de 2026: 34 dos então 73 feeds não tinham produzido
 uma única linha no arquivo mensal, em silêncio, porque a recolha regista as
 falhas apenas no registo da execução, que ninguém lê. Este verificador corre
 à mão (workflow verificar-fontes.yml) e grava o resultado em
@@ -36,14 +36,6 @@ from extrair_noticias import (FONTES, FONTES_LUSOFONAS, FONTES_INTERNACIONAIS,
 # responder com artigos é o candidato a substituir o configurado.
 # ---------------------------------------------------------------------------
 ALTERNATIVAS = {
-    "Público · Política": ["https://www.publico.pt/politica/rss",
-                           "https://feeds.feedburner.com/publico-politica"],
-    "Público · Economia": ["https://www.publico.pt/economia/rss",
-                           "https://feeds.feedburner.com/publico-economia"],
-    "Público · Sociedade": ["https://www.publico.pt/sociedade/rss",
-                            "https://feeds.feedburner.com/publico-sociedade"],
-    "Público · Ciência": ["https://www.publico.pt/ciencia/rss",
-                          "https://feeds.feedburner.com/publico-ciencia"],
     "Expresso": ["https://expresso.pt/rss",
                  "https://expresso.pt/rss/feed"],
     "SIC Notícias": ["https://sicnoticias.pt/rss",
@@ -94,36 +86,27 @@ ALTERNATIVAS = {
                             "https://cartamz.com/index.php?format=feed&type=rss"],
     "Inforpress (Cabo Verde)": ["https://inforpress.cv/feed"],
     "Tatoli (Timor-Leste)": ["https://tatoli.tl/pt/feed/"],
-    "EURACTIV": ["https://www.euractiv.com/feed",
-                 "https://www.euractiv.com/sections/politics/feed/"],
     "Deutsche Welle (português)": ["https://rss.dw.com/rdf/rss-br-all",
                                    "https://rss.dw.com/atom/rss-br-all",
                                    "https://rss.dw.com/xml/rss-pt-all"],
     "France 24 (inglês)": ["https://www.france24.com/en/rss"],
-    "Agência Lusa · Internacional": ["https://www.lusa.pt/rss/internacional"],
     "Corriere della Sera": ["https://xml2.corriereobjects.it/rss/homepage.xml",
                             "https://www.corriere.it/rss/ultimora.xml"],
-    "Associated Press": ["https://apnews.com/hub/world-news.rss",
-                         "https://apnews.com/apf-topnews.rss",
-                         "https://apnews.com/index.rss"],
 }
 
 # Notas de contexto que o quadro deve mostrar mesmo antes de qualquer teste.
 NOTAS = {
     "Angop": "A ligação direta cai sem resposta (bloqueio de IPs de centros "
              "de dados); recolhida via Google Notícias.",
-    "Agência Lusa · Internacional": "Sem feed público e redundante com a "
-                                    "Lusa via Google Notícias — candidata a "
-                                    "sair da lista.",
-    "Associated Press": "A AP retirou os feeds públicos (401, autenticação "
-                        "exigida) e a edição portuguesa do Google quase não "
-                        "a indexa — candidata a sair da lista.",
-    "Público · Política": "Redundante com o feed principal do Público "
-                          "enquanto não houver feed próprio da secção.",
-    "Público · Economia": "Idem.",
-    "Público · Sociedade": "Idem.",
-    "Público · Ciência": "Idem.",
+    "Renascença": "Domínio corrigido para rr.pt em agosto de 2026; se a "
+                  "pesquisa continuar a não devolver nada, a entrada deve sair.",
+    "Jornal i": "Domínio corrigido para ionline.pt em agosto de 2026; mesma "
+                "reserva da Renascença.",
+    "Construir": "Publicação de nicho e baixo volume: uma pesquisa de um dia "
+                 "pode legitimamente não devolver nada.",
+    "Vida Económica": "Mesma reserva do Construir.",
 }
+
 
 
 def testar(url, tempo_limite):
