@@ -463,9 +463,26 @@ AZUL, CINZA = "2B5683", "F2F5F8"
 # por consulta — acima disso o Google escolhe por relevância e a cronologia
 # deixa de ser garantida; com oito recolhas diárias, nada se perde.
 # ---------------------------------------------------------------------------
-# Intervalo entre recolhas, em horas: serve para saber se um feed próprio
-# cobre ou não o tempo decorrido desde a passagem anterior.
+# Intervalo entre recolhas, em horas — valor de recurso, usado só quando não há
+# registo da passagem anterior. O intervalo REAL não é constante: de dia são
+# duas horas, entre a recolha das 19h07 e a das 23h07 são quatro, e entre esta e
+# a das 07h07 são oito. Um feed curto que chegue para duas horas pode não chegar
+# para oito, e é por isso que se lê a hora da recolha anterior em vez de assumir.
 HORAS_ENTRE_RECOLHAS = 2
+
+
+def horas_desde_a_recolha_anterior(caminho="fontes-recolha.json"):
+    """Quanto tempo passou desde a passagem anterior, pelo relatório que ela deixou."""
+    try:
+        with open(caminho, encoding="utf-8") as origem:
+            quando = json.load(origem).get("recolhido")
+        anterior = datetime.strptime(quando, "%Y-%m-%d %H:%M")
+        horas = (agora_lisboa().replace(tzinfo=None) - anterior).total_seconds() / 3600
+        # Limites de sanidade: um relógio trocado ou uma paragem de dias não
+        # devem mandar pedir ao Google por tudo e por nada.
+        return min(max(horas, 1.0), 24.0)
+    except Exception:                                          # noqa: BLE001
+        return HORAS_ENTRE_RECOLHAS
 
 VIA_GOOGLE = {
     # Bloqueiam IPs de centros de dados (403 comprovado em duas verificações)
@@ -1132,6 +1149,11 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
     # Domínios já lidos com êxito nesta recolha, para o recurso não duplicar
     # publicações que têm mais do que uma entrada na lista.
     dominios_lidos = set()
+    # Quanto tempo o feed de cada publicação tem de cobrir para não deixar
+    # buraco: o que passou desde a recolha anterior.
+    horas_intervalo = horas_desde_a_recolha_anterior()
+    print(f"Intervalo desde a recolha anterior: {horas_intervalo:.1f}h "
+          f"(um feed que cubra menos do que isto é completado pelo Google)")
     sem_ligacao_por_fonte = {}
     # Todos os artigos lidos, marcados ou não: é este o corpus que a pesquisa
     # por termo livre percorre. Sem ele, procurar "Ceuta" só encontraria o que
@@ -1205,7 +1227,10 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
             datados = [i["data"] for i in itens if i["data"]]
             if datados:
                 horas = (agora_lisboa() - min(datados)).total_seconds() / 3600
-                if horas < HORAS_ENTRE_RECOLHAS + 1:
+                # A margem de 25% cobre o atraso com que o GitHub arranca as
+                # execuções: um feed que cubra exatamente o intervalo continua a
+                # deixar buraco se a recolha se atrasar vinte minutos.
+                if horas < horas_intervalo * 1.25:
                     try:
                         extra = extrair_itens(ler_feed(url_via_google(dominio)))
                     except Exception:                          # noqa: BLE001
@@ -1312,6 +1337,7 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         mudas = [r for r in relatorio if not r["lidos"]]
         with open("fontes-recolha.json", "w", encoding="utf-8") as destino:
             json.dump({"recolhido": agora_lisboa().strftime("%Y-%m-%d %H:%M"),
+                       "horas_desde_a_anterior": round(horas_intervalo, 1),
                        "fontes": len(relatorio),
                        "sem_artigos": len(mudas),
                        "por_recurso": len([r for r in relatorio
