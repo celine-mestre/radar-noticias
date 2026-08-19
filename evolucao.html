@@ -344,6 +344,11 @@ table.mtz td[style*="--i:0.6"],table.mtz td[style*="--i:0.7"],
 table.mtz td[style*="--i:0.8"],table.mtz td[style*="--i:0.9"],
 table.mtz td[style*="--i:1.0"]{color:#fff}
 table.mtz .mtz-vazia{color:var(--texto-ligeiro);background:none}
+/* Escala sequencial: a partir de certo ponto o fundo é escuro e o texto tem de
+   virar branco para continuar legível. */
+table.mtz td.mtz-forte{color:#fff}
+/* Fronteira de semana, o mesmo ritmo dos gráficos */
+table.mtz .mtz-semana{border-left:1.5px dashed var(--texto-ligeiro)}
 table.mtz .mtz-foco{outline:2px solid var(--azul);outline-offset:-2px;border-radius:4px}
 table.mtz th.mtz-foco{color:var(--azul);font-weight:600;outline:none}
 table.mtz-pub td{background:color-mix(in srgb, var(--azul) calc(var(--i) * 78%), transparent)}
@@ -521,10 +526,12 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
           <div class="aj-ic">📈</div>
           <b>Trajetória</b>
           <span>Uma linha por área, a percorrer o período todo, para ver onde a
-            atenção subiu ou desceu. Com uma área escolhida, junta-se-lhe a
-            <strong>evolução do tom</strong>: a percentagem de notícias negativas
-            período a período, lida da esquerda para a direita como a linha de
-            cima. Períodos sem avaliações suficientes interrompem a linha.</span>
+            atenção subiu ou desceu. Os losangos vermelhos marcam os dias de
+            <strong>pico</strong>, cuja explicação está no quadro seguinte. Com uma
+            área escolhida, junta-se-lhe a <strong>evolução do tom</strong>: a
+            percentagem de notícias negativas período a período, lida da esquerda
+            para a direita como a linha de cima. Períodos sem avaliações
+            suficientes interrompem a linha.</span>
         </div>
         <div class="aj-c" style="--c:var(--vermelho)">
           <div class="aj-ic">⚡</div>
@@ -698,7 +705,9 @@ const MARCOS = [
     curto: "mais notícias por publicação",
     nota: "Passou a ler-se mais fundo em cada publicação: os feeds que mostram "
         + "poucas notícias de cada vez, e que por isso perdiam as mais antigas "
-        + "entre duas recolhas, passaram a ser completados pela mesma pesquisa." },
+        + "entre duas recolhas, passaram a ser completados por uma pesquisa ao "
+        + "Google Notícias restrita ao domínio dessa publicação — sempre que o "
+        + "feed não cubra o tempo decorrido desde a recolha anterior." },
 ];
 
 
@@ -1243,7 +1252,7 @@ function corDoTom(pct){
 }
 
 function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null,
-                chaves = null){
+                chaves = null, picos = null){
   if(valores.length < 2) return "";
   /* As duas linhas partilham a escala, senão a de Portugal parecia maior do que
      é. A escala é a do total, que é sempre o maior dos dois. */
@@ -1328,6 +1337,20 @@ function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null,
     }).join("");
   }
 
+  /* Os picos desta área, no próprio traçado: um losango sobre o ponto do dia.
+     Sem legenda nem resumo — o quadro dos picos, logo a seguir, tem os dois. Aqui
+     a pergunta é outra: onde é que esta subida caiu na história da área. É a
+     diferença entre saber que houve um pico e VER a forma que ele fez. */
+  let marcasPico = "";
+  if(picos && picos.length){
+    marcasPico = picos.filter(i => i >= 0 && i < valores.length).map(i => {
+      const px = (i * passo).toFixed(1), py = esc(valores[i]).toFixed(1);
+      return `<path d="M${px},${py} l2.6,3 l-2.6,3 l-2.6,-3 z"
+        fill="var(--vermelho,#B23A3A)" stroke="var(--fundo)" stroke-width="0.6"
+        vector-effect="non-scaling-stroke" transform="translate(0,-6)"/>`;
+    }).join("");
+  }
+
   return `<svg viewBox="0 0 100 ${faixa ? 45 : 34}" preserveAspectRatio="none">
     ${semanas}
     <path d="${d} L100,34 L0,34 Z" fill="${corLinha}" opacity=".10"/>
@@ -1335,6 +1358,7 @@ function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null,
           vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
     ${linhaPT}
     ${marca}
+    ${marcasPico}
     ${faixa}
   </svg>`;
 }
@@ -1346,6 +1370,14 @@ function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null,
    azedar ou a melhorar? Uma percentagem em linha mostra isso; barras empilhadas,
    não. Os períodos sem avaliações que cheguem interrompem a linha, em vez de a
    fazerem cair a zero, que seria uma leitura falsa. */
+/* Em que períodos esta área teve pico, na grelha do gráfico. */
+function picosDaArea(nome, chaves){
+  if(!TEMPESTADES.length) return [];
+  const comPico = new Set(TEMPESTADES.filter(t => t.area === nome)
+    .map(t => chaveDoPeriodo(t.data)));
+  return chaves.map((k, i) => comPico.has(k) ? i : -1).filter(i => i >= 0);
+}
+
 function linhaDoTom(nome, chaves, iMarca){
   const pts = chaves.map(k => {
     const c = TOM_PERIODO[nome + "|" + k];
@@ -1445,18 +1477,31 @@ function blocoMatrizTom(linhas, pares, areas){
   }));
   if(!comDados.length) return "";
 
-  const celula = (n, k) => {
+  /* Uma risca antes de cada segunda-feira dá à matriz o mesmo ritmo semanal dos
+     gráficos: sem ela, dezasseis colunas de dias seguidos leem-se como um bloco. */
+  const semanaNova = (k, i) => {
+    if(agregacao !== "dia" || !i) return "";
+    const d = new Date(k + "T00:00:00");
+    return !isNaN(d) && d.getDay() === 1 ? "mtz-semana" : "";
+  };
+
+  const celula = (n, k, sem = "") => {
     const c = tons[n + "|" + k];
     if(!c || c.av < MINIMO_AVALIADAS){
-      return `<td class="mtz-vazia" title="${descreverPeriodo(k)}: ${
+      return `<td class="mtz-vazia ${sem}" title="${descreverPeriodo(k)}: ${
         c ? `só ${c.av} avaliadas` : "sem avaliações"} — o mínimo são ${MINIMO_AVALIADAS}">·</td>`;
     }
     const p = Math.round(100 * c.negativo / c.av);
-    /* A intensidade da cor acompanha a distância aos 50%: quanto mais longe do
-       equilíbrio, mais carregada — para os dois lados. */
-    const i = Math.min(1, Math.abs(p - 50) / 40).toFixed(1);
-    return `<td style="--i:${i};background:color-mix(in srgb, ${corDoTom(p)} calc(var(--i) * 70%), transparent)"
-      title="${n} · ${descreverPeriodo(k)}: ${p}% negativas de ${c.av} avaliadas">${p}</td>`;
+    /* A matriz mede UMA coisa — a percentagem de negativas —, e uma medida só
+       pede uma escala só: do claro ao carregado, a acompanhar o valor. Pintar de
+       verde os valores baixos sugeria um segundo indicador («positividade») que
+       não está aqui: 18% de negativas não quer dizer 82% de positivas, porque
+       pelo meio há as neutras, que costumam ser a maioria. */
+    const i = Math.min(1, p / 90).toFixed(2);
+    const claro = p < 55;
+    return `<td class="${claro ? "" : "mtz-forte"} ${sem}"
+      style="background:color-mix(in srgb, var(--vermelho, #B23A3A) ${Math.round(i * 85)}%, transparent)"
+      title="${n} · ${descreverPeriodo(k)}: ${p}% de notícias negativas, de ${c.av} avaliadas">${p}</td>`;
   };
 
   return `
@@ -1464,20 +1509,22 @@ function blocoMatrizTom(linhas, pares, areas){
       <h2>Tom por área e período <span class="h2-foco">· % de notícias negativas</span></h2>
       <div class="mtz-rolo">
         <table class="mtz">
-          <tr><th></th>${chaves.map(k =>
-            `<th title="${descreverPeriodo(k)}">${rotuloCurto(k)}</th>`).join("")}</tr>
+          <tr><th></th>${chaves.map((k, i) =>
+            `<th class="${semanaNova(k, i)}" title="${descreverPeriodo(k)}">${rotuloCurto(k)}</th>`).join("")}</tr>
           ${comDados.map(n => `<tr>
             <th class="mtz-lin" title="${n}">${n}</th>
-            ${chaves.map(k => celula(n, k)).join("")}
+            ${chaves.map((k, i) => celula(n, k, semanaNova(k, i))).join("")}
           </tr>`).join("")}
         </table>
       </div>
       <p class="nota">Percentagem de notícias negativas em cada área e período, sobre a
-        comunicação social nacional avaliada pelo Amália, em validação. Verde abaixo de
-        40%, vermelho acima de 60%, cinzento no meio; a cor carrega à medida que se
-        afasta do equilíbrio. Um ponto quer dizer que esse período não chegou a
-        ${MINIMO_AVALIADAS} notícias avaliadas nessa área — não que não tenha havido
-        notícias. Áreas sem nenhuma célula desenhável não entram na matriz.</p>
+        comunicação social nacional avaliada pelo Amália, em validação. A cor carrega com
+        o valor: quanto mais escura, maior a proporção de negativas. Não há verde porque
+        a matriz mede uma coisa só — 18% de negativas não quer dizer 82% de positivas,
+        já que pelo meio estão as neutras, em geral maioritárias; as três proporções
+        estão no quadro do sentimento, acima. Um ponto quer dizer que esse período não
+        chegou a ${MINIMO_AVALIADAS} notícias avaliadas nessa área — não que não tenha
+        havido notícias. Áreas sem nenhuma célula desenhável não entram na matriz.</p>
     </div>`;
 }
 
@@ -2350,14 +2397,6 @@ function desenhar(){
       })()}</p>
     </div>
 
-    ${blocoTempestades(linhas)}
-
-    ${blocoSentimento(linhas)}
-
-    ${blocoMatrizTom(linhas, pares, areas)}
-
-    ${blocoComparacao(linhas, pares)}
-
     <div class="bloco">
       <h2>${areaEscolhida ? "Trajetória da área" : "Trajetória de cada área"}
         <span class="h2-foco">· período todo${diaEscolhido
@@ -2398,7 +2437,8 @@ function desenhar(){
               : (emCurso && agregacao === "dia"
                  ? `${dataCurta(chavesMostra[chavesMostra.length - 1])} · último dia completo`
                  : `${ultimoAgreg()} do período`)}</small>
-            ${faisca(valsMostra, cor(g), iMostra, null, valsPTMostra, chavesMostra)}
+            ${faisca(valsMostra, cor(g), iMostra, null, valsPTMostra, chavesMostra,
+                     picosDaArea(nome, chavesMostra))}
             ${areaEscolhida ? linhaDoTom(nome, chavesMostra, iMostra) : ""}
           </div>`;
         }).join("")}
@@ -2411,10 +2451,20 @@ function desenhar(){
         trajetória.${diaEscolhido ? ` O ponto assinala ${descreverPeriodo(diaEscolhido)}, e o
         número mostra quanto esse período se afasta da média da área no intervalo.` : ""}</p>
       <p class="nota">A trajetória mostra <strong>volume</strong>: é a leitura de quem
-        procura onde a atenção subiu ou desceu. O tom da cobertura tem quadro próprio, mais
-        acima, onde se lê com as proporções exatas em vez de uma cor por período.
+        procura onde a atenção subiu ou desceu. Os <strong>losangos vermelhos</strong>
+        assinalam os dias em que a área teve um pico noticioso — vê-se assim a forma que
+        cada pico fez na história da área, e o quadro seguinte diz o que o motivou. O tom
+        da cobertura tem quadro próprio, mais abaixo, com as proporções exatas.
         ${origem === "todas" ? "A linha cheia é o volume total e a tracejada é só a parte de Portugal." : ""}</p>
     </div>
+
+    ${blocoTempestades(linhas)}
+
+    ${blocoSentimento(linhas)}
+
+    ${blocoMatrizTom(linhas, pares, areas)}
+
+    ${blocoComparacao(linhas, pares)}
 
     ${blocoPublicacoes(linhas, areas)}
 
