@@ -62,11 +62,12 @@ TOPO_MOMENTUM = 5     # áreas no ranking do momentum
 INICIO_SERIE = "2026-08-04"
 
 # ---------------------------------------------------------------------------
-# ALARGAMENTO DAS FONTES a 17 de agosto de 2026: recuperaram-se feeds em falha
-# e entrou a via Google Notícias (Expresso, SIC, JN, DN, TSF, Lusa…). O volume
-# diário das áreas subiu por o corpus ter crescido, não por a atualidade ter
-# mudado — e comparar o dia de hoje, contado com as fontes novas, com medianas
-# de dias que não as tinham dispara picos falsos.
+# ALARGAMENTO DA LEITURA, concluído a 19 de agosto de 2026. Em três dias mudaram
+# duas coisas: entraram publicações que estavam em falha silenciosa e passou a
+# ler-se mais fundo em cada uma — os feeds curtos, que só mostram as últimas dez
+# notícias, passaram a ser completados pela pesquisa ao domínio. O volume diário
+# subiu porque o radar passou a ver mais, não porque tenha havido mais notícias,
+# e comparar o dia de hoje com medianas do regime anterior dispara picos falsos.
 #
 # A regra é comparar igual com igual: enquanto a janela da linha de base ainda
 # contiver dias anteriores ao marco, a contagem — a de hoje E a de cada dia da
@@ -76,15 +77,23 @@ INICIO_SERIE = "2026-08-04"
 # tudo: com a base de 28 dias, isso acontece a 14 de setembro de 2026, sem
 # intervenção de ninguém.
 # ---------------------------------------------------------------------------
-MARCO_FONTES = "2026-08-17"
+MARCO_FONTES = "2026-08-19"
+# O alargamento não foi instantâneo: começou a 17 e ficou completo a 19. Os dias
+# pelo meio foram medidos em regime híbrido — nem o antigo nem o novo — e os
+# picos que então se registaram não são comparáveis com nada. Saem do registo.
+INICIO_ALARGAMENTO = "2026-08-17"
 
 
-def conjunto_antigo(linhas, marco=MARCO_FONTES):
-    """As publicações que já marcavam notícias antes do alargamento."""
-    return {(r.get("fonte") or "").strip().lower()
-            for r in linhas
-            if r.get("area") and (r.get("data") or "")[:10] < marco
-            and (r.get("fonte") or "").strip()}
+# A primeira tentativa de lidar com a transição foi contar, de um lado e do
+# outro, apenas as publicações que já existiam antes do marco. Deixou de chegar
+# quando a leitura passou a ser também mais funda: o Público está no conjunto
+# antigo e mesmo assim passou a render mais notícias por dia. Comparar as mesmas
+# publicações não garante comparar a mesma cobertura.
+#
+# A regra passou a ser mais simples e mais segura: a partir do marco, a linha de
+# base é feita SÓ de dias do regime novo. Enquanto não houver dias suficientes,
+# não se emite pico nenhum — vale mais uma semana em silêncio do que uma semana
+# de alarmes falsos. Ao fim desse prazo os alertas voltam, e voltam certos.
 
 
 def agora_lisboa():
@@ -269,20 +278,19 @@ def principal():
         print(f"alertas: sem arquivo mensal em {args.mensal}/ — nada a avaliar")
         return
 
-    # Igual com igual: se a janela da base ainda apanha dias anteriores ao
-    # alargamento das fontes, conta-se só o conjunto antigo — hoje e base.
-    inicio_janela = (datetime.strptime(hoje, "%Y-%m-%d")
-                     - timedelta(days=args.dias)).strftime("%Y-%m-%d")
-    em_transicao = inicio_janela < MARCO_FONTES <= hoje
-    fontes_base = conjunto_antigo(linhas) if em_transicao else None
+    # A base só usa dias comparáveis com o de hoje: depois do marco, só dias do
+    # regime novo. É isso que o «início» passa a ser.
+    inicio = max(args.inicio, MARCO_FONTES) if hoje >= MARCO_FONTES else args.inicio
+    em_transicao = inicio == MARCO_FONTES
     fim_transicao = (datetime.strptime(MARCO_FONTES, "%Y-%m-%d")
-                     + timedelta(days=args.dias)).strftime("%Y-%m-%d")
-    if em_transicao:
-        print(f"alertas: transição do alargamento das fontes — a contar só as "
-              f"{len(fontes_base)} publicações do conjunto antigo, até {fim_transicao}")
+                     + timedelta(days=MINIMO_DIAS)).strftime("%Y-%m-%d")
 
-    dias = contagens_ate_ao_corte(linhas, corte, fontes_base)
-    tempestades, momentum, n_base = avaliar(dias, hoje, args.dias, args.inicio)
+    dias = contagens_ate_ao_corte(linhas, corte)
+    tempestades, momentum, n_base = avaliar(dias, hoje, args.dias, inicio)
+    if em_transicao and n_base < MINIMO_DIAS:
+        print(f"alertas: base de {n_base} dias desde o alargamento da leitura em "
+              f"{MARCO_FONTES} — sem juízo até {fim_transicao}, para não comparar "
+              f"dias de regimes diferentes")
 
     anterior = {}
     if os.path.exists(args.saida):
@@ -297,12 +305,12 @@ def principal():
     # falsos ficaram no registo. Reavaliam-se aqui, fechados (dia inteiro) e
     # com a mesma régua igual-com-igual; os que sobreviverem eram picos reais.
     historico = [r for r in (anterior.get("historico") or [])
-                 if not (MARCO_FONTES <= r.get("data", "") < hoje)]
-    dias_fechados = contagens_ate_ao_corte(linhas, "23:59", fontes_base)
+                 if not (INICIO_ALARGAMENTO <= r.get("data", "") < hoje)]
+    dias_fechados = contagens_ate_ao_corte(linhas, "23:59")
     d = datetime.strptime(MARCO_FONTES, "%Y-%m-%d")
     while d.strftime("%Y-%m-%d") < hoje:
         dia_passado = d.strftime("%Y-%m-%d")
-        t_dia, _, _ = avaliar(dias_fechados, dia_passado, args.dias, args.inicio)
+        t_dia, _, _ = avaliar(dias_fechados, dia_passado, args.dias, inicio)
         for t in t_dia:
             historico.append({"data": dia_passado, "area": t["area"],
                               "hoje": t["hoje"], "mediana": t["mediana"],
@@ -319,14 +327,14 @@ def principal():
                   f"máx({FATOR_DESVIO:g} desvios robustos, {SUBIDA_MINIMA} notícias) "
                   f"e atinge pelo menos {PISO_ABSOLUTO} notícias; "
                   f"sem alertas com menos de {MINIMO_DIAS} dias de série, "
-                  f"contada desde {args.inicio} (método de recolha atual)."
-                  + (f" Em transição do alargamento das fontes de {MARCO_FONTES}: "
-                     f"até {fim_transicao}, hoje e a base contam apenas as "
-                     f"{len(fontes_base)} publicações que já marcavam antes do "
-                     f"marco, para a comparação ser igual com igual."
+                  f"contada desde {inicio} (método de recolha atual)."
+                  + (f" A leitura alargou-se a {MARCO_FONTES} — mais publicações e "
+                     f"leitura mais funda em cada uma —, pelo que a base só usa dias "
+                     f"a partir dessa data; até {fim_transicao} pode não haver dias "
+                     f"suficientes para emitir picos."
                      if em_transicao else "")),
         "transicao_fontes": ({"marco": MARCO_FONTES, "fim": fim_transicao,
-                              "publicacoes_contadas": len(fontes_base)}
+                              "dias_de_base": n_base}
                              if em_transicao else None),
         "tempestades": tempestades,
         "momentum": momentum,

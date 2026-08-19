@@ -99,7 +99,7 @@ internacional ou todas. Ambos valem para o radar e para as consultas.
   de cada palavra-chave e evolução da área ao longo do período escolhido.
 - Impressão em PDF com cabeçalho institucional, e exportação para Excel com folha de
   notícias — incluindo o tom de cada notícia, quando avaliado —, folha de especificações
-  e folha de síntese, esta com o tom do conjunto, por publicação e por assunto.
+  e folha de síntese, esta com o tom do conjunto, por assunto.
 
 **Alertas de pico noticioso.** Quando uma área dispara — um volume de notícias muito
 acima do seu comportamento habitual —, o painel abre com uma faixa de alerta, e o
@@ -150,7 +150,7 @@ fora do período.
 | `historico.json` | **Série diária.** Por dia e por área: marcações, publicações distintas, repartição por origem e contagem de cada palavra-chave — e, por dia, quantas notícias DISTINTAS houve. A distinção importa: uma notícia que satisfaz três áreas deixa três marcações e é contada em cada uma delas, pelo que somar as áreas dá marcações e não notícias (cerca de 1,3 áreas por notícia). Cada notícia conta uma só vez, no dia em que foi publicada. Agregados, não notícias. (O ficheiro guarda ainda um campo `novas`, vestígio de quando a série era construída recolha a recolha; hoje é igual a `notícias` e não é usado.) |
 | `alertas.json` | **Picos noticiosos e momentum.** Escrito pelo `alertas.py` após cada recolha: compara o volume do dia, por área, com a mediana dos últimos 28 dias *à mesma hora* (desvio robusto, mínimo de 8 notícias de subida, piso de 12). Guarda os picos do dia, o top 5 do momentum e o histórico acumulado de alertas por área e por dia. |
 | `corpus.json` | **Comunicação social em bruto, sete dias.** Todos os artigos lidos dos feeds, marcados ou não. Serve a pesquisa por termo livre; o painel só o carrega quando alguém pesquisa. |
-| `sentimento_ia.py` + `.github/workflows/sentimento-amalia.yml` | **Sentimento em validação.** A cada recolha, o Amália classifica o tom (positivo, neutro, negativo) das notícias da comunicação social nacional ainda sem avaliação — e só dessas —, em lotes, e grava sentimentos.json e a série sentimento-serie.json (agregados por área e dia). O critério de arranque é o trabalho pendente, não a hora: sem pelo menos quinze notícias por avaliar, o modelo nem chega a ser carregado. As avaliações aparecem no radar (ponto junto a cada notícia, distribuição da consulta, e o tom por publicação e por assunto na síntese), na evolução (barras por dia, semana ou mês) e no Excel (coluna própria e secções na folha de síntese), sempre com o rótulo «em validação» até a leitura humana estar concluída — a funcionalidade é definitiva; o rótulo é temporário. |
+| `sentimento_ia.py` + `.github/workflows/sentimento-amalia.yml` | **Sentimento em validação.** A cada recolha, o Amália classifica o tom (positivo, neutro, negativo) das notícias da comunicação social nacional ainda sem avaliação — e só dessas —, em lotes, e grava sentimentos.json e a série sentimento-serie.json (agregados por área e dia). O critério de arranque é o trabalho pendente, não a hora: sem pelo menos quinze notícias por avaliar, o modelo nem chega a ser carregado. As avaliações aparecem no radar (ponto junto a cada notícia, distribuição da consulta, e o tom por assunto na síntese), na evolução (barras por dia, semana ou mês) e no Excel (coluna própria e secções na folha de síntese), sempre com o rótulo «em validação» até a leitura humana estar concluída — a funcionalidade é definitiva; o rótulo é temporário. |
 | `sentimento-meses/AAAA-MM.jsonl.gz` | **Arquivo permanente das avaliações.** Uma linha por notícia avaliada (ligação, tom, dia), acumulada por mês e nunca podada — ao contrário do `sentimentos.json`, que é o ficheiro de trabalho e guarda só a janela recente. Uma avaliação é um facto que não muda, pelo que fica guardada de vez: é isto que permitirá alargar a janela do painel, ou repescar meses inteiros, sem mandar o Amália reclassificar o que já classificou. Cerca de 70 KB por dois mil registos. |
 | `resumo_picos.py` + `.github/workflows/resumo-picos.yml` | **Porquê de cada pico.** Para cada pico registado no alertas.json, recupera as notícias reais desse dia e dessa área do arquivo mensal — que guarda tudo, para lá dos sete dias do corpus — e pede ao Amália um resumo de três ou quatro frases do que aconteceu. Grava picos-resumos.json, que a evolução mostra ao clicar num pico. Incremental: um pico já resumido não volta a ser tratado, e o modelo só é carregado havendo picos por explicar. O resumo é sempre sobre notícias que existem; não havendo, o painel di-lo em vez de inventar. |
 | `publicacoes.json` | **Publicações por dia e por área.** As doze que mais noticiaram cada área em cada dia, escritas pelo fecho dos dias. Cerca de 3,5 KB por dia, e só se guardam os últimos 120 dias — o cruzamento área × publicação não precisa de mais. Sem este ficheiro o painel funciona igual, apenas sem esse quadro. |
@@ -344,6 +344,13 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
   Uma notícia de um título não subscrito, ou anterior a esse período, não está no
   corpus. A janela do arquivo define-se com `--dias-arquivo` e pode ser alargada
   quando houver espaço para isso.
+- **O tom não se reparte por publicação.** A avaliação do Amália mede o tom do
+  acontecimento noticiado, não a orientação editorial de quem o noticia, e é automática
+  e ainda em validação. Por isso o painel mostra o tom da área e dos seus assuntos, e
+  não uma ordenação de órgãos de comunicação social — que seria um juízo que o
+  indicador não sustenta e que não cabe a um organismo do Estado produzir. A
+  repartição por publicação existe nos dados para efeitos de análise interna; não é
+  mostrada nem exportada.
 - **Marcação literal.** Um artigo entra numa área por conter a expressão no título ou
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
 - **As expressões são curtas, como a imprensa escreve.** "política de imigração" quase
@@ -382,14 +389,19 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
 - **Comparação entre áreas.** Legítima dentro do corpus: nenhuma área é truncada e o
   método é o mesmo para todas. As contagens medem o que as publicações subscritas
   noticiaram, não o total do que foi noticiado.
-- **Quebra de série a 17–18 de agosto de 2026.** Nessa data o conjunto de fontes
-  efetivamente lidas alargou-se de forma substancial: a correção dos endereços dos
-  feeds recuperou títulos que estavam em falha silenciosa (Correio da Manhã, Notícias
-  ao Minuto, Sábado, Açoriano Oriental, entre outros) e a via Google Notícias trouxe
-  de volta o Expresso, a SIC, o JN, o DN, a TSF e a Lusa. As comparações que
-  atravessem essa data — incluindo os **alertas de pico**, cuja mediana de referência
-  vem dos 28 dias anteriores — medem também a expansão das fontes, e não apenas a
-  atualidade; leiam-se com essa reserva até a base de comparação renovar.
+- **Quebra de série a 17–19 de agosto de 2026.** Em três dias mudaram duas coisas na
+  leitura. Primeiro, o conjunto de fontes: a correção dos endereços recuperou títulos
+  que estavam em falha silenciosa (Correio da Manhã, Notícias ao Minuto, Sábado,
+  Açoriano Oriental) e a via Google Notícias trouxe de volta o Expresso, a SIC, o JN, o
+  DN, a TSF e a Lusa. Depois, a profundidade: os feeds curtos — o do Público mostra dez
+  notícias, e o jornal publica mais de dez em duas horas nos dias movimentados — passaram
+  a ser completados pela pesquisa ao domínio, deixando de se perder o que saía do feed
+  entre recolhas. **O radar passou a ver mais; não houve mais notícias.** Comparações que
+  atravessem esta data medem as duas coisas ao mesmo tempo. O painel de evolução assinala
+  a data no gráfico de volume, e os **alertas de pico** deixam de usar dias anteriores a
+  19 de agosto como base — pelo que ficam em silêncio até haver sete dias do regime novo,
+  por volta de 26 de agosto, e depois voltam sem viés.
+
 - **Imprensa apenas.** As plataformas sociais não publicam feeds e estão fora do
   âmbito da aplicação.
 - **Responsabilidade editorial.** O painel é um instrumento de acesso e triagem: a

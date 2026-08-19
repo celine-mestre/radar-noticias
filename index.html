@@ -2351,9 +2351,8 @@ const MANUAL = [
     recolha está sempre à vista, ao lado do título das áreas.</p>` },
 
   { n:"10", titulo:"Quais são as fontes", cor:"var(--dourado)", icone:"lista", corpo:`
-    <p>A lista abaixo é a das publicações subscritas, tal como a última recolha as leu —
-    não é uma lista escrita à mão que possa ficar desatualizada. Para cada uma diz-se
-    quantos artigos deu nessa recolha e se é classificada por área.</p>
+    <p>Estas são as publicações subscritas. A lista acompanha a configuração da recolha,
+    pelo que não fica para trás quando uma fonte entra ou sai.</p>
     <div id="manFontes"><p class="man-aviso">A carregar a lista das fontes…</p></div>
     <p><strong>Porque é que algumas ficam de fora.</strong> Uma publicação pode estar na
     lista e não aparecer nos quadros por três razões, todas visíveis acima:</p>
@@ -2367,9 +2366,9 @@ const MANUAL = [
         ser lida.</dd>
       <dt>Não respondeu à recolha</dt><dd>Feeds descontinuados, endereços mudados ou
         servidores que recusam pedidos automáticos. Quando isso acontece, tenta-se a
-        segunda via de leitura; falhando as duas, a publicação fica assinalada acima com o
-        motivo. As que deixam de responder de forma permanente saem da lista, para não
-        inflacionarem a contagem das fontes.</dd>
+        segunda via de leitura, a pesquisa restrita ao domínio. As que deixam de
+        responder por qualquer das vias saem da lista, para não inflacionarem a contagem
+        das fontes.</dd>
     </dl>
     <p class="man-aviso">A lista é o que se subscreve, não o que existe: nenhuma seleção
     de fontes cobre tudo o que foi publicado. O que fica de fora está no capítulo 7.</p>` }
@@ -2536,9 +2535,15 @@ function blocoSentimentoArea(area, corArea){
       .sort((x, y) => y.pctNeg - x.pctNeg || y.n - x.n);
   };
 
-  const publicacoes = porChave(n => [n.fonte], 5).slice(0, 8);
+  /* POR ASSUNTO, e não por publicação. O tom por órgão identificado seria o
+     Estado a classificar editorialmente publicações concretas, com uma
+     avaliação automática ainda por validar — e a ordená-las da mais negativa
+     para a menos. O que a decisão pública precisa de saber é o tom da cobertura
+     da área e em que assuntos ele se concentra; isso diz-se sem nomear
+     ninguém. A repartição por publicação continua a existir nos dados, para
+     análise interna, mas não se mostra nem se exporta. */
   const assuntos = porChave(n => n.palavras || [], 5).slice(0, 8);
-  if(!publicacoes.length && !assuntos.length) return "";
+  if(!assuntos.length) return "";
 
   const pct = v => `${Math.round(100 * v)}%`;
   const linha = x => {
@@ -2565,20 +2570,17 @@ function blocoSentimentoArea(area, corArea){
           <b style="color:var(--vermelho,#B23A3A)">${geral.negativo} negativas</b>
           — ${pct(pctNegGeral)} de tom negativo, que é a referência abaixo.</p>
 
-        ${publicacoes.length ? `
-        <h5 class="sa-sub">Por publicação</h5>
-        <div class="sa-lista">${publicacoes.map(linha).join("")}</div>` : ""}
-
         ${assuntos.length ? `
         <h5 class="sa-sub">Por assunto</h5>
         <div class="sa-lista">${assuntos.map(linha).join("")}</div>` : ""}
 
-        <p class="sin-nota">Ordenado do tom mais negativo para o menos. A marca
-          em p.p. assinala quem se afasta dez ou mais pontos percentuais da média
-          da área nesta consulta — é aí que está a informação. Só entram
-          publicações e assuntos com pelo menos cinco notícias avaliadas, porque
-          abaixo disso a proporção não diz nada. Avaliação automática do Amália
-          sobre a comunicação social nacional, em validação por leitura humana.</p>
+        <p class="sin-nota">Assuntos ordenados do tom mais negativo para o menos. A
+          marca em p.p. assinala os que se afastam dez ou mais pontos percentuais da
+          média da área nesta consulta — é aí que está a informação. Só entram assuntos
+          com pelo menos cinco notícias avaliadas, porque abaixo disso a proporção não
+          diz nada. Avaliação automática do Amália sobre a comunicação social nacional,
+          em validação por leitura humana; mede o tom do que foi noticiado e não a
+          orientação de quem noticiou, pelo que não se reparte por publicação.</p>
       </div>`;
 }
 
@@ -3000,15 +3002,15 @@ async function preencherFontes(){
   dados.detalhe.forEach(f => (porOrigem[temOrigem ? f.origem : "todas"]
     || porOrigem[temOrigem ? "nacionais" : "todas"]).push(f));
 
+  /* O manual é documentação, não um mostrador de estado: diz QUE publicações se
+     subscrevem e como são lidas, e não quantos artigos deram na última passagem —
+     um número que muda de duas em duas horas e que ninguém vai lá confirmar. O
+     estado por recolha vive no relatório das fontes, para quem gere o serviço. */
   const linha = f => {
-    const estado = f.erro
-      ? `<span class="fo-mal" title="${esc(f.erro)}">não respondeu</span>`
-      : !f.lidos
-        ? `<span class="fo-mal">sem artigos nesta recolha</span>`
-        : `<span class="fo-n">${f.lidos} ${f.lidos === 1 ? "artigo" : "artigos"}</span>`;
     const lingua = f.pt ? "" : `<span class="fo-eti">outra língua</span>`;
-    const via = f.via.startsWith("google") ? `<span class="fo-eti">via Google</span>` : "";
-    return `<li><span class="fo-nome">${esc(f.fonte)}</span>${lingua}${via}${estado}</li>`;
+    const via = f.via && f.via.includes("oogle")
+      ? `<span class="fo-eti">via Google Notícias</span>` : "";
+    return `<li><span class="fo-nome">${esc(f.fonte)}</span>${lingua}${via}</li>`;
   };
 
   alvo.innerHTML = Object.entries(porOrigem).filter(([, v]) => v.length).map(([o, v]) => `
@@ -3017,9 +3019,9 @@ async function preencherFontes(){
       <ul class="fo-lista">${v.slice().sort((a, b) =>
         a.fonte.localeCompare(b.fonte, "pt")).map(linha).join("")}</ul>
     </div>`).join("")
-    + `<p class="man-aviso">Estado da recolha de ${esc(dados.recolhido || "—")}.
-       ${dados.sem_artigos ? `${dados.sem_artigos} ${dados.sem_artigos === 1
-         ? "publicação não deu artigos" : "publicações não deram artigos"} nessa passagem.` : ""}</p>`;
+    + `<p class="man-aviso">Uma publicação marcada «via Google Notícias» é lida por
+       pesquisa restrita ao seu domínio, por não publicar feed acessível ou por o
+       feed não chegar para o intervalo entre recolhas.</p>`;
 }
 
 function abrirManual(n){
@@ -3843,10 +3845,10 @@ function seccoesTomExcel(){
       Math.round(100 * geral.negativo / avaliadas.length)]],
     "% negativo"
   ]];
-  const publicacoes = agrupar(n => [n.fonte], 5);
+  /* Sem repartição por publicação — ver a nota no blocoSentimentoArea. O que
+     sai do edifício é o tom da área e dos seus assuntos, nunca um ranking de
+     órgãos de comunicação social. */
   const assuntos = agrupar(n => n.palavras, 5);
-  if(publicacoes.length)
-    seccoes.push(["Tom por publicação", "Publicação", publicacoes, "% negativo"]);
   if(assuntos.length)
     seccoes.push(["Tom por assunto", "Palavra-chave", assuntos, "% negativo"]);
   return seccoes;

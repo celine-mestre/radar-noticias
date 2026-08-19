@@ -169,6 +169,11 @@ main{padding:1.6rem 0 3rem}
 /* Marca do alargamento das fontes: presente, mas sem competir com os dados */
 .marco line{stroke:var(--dourado);stroke-width:1.2;stroke-dasharray:2 5;opacity:.75}
 .marco-rot{fill:var(--dourado);font-size:8px;font-weight:600;letter-spacing:.02em}
+.marco-legenda{display:flex;gap:.6rem;align-items:flex-start;margin:.7rem 0 0;
+  font-size:.76rem;color:var(--texto-suave);line-height:1.55}
+.marco-legenda strong{color:var(--texto);font-weight:600}
+.marco-risca{flex:none;width:3px;align-self:stretch;border-radius:2px;
+  background:repeating-linear-gradient(var(--dourado) 0 2px,transparent 2px 6px)}
 .barra-dia{cursor:pointer;transition:opacity .15s}
 .barra-dia:hover{opacity:.72}
 .barra-dia.marcada rect{stroke:var(--texto);stroke-width:1.5}
@@ -644,9 +649,12 @@ const INICIO_SERIE = "2026-08-04";
    atualidade — daí a marca discreta nos quadros temporais. Esvaziar a constante
    faz a marca desaparecer.
    ────────────────────────────────────────────────────────────────────────── */
-const MARCO_FONTES = "2026-08-17";
-const MARCO_NOTA = "17/08/2026 — alargamento das fontes lidas: "
-  + "as comparações que atravessem esta data medem também esse alargamento";
+const MARCO_FONTES = "2026-08-19";
+const MARCO_NOTA = "Entre 17 e 19 de agosto de 2026 passaram a ser lidas mais "
+  + "publicações e a ler-se mais fundo em cada uma. A partir daqui os números são "
+  + "maiores porque o radar passou a ver mais, e não porque tenha havido mais "
+  + "notícias. Comparar um dia anterior com um dia posterior a esta marca mede as "
+  + "duas coisas ao mesmo tempo.";
 
 const $ = s => document.querySelector(s);
 const cor = g => (GRUPOS.find(x => x.id === g) || {}).cor || "#2B5683";
@@ -1101,7 +1109,7 @@ function barrasEmpilhadas(pontos){
     const x = (esq + marcoIdx * largura).toFixed(1);
     return `<g class="marco"><title>${MARCO_NOTA}</title>
       <line x1="${x}" y1="10" x2="${x}" y2="${base}"/>
-      <text class="rot marco-rot" x="${x}" y="8" text-anchor="middle">+ fontes</text>
+      <text class="rot marco-rot" x="${x}" y="8" text-anchor="middle">daqui o radar vê mais</text>
     </g>`;
   })() : "";
 
@@ -1947,6 +1955,13 @@ function desenhar(){
       <h2>Volume ao longo do tempo <span class="h2-foco">· ${linhas.length}
         ${linhas.length === 1 ? "dia" : "dias"}, por ${agregNome()}</span></h2>
       ${barrasEmpilhadas(pontos)}
+      ${MARCO_FONTES && linhas.length && linhas[0].data < MARCO_FONTES
+          && linhas[linhas.length - 1].data >= MARCO_FONTES ? `
+        <p class="marco-legenda"><span class="marco-risca"></span>
+          <strong>19/08/2026 — daqui em diante o radar vê mais.</strong> Nos dias
+          anteriores liam-se menos publicações, e das que se liam nem sempre chegavam
+          todas as notícias do dia. A subida a partir desta marca é, em parte, o radar
+          a alcançar o que antes lhe escapava — e não mais notícias publicadas.</p>` : ""}
       ${(() => {
         /* Escolhido um período, a legenda passa a ser desse período — é o que se
            está a olhar — e diz no princípio a que período se refere, para não
@@ -2030,15 +2045,7 @@ function desenhar(){
       <h2>${areaEscolhida ? "Trajetória da área" : "Trajetória de cada área"}
         <span class="h2-foco">· período todo${diaEscolhido
           ? `, com ${descreverPeriodo(diaEscolhido)} assinalado` : ""}</span></h2>
-      ${Object.keys(TOM_PERIODO).length ? `<div class="legenda">
-        <span style="--cor:var(--verde)"><i></i>Cobertura sobretudo positiva</span>
-        <span style="--cor:#9aa1a8"><i></i>Equilibrada</span>
-        <span style="--cor:var(--vermelho,#B23A3A)"><i></i>Sobretudo negativa</span>
-        <span style="--cor:transparent"><i style="border:1px dashed var(--borda)"></i>Amostra pequena</span>
-      </div>
-      ${origem === "todas" ? `<p class="nota" style="margin:.1rem 0 .6rem">
-        A linha cheia é o volume total; a tracejada é só a parte de Portugal, que é a
-        que o tom diz respeito.</p>` : ""}` : ""}
+
       <div class="mini">
         ${/* Todas as áreas, e não as oito mais noticiadas: o corte era meu e
              escondia as pequenas, que são precisamente aquelas onde uma subida
@@ -2050,12 +2057,6 @@ function desenhar(){
             (d.areas[nome] && d.areas[nome].origens
               ? d.areas[nome].origens.nacionais : 0) || 0);
           const iM = diaEscolhido ? pares.findIndex(([c]) => c === diaEscolhido) : -1;
-          const tons = pares.map(([k]) => {
-            const c = TOM_PERIODO[nome + "|" + k];
-            return c && c.av >= MINIMO_AVALIADAS ? c : null;
-          });
-          const cAgora = iM >= 0 ? tons[iM] : tons.filter(x => x !== null).pop();
-          const tomAgora = cAgora ? Math.round(cAgora.negativo / cAgora.av * 100) : null;
           const valor = iM >= 0 ? vals[iM] : (vals[vals.length - 1] || 0);
           const media = vals.reduce((x, y) => x + y, 0) / (vals.length || 1);
           const desvio = media ? Math.round((valor - media) / media * 100) : 0;
@@ -2065,11 +2066,8 @@ function desenhar(){
             <small class="mini-rot">${iM >= 0
               ? `${descreverPeriodo(diaEscolhido)} · ${desvio >= 0 ? "+" : ""}${desvio}%
                  face à média do período`
-              : `último ${agregNome()} do período`}${
-              tomAgora === null ? ""
-              : ` · <span style="color:${corDoTom(tomAgora)}">${tomAgora}% negativas</span>`
-            }</small>
-            ${faisca(vals, cor(g), iM, tons, valsPT)}
+              : `último ${agregNome()} do período`}</small>
+            ${faisca(vals, cor(g), iM, null, valsPT)}
           </div>`;
         }).join("")}
       </div>
@@ -2080,16 +2078,10 @@ function desenhar(){
         o período todo, mesmo com um ${agregNome()} escolhido acima — é isso que faz dela uma
         trajetória.${diaEscolhido ? ` O ponto assinala ${descreverPeriodo(diaEscolhido)}, e o
         número mostra quanto esse período se afasta da média da área no intervalo.` : ""}</p>
-      <p class="nota">A faixa por baixo de cada linha é o <strong>tom da cobertura</strong>
-        no mesmo período — avaliação do Amália, em validação, só sobre a comunicação social
-        nacional. Verde abaixo de 40% de notícias negativas, vermelho acima de 60%, cinzento
-        no meio; vazado quando o período não chega a ${MINIMO_AVALIADAS} notícias avaliadas e
-        a proporção seria ruído. Ao agregar por semana ou mês a cor é a média do período, e a
-        média achata as diferenças — para ver as proporções exatas, o quadro do sentimento
-        mostra-as por inteiro. Como o tom só se aplica à comunicação social nacional, a linha
-        tracejada mostra quantas dessas notícias havia: sem ela, a faixa ficaria debaixo de
-        uma linha que conta também a Lusofonia e o estrangeiro. Com a origem já filtrada em
-        Portugal as duas linhas coincidem e desenha-se uma só.</p>
+      <p class="nota">A trajetória mostra <strong>volume</strong>: é a leitura de quem
+        procura onde a atenção subiu ou desceu. O tom da cobertura tem quadro próprio, mais
+        acima, onde se lê com as proporções exatas em vez de uma cor por período.
+        ${origem === "todas" ? "A linha cheia é o volume total e a tracejada é só a parte de Portugal." : ""}</p>
     </div>
 
     ${blocoPublicacoes(linhas, areas)}
