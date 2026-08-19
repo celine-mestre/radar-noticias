@@ -1206,6 +1206,7 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
             falhas.append((nome_fonte, falha))
             relatorio.append({"fonte": nome_fonte, "dominio": dominio,
                               "origem": origem_da_lista, "pt": escreve_em_portugues(dominio),
+                              "via_config": "google" if via_google else "feed",
                               "via": "google" if via_google else "direta",
                               "lidos": 0, "marcados": 0, "erro": falha[:160]})
             continue
@@ -1292,6 +1293,10 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
             dominios_lidos.add(dominio.lower())
         relatorio.append({"fonte": nome_fonte, "dominio": dominio,
                           "origem": origem_da_lista, "pt": escreve_em_portugues(dominio),
+                          # A via CONFIGURADA não muda de recolha para recolha —
+                          # é dela que o manual vive. A via usada é o que
+                          # aconteceu nesta passagem, e serve para diagnóstico.
+                          "via_config": "google" if via_google else "feed",
                           "via": "google" if via_google else
                                  ("google (recurso)" if recurso == "google"
                                   else "direta + Google" if recurso == "complemento"
