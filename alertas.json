@@ -1,9 +1,9 @@
 {
- "atualizado": "2026-08-19 02:10",
+ "atualizado": "2026-08-19 02:25",
  "dia": "2026-08-19",
- "corte": "02:10",
+ "corte": "02:25",
  "dias_base": 0,
- "regra": "Tempestade quando a contagem do dia, até às 02:10, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-19 (método de recolha atual). A leitura alargou-se a 2026-08-19 — mais publicações e leitura mais funda em cada uma —, pelo que a base só usa dias a partir dessa data; até 2026-08-26 pode não haver dias suficientes para emitir picos.",
+ "regra": "Tempestade quando a contagem do dia, até às 02:25, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-19 (método de recolha atual). A leitura alargou-se a 2026-08-19 — mais publicações e leitura mais funda em cada uma —, pelo que a base só usa dias a partir dessa data; até 2026-08-26 pode não haver dias suficientes para emitir picos.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-08-26",
