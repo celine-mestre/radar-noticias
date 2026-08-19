@@ -580,12 +580,13 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
       série começa no dia da primeira recolha e cresce um ponto por dia. Com menos de
       três ou quatro semanas, uma variação diz mais sobre o dia do que sobre a área.</p>
 
-      <p class="aj-nota"><strong>Alargamento das fontes a 17 de agosto de 2026.</strong>
-      Nessa data passaram a ser lidas mais publicações: recuperaram-se feeds que estavam
-      em falha silenciosa e os órgãos que recusam leitura automática — Expresso, SIC,
-      Jornal de Notícias, Diário de Notícias, TSF, Lusa — passaram a entrar por outra via.
-      O corpus alargou-se, e não a atualidade: as comparações que atravessem essa data
-      medem também esse alargamento. Os quadros assinalam-na com uma marca discreta.</p>
+      <p class="aj-nota"><strong>Mudanças de método de leitura.</strong>
+      Há dias em que o radar passa a ver de outra maneira — mais publicações lidas, ou
+      leitura mais funda em cada uma. O gráfico de volume assinala-os com uma risca
+      tracejada, e o cursor diz o que mudou em cada um. A partir dessas datas o mesmo dia
+      noticioso dá mais notícias contadas: quem comparar períodos de um lado e do outro
+      está a medir também a mudança de método. Os picos noticiosos são a exceção — durante
+      a transição são medidos apenas nas publicações cuja leitura não mudou.</p>
     </div>
   </div>
 </div>
@@ -665,14 +666,21 @@ const INICIO_SERIE = "2026-08-04";
    atualidade — daí a marca discreta nos quadros temporais. Esvaziar a constante
    faz a marca desaparecer.
    ────────────────────────────────────────────────────────────────────────── */
-const MARCO_FONTES = "2026-08-19";
-const MARCO_NOTA = "19/08/2026 — mudança de método de leitura. Até 16 de agosto, "
-  + "vinte e cinco publicações estavam configuradas mas não chegavam a ser lidas, "
-  + "entre elas o Expresso, a SIC, o Jornal de Notícias, o Diário de Notícias, a TSF "
-  + "e a Lusa; e nas que se liam, o Público entre elas, cabiam no feed menos notícias "
-  + "do que as publicadas entre duas recolhas, pelo que as mais antigas se perdiam. "
-  + "Corrigido isso, o mesmo dia noticioso dá mais notícias contadas. A diferença "
-  + "entre os dois lados desta marca é de MEDIÇÃO, não de atualidade.";
+/* ── MUDANÇAS DE MÉTODO DE LEITURA ────────────────────────────────────────
+   Marcas na linha do tempo. Não assinalam acontecimentos noticiosos: assinalam
+   dias em que o radar passou a ver de outra maneira, e a partir dos quais os
+   números deixam de ser comparáveis com os anteriores. Acrescentar uma futura é
+   juntar uma linha a esta lista — a data é a do primeiro dia já no regime novo.
+   ────────────────────────────────────────────────────────────────────────── */
+const MARCOS = [
+  { data: "2026-08-18", rotulo: "mudança de método",
+    nota: "Passaram a ser lidas publicações que estavam configuradas mas não "
+        + "chegavam a ser recolhidas." },
+  { data: "2026-08-19", rotulo: "mudança de método",
+    nota: "Passou a ler-se mais fundo em cada publicação: os feeds que mostram "
+        + "poucas notícias de cada vez deixaram de perder as mais antigas." },
+];
+
 
 const $ = s => document.querySelector(s);
 const cor = g => (GRUPOS.find(x => x.id === g) || {}).cor || "#2B5683";
@@ -1143,18 +1151,33 @@ function barrasEmpilhadas(pontos){
            x="${(esq + i * largura + largura / 2).toFixed(1)}" y="${A - 12}"
            text-anchor="middle">${p.curto}</text>` : "").join("");
 
-  /* Marca discreta do alargamento das fontes: uma linha tracejada na fronteira
-     do período em que entrou. Não se desenha se ficar fora do que está à vista,
-     nem no primeiro ponto, onde não separaria nada. */
-  const marcoIdx = MARCO_FONTES
-    ? pontos.findIndex(p => p.rotulo === chaveDoPeriodo(MARCO_FONTES)) : -1;
-  const marco = marcoIdx > 0 ? (() => {
-    const x = (esq + marcoIdx * largura).toFixed(1);
-    return `<g class="marco"><title>${MARCO_NOTA}</title>
-      <line x1="${x}" y1="10" x2="${x}" y2="${base}"/>
-      <text class="rot marco-rot" x="${x}" y="8" text-anchor="middle">mudança de método</text>
-    </g>`;
-  })() : "";
+  /* Marcas discretas das mudanças de método: uma linha tracejada na fronteira do
+     período em que cada uma entrou. Não se desenham fora do que está à vista nem
+     no primeiro ponto, onde não separariam nada. Marcos que caiam no mesmo
+     período — por agregação a semana ou mês — desenham-se uma vez só, com as
+     notas juntas: duas riscas no mesmo sítio não se distinguiriam. */
+  const marco = (() => {
+    const porIndice = new Map();
+    MARCOS.forEach(m => {
+      const i = pontos.findIndex(p => p.rotulo === chaveDoPeriodo(m.data));
+      if(i > 0) porIndice.set(i, [...(porIndice.get(i) || []), m]);
+    });
+    const indices = [...porIndice.keys()].sort((a, b) => a - b);
+    return indices.map((i, ordem) => {
+      const ms = porIndice.get(i);
+      const x = (esq + i * largura).toFixed(1);
+      const dataPt = d => `${d.slice(8)}/${d.slice(5, 7)}`;
+      const nota = ms.map(m => `${dataPt(m.data)} — ${m.nota}`).join("  ");
+      /* Marcas em dias seguidos ficam a poucos píxeis uma da outra: o rótulo
+         escreve-se uma vez só, senão os dois textos sobrepunham-se. */
+      const colada = ordem > 0 && i - indices[ordem - 1] <= 2;
+      return `<g class="marco"><title>${nota}</title>
+        <line x1="${x}" y1="10" x2="${x}" y2="${base}"/>
+        ${colada ? "" : `<text class="rot marco-rot" x="${x}" y="8"
+          text-anchor="middle">${ms[0].rotulo}</text>`}
+      </g>`;
+    }).join("");
+  })();
 
   /* O mesmo ritmo semanal da trajetória: uma risca ténue antes de cada
      segunda-feira, só em leitura diária. */
@@ -1766,10 +1789,10 @@ function blocoTempestades(linhas){
         </div>` : ""}
       <p class="nota">Dias em que uma área teve um volume de notícias muito acima do habitual —
         mediana dos 28 dias anteriores à mesma hora, mais dois desvios robustos.
-        Entre 17/08/2026 e 16/09/2026 — o tempo que a base leva a renovar-se depois da
-        mudança de método de leitura —, tanto o dia como a base são contados apenas nas
-        publicações cuja leitura não mudou. Os picos deste período medem-se assim num
-        subconjunto do corpus, mas comparam o comparável: um pico é um pico.
+        Depois de uma mudança de método de leitura — as marcas assinaladas no gráfico de
+        volume —, tanto o dia como a base passam a ser contados apenas nas publicações
+        cuja leitura não mudou, até a base se renovar por inteiro. Os picos desse período
+        medem-se assim num subconjunto do corpus, mas comparam o comparável.
         O número à esquerda é quantas vezes o dia esteve acima da mediana da área —
         o seu volume habitual —, e é por ele que a lista está ordenada: o maior
         primeiro, e não o mais recente. Mede-se contra a mediana e não contra o
@@ -2055,19 +2078,27 @@ function desenhar(){
       <h2>Volume ao longo do tempo <span class="h2-foco">· ${linhas.length}
         ${linhas.length === 1 ? "dia" : "dias"}, por ${agregNome()}</span></h2>
       ${barrasEmpilhadas(pontos)}
-      ${MARCO_FONTES && linhas.length && linhas[0].data < MARCO_FONTES
-          && linhas[linhas.length - 1].data >= MARCO_FONTES ? `
-        <p class="marco-legenda"><span class="marco-risca"></span>
-          <span><strong>19/08/2026 — mudança de método de leitura.</strong>
-          Até 16 de agosto havia vinte e cinco publicações configuradas que não
-          chegavam a ser lidas — Expresso, SIC, Jornal de Notícias, Diário de Notícias,
-          TSF e Lusa entre elas — e, nas que se liam, os feeds mais curtos mostravam
-          menos notícias do que as publicadas entre duas recolhas, perdendo-se as mais
-          antigas. Corrigido isso, <strong>o mesmo dia noticioso passa a dar mais
-          notícias contadas</strong>: a diferença entre os dois lados desta marca é de
-          medição, não de atualidade. Os <em>picos noticiosos</em> não são afetados —
-          durante a transição são medidos apenas nas publicações cuja leitura não
-          mudou.</span></p>` : ""}
+      ${(() => {
+        /* A legenda só aparece se alguma marca estiver à vista, e diz o essencial
+           sem repetir o detalhe que o rato já dá: o que mudou foi a leitura, não
+           a atualidade. */
+        if(!linhas.length) return "";
+        const visiveis = MARCOS.filter(m => m.data > linhas[0].data
+          && m.data <= linhas[linhas.length - 1].data);
+        if(!visiveis.length) return "";
+        const dataPt = d => `${d.slice(8)}/${d.slice(5, 7)}/${d.slice(0, 4)}`;
+        return `<p class="marco-legenda"><span class="marco-risca"></span>
+          <span><strong>${visiveis.length === 1
+            ? `${dataPt(visiveis[0].data)} — mudança de método de leitura.`
+            : `${visiveis.map(m => dataPt(m.data)).join(" e ")} — mudanças de método de leitura.`}</strong>
+          Nestas datas o radar passou a ler mais publicações e a ler mais fundo em cada
+          uma. O mesmo dia noticioso passa por isso a dar mais notícias contadas: a
+          diferença entre os dois lados ${visiveis.length === 1 ? "desta marca" : "destas marcas"}
+          é de <strong>medição, não de atualidade</strong>. Os <em>picos noticiosos</em>
+          não são afetados — durante a transição são medidos apenas nas publicações cuja
+          leitura não mudou. Passe o cursor sobre ${visiveis.length === 1 ? "a marca" : "cada marca"}
+          para saber o que mudou.</span></p>`;
+      })()}
       ${(() => {
         /* Escolhido um período, a legenda passa a ser desse período — é o que se
            está a olhar — e diz no princípio a que período se refere, para não
