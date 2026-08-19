@@ -166,6 +166,9 @@ main{padding:1.6rem 0 3rem}
 .eixo{stroke:var(--borda);stroke-width:1}
 .rot{font-size:9px;fill:var(--texto-ligeiro);font-family:var(--fonte)}
 .grade{stroke:var(--borda);stroke-width:1;stroke-dasharray:3 4}
+/* Divisória de semana: presente o suficiente para dar ritmo, discreta o
+   suficiente para não competir com as barras. */
+.sem{stroke:var(--borda);stroke-width:1;opacity:.85}
 /* Marca do alargamento das fontes: presente, mas sem competir com os dados */
 .marco line{stroke:var(--dourado);stroke-width:1.2;stroke-dasharray:2 5;opacity:.75}
 .marco-rot{fill:var(--dourado);font-size:8px;font-weight:600;letter-spacing:.02em}
@@ -862,6 +865,12 @@ function agregNome(plural){
                 : (NOME_AGREG[agregacao] || agregacao);
 }
 
+/* «último dia», «última semana», «último mês» — a semana é a única feminina, e
+   sem isto lia-se «último semana do período». */
+function ultimoAgreg(){
+  return agregacao === "semana" ? "última semana" : "último " + agregNome();
+}
+
 function chaveDoPeriodo(dataISO, modo = agregacao){
   if(modo === "dia") return dataISO;
   if(modo === "mes") return dataISO.slice(0, 7);
@@ -1113,8 +1122,21 @@ function barrasEmpilhadas(pontos){
     </g>`;
   })() : "";
 
+  /* O mesmo ritmo semanal da trajetória: uma risca ténue antes de cada
+     segunda-feira, só em leitura diária. */
+  const semanas = agregacao === "dia" && pontos.length > 2
+    ? pontos.map((p, i) => {
+        if(!i) return "";
+        const d0 = new Date(p.rotulo + "T00:00:00");
+        if(isNaN(d0) || d0.getDay() !== 1) return "";
+        const x = (esq + i * largura).toFixed(1);
+        return `<line class="sem" x1="${x}" y1="10" x2="${x}" y2="${base}"/>`;
+      }).join("")
+    : "";
+
   return `<svg class="grafico" id="graficoTempo" viewBox="0 0 ${L} ${A}">
     ${niveis}
+    ${semanas}
     <line class="eixo" x1="${esq}" y1="${base}" x2="${L}" y2="${base}"/>
     ${barras}${etiquetas}${marco}
   </svg>`;
@@ -1135,7 +1157,8 @@ function corDoTom(pct){
   return "#9aa1a8";
 }
 
-function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null){
+function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null,
+                chaves = null){
   if(valores.length < 2) return "";
   /* As duas linhas partilham a escala, senão a de Portugal parecia maior do que
      é. A escala é a do total, que é sempre o maior dos dois. */
@@ -1202,7 +1225,25 @@ function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null){
     }
   }
 
+  /* Divisórias de semana. Em leitura diária, dezoito pontos seguidos não dizem
+     onde acaba uma semana e começa a outra, e é assim que se lê uma série de
+     notícias: por semanas. Uma risca ténue antes de cada segunda-feira dá esse
+     ritmo sem competir com a linha. Nas outras agregações não se desenha —
+     cada ponto já é uma semana ou um mês. */
+  let semanas = "";
+  if(chaves && agregacao === "dia" && chaves.length > 2){
+    semanas = chaves.map((k, i) => {
+      if(!i) return "";
+      const d0 = new Date(k + "T00:00:00");
+      if(d0.getDay() !== 1) return "";          // 1 = segunda-feira
+      const x = ((i - 0.5) * passo).toFixed(1);
+      return `<line x1="${x}" y1="0" x2="${x}" y2="34" stroke="var(--borda)"
+                stroke-width="1" vector-effect="non-scaling-stroke" opacity=".7"/>`;
+    }).join("");
+  }
+
   return `<svg viewBox="0 0 100 ${faixa ? 45 : 34}" preserveAspectRatio="none">
+    ${semanas}
     <path d="${d} L100,34 L0,34 Z" fill="${corLinha}" opacity=".10"/>
     <path d="${d}" fill="none" stroke="${corLinha}" stroke-width="1.6"
           vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
@@ -1927,6 +1968,10 @@ function desenhar(){
   const poucos = linhas.length < 10;
   const hojeEmCurso = linhas.length &&
     linhas[linhas.length - 1].data === new Date().toISOString().slice(0, 10);
+  /* Atalhos usados pela trajetória, que termina no último período fechado. */
+  const emCurso = hojeEmCurso;
+  const dataCurta = k => (k || "").length === 10
+    ? `${k.slice(8)}/${k.slice(5, 7)}` : (k || "");
 
   const rotuloFoco = diaEscolhido
     ? `<button class="limpar" id="limparDia">${descreverPeriodo(diaEscolhido)} · ver o período inteiro ✕</button>`
@@ -2057,8 +2102,20 @@ function desenhar(){
             (d.areas[nome] && d.areas[nome].origens
               ? d.areas[nome].origens.nacionais : 0) || 0);
           const iM = diaEscolhido ? pares.findIndex(([c]) => c === diaEscolhido) : -1;
-          const valor = iM >= 0 ? vals[iM] : (vals[vals.length - 1] || 0);
-          const media = vals.reduce((x, y) => x + y, 0) / (vals.length || 1);
+          /* O último ponto da série é o dia em curso: às duas da manhã tem duas
+             horas de notícias, e mostrá-lo como «último dia» dava a impressão de
+             um colapso da área. Sem período escolhido, a leitura passa a ser a do
+             último período FECHADO — e a linha termina aí, para não descer a pique
+             no fim por razão nenhuma. O dia de hoje continua no gráfico de volume,
+             que o assinala como ainda a decorrer. */
+          const fecho = (emCurso && agregacao === "dia" && vals.length > 1)
+            ? vals.length - 1 : vals.length;
+          const valsMostra = vals.slice(0, fecho);
+          const valsPTMostra = valsPT.slice(0, fecho);
+          const chavesMostra = pares.map(([k]) => k).slice(0, fecho);
+          const iMostra = iM >= 0 && iM < fecho ? iM : -1;
+          const valor = iM >= 0 ? vals[iM] : (valsMostra[valsMostra.length - 1] || 0);
+          const media = valsMostra.reduce((x, y) => x + y, 0) / (valsMostra.length || 1);
           const desvio = media ? Math.round((valor - media) / media * 100) : 0;
           return `<div class="mini-cx" style="--cor:${cor(g)}">
             <h3>${nome}</h3>
@@ -2066,8 +2123,10 @@ function desenhar(){
             <small class="mini-rot">${iM >= 0
               ? `${descreverPeriodo(diaEscolhido)} · ${desvio >= 0 ? "+" : ""}${desvio}%
                  face à média do período`
-              : `último ${agregNome()} do período`}</small>
-            ${faisca(vals, cor(g), iM, null, valsPT)}
+              : (emCurso && agregacao === "dia"
+                 ? `${dataCurta(chavesMostra[chavesMostra.length - 1])} · último dia completo`
+                 : `${ultimoAgreg()} do período`)}</small>
+            ${faisca(valsMostra, cor(g), iMostra, null, valsPTMostra, chavesMostra)}
           </div>`;
         }).join("")}
       </div>
