@@ -1,9 +1,9 @@
 {
- "atualizado": "2026-08-19 00:53",
+ "atualizado": "2026-08-19 01:13",
  "dia": "2026-08-19",
- "corte": "00:53",
+ "corte": "01:13",
  "dias_base": 14,
- "regra": "Tempestade quando a contagem do dia, até às 00:53, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). Em transição do alargamento das fontes de 2026-08-17: até 2026-09-14, hoje e a base contam apenas as 80 publicações que já marcavam antes do marco, para a comparação ser igual com igual.",
+ "regra": "Tempestade quando a contagem do dia, até às 01:13, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). Em transição do alargamento das fontes de 2026-08-17: até 2026-09-14, hoje e a base contam apenas as 80 publicações que já marcavam antes do marco, para a comparação ser igual com igual.",
  "transicao_fontes": {
   "marco": "2026-08-17",
   "fim": "2026-09-14",
@@ -54,11 +54,11 @@
   {
    "area": "Agricultura e Mar",
    "hoje": 1,
-   "mediana": 0,
-   "limiar": 8,
-   "excesso": 1,
+   "mediana": 0.0,
+   "limiar": 8.0,
+   "excesso": 1.0,
    "variacao_pct": null,
-   "dias_base": 13,
+   "dias_base": 14,
    "tempestade": false
   }
  ],
