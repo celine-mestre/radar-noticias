@@ -463,6 +463,10 @@ AZUL, CINZA = "2B5683", "F2F5F8"
 # por consulta — acima disso o Google escolhe por relevância e a cronologia
 # deixa de ser garantida; com oito recolhas diárias, nada se perde.
 # ---------------------------------------------------------------------------
+# Intervalo entre recolhas, em horas: serve para saber se um feed próprio
+# cobre ou não o tempo decorrido desde a passagem anterior.
+HORAS_ENTRE_RECOLHAS = 2
+
 VIA_GOOGLE = {
     # Bloqueiam IPs de centros de dados (403 comprovado em duas verificações)
     "Expresso", "SIC Notícias", "Jornal de Notícias", "TSF",
@@ -1143,6 +1147,35 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         if recurso:
             print("(direta sem resultado; via Google)", end=" ", flush=True)
 
+        # FEED TRUNCADO. Um feed próprio publica as últimas N notícias, e esse N
+        # varia muito: 700 no Notícias ao Minuto, 10 no Público. Com dez, e
+        # publicando o Público umas quarenta por dia (catorze na sua duas horas
+        # mais movimentada), a recolha seguinte chega e as mais antigas já
+        # saíram do feed — perdem-se sem deixar rasto.
+        #
+        # O sinal é a JANELA que o feed cobre: se o artigo mais antigo que ele
+        # traz é mais recente do que o intervalo entre recolhas, o feed não
+        # chega para as duas horas e há um buraco. Nesse caso completa-se com a
+        # pesquisa ao Google, que devolve até cem, e juntam-se os dois — o feed
+        # próprio continua a ser a fonte principal, o Google só tapa o buraco.
+        if not via_google and not recurso and itens and escreve_em_portugues(dominio):
+            datados = [i["data"] for i in itens if i["data"]]
+            if datados:
+                horas = (agora_lisboa() - min(datados)).total_seconds() / 3600
+                if horas < HORAS_ENTRE_RECOLHAS + 1:
+                    try:
+                        extra = extrair_itens(ler_feed(url_via_google(dominio)))
+                    except Exception:                          # noqa: BLE001
+                        extra = []
+                    conhecidos = {(i["titulo"] or "").lower() for i in itens}
+                    novos = [i for i in extra
+                             if (i["titulo"] or "").lower() not in conhecidos]
+                    if novos:
+                        itens = itens + novos
+                        recurso = "complemento"
+                        print(f"(feed cobre {horas:.1f}h; +{len(novos)} do Google)",
+                              end=" ", flush=True)
+
         lidos += len(itens)
         marcados = 0
         sem_endereco = 0
@@ -1192,7 +1225,9 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         relatorio.append({"fonte": nome_fonte, "dominio": dominio,
                           "origem": origem_da_lista, "pt": escreve_em_portugues(dominio),
                           "via": "google" if via_google else
-                                 ("google (recurso)" if recurso else "direta"),
+                                 ("google (recurso)" if recurso == "google"
+                                  else "direta + Google" if recurso == "complemento"
+                                  else "direta"),
                           "lidos": len(itens), "marcados": marcados, "erro": ""})
         if sem_endereco:
             sem_ligacao_por_fonte[nome_fonte] = sem_endereco
