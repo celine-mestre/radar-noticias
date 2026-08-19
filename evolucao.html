@@ -1907,14 +1907,42 @@ function blocoTempestades(linhas){
     a.area.localeCompare(b.area, "pt") || b.data.localeCompare(a.data);
   const CRITERIO = { data: porData, forca: porForca, area: porAreaNome };
   const ordenar = lista => lista.sort(CRITERIO[ordemPicos] || porData);
+  /* Sem corte aqui: quem corta é o noFocoTopo, logo abaixo, conforme o critério
+     de leitura escolhido. Este slice(0,12) fixo era o que fazia a lista por área
+     parar aos doze primeiros nomes do alfabeto. */
   const noFoco = diaEscolhido
     ? ordenar(dentro.filter(t => chaveDoPeriodo(t.data) === diaEscolhido))
-    : ordenar(dentro.slice()).slice(0, 12);
+    : ordenar(dentro.slice());
   /* Com um dia escolhido a lista era toda a do dia — o que basta para um dia,
      mas com agregação por mês o «período em foco» é um mês inteiro e podiam vir
      dezenas. O teto é o mesmo dos restantes; o que sobra cai no grupo recolhido
      por área, logo abaixo. */
-  const noFocoTopo = noFoco.slice(0, 12);
+  /* O CORTE segue o critério de leitura, senão a lista promete uma coisa e
+     mostra outra — em ordem cronológica, «os 12 mais fortes» são na verdade os
+     12 mais recentes, e os fortes de há três semanas ficavam escondidos sem
+     explicação.
+
+       · por data — corta-se no TEMPO, não no número: mostram-se todos os picos
+         dos últimos DIAS_EM_DESTAQUE dias e recolhem-se os anteriores. É a
+         leitura de quem quer saber o que houve nesta semana;
+       · por intensidade — os 12 maiores, que é o que a ordem promete;
+       · por área — nenhum corte: a organização já é o agrupamento, e cortar
+         deixaria áreas de fora sem razão nenhuma.  */
+  const DIAS_EM_DESTAQUE = 7;
+  const noFocoTopo = (() => {
+    if(ordemPicos === "forca") return noFoco.slice(0, 12);
+    if(ordemPicos === "area") return noFoco;
+    if(!noFoco.length) return noFoco;
+    const maisRecente = noFoco[0].data;
+    const corteData = new Date(maisRecente + "T00:00:00");
+    corteData.setDate(corteData.getDate() - (DIAS_EM_DESTAQUE - 1));
+    const limite = corteData.toISOString().slice(0, 10);
+    const recentes = noFoco.filter(t => t.data >= limite);
+    /* Num período muito curto pode não sobrar nada para recolher, e num muito
+       calmo os últimos sete dias podem não ter pico nenhum: nesse caso mostram-
+       se à mesma os mais recentes, para o quadro não abrir vazio. */
+    return recentes.length ? recentes : noFoco.slice(0, 5);
+  })();
   const chavesFoco = new Set(noFocoTopo.map(t => `${t.data}|${t.area}`));
   const resto = ordenar(dentro.filter(t => !chavesFoco.has(`${t.data}|${t.area}`)));
 
@@ -1978,13 +2006,21 @@ function blocoTempestades(linhas){
       ${porArea.size ? `
         <div class="tp-mais">
           <p class="nota" style="margin:.8rem 0 .4rem">
-            ${diaEscolhido
-              ? `Mais ${resto.length} ${resto.length === 1 ? "pico" : "picos"} noutros
-                 ${agregNome(true).toLowerCase()} deste período, em ${porArea.size}
-                 ${porArea.size === 1 ? "área" : "áreas"} — recolhidos por área:`
-              : `A lista acima mostra os ${12} mais fortes. Há mais ${resto.length}
-                 ${resto.length === 1 ? "pico" : "picos"} neste período, em ${porArea.size}
-                 ${porArea.size === 1 ? "área" : "áreas"} — recolhidos por área:`}</p>
+            ${(() => {
+              const q = `${resto.length} ${resto.length === 1 ? "pico" : "picos"}`;
+              const emAreas = `${porArea.size} ${porArea.size === 1 ? "área" : "áreas"}`;
+              if(diaEscolhido)
+                return `Mais ${q} noutros ${agregNome(true).toLowerCase()} deste período,
+                        em ${emAreas} — recolhidos por área:`;
+              if(ordemPicos === "forca")
+                return `A lista acima mostra os doze mais intensos. Os outros ${q}
+                        do período, em ${emAreas}, ficam recolhidos por área:`;
+              if(ordemPicos === "area")
+                return `Mais ${q} em ${emAreas}:`;
+              return `A lista acima mostra os picos dos últimos ${DIAS_EM_DESTAQUE} dias
+                      com registo. Antes disso houve mais ${q}, em ${emAreas} —
+                      recolhidos por área:`;
+            })()}</p>
           ${[...porArea.entries()]
             .sort((a, b) => forca(b[1][0]) - forca(a[1][0]))
             .map(([area, ts], i) => `
