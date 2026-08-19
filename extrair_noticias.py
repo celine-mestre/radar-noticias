@@ -1091,13 +1091,17 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
     # já tivesse sido marcado por uma palavra-chave de área.
     todos = {}
     lista = list(FONTES)
+    origens_lista = {n: "nacionais" for n, _, _ in FONTES}
     if lusofonas:
         lista += FONTES_LUSOFONAS
+        origens_lista.update({n: "lusofonas" for n, _, _ in FONTES_LUSOFONAS})
     if internacionais:
         lista += FONTES_INTERNACIONAIS
+        origens_lista.update({n: "internacionais" for n, _, _ in FONTES_INTERNACIONAIS})
 
     for i, (nome_fonte, dominio, url) in enumerate(lista, 1):
         via_google = nome_fonte in VIA_GOOGLE
+        origem_da_lista = origens_lista.get(nome_fonte, "nacionais")
         print(f"[{i}/{len(lista)}] {nome_fonte}"
               f"{' (via Google Notícias)' if via_google else ''}…",
               end=" ", flush=True)
@@ -1132,6 +1136,7 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
             print(f"falhou ({falha})")
             falhas.append((nome_fonte, falha))
             relatorio.append({"fonte": nome_fonte, "dominio": dominio,
+                              "origem": origem_da_lista, "pt": escreve_em_portugues(dominio),
                               "via": "google" if via_google else "direta",
                               "lidos": 0, "marcados": 0, "erro": falha[:160]})
             continue
@@ -1185,6 +1190,7 @@ def recolher_fontes(alvo, dias=7, pausa=0.4, internacionais=True, lusofonas=True
         if itens:
             dominios_lidos.add(dominio.lower())
         relatorio.append({"fonte": nome_fonte, "dominio": dominio,
+                          "origem": origem_da_lista, "pt": escreve_em_portugues(dominio),
                           "via": "google" if via_google else
                                  ("google (recurso)" if recurso else "direta"),
                           "lidos": len(itens), "marcados": marcados, "erro": ""})

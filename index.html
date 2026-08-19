@@ -557,6 +557,21 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .man-ficha b{display:block;font-size:.8rem;font-weight:600;color:var(--texto);margin-bottom:.1rem}
 .man-ficha span{font-size:.78rem;color:var(--texto-ligeiro);line-height:1.45}
 
+/* Lista das fontes no manual */
+.fo-grupo{margin:.9rem 0}
+.fo-grupo h5{margin:0 0 .4rem;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--texto-suave);font-weight:600}
+.fo-grupo h5 span{font-weight:400;color:var(--texto-ligeiro);text-transform:none;letter-spacing:0}
+.fo-lista{list-style:none;margin:0;padding:0;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.15rem .9rem}
+.fo-lista li{display:flex;align-items:baseline;gap:.4rem;font-size:.79rem;
+  padding:.2rem 0;border-bottom:1px solid var(--borda)}
+.fo-nome{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--texto)}
+.fo-n{color:var(--texto-ligeiro);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.74rem}
+.fo-mal{color:var(--vermelho);font-size:.72rem;white-space:nowrap}
+.fo-eti{font-size:.66rem;color:var(--texto-ligeiro);border:1px solid var(--borda);
+  border-radius:20px;padding:.02rem .35rem;white-space:nowrap}
+@media(max-width:700px){.fo-lista{grid-template-columns:1fr}}
 .man-aviso{margin-top:.7rem;padding:.55rem .8rem;border-radius:0 var(--raio-s) var(--raio-s) 0;
   border-left:3px solid color-mix(in srgb, var(--cor) 55%, transparent);
   background:color-mix(in srgb, var(--cor) 5%, transparent);font-size:.83rem}
@@ -2333,7 +2348,31 @@ const MANUAL = [
     tempo: volume por período e por origem, trajetória de cada área e expressões que mais
     rendem.</p>
     <p class="man-aviso">Abrindo o painel às 16h, vê o que foi recolhido às 15h07. A hora da
-    recolha está sempre à vista, ao lado do título das áreas.</p>` }
+    recolha está sempre à vista, ao lado do título das áreas.</p>` },
+
+  { n:"10", titulo:"Quais são as fontes", cor:"var(--dourado)", icone:"lista", corpo:`
+    <p>A lista abaixo é a das publicações subscritas, tal como a última recolha as leu —
+    não é uma lista escrita à mão que possa ficar desatualizada. Para cada uma diz-se
+    quantos artigos deu nessa recolha e se é classificada por área.</p>
+    <div id="manFontes"><p class="man-aviso">A carregar a lista das fontes…</p></div>
+    <p><strong>Porque é que algumas ficam de fora.</strong> Uma publicação pode estar na
+    lista e não aparecer nos quadros por três razões, todas visíveis acima:</p>
+    <dl>
+      <dt>Escreve noutra língua</dt><dd>As palavras-chave são portuguesas. Aplicá-las a
+        texto inglês, espanhol ou francês daria coincidências falsas — «gaza» num texto
+        espanhol, «PSP» num inglês. Estas publicações são lidas e entram na pesquisa por
+        termo, mas não são classificadas por área.</dd>
+      <dt>Não publicou nada da área</dt><dd>Uma publicação especializada só marca quando
+        tem matéria da sua área. Não aparecer num dia não quer dizer que tenha deixado de
+        ser lida.</dd>
+      <dt>Não respondeu à recolha</dt><dd>Feeds descontinuados, endereços mudados ou
+        servidores que recusam pedidos automáticos. Quando isso acontece, tenta-se a
+        segunda via de leitura; falhando as duas, a publicação fica assinalada acima com o
+        motivo. As que deixam de responder de forma permanente saem da lista, para não
+        inflacionarem a contagem das fontes.</dd>
+    </dl>
+    <p class="man-aviso">A lista é o que se subscreve, não o que existe: nenhuma seleção
+    de fontes cobre tudo o que foi publicado. O que fica de fora está no capítulo 7.</p>` }
 ];
 
 
@@ -2346,7 +2385,8 @@ const ICONES_MANUAL = {
   grafico:'<path d="M3 3v18h18"/><path d="M7 15V9M12 15V6M17 15v-4"/>',
   aviso:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
   engrenagem:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/>',
-  chave:'<path d="M20.6 3.4a5.5 5.5 0 0 1-7.1 8.3L11 14.2 8.8 12 3 17.8V21h3.2l8.6-8.6"/><circle cx="17" cy="7" r="1.2"/>'
+  chave:'<path d="M20.6 3.4a5.5 5.5 0 0 1-7.1 8.3L11 14.2 8.8 12 3 17.8V21h3.2l8.6-8.6"/><circle cx="17" cy="7" r="1.2"/>',
+  lista:'<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1.2"/><circle cx="3.5" cy="12" r="1.2"/><circle cx="3.5" cy="18" r="1.2"/>'
 };
 
 /* =========================================================================
@@ -2922,6 +2962,66 @@ function enviarSubscricao(){
   });
 }
 
+/* A lista das fontes no manual vem do relatório que CADA recolha escreve, e
+   não de uma cópia da lista dentro do painel. Duas razões: uma segunda cópia
+   dessincroniza-se sempre (já aconteceu com a lista de áreas, em quatro
+   ficheiros diferentes), e o que interessa a quem lê não é o que está
+   configurado — é o que a última recolha conseguiu mesmo ler. */
+async function preencherFontes(){
+  const alvo = $("#manFontes");
+  if(!alvo || alvo.dataset.pronto) return;
+  let dados = null;
+  for(const endereco of enderecosDados()){
+    try{
+      const r = await fetch(endereco.replace("noticias.json", "fontes-recolha.json"),
+                            { cache:"no-store" });
+      if(!r.ok) throw new Error("estado " + r.status);
+      dados = await r.json();
+      break;
+    }catch(e){ /* tenta o endereço seguinte */ }
+  }
+  if(!dados || !Array.isArray(dados.detalhe)){
+    alvo.innerHTML = `<p class="man-aviso">A lista das fontes fica disponível depois da
+      próxima recolha.</p>`;
+    return;
+  }
+  alvo.dataset.pronto = "1";
+
+  const ROTULO = { nacionais:"Portugal", lusofonas:"Lusofonia",
+                   internacionais:"Internacional" };
+  // Os relatórios escritos antes desta versão não trazem a origem. Nesse caso
+  // mostra-se uma lista única, em vez de arrumar tudo em «Portugal» — que seria
+  // falso. Ao fim de uma recolha, a repartição aparece sozinha.
+  const temOrigem = dados.detalhe.some(f => f.origem);
+  const porOrigem = temOrigem
+    ? { nacionais:[], lusofonas:[], internacionais:[] }
+    : { todas:[] };
+  if(!temOrigem) ROTULO.todas = "Publicações subscritas";
+  dados.detalhe.forEach(f => (porOrigem[temOrigem ? f.origem : "todas"]
+    || porOrigem[temOrigem ? "nacionais" : "todas"]).push(f));
+
+  const linha = f => {
+    const estado = f.erro
+      ? `<span class="fo-mal" title="${esc(f.erro)}">não respondeu</span>`
+      : !f.lidos
+        ? `<span class="fo-mal">sem artigos nesta recolha</span>`
+        : `<span class="fo-n">${f.lidos} ${f.lidos === 1 ? "artigo" : "artigos"}</span>`;
+    const lingua = f.pt ? "" : `<span class="fo-eti">outra língua</span>`;
+    const via = f.via.startsWith("google") ? `<span class="fo-eti">via Google</span>` : "";
+    return `<li><span class="fo-nome">${esc(f.fonte)}</span>${lingua}${via}${estado}</li>`;
+  };
+
+  alvo.innerHTML = Object.entries(porOrigem).filter(([, v]) => v.length).map(([o, v]) => `
+    <div class="fo-grupo">
+      <h5>${ROTULO[o]} <span>${v.length} ${v.length === 1 ? "publicação" : "publicações"}</span></h5>
+      <ul class="fo-lista">${v.slice().sort((a, b) =>
+        a.fonte.localeCompare(b.fonte, "pt")).map(linha).join("")}</ul>
+    </div>`).join("")
+    + `<p class="man-aviso">Estado da recolha de ${esc(dados.recolhido || "—")}.
+       ${dados.sem_artigos ? `${dados.sem_artigos} ${dados.sem_artigos === 1
+         ? "publicação não deu artigos" : "publicações não deram artigos"} nessa passagem.` : ""}</p>`;
+}
+
 function abrirManual(n){
   $("#modal").innerHTML = `
     <div class="modal-cab nota-cab">
@@ -2957,6 +3057,7 @@ function abrirManual(n){
     </div>`;
   $("#veu").classList.add("aberto");
   marcarCapitulo(n || "1");
+  preencherFontes();
   if(n && n !== "1") irParaCapitulo(n);
 
   /* O separador ativo acompanha a leitura */
