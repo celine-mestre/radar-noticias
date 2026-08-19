@@ -290,6 +290,11 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
    as linhas e as barras alinham à esquerda e à direita. */
 .sa-lista{display:grid;grid-template-columns:minmax(90px,1.1fr) 2fr auto;
   gap:.35rem .6rem;align-items:center;font-size:.8rem}
+/* A barra do conjunto é a referência: fica destacada e um pouco mais alta, para
+   se distinguir das linhas dos assuntos que se comparam com ela. */
+.sa-conjunto{margin-bottom:.9rem;padding-bottom:.7rem;border-bottom:1px solid var(--borda)}
+.sa-conjunto .sa-rot{font-weight:600}
+.sa-conjunto .sa-barra{height:18px}
 .sa-linha{display:contents}
 .sa-rot{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--texto)}
 .sa-barra{display:flex;height:14px;border-radius:4px;overflow:hidden;background:var(--superficie-alt)}
@@ -454,8 +459,11 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .passo-corpo > p{font-size:.84rem;color:var(--texto-suave);margin-bottom:.8rem;line-height:1.5}
 .passo-estado{font-size:.86rem;color:var(--texto-suave);margin:.9rem 0 0}
 .passo-accoes{display:flex;gap:.5rem;flex-wrap:wrap}
+/* O [hidden] tem de vir DEPOIS e com peso, senão o display:flex desta regra
+   ganha-lhe e a caixa aparece aberta apesar do atributo — foi o que aconteceu. */
 .sin-teto{display:flex;gap:.85rem;align-items:flex-start;margin:.6rem 0 0;padding:.85rem 1rem;
   border-radius:var(--raio-s);background:rgba(190,156,84,.09);border-left:3px solid var(--dourado)}
+.sin-teto[hidden]{display:none}
 /* Cabeçalho da secção dos números, com o «i» que abre a explicação */
 .sin-cab{display:flex;align-items:center;margin:1.2rem 0 .2rem}
 .sin-cab h4{margin:0;font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;
@@ -493,6 +501,9 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 
 .sin-cobertura{margin-top:.3rem}
 .sin-linha{display:flex;align-items:center;gap:.7rem;padding:.24rem 0;font-size:.82rem}
+/* Sem notícia nenhuma, a linha inteira esbate-se: a leitura é «este termo não
+   puxou cobertura», e não «puxou pouca». */
+.sin-linha.sin-zero{opacity:.55}
 .sin-rot{width:38%;color:var(--texto-suave);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sin-barra{flex:1;height:8px;border-radius:99px;background:var(--superficie-alt);
   border:1px solid var(--borda);overflow:hidden}
@@ -2563,12 +2574,19 @@ function blocoSentimentoArea(area, corArea){
   return `
       <div class="bloco">
         <h4>Tom da cobertura <span style="font-weight:400;opacity:.7">(em validação · só comunicação social nacional)</span></h4>
-        <p class="sin-nota" style="margin:0 0 .7rem">
+        <p class="sin-nota" style="margin:0 0 .5rem">
           Nesta consulta, ${totalGeral} das ${nacionais.length} notícias nacionais estão avaliadas:
           <b style="color:var(--verde)">${geral.positivo} positivas</b>,
           <b>${geral.neutro} neutras</b>,
           <b style="color:var(--vermelho,#B23A3A)">${geral.negativo} negativas</b>
           — ${pct(pctNegGeral)} de tom negativo, que é a referência abaixo.</p>
+
+        <!-- O conjunto merece a mesma barra que as suas partes: sem ela, a
+             referência ficava só em texto e não havia como comparar de relance
+             um assunto com o todo. -->
+        <div class="sa-lista sa-conjunto">${linha({
+          chave: "Conjunto da área", n: totalGeral, ...geral,
+          pctNeg: pctNegGeral })}</div>
 
         ${assuntos.length ? `
         <h5 class="sa-sub">Por assunto</h5>
@@ -2794,7 +2812,7 @@ function corpoSintese(){
       </div>
       <div class="sin-teto" id="notaNumeros" hidden>
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <p><strong>O que estes números medem.</strong> As notícias vêm dos feeds das publicações subscritas, marcadas pelas palavras-chave da área. Medem o que essas publicações noticiaram no período, não o total do que foi noticiado. Como nenhuma área é truncada e o método é igual para todas, a comparação entre áreas é legítima.</p>
+        <p><strong>O que estes números medem.</strong> As notícias vêm dos feeds das publicações subscritas, marcadas pelas palavras-chave da área. Medem o que essas publicações noticiaram no período, e não o total do que foi noticiado no país. <strong>Comparar áreas é legítimo</strong> porque todas passam pelo mesmo crivo: as mesmas publicações, o mesmo período e o mesmo modo de marcação — e nenhuma área tem teto de notícias que a corte antes das outras. Uma área com o dobro das notícias de outra foi, de facto, o dobro noticiada nestas publicações. O que os números <strong>não</strong> permitem é ler uma área como percentagem de tudo o que se publicou em Portugal, nem comparar dias anteriores a 19 de agosto de 2026 com dias posteriores, altura em que o radar passou a ler mais publicações e a ler mais fundo em cada uma.</p>
       </div>
 
       <div class="sin-kpis">
@@ -2824,12 +2842,19 @@ function corpoSintese(){
       <div class="bloco">
         <h4>Cobertura das palavras-chave da área</h4>
         <div class="sin-cobertura">${cobre.map(c => `
-          <div class="sin-linha">
+          <div class="sin-linha${c.n ? "" : " sin-zero"}">
             <span class="sin-rot" title="${esc(c.palavra)}">${esc(c.palavra)}</span>
-            <span class="sin-barra"><i style="width:${Math.max(2, Math.round(c.n / recolha.length * 100))}%;background:${corA}"></i></span>
+            <span class="sin-barra">${c.n
+              ? /* A largura mínima existe para uma notícia não desaparecer numa
+                   barra de meio pixel — mas aplicava-se também ao zero, e uma
+                   expressão sem notícia nenhuma ficava com o mesmo verde de uma
+                   com uma. O zero passa a não ter barra: fica a calha vazia,
+                   que é a leitura certa. */
+                `<i style="width:${Math.max(2, Math.round(c.n / recolha.length * 100))}%;background:${corA}"></i>`
+              : ""}</span>
             <span class="sin-n">${c.n}</span>
           </div>`).join("")}</div>
-        <p class="sin-nota">Quantas das notícias recolhidas contêm cada palavra-chave no título. Palavras a zero indicam termos que não estão a puxar cobertura no período escolhido.</p>
+        <p class="sin-nota">Quantas das notícias recolhidas contêm cada palavra-chave no título. A barra é proporcional ao total da consulta; as expressões a zero ficam sem barra e indicam termos que não estão a puxar cobertura no período escolhido.</p>
       </div>
 
       ${blocoSentimentoArea(a, corA)}
