@@ -1414,6 +1414,73 @@ function tomPorAreaPeriodo(linhas){
   return m;
 }
 
+/* Matriz do tom: áreas em linha, períodos em coluna, e em cada célula a
+   percentagem de notícias negativas. É a leitura que a linha de cada cartão não
+   dá — comparar áreas entre si no mesmo período, e ver de relance onde a
+   cobertura azedou. Célula vazia quer dizer avaliações insuficientes, e não
+   ausência de notícias: são coisas diferentes e o painel não as deve confundir.
+
+   Esta matriz esteve durante semanas no Excel e no manual sem existir no ecrã —
+   o quadro foi escrito, o CSS ficou, e a chamada nunca chegou a ser feita. */
+/* Cabeçalho de coluna curto: numa matriz com vinte colunas não cabe
+   «semana de 10/08 a 16/08». O título completo fica no atributo. */
+function rotuloCurto(k){
+  if(agregacao === "mes") return k.slice(5, 7) + "/" + k.slice(2, 4);
+  return k.slice(8) + "/" + k.slice(5, 7);
+}
+
+function blocoMatrizTom(linhas, pares, areas){
+  if(!SENTIMENTO.length || !linhas.length) return "";
+  if(origem === "lusofonas" || origem === "internacionais") return "";
+  const tons = tomPorAreaPeriodo(linhas);
+  if(!Object.keys(tons).length) return "";
+
+  const chaves = pares.map(([k]) => k);
+  const nomes = areas.map(([n]) => n);
+  /* Só entram áreas com ao menos uma célula desenhável: uma linha inteira de
+     traços não informa e empurra o resto para fora do ecrã. */
+  const comDados = nomes.filter(n => chaves.some(k => {
+    const c = tons[n + "|" + k];
+    return c && c.av >= MINIMO_AVALIADAS;
+  }));
+  if(!comDados.length) return "";
+
+  const celula = (n, k) => {
+    const c = tons[n + "|" + k];
+    if(!c || c.av < MINIMO_AVALIADAS){
+      return `<td class="mtz-vazia" title="${descreverPeriodo(k)}: ${
+        c ? `só ${c.av} avaliadas` : "sem avaliações"} — o mínimo são ${MINIMO_AVALIADAS}">·</td>`;
+    }
+    const p = Math.round(100 * c.negativo / c.av);
+    /* A intensidade da cor acompanha a distância aos 50%: quanto mais longe do
+       equilíbrio, mais carregada — para os dois lados. */
+    const i = Math.min(1, Math.abs(p - 50) / 40).toFixed(1);
+    return `<td style="--i:${i};background:color-mix(in srgb, ${corDoTom(p)} calc(var(--i) * 70%), transparent)"
+      title="${n} · ${descreverPeriodo(k)}: ${p}% negativas de ${c.av} avaliadas">${p}</td>`;
+  };
+
+  return `
+    <div class="bloco">
+      <h2>Tom por área e período <span class="h2-foco">· % de notícias negativas</span></h2>
+      <div class="mtz-rolo">
+        <table class="mtz">
+          <tr><th></th>${chaves.map(k =>
+            `<th title="${descreverPeriodo(k)}">${rotuloCurto(k)}</th>`).join("")}</tr>
+          ${comDados.map(n => `<tr>
+            <th class="mtz-lin" title="${n}">${n}</th>
+            ${chaves.map(k => celula(n, k)).join("")}
+          </tr>`).join("")}
+        </table>
+      </div>
+      <p class="nota">Percentagem de notícias negativas em cada área e período, sobre a
+        comunicação social nacional avaliada pelo Amália, em validação. Verde abaixo de
+        40%, vermelho acima de 60%, cinzento no meio; a cor carrega à medida que se
+        afasta do equilíbrio. Um ponto quer dizer que esse período não chegou a
+        ${MINIMO_AVALIADAS} notícias avaliadas nessa área — não que não tenha havido
+        notícias. Áreas sem nenhuma célula desenhável não entram na matriz.</p>
+    </div>`;
+}
+
 /* ═══ CRUZAMENTOS ═══════════════════════════════════════════════════════════
    Até aqui cada quadro respondia a uma pergunta de cada vez: quanto, por área,
    com que palavras, com que tom. O que faltava era cruzar — comparar duas áreas,
@@ -2193,21 +2260,22 @@ function desenhar(){
           && m.data <= linhas[linhas.length - 1].data);
         if(!visiveis.length) return "";
         const dataPt = d => `${d.slice(8)}/${d.slice(5, 7)}/${d.slice(0, 4)}`;
+        /* No corpo fica só a chave de leitura — uma linha, ao lado da risca. O
+           resto vai para as notas do quadro, que o «i» do título recolhe: um
+           parágrafo de oito linhas debaixo do gráfico afastava do ecrã aquilo
+           que ele serve para explicar. */
+        const chave = visiveis.map(m =>
+          `<strong>${dataPt(m.data)}</strong> ${m.curto}`).join(" · ");
+        const detalhe = visiveis.map(m =>
+          `<strong>${dataPt(m.data)}:</strong> ${m.nota}`).join(" ");
         return `<p class="marco-legenda"><span class="marco-risca"></span>
-          <span><strong>${visiveis.length === 1
-            ? `${dataPt(visiveis[0].data)} — mudança de método de leitura.`
-            : "Mudanças de método de leitura."}</strong>
-          ${visiveis.map(m => `<strong>${dataPt(m.data)}:</strong> ${m.curto}`).join(" · ")}.
-          No primeiro caso entraram publicações que estavam na lista mas não chegavam a
-          ser recolhidas — umas por correção do endereço do feed, outras por passarem a
-          ser lidas pelo Google Notícias, a via usada quando um órgão não disponibiliza
-          feed acessível. No segundo, as publicações cujo feed mostra poucas notícias de
-          cada vez deixaram de perder as mais antigas entre recolhas. Em ambos, o mesmo
-          dia noticioso passa a dar mais notícias contadas: a diferença entre os dois
-          lados ${visiveis.length === 1 ? "desta marca" : "destas marcas"} é de
-          <strong>medição, não de atualidade</strong>. Os <em>picos noticiosos</em> não
-          são afetados — durante a transição são medidos apenas nas publicações cuja
-          leitura não mudou.</span></p>`;
+          <span>${chave} — mudanças no método de leitura, não na atualidade.</span></p>
+        <p class="nota"><strong>As marcas tracejadas no gráfico</strong> assinalam dias
+          em que o radar passou a ver de outra maneira. ${detalhe} Em qualquer dos casos
+          o mesmo dia noticioso passa a dar mais notícias contadas: a diferença entre os
+          dois lados ${visiveis.length === 1 ? "da marca" : "das marcas"} é de medição, e
+          não de atualidade. Os picos noticiosos não são afetados — durante a transição
+          são medidos apenas nas publicações cuja leitura não mudou.</p>`;
       })()}
       ${(() => {
         /* Escolhido um período, a legenda passa a ser desse período — é o que se
@@ -2285,6 +2353,8 @@ function desenhar(){
     ${blocoTempestades(linhas)}
 
     ${blocoSentimento(linhas)}
+
+    ${blocoMatrizTom(linhas, pares, areas)}
 
     ${blocoComparacao(linhas, pares)}
 
