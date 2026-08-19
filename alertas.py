@@ -88,13 +88,19 @@ MARCO_FONTES = "2026-08-19"
 # pelo meio foram medidos em regime híbrido, e por isso são reavaliados com a
 # régua do conjunto de referência, como todos os outros.
 INICIO_ALARGAMENTO = "2026-08-17"
+# Dias de presença exigidos antes do alargamento para uma publicação servir
+# de terreno de comparação. Cinco chegam para distinguir quem lá estava de
+# quem apareceu com a mudança.
+DIAS_DE_PRESENCA = 5
 
 
-def conjunto_de_referencia(linhas, marco=MARCO_FONTES, relatorio="fontes-recolha.json"):
+def conjunto_de_referencia(linhas, inicio_alargamento=INICIO_ALARGAMENTO,
+                           relatorio="fontes-recolha.json"):
     """Publicações cuja leitura não mudou com o alargamento.
 
     Três exclusões, por esta ordem:
-      1. as que não marcavam antes do marco — não há com que as comparar;
+      1. as que não têm presença histórica — menos de cinco dias com marcações
+         antes do início do alargamento; sem isso não há com que as comparar;
       2. as que são lidas pela pesquisa ao Google (constante VIA_GOOGLE) —
          entraram ou mudaram de via com o alargamento;
       3. as que a recolha assinala como completadas ou recuperadas pelo Google
@@ -102,10 +108,22 @@ def conjunto_de_referencia(linhas, marco=MARCO_FONTES, relatorio="fontes-recolha
          estava, mas passou a render mais por dia.
     O que sobra é terreno estável: nem ganhou fontes, nem ganhou profundidade.
     """
-    antes = {(r.get("fonte") or "").strip()
-             for r in linhas
-             if r.get("area") and (r.get("data") or "")[:10] < marco
-             and (r.get("fonte") or "").strip()}
+    # Presença HISTÓRICA, e não uma marcação avulsa: exige-se que a publicação
+    # tenha marcado em pelo menos cinco dias anteriores ao INÍCIO do alargamento.
+    # Com a fronteira no marco, entravam publicações que só começaram a marcar a
+    # 16, 17 ou 18 de agosto — precisamente as que o alargamento trouxe —, e que
+    # nos dias novos rendem dezenas de notícias e nos antigos zero: o «hoje»
+    # subia contra uma base que não as tinha. Foi assim que reapareceram picos
+    # de 18 de agosto que já tínhamos concluído serem artefacto.
+    dias_por_fonte = {}
+    for r in linhas:
+        if not r.get("area"):
+            continue
+        fonte = (r.get("fonte") or "").strip()
+        dia = (r.get("data") or "")[:10]
+        if fonte and dia < inicio_alargamento:
+            dias_por_fonte.setdefault(fonte, set()).add(dia)
+    antes = {f for f, ds in dias_por_fonte.items() if len(ds) >= DIAS_DE_PRESENCA}
 
     mexidas = set()
     try:

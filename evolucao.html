@@ -1978,9 +1978,13 @@ function blocoTempestades(linhas){
       ${porArea.size ? `
         <div class="tp-mais">
           <p class="nota" style="margin:.8rem 0 .4rem">
-            ${diaEscolhido ? "Fora do período escolhido" : "Restantes"}, na janela:
-            ${resto.length} ${resto.length === 1 ? "pico" : "picos"} em
-            ${porArea.size} ${porArea.size === 1 ? "área" : "áreas"}.</p>
+            ${diaEscolhido
+              ? `Mais ${resto.length} ${resto.length === 1 ? "pico" : "picos"} noutros
+                 ${agregNome(true).toLowerCase()} deste período, em ${porArea.size}
+                 ${porArea.size === 1 ? "área" : "áreas"} — recolhidos por área:`
+              : `A lista acima mostra os ${12} mais fortes. Há mais ${resto.length}
+                 ${resto.length === 1 ? "pico" : "picos"} neste período, em ${porArea.size}
+                 ${porArea.size === 1 ? "área" : "áreas"} — recolhidos por área:`}</p>
           ${[...porArea.entries()]
             .sort((a, b) => forca(b[1][0]) - forca(a[1][0]))
             .map(([area, ts], i) => `
