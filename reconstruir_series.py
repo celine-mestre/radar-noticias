@@ -256,8 +256,21 @@ def nomes_por_dominio(dias):
             dominio = (n.get("dominio") or "").lower()
             if dominio:
                 contagem[dominio][n.get("fonte") or ""] += 1
+    # A lista das fontes configuradas manda: se o domínio consta dela, o nome é
+    # esse e não há dedução que valha. A heurística fica para o que sobra — um
+    # domínio que já não esteja na lista, mas cujo histórico ainda conte.
+    try:
+        from extrair_noticias import _mapa_dominios
+        oficiais = _mapa_dominios()
+    except Exception:                                          # noqa: BLE001
+        oficiais = {}
+
     mapa = {}
     for dominio, nomes in contagem.items():
+        limpo = dominio.replace("www.", "")
+        if limpo in oficiais:
+            mapa[dominio] = oficiais[limpo]
+            continue
         bons = sorted(((q, nome) for nome, q in nomes.items()
                        if not parece_credito(nome)), reverse=True)
         mapa[dominio] = bons[0][1] if bons else dominio
@@ -276,7 +289,12 @@ def dia_das_publicacoes(data, registo, origens, nomes):
         # O nome vem da tabela do domínio, não do registo: assim um crédito de
         # fotografia que tenha entrado num dia solto não vira publicação.
         fonte = nomes.get((n.get("dominio") or "").lower()) \
-            or n.get("fonte") or n.get("dominio") or ""
+            or n.get("dominio") or ""
+        # Deliberadamente NÃO se recorre ao campo «fonte» do registo: é
+        # precisamente aí que moram os créditos de fotografia e os títulos de
+        # outras peças que se faziam passar por publicações. Sem domínio, a
+        # linha não entra no quadro das publicações — continua a contar para o
+        # volume da área, que é o que ela mede de facto.
         if not fonte:
             continue
         origens.setdefault(fonte, origem_da_fonte(n.get("dominio")))

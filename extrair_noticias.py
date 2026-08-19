@@ -1044,6 +1044,49 @@ DOMINIOS_PORTUGUES = (
 )
 
 
+# ---------------------------------------------------------------------------
+# SANEAMENTO DO NOME DA PUBLICAÇÃO
+#
+# Antes de a leitura passar a usar sempre o nome do feed, o campo «fonte» era
+# tirado do <source> do item — e vários publicadores metem lá outra coisa: a
+# RFI põe o crédito da fotografia («© Reuters», «AFP - HENRY NICHOLLS»), o
+# Expresso das Ilhas põe o título de outra peça. Ficaram no arquivo dezenas de
+# linhas com «publicações» que não são publicações, e que apareciam nos quadros
+# e no Excel ao lado dos jornais a sério.
+#
+# A recolha nova já não produz isto, mas o arquivo tem memória. Saneia-se na
+# leitura: o domínio, esse, está sempre certo, e é ele que diz qual é a
+# publicação. Quando o domínio não é conhecido, a linha não conta como
+# publicação — é o caso das secções de jornais que saíram da lista.
+# ---------------------------------------------------------------------------
+def _mapa_dominios():
+    mapa = {}
+    for nome, dominio, _ in FONTES + FONTES_LUSOFONAS + FONTES_INTERNACIONAIS:
+        mapa.setdefault((dominio or "").lower().replace("www.", ""), nome)
+    return mapa
+
+
+def sanear_fonte(registo, mapa=None):
+    """Repõe o nome oficial da publicação a partir do domínio, quando preciso."""
+    mapa = mapa if mapa is not None else _mapa_dominios()
+    nomes = set(mapa.values())
+    fonte = (registo.get("fonte") or "").strip()
+    if fonte in nomes:
+        return registo
+    dominio = (registo.get("dominio") or "").lower().replace("www.", "")
+    oficial = mapa.get(dominio)
+    if not oficial:
+        # Tenta o sufixo: news.google.com/… não tem domínio próprio, mas
+        # publico.pt/politica/… continua a ser o Público.
+        for d, n in mapa.items():
+            if dominio.endswith("." + d) or dominio == d:
+                oficial = n
+                break
+    if oficial:
+        registo["fonte"] = oficial
+    return registo
+
+
 def escreve_em_portugues(dominio):
     """Verdadeiro se a publicação escreve em português."""
     d = (dominio or "").lower().replace("www.", "")
@@ -1654,6 +1697,27 @@ def atualizar_arquivo(caminho, linhas, dias=7, por_palavra=None):
     if estragados:
         anteriores = [r for r in anteriores if not texto_estragado(r)]
         print(f"arquivo: {estragados} registos com caracteres ilegíveis descartados")
+
+    # Nomes de publicação vindos do <source> de feeds que lá metiam outra coisa
+    # — créditos de fotografia, títulos de peças. O domínio diz qual é mesmo a
+    # publicação; corrige-se na leitura, e o arquivo sai limpo.
+    mapa = _mapa_dominios()
+    nomes_certos = set(mapa.values())
+    corrigidos = 0
+    for r in anteriores:
+        antes = (r.get("fonte") or "").strip()
+        sanear_fonte(r, mapa)
+        if (r.get("fonte") or "").strip() != antes:
+            corrigidos += 1
+    if corrigidos:
+        print(f"arquivo: {corrigidos} nomes de publicação repostos a partir do domínio")
+    # O que nem pelo domínio se identifica não é publicação nenhuma: sai.
+    restos = [r for r in anteriores
+              if (r.get("fonte") or "").strip() not in nomes_certos]
+    if restos:
+        anteriores = [r for r in anteriores
+                      if (r.get("fonte") or "").strip() in nomes_certos]
+        print(f"arquivo: {len(restos)} registos sem publicação identificável descartados")
 
     def registo(l):
         r = dict(zip(campos, l))

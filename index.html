@@ -292,9 +292,15 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
   gap:.35rem .6rem;align-items:center;font-size:.8rem}
 /* A barra do conjunto é a referência: fica destacada e um pouco mais alta, para
    se distinguir das linhas dos assuntos que se comparam com ela. */
-.sa-conjunto{margin-bottom:.9rem;padding-bottom:.7rem;border-bottom:1px solid var(--borda)}
-.sa-conjunto .sa-rot{font-weight:600}
+.sa-linha.sa-conjunto{display:contents}
+.sa-conjunto .sa-rot{font-weight:600;color:var(--texto)}
 .sa-conjunto .sa-barra{height:18px}
+.sa-conjunto .sa-n{font-weight:600;color:var(--texto)}
+/* O cabeçalho atravessa as três colunas da grelha e serve de separador entre a
+   referência e as linhas que com ela se comparam. */
+.sa-lista .sa-sub{grid-column:1/-1;margin:.75rem 0 .1rem;padding-top:.7rem;
+  border-top:1px solid var(--borda);font-size:.7rem;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--texto-ligeiro);font-weight:600}
 .sa-linha{display:contents}
 .sa-rot{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--texto)}
 .sa-barra{display:flex;height:14px;border-radius:4px;overflow:hidden;background:var(--superficie-alt)}
@@ -2564,12 +2570,19 @@ function blocoSentimentoArea(area, corArea){
           ${desvio > 0 ? "+" : "−"}${Math.round(Math.abs(desvio) * 100)} p.p.</b>`;
     const seg = (v, c) => v ? `<i class="${c}" style="width:${(100 * v / x.n).toFixed(1)}%"
       title="${c === "pos" ? "positivas" : c === "neu" ? "neutras" : "negativas"}: ${v} de ${x.n} (${Math.round(100 * v / x.n)}%)"></i>` : "";
-    return `<div class="sa-linha">
+    return `<div class="sa-linha">${interior(x, marca, seg)}</div>`;
+  };
+  const linhaInterior = x => {
+    const desvio = x.pctNeg - pctNegGeral;
+    const marca = "";
+    const seg = (v, c) => v ? `<i class="${c}" style="width:${(100 * v / x.n).toFixed(1)}%"
+      title="${c === "pos" ? "positivas" : c === "neu" ? "neutras" : "negativas"}: ${v} de ${x.n} (${Math.round(100 * v / x.n)}%)"></i>` : "";
+    return interior(x, marca, seg);
+  };
+  const interior = (x, marca, seg) => `
       <span class="sa-rot" title="${esc(x.chave)}">${esc(x.chave)}</span>
       <span class="sa-barra" title="${x.positivo} positivas (${Math.round(100 * x.positivo / x.n)}%) · ${x.neutro} neutras (${Math.round(100 * x.neutro / x.n)}%) · ${x.negativo} negativas (${Math.round(100 * x.negativo / x.n)}%)">${seg(x.positivo, "pos")}${seg(x.neutro, "neu")}${seg(x.negativo, "neg")}</span>
-      <span class="sa-n">${pct(x.pctNeg)} neg.${marca}</span>
-    </div>`;
-  };
+      <span class="sa-n">${pct(x.pctNeg)} neg.${marca}</span>`;
 
   return `
       <div class="bloco">
@@ -2584,13 +2597,17 @@ function blocoSentimentoArea(area, corArea){
         <!-- O conjunto merece a mesma barra que as suas partes: sem ela, a
              referência ficava só em texto e não havia como comparar de relance
              um assunto com o todo. -->
-        <div class="sa-lista sa-conjunto">${linha({
-          chave: "Conjunto da área", n: totalGeral, ...geral,
-          pctNeg: pctNegGeral })}</div>
-
-        ${assuntos.length ? `
-        <h5 class="sa-sub">Por assunto</h5>
-        <div class="sa-lista">${assuntos.map(linha).join("")}</div>` : ""}
+        <!-- Conjunto e assuntos vivem na MESMA grelha: em grelhas separadas, a
+             coluna da direita mede o conteúdo de cada uma e as barras acabavam
+             desalinhadas entre a referência e aquilo que com ela se compara. O
+             cabeçalho atravessa as três colunas. -->
+        <div class="sa-lista">
+          <div class="sa-linha sa-conjunto">${linhaInterior({
+            chave: "Conjunto da área", n: totalGeral, ...geral,
+            pctNeg: pctNegGeral })}</div>
+          ${assuntos.length ? `<h5 class="sa-sub">Por assunto</h5>
+            ${assuntos.map(linha).join("")}` : ""}
+        </div>
 
         <p class="sin-nota">Assuntos ordenados do tom mais negativo para o menos. A
           marca em p.p. assinala os que se afastam dez ou mais pontos percentuais da
