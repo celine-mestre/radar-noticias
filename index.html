@@ -587,7 +587,10 @@ header.topo .deco{position:absolute;inset:0;opacity:.30;pointer-events:none}
 .fo-n{color:var(--texto-ligeiro);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.74rem}
 .fo-mal{color:var(--vermelho);font-size:.72rem;white-space:nowrap}
 .fo-eti{font-size:.66rem;color:var(--texto-ligeiro);border:1px solid var(--borda);
-  border-radius:20px;padding:.02rem .35rem;white-space:nowrap}
+  border-radius:20px;padding:.02rem .35rem;white-space:nowrap;cursor:help}
+/* A via está em todas as linhas, pelo que tem de ser discreta: é referência,
+   não destaque. A largura fixa alinha as etiquetas em coluna. */
+.fo-via{min-width:74px;text-align:center;opacity:.85}
 @media(max-width:700px){.fo-lista{grid-template-columns:1fr}}
 .man-aviso{margin-top:.7rem;padding:.55rem .8rem;border-radius:0 var(--raio-s) var(--raio-s) 0;
   border-left:3px solid color-mix(in srgb, var(--cor) 55%, transparent);
@@ -3048,10 +3051,29 @@ async function preencherFontes(){
      subscrevem e como são lidas, e não quantos artigos deram na última passagem —
      um número que muda de duas em duas horas e que ninguém vai lá confirmar. O
      estado por recolha vive no relatório das fontes, para quem gere o serviço. */
+  /* A via de leitura aparece em TODAS as publicações, e não só nas que vão pelo
+     Google: quem lê a lista quer saber como cada uma é lida, e «sem etiqueta»
+     não é resposta — é ausência de resposta. São três casos, e cada um tem a
+     sua explicação ao passar o rato. */
+  const VIAS = {
+    "direta": ["feed",
+      "Lida pelo feed RSS da própria publicação."],
+    "google": ["Google",
+      "A publicação não disponibiliza feed acessível: é lida por pesquisa ao "
+      + "Google Notícias restrita ao seu domínio."],
+    "google (recurso)": ["Google",
+      "O feed próprio não respondeu nesta recolha: foi lida por pesquisa ao "
+      + "Google Notícias restrita ao seu domínio."],
+    "direta + Google": ["feed + Google",
+      "O feed próprio mostra poucas notícias de cada vez — menos do que a "
+      + "publicação produz entre duas recolhas —, pelo que é completado por "
+      + "pesquisa ao Google Notícias restrita ao seu domínio."],
+  };
   const linha = f => {
-    const lingua = f.pt ? "" : `<span class="fo-eti">outra língua</span>`;
-    const via = f.via && f.via.includes("oogle")
-      ? `<span class="fo-eti">via Google Notícias</span>` : "";
+    const lingua = f.pt ? ""
+      : `<span class="fo-eti" title="As palavras-chave são portuguesas: esta publicação entra no corpus da pesquisa por termo, mas não é classificada por área.">outra língua</span>`;
+    const [rot, porque] = VIAS[f.via] || VIAS["direta"];
+    const via = `<span class="fo-eti fo-via" title="${esc(porque)}">${rot}</span>`;
     return `<li><span class="fo-nome">${esc(f.fonte)}</span>${lingua}${via}</li>`;
   };
 
@@ -3061,9 +3083,12 @@ async function preencherFontes(){
       <ul class="fo-lista">${v.slice().sort((a, b) =>
         a.fonte.localeCompare(b.fonte, "pt")).map(linha).join("")}</ul>
     </div>`).join("")
-    + `<p class="man-aviso">Uma publicação marcada «via Google Notícias» é lida por
-       pesquisa restrita ao seu domínio, por não publicar feed acessível ou por o
-       feed não chegar para o intervalo entre recolhas.</p>`;
+    + `<p class="man-aviso"><strong>feed</strong> — lida pelo feed RSS da própria
+       publicação. <strong>Google</strong> — não disponibiliza feed acessível e é
+       lida por pesquisa ao Google Notícias restrita ao seu domínio.
+       <strong>feed + Google</strong> — tem feed, mas mostra poucas notícias de
+       cada vez, menos do que produz entre duas recolhas, e a pesquisa completa o
+       que faltaria. Passe o cursor sobre a etiqueta para a explicação.</p>`;
 }
 
 function abrirManual(n){
