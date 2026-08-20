@@ -383,6 +383,12 @@ table.mtz .mtz-vazia{color:var(--texto-ligeiro);background:none}
 table.mtz td.mtz-forte{color:#fff}
 /* Fronteira de semana, o mesmo ritmo dos gráficos */
 table.mtz .mtz-semana{border-left:1.5px dashed var(--texto-ligeiro)}
+/* Célula com resumo do Amália: um canto dobrado, discreto, para se saber onde
+   vale a pena parar o cursor — um tooltip que ninguém adivinha não existe. */
+table.mtz td.mtz-com-resumo{position:relative;cursor:help}
+table.mtz td.mtz-com-resumo::after{content:"";position:absolute;top:1px;right:1px;
+  border:3px solid transparent;border-top-color:currentColor;border-right-color:currentColor;
+  opacity:.55}
 table.mtz .mtz-foco{outline:2px solid var(--azul);outline-offset:-2px;border-radius:4px}
 table.mtz th.mtz-foco{color:var(--azul);font-weight:600;outline:none}
 table.mtz-pub td{background:color-mix(in srgb, var(--azul) calc(var(--i) * 78%), transparent)}
@@ -753,6 +759,7 @@ const num = n => n.toLocaleString("pt-PT");
 let SERIE = [];        // [{data, areas:{nome:{noticias, novas, fontes, origens, palavras}}}]
 let TEMPESTADES = [];  // [{data, area, hoje, mediana, limiar}] — do alertas.json
 let RESUMOS_PICOS = {}; // {"data|área": {texto, n}} — do picos-resumos.json
+let RESUMOS_TOM = {};   // {"data|área": {texto, n, pct}} — do matriz-resumos.json
 /* Patamar de leitura, partilhado pelo quadro do sentimento e pela faixa de tom
    das trajetórias: abaixo disto uma proporção é ruído, não leitura. */
 const MINIMO_AVALIADAS = 8;
@@ -861,6 +868,21 @@ async function carregar(){
    picos continuam clicáveis mas dizem que o resumo ainda não existe. */
 async function carregarResumosPicos(){
   for(const caminho of ["picos-resumos.json", "./picos-resumos.json"]){
+    try{
+      const r = await fetch(caminho, { cache: "no-store" });
+      if(!r.ok) continue;
+      const d = await r.json();
+      if(d.resumos) return d.resumos;
+    }catch(e){ /* segue */ }
+  }
+  return {};
+}
+
+/* Resumos das coberturas muito negativas: o que aconteceu nos dias em que uma
+   área passou o limiar, escrito pelo Amália a partir dos títulos negativos
+   desse dia. Acessório: sem ficheiro, a matriz continua a funcionar. */
+async function carregarResumosTom(){
+  for(const caminho of ["matriz-resumos.json", "./matriz-resumos.json"]){
     try{
       const r = await fetch(caminho, { cache: "no-store" });
       if(!r.ok) continue;
@@ -1501,6 +1523,25 @@ function rotuloCurto(k){
   return k.slice(8) + "/" + k.slice(5, 7);
 }
 
+/* Que dias compõem uma chave de período. Em leitura diária é o próprio dia;
+   por semana ou por mês, todos os dias da série que caem lá dentro. É isto que
+   permite gerar os resumos uma vez, ao dia, e mostrá-los em qualquer vista. */
+function diasDoPeriodo(chave){
+  if(agregacao === "dia") return [chave];
+  return SERIE.filter(d => chaveDoPeriodo(d.data) === chave).map(d => d.data);
+}
+
+const dataCurtaPt = iso => `${iso.slice(8)}/${iso.slice(5, 7)}`;
+
+/* Texto do Amália dentro de um atributo title: as aspas e os sinais de menor
+   partiriam o HTML, e as mudanças de linha têm de sobreviver para o tooltip
+   sair em parágrafos. (Havia uma função `esc` neste ficheiro, mas é a escala
+   vertical da faísca — o nome enganou-me e o painel deixou de desenhar.) */
+function textoAtributo(s){
+  return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 function blocoMatrizTom(linhas, pares, areas){
   if(!SENTIMENTO.length || !linhas.length) return "";
   if(origem === "lusofonas" || origem === "internacionais") return "";
@@ -1532,6 +1573,17 @@ function blocoMatrizTom(linhas, pares, areas){
         c ? `só ${c.av} avaliadas` : "sem avaliações"} — o mínimo são ${MINIMO_AVALIADAS}">·</td>`;
     }
     const p = Math.round(100 * c.negativo / c.av);
+    /* Acima do limiar, a célula carrega o resumo do Amália no próprio tooltip.
+       Como o quadro pode estar agregado a semana ou mês, junta-se o resumo de
+       CADA dia desse período que tenha passado o limiar — os resumos são
+       gerados por dia, que é o átomo que não muda, e a vista agregada limita-se
+       a encadeá-los por ordem. */
+    const dias = diasDoPeriodo(k).filter(dd => RESUMOS_TOM[dd + "|" + n]);
+    const resumo = dias.map(dd => {
+      const r = RESUMOS_TOM[dd + "|" + n];
+      return (dias.length > 1 ? dataCurtaPt(dd) + " · " : "")
+        + `${r.pct}% negativas de ${r.n} notícias\n${r.texto}`;
+    }).join("\n\n");
     /* A matriz mede UMA coisa — a percentagem de negativas —, e uma medida só
        pede uma escala só: do claro ao carregado, a acompanhar o valor. Pintar de
        verde os valores baixos sugeria um segundo indicador («positividade») que
@@ -1539,9 +1591,10 @@ function blocoMatrizTom(linhas, pares, areas){
        pelo meio há as neutras, que costumam ser a maioria. */
     const i = Math.min(1, p / 90).toFixed(2);
     const claro = p < 55;
-    return `<td class="${claro ? "" : "mtz-forte"} ${sem}"
+    const base = `${n} · ${descreverPeriodo(k)}: ${p}% de notícias negativas, de ${c.av} avaliadas`;
+    return `<td class="${claro ? "" : "mtz-forte"} ${sem}${resumo ? " mtz-com-resumo" : ""}"
       style="background:color-mix(in srgb, var(--vermelho, #B23A3A) ${Math.round(i * 85)}%, transparent)"
-      title="${n} · ${descreverPeriodo(k)}: ${p}% de notícias negativas, de ${c.av} avaliadas">${p}</td>`;
+      title="${textoAtributo(resumo ? base + "\n\n" + resumo : base)}">${p}</td>`;
   };
 
   return `
@@ -1564,7 +1617,12 @@ function blocoMatrizTom(linhas, pares, areas){
         já que pelo meio estão as neutras, em geral maioritárias; as três proporções
         estão no quadro do sentimento, acima. Um ponto quer dizer que esse período não
         chegou a ${MINIMO_AVALIADAS} notícias avaliadas nessa área — não que não tenha
-        havido notícias. Áreas sem nenhuma célula desenhável não entram na matriz.</p>
+        havido notícias. Áreas sem nenhuma célula desenhável não entram na matriz.
+        As células com um <strong>canto dobrado</strong> passaram os 75% de negativas e
+        têm, ao passar o cursor, um resumo do Amália sobre o que aconteceu nesse dia —
+        escrito a partir dos títulos das notícias negativas, e a descrever
+        acontecimentos, não a atitude das publicações. Os resumos são feitos ao dia; nas
+        vistas por semana ou por mês, a célula junta os dos dias que a compõem.</p>
     </div>`;
 }
 
@@ -1919,8 +1977,11 @@ function blocoPublicacoes(linhas, areas){
         proporcional à maior das mostradas: diz de onde vem o volume que o painel conta,
         e mostra quando o retrato depende muito de poucos órgãos. A cor das etiquetas
         carrega com a força da especialização.
-        Um limite do registo: guardam-se as doze publicações com mais volume em cada área
-        e dia, o que deixa de fora uma cauda longa de cerca de 5%.</p>
+        Um limite do registo: em cada área e dia guardam-se as doze publicações com mais
+        volume. Só um em cada cinco pares área-dia chega a ter mais de doze publicações,
+        e o que fica de fora são <strong>4% das marcações</strong> — sempre das
+        publicações com menos volume nesse dia, pelo que os totais das pequenas são um
+        mínimo.</p>
     </div>`;
 }
 
@@ -2016,9 +2077,9 @@ function blocoPesoPublicacoes(linhas){
         para metade de tudo o que o painel conta</strong>, em ${lista.length} com
         marcações no período. A cor da barra é a origem — Portugal, Lusofonia ou
         internacional. Conta marcações, e não notícias: uma notícia que toque três áreas
-        conta três vezes. Vale aqui o mesmo limite do quadro anterior: o registo guarda as
-        doze publicações com mais volume em cada área e dia, deixando de fora uma cauda
-        longa de cerca de 5%.</p>
+        conta três vezes. Vale aqui o mesmo limite do quadro anterior: em cada área e dia guardam-se
+        as doze publicações com mais volume, o que deixa de fora 4% das marcações,
+        sempre das de menor volume.</p>
     </div>`;
 }
 
@@ -3249,6 +3310,7 @@ $("#agregacao").addEventListener("click", e => {
   TEMPESTADES = await carregarTempestades();
   PUBLICACOES = await carregarPublicacoes();
   RESUMOS_PICOS = await carregarResumosPicos();
+  RESUMOS_TOM = await carregarResumosTom();
   SENTIMENTO = await carregarSentimento();
   SERIE = (await carregar())
     .filter(d => d && d.data && (!INICIO_SERIE || d.data >= INICIO_SERIE))
