@@ -46,6 +46,14 @@ anterior ao arquivo, não aparece — e alargar o âmbito é acrescentar feeds �
    (`site:expresso.pt`), com as ligações de reencaminhamento resolvidas para o
    endereço do jornal no fim da recolha. Em ambas as vias, cada artigo traz título,
    resumo, data de publicação, fonte e ligação direta.
+
+   Um feed próprio mostra apenas as últimas notícias, e esse número varia muito: há
+   feeds com setecentas e feeds com dez. Quando o feed de uma publicação **não cobre o
+   tempo decorrido desde a recolha anterior** — que não é constante: duas horas de dia,
+   oito entre a última recolha da noite e a primeira da manhã —, ou quando não responde,
+   a leitura dessa publicação é completada, nessa passagem, pela mesma pesquisa ao
+   Google. Sem isso, um jornal que publique mais notícias do que as que cabem no seu
+   feed perde as mais antigas entre recolhas, sem deixar rasto.
 3. **Marcação.** Para cada artigo, o programa procura literalmente as expressões de
    cada área no título e no resumo. Encontrando, marca o artigo com essa área e com
    as expressões que a acionaram. Um artigo pode ficar em mais de uma área.
@@ -64,7 +72,11 @@ anterior ao arquivo, não aparece — e alargar o âmbito é acrescentar feeds �
    as notícias reais desse dia e dessa área no arquivo mensal e escreve, em três ou
    quatro frases, o que motivou o pico — para `picos-resumos.json`, que a evolução
    mostra ao clique.
-7. **No painel.** O radar lê o `arquivo.json` e conta as notícias de cada área
+7. **E o resumo dos dias muito negativos.** Depois de o tom estar avaliado, as áreas
+   cuja cobertura do dia foi negativa em 75% ou mais recebem também um resumo do
+   Amália, escrito a partir dos títulos das notícias negativas desse dia — para
+   `matriz-resumos.json`, que a matriz do tom mostra ao passar o cursor.
+8. **No painel.** O radar lê o `arquivo.json` e conta as notícias de cada área
    dentro do período e da origem escolhidos. Ao abrir uma área, o mesmo ficheiro é
    filtrado pelas palavras-chave selecionadas. As duas contagens seguem os mesmos
    critérios, pelo que dizem sempre o mesmo número. Tudo local, em milissegundos.
@@ -100,6 +112,13 @@ internacional ou todas. Ambos valem para o radar e para as consultas.
 - Impressão em PDF com cabeçalho institucional, e exportação para Excel com folha de
   notícias — incluindo o tom de cada notícia, quando avaliado —, folha de especificações
   e folha de síntese, esta com o tom do conjunto, por assunto.
+
+**Manual embutido, com a lista das fontes.** O painel traz um manual de dez capítulos,
+o último dos quais lista **todas as publicações subscritas**, repartidas por origem e com
+a via por que são lidas — feed próprio ou Google Notícias —, mais as três razões pelas
+quais uma publicação da lista pode não aparecer nos quadros: escreve noutra língua, não
+publicou nada da área, ou não respondeu à recolha. A lista acompanha a configuração, pelo
+que não fica para trás quando uma fonte entra ou sai.
 
 **Alertas de pico noticioso.** Quando uma área dispara — um volume de notícias muito
 acima do seu comportamento habitual —, o painel abre com uma faixa de alerta, e o
@@ -148,17 +167,20 @@ fora do período.
 | `noticias.json` | **Retrato do dia.** O que os feeds trouxeram na última recolha. |
 | `arquivo.json` | **Arquivo de sete dias.** Acumula as recolhas, sem repetições, com as palavras-chave de cada artigo. É o que responde às pesquisas no painel. |
 | `historico.json` | **Série diária.** Por dia e por área: marcações, publicações distintas, repartição por origem e contagem de cada palavra-chave — e, por dia, quantas notícias DISTINTAS houve. A distinção importa: uma notícia que satisfaz três áreas deixa três marcações e é contada em cada uma delas, pelo que somar as áreas dá marcações e não notícias (cerca de 1,3 áreas por notícia). Cada notícia conta uma só vez, no dia em que foi publicada. Agregados, não notícias. (O ficheiro guarda ainda um campo `novas`, vestígio de quando a série era construída recolha a recolha; hoje é igual a `notícias` e não é usado.) |
-| `alertas.json` | **Picos noticiosos e momentum.** Escrito pelo `alertas.py` após cada recolha: compara o volume do dia, por área, com a mediana dos últimos 28 dias *à mesma hora* (desvio robusto, mínimo de 8 notícias de subida, piso de 12). Guarda os picos do dia, o top 5 do momentum e o histórico acumulado de alertas por área e por dia. |
+| `alertas.json` | **Picos noticiosos e momentum.** Escrito pelo `alertas.py` após cada recolha: compara o volume do dia, por área, com a mediana dos últimos 28 dias *à mesma hora* (desvio robusto, mínimo de 8 notícias de subida, piso de 12). Guarda os picos do dia, o top 5 do momentum e o histórico acumulado. Depois de uma mudança de método de leitura, e enquanto a base de 28 dias ainda apanhar dias do método anterior, tanto o dia como a base são contados **apenas nas publicações cuja leitura não mudou** — as que já marcavam com regularidade antes da mudança —, e o ficheiro regista esse regime em `transicao_fontes`. É o que mantém os picos comparáveis sem os calar; ver as ressalvas metodológicas. |
 | `corpus.json` | **Comunicação social em bruto, sete dias.** Todos os artigos lidos dos feeds, marcados ou não. Serve a pesquisa por termo livre; o painel só o carrega quando alguém pesquisa. |
 | `sentimento_ia.py` + `.github/workflows/sentimento-amalia.yml` | **Sentimento em validação.** A cada recolha, o Amália classifica o tom (positivo, neutro, negativo) das notícias da comunicação social nacional ainda sem avaliação — e só dessas —, em lotes, e grava sentimentos.json e a série sentimento-serie.json (agregados por área e dia). O critério de arranque é o trabalho pendente, não a hora: sem pelo menos quinze notícias por avaliar, o modelo nem chega a ser carregado. As avaliações aparecem no radar (ponto junto a cada notícia, distribuição da consulta, e o tom por assunto na síntese), na evolução (barras por dia, semana ou mês) e no Excel (coluna própria e secções na folha de síntese), sempre com o rótulo «em validação» até a leitura humana estar concluída — a funcionalidade é definitiva; o rótulo é temporário. |
 | `sentimento-meses/AAAA-MM.jsonl.gz` | **Arquivo permanente das avaliações.** Uma linha por notícia avaliada (ligação, tom, dia), acumulada por mês e nunca podada — ao contrário do `sentimentos.json`, que é o ficheiro de trabalho e guarda só a janela recente. Uma avaliação é um facto que não muda, pelo que fica guardada de vez: é isto que permitirá alargar a janela do painel, ou repescar meses inteiros, sem mandar o Amália reclassificar o que já classificou. Cerca de 70 KB por dois mil registos. |
 | `resumo_picos.py` + `.github/workflows/resumo-picos.yml` | **Porquê de cada pico.** Para cada pico registado no alertas.json, recupera as notícias reais desse dia e dessa área do arquivo mensal — que guarda tudo, para lá dos sete dias do corpus — e pede ao Amália um resumo de três ou quatro frases do que aconteceu. Grava picos-resumos.json, que a evolução mostra ao clicar num pico. Incremental: um pico já resumido não volta a ser tratado, e o modelo só é carregado havendo picos por explicar. O resumo é sempre sobre notícias que existem; não havendo, o painel di-lo em vez de inventar. |
-| `publicacoes.json` | **Publicações por dia e por área.** As doze que mais noticiaram cada área em cada dia, escritas pelo fecho dos dias. Cerca de 3,5 KB por dia, e só se guardam os últimos 120 dias — o cruzamento área × publicação não precisa de mais. Sem este ficheiro o painel funciona igual, apenas sem esse quadro. |
+| `publicacoes.json` | **Publicações por dia e por área.** As doze que mais noticiaram cada área em cada dia, escritas pelo fecho dos dias. Cerca de 3,5 KB por dia, e só se guardam os últimos 120 dias. O limite de doze **por área e por dia** deixa de fora cerca de 5% das marcações do mês, sempre de publicações com pouco volume nesse dia — os totais das mais pequenas são, por isso, um mínimo. Alimenta dois quadros da evolução: as publicações especializadas e o peso de cada publicação no corpus. |
 | `reconstruir_series.py` | **Fecho dos dias passados.** Corre a seguir a cada recolha e reconta todos os dias anteriores a hoje a partir do `meses/` e do `sentimento-meses/`, que são permanentes e refletem sempre as expressões em vigor. Sem isto, um dia que saísse da janela de sete dias ficava congelado com o número que tinha nesse momento: não acompanhava a revalidação das expressões nem as notícias do fim da noite, que só entram na recolha da manhã seguinte. Idempotente e não toca no dia em curso. |
 | `retroativo_pm.py` + `.github/workflows/retroativo-pm.yml` | **Passo retroativo, execução única.** Revalida todas as marcações existentes sob as regras atuais (retirando pares de expressões entretanto removidas, como «empresas») e reclassifica o corpus de 7 dias com as áreas e expressões novas, injetando o resultado no arquivo, no retrato, no arquivo mensal, na série diária e nos alertas. Idempotente: correr duas vezes não duplica nem retira mais nada. |
 | `meses/AAAA-MM.jsonl.gz` | **Arquivo permanente e integral.** Um ficheiro comprimido por mês com todas as notícias desse mês — as marcadas com a sua área, e as não marcadas com área vazia (guardadas para que os passos retroativos futuros tenham meses de profundidade, e não apenas os sete dias do corpus). A área vazia é ignorada por tudo o que conta por área. ~2–3 MB/mês. |
 | `verificar_fontes.py` + `.github/workflows/verificar-fontes.yml` | **Estado das fontes, a pedido.** Testa as 66 entradas — as diretas pelo seu endereço, as da via Google pelo endereço da pesquisa — e, para as que falham, experimenta endereços alternativos conhecidos e a autodescoberta (os feeds que a própria página inicial anuncia). Grava `fontes-estado.json` e um quadro legível no Summary da execução. Nasceu da auditoria de agosto de 2026, em que 34 das então 73 entradas estavam em falha silenciosa; corre à mão, no botão *Run workflow*. |
 | `fontes-estado.json` | **Resultado da última verificação de fontes**: entrada a entrada, se responde, com quantos artigos, e que endereço alternativo responde quando o configurado falha. |
+| `fontes-recolha.json` | **Relatório de CADA recolha, fonte a fonte:** por que via foi lida (feed próprio, Google Notícias, ou feed completado pela pesquisa), quantos artigos deu, quantos marcou e que erro teve, mais o intervalo decorrido desde a passagem anterior. Nasceu de uma constatação incómoda: as falhas só existiam no registo da execução, que ninguém lê, e por isso uma publicação podia desaparecer durante semanas sem que nada o dissesse. É também daqui que o manual do painel monta a lista das fontes. |
+| `resumo_matriz.py` + `.github/workflows/resumo-matriz.yml` | **Porquê de cada dia muito negativo.** Para cada célula da matriz do tom que passe os 75% de notícias negativas (com pelo menos oito avaliadas), reúne os títulos das notícias **negativas** desse dia e dessa área e pede ao Amália três ou quatro frases sobre o que aconteceu. Grava `matriz-resumos.json`, que a matriz mostra ao passar o cursor. Corre a seguir ao sentimento — não à recolha —, porque só há coberturas negativas a explicar depois de o tom estar avaliado; é incremental e tem teto por passagem. Resume **por dia**, que é o átomo que nunca muda: nas vistas por semana ou por mês, o painel junta os resumos dos dias que compõem o período, sem gerar nada de novo. |
+| `matriz-resumos.json` | Os resumos acima, indexados por dia e área, com a percentagem de negativas e o número de notícias que os sustentam. |
 
 Os três ficheiros de dados são gerados pela recolha. Não devem ser editados à mão.
 
@@ -344,13 +366,30 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
   Uma notícia de um título não subscrito, ou anterior a esse período, não está no
   corpus. A janela do arquivo define-se com `--dias-arquivo` e pode ser alargada
   quando houver espaço para isso.
+- **Duas contagens diferentes, ambas certas: notícias e marcações.** Uma notícia que
+  satisfaz três áreas deixa três marcações e conta em cada uma delas. Os quadros que
+  respondem a «quanto se noticiou» usam notícias; os que respondem a «quanto pesou cada
+  área» usam marcações. Cada quadro diz qual usa, e o rácio anda pelas 1,3 marcações por
+  notícia.
+- **Durante uma transição de método, os picos contam num universo mais estreito.** Quando
+  o modo de leitura muda — mais publicações lidas, ou leitura mais funda —, comparar o dia
+  de hoje com uma mediana de dias medidos de outra maneira produziria alarmes falsos. Por
+  isso, enquanto a base de 28 dias ainda apanhar dias do método anterior, os picos são
+  calculados apenas nas publicações cuja leitura não mudou: as que já marcavam com
+  regularidade antes. **As contagens do quadro dos picos ficam assim menores do que as dos
+  restantes quadros**, que contam tudo — no mesmo dia e na mesma área, um pico pode dizer
+  52 notícias e o gráfico de volume dizer 109, sem que nenhum esteja errado. O painel
+  assinala-o com a etiqueta «contagem restrita», e a restrição desaparece sozinha quando a
+  base ficar toda no método novo.
 - **O tom não se reparte por publicação.** A avaliação do Amália mede o tom do
   acontecimento noticiado, não a orientação editorial de quem o noticia, e é automática
   e ainda em validação. Por isso o painel mostra o tom da área e dos seus assuntos, e
   não uma ordenação de órgãos de comunicação social — que seria um juízo que o
   indicador não sustenta e que não cabe a um organismo do Estado produzir. A
   repartição por publicação existe nos dados para efeitos de análise interna; não é
-  mostrada nem exportada.
+  mostrada nem exportada. Pela mesma razão, os resumos dos dias muito negativos descrevem
+  **acontecimentos** — que casos, decisões ou problemas estão por trás dos títulos — e
+  nunca a atitude dos jornais ou a qualidade da cobertura.
 - **Marcação literal.** Um artigo entra numa área por conter a expressão no título ou
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
 - **As expressões são curtas, como a imprensa escreve.** "política de imigração" quase
@@ -398,9 +437,11 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
   a ser completados pela pesquisa ao domínio, deixando de se perder o que saía do feed
   entre recolhas. **O radar passou a ver mais; não houve mais notícias.** Comparações que
   atravessem esta data medem as duas coisas ao mesmo tempo. O painel de evolução assinala
-  a data no gráfico de volume, e os **alertas de pico** deixam de usar dias anteriores a
-  19 de agosto como base — pelo que ficam em silêncio até haver sete dias do regime novo,
-  por volta de 26 de agosto, e depois voltam sem viés.
+  as duas datas no gráfico de volume, com a explicação no cursor. Os **alertas de pico**
+  não são afetados: em vez de ficarem calados durante semanas, passam a medir no
+  subconjunto de publicações cuja leitura não mudou — ver a ressalva sobre as transições
+  de método, acima. A restrição levanta-se sozinha a 16 de setembro de 2026, quando a base
+  de 28 dias estiver toda no método novo.
 
 - **Imprensa apenas.** As plataformas sociais não publicam feeds e estão fora do
   âmbito da aplicação.
@@ -673,46 +714,58 @@ recolhida"** em vez de "arquivo de 7 dias".
 ## Painel de evolução
 
 `evolucao.html`, ao lado do painel principal e ligado a ele pelo ícone de gráfico. Lê o
-`historico.json` e mostra a série ao longo do tempo:
+`historico.json` e mostra a série ao longo do tempo. Os quadros estão pela ordem em que
+a leitura se aprofunda — do agregado ao detalhe, e cada coisa primeiro vista e depois
+explicada:
 
-- Volume por período, repartido por origem da comunicação social, em **notícias**. Clicar
-  numa barra passa os quadros seguintes a mostrar apenas esse período.
-- Volume por área governativa, em **marcações** — porque aqui uma notícia conta em cada
-  área que satisfaz —, com a contagem e a parte de cada área no total do conjunto
-  mostrado, e uma nota que dá o rácio entre marcações e notícias do período; trajetória de todas as áreas; e uma nuvem com as expressões que
-  trouxeram notícias no período — o tamanho vale pela quantidade, e as que não aparecem
-  ficaram a zero, sendo candidatas a revisão.
-- **Picos noticiosos registados**, com o volume do dia, a mediana da área e quantas
-  vezes o dia esteve acima dela — é por esse número que a lista se ordena, o maior
-  primeiro. Clicar num pico abre o resumo do Amália sobre o que o motivou.
-- **Sentimento da cobertura**, em barras por dia, semana ou mês, apenas da comunicação
-  social nacional e sujeito ao patamar de cobertura.
-- **Trajetória de cada área**, com o volume em linha — a cheia é o total, a tracejada é só
-  a parte de Portugal, que é a que o tom diz respeito — e, por baixo, uma faixa com o **tom
-  da cobertura** no mesmo eixo de tempo. Cada tijolo é repartido pelas proporções de
-  positivas, neutras e negativas do período, e não resumido a uma cor: a média destrói o
-  sinal ao agregar — nesta série, ao passar de dia para semana o vermelho cai de 17% das
-  células para 3%. Fica vazado quando o período não tem massa que sustente a proporção.
-  Volume e tom leem-se juntos, área a área, sem sair do cartão.
-- **Cruzamentos**: duas áreas lado a lado, na mesma escala e com totais, médias, maior
-  período e tom comparados; e uma matriz **áreas × publicações**, que se lê por linha (que
-  órgãos sustentam uma área) e por coluna (que áreas cada órgão cobre mais).
+1. **Volume ao longo do tempo**, repartido por origem, em **notícias**. Clicar numa barra
+   passa os quadros seguintes a mostrar apenas esse período. Riscas tracejadas assinalam
+   as fronteiras de semana e as **mudanças de método de leitura**, cuja explicação está no
+   cursor e na nota do quadro.
+2. **Volume por área governativa**, em **marcações** — porque aqui uma notícia conta em
+   cada área que satisfaz —, com a parte de cada área e o rácio entre marcações e notícias.
+3. **Trajetória de cada área**: uma linha por área a percorrer o período todo, a cheia com
+   o volume total e a tracejada só com a parte de Portugal. **Losangos vermelhos** marcam
+   os dias de pico — vê-se a forma que cada pico fez na história da área, e o quadro
+   seguinte diz o que o motivou. Com uma área escolhida, junta-se-lhe a **evolução do
+   tom**: a percentagem de negativas período a período, com a linha interrompida onde
+   faltam avaliações, em vez de cair a zero.
+4. **Picos noticiosos registados**, com o volume do dia, a mediana da área e quantas vezes
+   o dia esteve acima dela. Ordenam-se **por data** (do mais recente, agrupados por dia),
+   **por intensidade** ou **por área**, conforme a pergunta seja o que houve ontem, quais
+   foram os maiores ou como se tem comportado cada área. Clicar num pico abre o resumo do
+   Amália sobre o que o motivou.
+5. **Sentimento da cobertura**, em barras por dia, semana ou mês, apenas da comunicação
+   social nacional e sujeito ao patamar de cobertura.
+6. **Tom por área e período**: matriz com a percentagem de negativas em cada área e cada
+   período, numa escala sequencial — a cor carrega com o valor, sem verde, porque a matriz
+   mede uma coisa só e 18% de negativas não quer dizer 82% de positivas. As células acima
+   de 75% têm um canto dobrado e mostram, ao passar o cursor, o **resumo do Amália** sobre
+   o que aconteceu nesse dia.
+7. **Publicações especializadas**: que órgãos cobrem uma área acima do seu peso habitual —
+   escolha editorial, não volume —, com o peso de cada um no corpus ao lado.
+8. **De onde vêm as notícias**: quantas marcações vieram de cada publicação, em barras
+   ordenadas. É a leitura de **dependência** e não de especialização: um órgão transversal,
+   que não se destaca em área nenhuma, pode ser ainda assim a maior fonte do corpus. A nota
+   diz quantas publicações chegam para metade de tudo o que o painel conta.
+9. **Palavras do período**: nuvem com as expressões que trouxeram notícias — o tamanho vale
+   pela quantidade, e as que ficaram a zero são candidatas a revisão.
+
+E ainda, escolhendo comparar, **duas áreas lado a lado**, na mesma escala e com totais,
+médias, maior período, origem das notícias, picos e tom.
+
 - **As explicações vivem atrás de um «i»** ao lado do título de cada quadro, para não
   encherem o ecrã no telemóvel; na impressão voltam todas à vista.
 - **Legibilidade com muitos dias**: acima de 45 dias na janela o gráfico passa sozinho a
   semanas, acima de 240 a meses, dizendo que o fez — quem carregar num botão de agregação
-  passa a mandar. Os picos noticiosos ordenam-se pela intensidade (quanto excederam o
-  limiar) e não pela data; os que caem fora do período escolhido ficam recolhidos por área.
+  passa a mandar.
 - **Um período escolhido vale para tudo**: cada quadro escreve no título o período a que
-  responde. As duas exceções dizem-no: a trajetória percorre sempre o intervalo inteiro e
-  assinala o período com um ponto, e a matriz do tom mostra a evolução toda com a coluna
-  escolhida em destaque.
+  responde. As exceções dizem-no: a trajetória percorre sempre o intervalo inteiro e
+  assinala o período com um ponto.
 - Seletores de janela (30 dias, 90, um ano, tudo), de agregação (dia, semana, mês), de
   origem (Portugal, lusofonia, internacional, todas), de **agrupamento temático** e de
-  **área governativa**, que reduzem todos os quadros ao que se escolheu. Escolhido um
-  período no gráfico, os quadros seguintes seguem-no — seja ele um dia, uma semana ou um
-  mês, e sempre identificado pelo intervalo que cobre.
-- Modo claro e escuro, ecrã inteiro, impressão em PDF, exportação para Excel com quatro
+  **área governativa**, que reduzem todos os quadros ao que se escolheu.
+- Modo claro e escuro, ecrã inteiro, impressão em PDF, exportação para Excel com oito
   folhas, e manual de leitura embutido.
 
 Não precisa de servidor: é um ficheiro estático no mesmo GitHub Pages.
