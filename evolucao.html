@@ -325,9 +325,18 @@ table.esp th{font-weight:500;color:var(--texto)}
 table.esp .num{text-align:right;font-variant-numeric:tabular-nums}
 table.esp .esp-area{color:var(--texto-suave)}
 table.esp .esp-fraco{color:var(--texto-ligeiro)}
+/* Barra do peso de cada publicação no corpus: torna o quadro comparável de
+   relance, e responde à pergunta «de onde vem o volume» sem um ranking à parte. */
+.esp-peso{white-space:nowrap;text-align:right;min-width:96px}
+.esp-peso i{display:inline-block;height:7px;border-radius:99px;background:var(--azul);
+  opacity:.5;vertical-align:middle;margin-right:.4rem;max-width:56px}
 .esp-chip{display:inline-flex;align-items:baseline;gap:.35rem;margin:.12rem .3rem .12rem 0;
   padding:.18rem .55rem;border:1px solid var(--borda);border-radius:999px;
-  font-size:.74rem;color:var(--texto-suave);white-space:nowrap}
+  font-size:.74rem;color:var(--texto-suave);white-space:nowrap;
+  /* O fundo carrega com a força da especialização: numa lista de vinte
+     etiquetas, a cor diz em qual olhar primeiro sem obrigar a ler os números. */
+  background:color-mix(in srgb, var(--azul) calc(var(--f, 0) * 16%), transparent);
+  border-color:color-mix(in srgb, var(--azul) calc(var(--f, 0) * 45%), var(--borda))}
 .esp-chip b{color:var(--azul);font-weight:600;font-variant-numeric:tabular-nums}
 table.esp .esp-ind{font-weight:600;color:var(--azul)}
 
@@ -1201,13 +1210,15 @@ function barrasEmpilhadas(pontos){
          rótulos dizem coisas diferentes — o que mudou em cada data —, vale a
          pena mostrar os dois: escalona-se o segundo em altura e alinha-se o
          texto à esquerda e à direita da risca, para não se sobreporem. */
+      /* O texto começa SEMPRE à direita da sua risca. Alinhado ao centro ou à
+         esquerda, estendia-se para trás e chegava perto da divisória de semana
+         anterior, parecendo o rótulo dela. Quando duas marcas ficam coladas,
+         escalona-se a segunda em altura — os dois textos continuam visíveis e
+         cada um encostado à sua linha. */
       const colada = ordem > 0 && i - indices[ordem - 1] <= 3;
-      const proximaColada = ordem + 1 < indices.length
-        && indices[ordem + 1] - i <= 3;
       const y = colada ? 17 : 8;
-      // Havendo outra logo a seguir, este texto encosta à direita da sua risca.
-      const anc = colada ? "start" : (proximaColada ? "end" : "middle");
-      const dx = colada ? 2 : (proximaColada ? -2 : 0);
+      const anc = "start";
+      const dx = 3;
       return `<g class="marco"><title>${nota}</title>
         <line x1="${x}" y1="${colada ? 19 : 10}" x2="${x}" y2="${base}"/>
         <text class="rot marco-rot" x="${(+x + dx).toFixed(1)}" y="${y}"
@@ -1303,13 +1314,17 @@ function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null,
     }).join("");
   }
 
-  /* O tom só existe para a comunicação social nacional. Sem esta segunda linha,
-     a faixa ficava debaixo de uma linha que conta também a Lusofonia e o
-     estrangeiro — duas contagens diferentes empilhadas no mesmo eixo. Com ela,
-     a faixa tem a sua própria linha por cima e vê-se de quanto estamos a falar.
-     Quando a origem escolhida já é Portugal as duas coincidem e desenha-se uma. */
+  /* Segunda linha, a tracejado: só a parte de Portugal. Com todas as origens à
+     vista, a linha cheia soma Lusofonia e estrangeiro, e a distância entre as
+     duas mostra quanto de cada subida é cobertura nacional. Quando a origem
+     escolhida já é Portugal as duas coincidem e desenha-se uma só.
+
+     Esta linha esteve semanas por desenhar: a condição exigia a faixa do tom,
+     que entretanto foi retirada do cartão — e ficou a nota a prometê-la sem que
+     ela aparecesse. A condição é agora a que devia ter sido desde o início: ter
+     valores de Portugal, e serem diferentes do total. */
   let linhaPT = "";
-  if(valoresPT && faixa){
+  if(valoresPT && valoresPT.length === valores.length){
     const dPT = valoresPT.map((v, i) =>
       `${i ? "L" : "M"}${(i * passo).toFixed(1)},${esc(v).toFixed(1)}`).join(" ");
     if(dPT !== d){
@@ -1765,6 +1780,11 @@ function blocoPublicacoes(linhas, areas){
     .sort((a, b) => b.areas[0].indice - a.areas[0].indice)
     .slice(0, 12);
 
+  /* A maior das publicações mostradas dá a escala das barras de peso: o que
+     interessa é comparar umas com as outras, não com o corpus inteiro, onde
+     todas seriam riscas minúsculas. */
+  const maiorPub = Math.max(1, ...grupos.map(g => porPub[g.pub] || 0));
+
   const vazio = `<p class="nota">Nenhuma publicação se destaca ${diaEscolhido
       ? `em ${descreverPeriodo(diaEscolhido)} — um período curto tem poucas notícias
          por área e o desvio não se distingue do acaso`
@@ -1792,10 +1812,14 @@ function blocoPublicacoes(linhas, areas){
       ${grupos.map(g => `<tr>
         <th>${g.pub}</th>
         <td>${g.areas.map(r => `<span class="esp-chip"
-          title="${r.n}: ${num(r.q)} notícias, ${pct(r.naArea)} da área">${r.n}
+          style="--f:${Math.min(1, (r.indice - 1) / 6).toFixed(2)}"
+          title="${r.n}: ${num(r.q)} notícias, ${pct(r.naArea)} da área — ${
+            vezes(r.indice)} o peso que esta publicação tem no conjunto">${r.n}
           <b>${vezes(r.indice)}</b></span>`).join("")}</td>
         <td class="num">${num(porPub[g.pub])}</td>
-        <td class="num esp-fraco">${pct(g.noTodo)}</td>
+        <td class="esp-peso"><i style="width:${
+          Math.max(2, Math.round(100 * porPub[g.pub] / maiorPub))}%"></i>
+          <span class="esp-fraco">${pct(g.noTodo)}</span></td>
       </tr>`).join("")}
     </table>`;
 
@@ -1865,6 +1889,10 @@ function blocoPublicacoes(linhas, areas){
              : `Esta contagem inclui todas as origens: o ficheiro das publicações ainda é
                 da versão que não as distinguia, e passa a distingui-las na próxima
                 recolha.`)}
+        A barra da última coluna é o <strong>peso de cada publicação no corpus</strong>,
+        proporcional à maior das mostradas: diz de onde vem o volume que o painel conta,
+        e mostra quando o retrato depende muito de poucos órgãos. A cor das etiquetas
+        carrega com a força da especialização.
         Um limite do registo: guardam-se as doze publicações com mais volume em cada área
         e dia, o que deixa de fora uma cauda longa de cerca de 5%.</p>
     </div>`;
@@ -1963,7 +1991,7 @@ function blocoTempestades(linhas){
         <div class="tp" data-pico="${chave}" role="button" tabindex="0"
              title="Ver o que motivou este pico">
           <span class="tp-data">${dataPt}</span>
-          <span class="tp-area">${t.area}</span>
+  ${ordemPicos === "area" ? "" : `<span class="tp-area">${t.area}</span>`}
           <span class="tp-n"><b class="tp-forca">${vezes(t)}×</b> ${num(t.hoje)} notícias ·
             mediana ${numDec(t.mediana)}
             <span class="tp-seta">▾</span></span>
@@ -2356,7 +2384,7 @@ function desenhar(){
         const detalhe = visiveis.map(m =>
           `<strong>${dataPt(m.data)}:</strong> ${m.nota}`).join(" ");
         return `<p class="marco-legenda"><span class="marco-risca"></span>
-          <span>${chave} — mudanças no método de leitura, não na atualidade.</span></p>
+          <span>${chave}</span></p>
         <p class="nota"><strong>As marcas tracejadas no gráfico</strong> assinalam dias
           em que o radar passou a ver de outra maneira. ${detalhe} Em qualquer dos casos
           o mesmo dia noticioso passa a dar mais notícias contadas: a diferença entre os
