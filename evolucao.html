@@ -1989,11 +1989,14 @@ function blocoPublicacoes(linhas, areas){
         proporcional à maior das mostradas: diz de onde vem o volume que o painel conta,
         e mostra quando o retrato depende muito de poucos órgãos. A cor das etiquetas
         carrega com a força da especialização.
-        Um limite do registo: em cada área e dia guardam-se as doze publicações com mais
-        volume. Só um em cada cinco pares área-dia chega a ter mais de doze publicações,
-        e o que fica de fora são <strong>4% das marcações</strong> — sempre das
-        publicações com menos volume nesse dia, pelo que os totais das pequenas são um
-        mínimo.</p>
+        <strong>Um limite do registo, que não se deve confundir com a lista acima.</strong>
+        Todos os dias, e para cada área, o painel arquiva as publicações que mais
+        noticiaram essa área nesse dia — cabem doze. As que ficarem além dessas doze
+        <em>nesse dia e nessa área</em> não chegam a ser registadas, e somam cerca de
+        <strong>5% das marcações do mês</strong>: são sempre publicações de pouco volume
+        nesse dia, pelo que os totais das mais pequenas ficam um pouco abaixo do real.
+        Coisa diferente é o número de linhas que estes quadros mostram: aí ninguém se
+        perde — o que não cabe na lista aparece agregado no fim.</p>
     </div>`;
 }
 
@@ -2089,9 +2092,12 @@ function blocoPesoPublicacoes(linhas){
         para metade de tudo o que o painel conta</strong>, em ${lista.length} com
         marcações no período. A cor da barra é a origem — Portugal, Lusofonia ou
         internacional. Conta marcações, e não notícias: uma notícia que toque três áreas
-        conta três vezes. Vale aqui o mesmo limite do quadro anterior: em cada área e dia guardam-se
-        as doze publicações com mais volume, o que deixa de fora 4% das marcações,
-        sempre das de menor volume.</p>
+        conta três vezes. As <strong>${TOPO} primeiras</strong> desta lista são as maiores do período; as
+        restantes não desaparecem — vão todas para a linha «outras publicações», que fecha
+        a conta nos 100%. Nota diferente e a não confundir com esta: o arquivo guarda, por
+        cada área e cada dia, até doze publicações, e o que fica além disso — cerca de 5%
+        das marcações do mês, sempre de publicações com pouco volume nesse dia — não entra
+        em nenhum destes quadros.</p>
     </div>`;
 }
 
