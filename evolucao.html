@@ -325,11 +325,36 @@ table.esp th{font-weight:500;color:var(--texto)}
 table.esp .num{text-align:right;font-variant-numeric:tabular-nums}
 table.esp .esp-area{color:var(--texto-suave)}
 table.esp .esp-fraco{color:var(--texto-ligeiro)}
+/* Ranking do peso das publicações: barras horizontais ordenadas. */
+table.pp{width:100%;border-collapse:collapse;font-size:.8rem}
+table.pp th{font-weight:500;color:var(--texto-suave);text-align:left;padding:.28rem .4rem}
+table.pp tr:first-child th{font-size:.7rem;color:var(--texto-ligeiro);text-transform:uppercase;
+  letter-spacing:.05em}
+table.pp td{padding:.28rem .4rem;font-variant-numeric:tabular-nums}
+table.pp .pp-pos{color:var(--texto-ligeiro);font-size:.74rem;width:1.6rem;text-align:right}
+table.pp .pp-nome{max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  color:var(--texto)}
+table.pp .pp-barra{width:46%;min-width:90px}
+table.pp .pp-barra i{display:block;height:9px;border-radius:99px;background:var(--azul);
+  opacity:.75;min-width:2px}
+table.pp .pp-pct{color:var(--texto-suave)}
+table.pp .pp-acum{color:var(--texto-ligeiro);font-size:.74rem}
+table.pp tr.pp-cauda{border-top:1px dashed var(--borda)}
+table.pp tr.pp-cauda .pp-nome{color:var(--texto-ligeiro);font-style:italic}
+table.pp tr.pp-cauda .pp-barra i{background:var(--borda);opacity:1}
+@media(max-width:620px){table.pp .pp-acum{display:none}table.pp .pp-nome{max-width:120px}}
 /* Barra do peso de cada publicação no corpus: torna o quadro comparável de
    relance, e responde à pergunta «de onde vem o volume» sem um ranking à parte. */
-.esp-peso{white-space:nowrap;text-align:right;min-width:96px}
-.esp-peso i{display:inline-block;height:7px;border-radius:99px;background:var(--azul);
-  opacity:.5;vertical-align:middle;margin-right:.4rem;max-width:56px}
+/* A barra tinha «width» em percentagem do contentor E um max-width de 56px: o
+   contentor era largo, pelo que tudo acima de metade batia no teto e saía com o
+   mesmo comprimento — 5%, 6% e 7% ficavam iguais, e valores pequenos apareciam
+   maiores do que deviam. Agora a calha tem largura FIXA e a percentagem é da
+   calha, que é o que faz a proporção ser verdadeira. */
+.esp-peso{display:flex;align-items:center;justify-content:flex-end;gap:.45rem;
+  white-space:nowrap}
+.esp-calha{width:58px;height:7px;flex:none;border-radius:99px;
+  background:var(--superficie-alt);border:1px solid var(--borda);overflow:hidden}
+.esp-calha i{display:block;height:100%;background:var(--azul);opacity:.55}
 .esp-chip{display:inline-flex;align-items:baseline;gap:.35rem;margin:.12rem .3rem .12rem 0;
   padding:.18rem .55rem;border:1px solid var(--borda);border-radius:999px;
   font-size:.74rem;color:var(--texto-suave);white-space:nowrap;
@@ -1817,8 +1842,9 @@ function blocoPublicacoes(linhas, areas){
             vezes(r.indice)} o peso que esta publicação tem no conjunto">${r.n}
           <b>${vezes(r.indice)}</b></span>`).join("")}</td>
         <td class="num">${num(porPub[g.pub])}</td>
-        <td class="esp-peso"><i style="width:${
-          Math.max(2, Math.round(100 * porPub[g.pub] / maiorPub))}%"></i>
+        <td class="esp-peso">
+          <span class="esp-calha"><i style="width:${
+            (100 * (porPub[g.pub] || 0) / maiorPub).toFixed(1)}%"></i></span>
           <span class="esp-fraco">${pct(g.noTodo)}</span></td>
       </tr>`).join("")}
     </table>`;
@@ -1895,6 +1921,104 @@ function blocoPublicacoes(linhas, areas){
         carrega com a força da especialização.
         Um limite do registo: guardam-se as doze publicações com mais volume em cada área
         e dia, o que deixa de fora uma cauda longa de cerca de 5%.</p>
+    </div>`;
+}
+
+/* DE ONDE VÊM AS NOTÍCIAS — o peso de cada publicação no corpus.
+   
+   O quadro anterior responde a «quem se especializa»; este responde a «de quem
+   dependemos». São perguntas diferentes e a resposta é quase oposta: o
+   Observador não se especializa em área nenhuma — reparte-se por todas — e é
+   ainda assim a maior fonte do corpus, com quase um quinto das marcações. Sem
+   este quadro, os órgãos transversais eram invisíveis no painel precisamente
+   por serem transversais.
+
+   BARRAS e não círculo. Um donut com 38 fatias é ilegível, e um donut com as
+   seis maiores mais uma fatia «outras» esconde exatamente o que aqui interessa:
+   a forma da cauda. Barras horizontais ordenadas comparam magnitudes com
+   precisão, comportam nomes longos sem os cortar e mostram de relance a
+   inclinação da distribuição. A linha do acumulado, ao lado, diz quantas
+   publicações são precisas para chegar a metade do corpus — que é a leitura de
+   dependência que importa a quem tem de defender o método.  */
+function blocoPesoPublicacoes(linhas){
+  if(!PUBLICACOES.length || !linhas.length) return "";
+  const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
+  const seguirOrigem = origem !== "todas" && Object.keys(ORIGEM_PUB).length > 0;
+
+  const porPub = {};
+  PUBLICACOES.filter(d => d.data >= primeiro && d.data <= ultimo &&
+                          (!diaEscolhido || chaveDoPeriodo(d.data) === diaEscolhido))
+    .forEach(d => Object.entries(d.areas || {}).forEach(([nome, pubs]) => {
+      if(areaEscolhida && nome !== areaEscolhida) return;
+      if(grupoEscolhido && !areasDoGrupo(grupoEscolhido).has(nome)) return;
+      Object.entries(pubs).forEach(([pub, q]) => {
+        if(seguirOrigem && ORIGEM_PUB[pub] !== origem) return;
+        porPub[pub] = (porPub[pub] || 0) + q;
+      });
+    }));
+
+  const lista = Object.entries(porPub).sort((a, b) => b[1] - a[1]);
+  if(lista.length < 3) return "";
+  const total = lista.reduce((s, [, q]) => s + q, 0) || 1;
+  const maior = lista[0][1];
+  const TOPO = 12;
+  const topo = lista.slice(0, TOPO);
+  const cauda = lista.slice(TOPO);
+  const caudaQ = cauda.reduce((s, [, q]) => s + q, 0);
+
+  /* Quantas publicações fazem metade do corpus: uma frase só, e diz mais sobre
+     a dependência do que qualquer gráfico. */
+  let acumulado = 0, paraMetade = 0;
+  for(const [, q] of lista){ acumulado += q; paraMetade++; if(acumulado >= total / 2) break; }
+
+  const pctv = q => (100 * q / total).toFixed(1).replace(".", ",") + "%";
+  let corrido = 0;
+  const linha = ([pub, q], i) => {
+    corrido += q;
+    const eOrigem = ORIGEM_PUB[pub];
+    const corB = eOrigem === "lusofonas" ? "var(--dourado)"
+      : eOrigem === "internacionais" ? "var(--teal)" : "var(--azul)";
+    return `<tr>
+      <td class="pp-pos">${i + 1}</td>
+      <th class="pp-nome" title="${pub}">${pub}</th>
+      <td class="pp-barra"><i style="width:${(100 * q / maior).toFixed(1)}%;background:${corB}"
+        title="${num(q)} marcações, ${pctv(q)} do período"></i></td>
+      <td class="num">${num(q)}</td>
+      <td class="num pp-pct">${pctv(q)}</td>
+      <td class="num pp-acum" title="As ${i + 1} maiores fazem ${
+        (100 * corrido / total).toFixed(0)}% do total">${
+        (100 * corrido / total).toFixed(0)}%</td>
+    </tr>`;
+  };
+
+  return `
+    <div class="bloco">
+      <h2>De onde vêm as notícias <span class="h2-foco">· peso de cada publicação</span></h2>
+      <div class="mtz-rolo">
+        <table class="pp">
+          <tr><th></th><th>Publicação</th><th></th><th class="num">Marcações</th>
+            <th class="num">Parte</th><th class="num">Acum.</th></tr>
+          ${topo.map(linha).join("")}
+          ${cauda.length ? `<tr class="pp-cauda">
+            <td class="pp-pos">·</td>
+            <th class="pp-nome">outras ${cauda.length} publicações</th>
+            <td class="pp-barra"><i style="width:${(100 * caudaQ / maior).toFixed(1)}%"></i></td>
+            <td class="num">${num(caudaQ)}</td>
+            <td class="num pp-pct">${pctv(caudaQ)}</td>
+            <td class="num pp-acum">100%</td>
+          </tr>` : ""}
+        </table>
+      </div>
+      <p class="nota">Quantas marcações vieram de cada publicação no período — a leitura
+        de <strong>dependência</strong>, não de especialização: um órgão transversal, que
+        não se destaca em área nenhuma, pode ser ainda assim a maior fonte do corpus.
+        <strong>${paraMetade} ${paraMetade === 1 ? "publicação chega" : "publicações chegam"}
+        para metade de tudo o que o painel conta</strong>, em ${lista.length} com
+        marcações no período. A cor da barra é a origem — Portugal, Lusofonia ou
+        internacional. Conta marcações, e não notícias: uma notícia que toque três áreas
+        conta três vezes. Vale aqui o mesmo limite do quadro anterior: o registo guarda as
+        doze publicações com mais volume em cada área e dia, deixando de fora uma cauda
+        longa de cerca de 5%.</p>
     </div>`;
 }
 
@@ -2535,6 +2659,8 @@ function desenhar(){
     ${blocoComparacao(linhas, pares)}
 
     ${blocoPublicacoes(linhas, areas)}
+
+    ${blocoPesoPublicacoes(linhas)}
 
     <div class="bloco">
       <h2>${areaEscolhida ? "Palavras da área" : "Palavras do período"} ${rotuloFoco}</h2>
