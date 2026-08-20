@@ -141,6 +141,18 @@ jobs:
       encadeado: true
     secrets: inherit
 
+  # Depende do SENTIMENTO, não da recolha: só há coberturas negativas a
+  # resumir depois de o tom do dia estar avaliado. Como o passo leve dele
+  # verifica primeiro se há alguma célula por resumir, na maioria das
+  # passagens isto não chega a carregar o modelo.
+  resumo_matriz:
+    needs: sentimento
+    if: always() && needs.sentimento.result == 'success'
+    uses: ./.github/workflows/resumo-matriz.yml
+    with:
+      encadeado: true
+    secrets: inherit
+
   # Corre mesmo que a síntese falhe: o relatório sai sem o parágrafo, que é
   # acessório. As notícias é que não podem faltar.
   relatorio:

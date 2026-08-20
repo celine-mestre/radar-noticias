@@ -1,0 +1,114 @@
+name: Resumo das coberturas negativas pelo Amalia
+
+# Para cada dia em que uma area teve cobertura negativa acima do limiar (75%),
+# pede ao Amalia um resumo do que aconteceu, a partir dos titulos das noticias
+# NEGATIVAS desse dia e area. Incremental: so resume celulas ainda sem resumo.
+# Grava matriz-resumos.json, que a matriz do tom le no painel de evolucao.
+#
+# So por DIA: o dia e o atomo e nunca muda. As vistas por semana e por mes
+# juntam os resumos dos dias que as compoem, sem gerar nada de novo.
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      encadeado:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gravacao-repositorio-matriz
+  cancel-in-progress: false
+
+jobs:
+  # Passo leve, sem modelo: há algum pico ainda sem resumo? Se não houver,
+  # nada disto precisa de correr — poupa descarregar 5,6 GB a cada recolha.
+  decidir:
+    runs-on: ubuntu-latest
+    outputs:
+      seguir: ${{ steps.v.outputs.seguir }}
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Ha coberturas negativas por resumir?
+        id: v
+        run: |
+          python3 - <<'PY'
+          import json, os
+
+          LIMIAR, MINIMO = 75, 8
+          celulas = []
+          if os.path.exists("sentimento-serie.json"):
+              with open("sentimento-serie.json", encoding="utf-8") as f:
+                  for d in json.load(f).get("dias", []):
+                      for area, c in (d.get("areas") or {}).items():
+                          av = c.get("avaliadas", 0)
+                          if av >= MINIMO and round(100 * c.get("negativo", 0) / av) >= LIMIAR:
+                              celulas.append(f"{d.get('data')}|{area}")
+          feitos = {}
+          if os.path.exists("matriz-resumos.json"):
+              with open("matriz-resumos.json", encoding="utf-8") as f:
+                  feitos = json.load(f).get("resumos", {})
+          faltam = [c for c in celulas if c not in feitos]
+
+          # Só a linha «nome=valor» entra no ficheiro de resultados: o GitHub
+          # rejeita o ficheiro inteiro se lá encontrar outra coisa.
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as saida:
+              saida.write(f"seguir={'sim' if faltam else 'nao'}\n")
+          print(f"{len(faltam)} coberturas negativas por resumir, {len(feitos)} ja feitas")
+          PY
+
+  resumir:
+    needs: decidir
+    if: needs.decidir.outputs.seguir == 'sim'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install --quiet llama-cpp-python huggingface-hub openpyxl
+
+      - name: Guardar o modelo em cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: amalia-gguf
+
+      - name: Resumir as coberturas negativas
+        run: python resumo_matriz.py --local --teto 8
+
+      - name: Gravar os resumos
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          # Como noutros fluxos do Amalia, o push pode colidir com um commit da
+          # recolha de 2 em 2 horas. Tenta-se ate 5 vezes, buscando o mais
+          # recente antes de reenviar, para nao perder os resumos.
+          for tentativa in 1 2 3 4 5; do
+            git add matriz-resumos.json 2>/dev/null || true
+            git diff --cached --quiet && { echo "Nada a gravar."; break; }
+            git commit -m "Resumo das coberturas negativas" || true
+            git pull --rebase --autostash -X theirs origin main || { git rebase --abort 2>/dev/null || true; }
+            if git push origin HEAD:main; then
+              echo "Gravado na tentativa $tentativa."
+              break
+            fi
+            echo "Colisao na tentativa $tentativa; a repetir..."
+            sleep 5
+          done
