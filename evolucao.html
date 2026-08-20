@@ -301,6 +301,10 @@ table.cmp th:first-child{text-align:left;font-weight:500;color:var(--texto-suave
 table.cmp tr:first-child th{border-top:0;font-size:.76rem}
 table.cmp td{font-variant-numeric:tabular-nums;color:var(--texto)}
 table.cmp small{color:var(--texto-ligeiro);font-size:.86em}
+/* Aviso de que o quadro está a contar num universo restrito. */
+.tp-regime{display:inline-block;margin-left:.5rem;padding:.05rem .45rem;border-radius:99px;
+  border:1px solid var(--dourado);color:var(--dourado);font-size:.62rem;font-weight:600;
+  letter-spacing:.04em;text-transform:uppercase;vertical-align:middle;cursor:help}
 /* Seletor de leitura do registo de picos */
 .tp-ordem{display:flex;gap:.3rem;align-items:center;margin:-.2rem 0 .7rem;flex-wrap:wrap}
 .tp-ordem-rot{font-size:.72rem;color:var(--texto-ligeiro);margin-right:.15rem}
@@ -760,6 +764,7 @@ let SERIE = [];        // [{data, areas:{nome:{noticias, novas, fontes, origens,
 let TEMPESTADES = [];  // [{data, area, hoje, mediana, limiar}] — do alertas.json
 let RESUMOS_PICOS = {}; // {"data|área": {texto, n}} — do picos-resumos.json
 let RESUMOS_TOM = {};   // {"data|área": {texto, n, pct}} — do matriz-resumos.json
+let TRANSICAO_PICOS = null; // {marco, fim, publicacoes_de_referencia} — do alertas.json
 /* Patamar de leitura, partilhado pelo quadro do sentimento e pela faixa de tom
    das trajetórias: abaixo disto uma proporção é ruído, não leitura. */
 const MINIMO_AVALIADAS = 8;
@@ -919,7 +924,14 @@ async function carregarTempestades(){
       const r = await fetch(caminho, { cache: "no-store" });
       if(!r.ok) continue;
       const d = await r.json();
-      if(Array.isArray(d.historico)) return d.historico;
+      if(Array.isArray(d.historico)){
+        /* Guarda-se também o regime em que os picos foram medidos: durante a
+           transição de método, contam-se apenas as publicações comparáveis, e
+           o painel tem de o dizer — senão o mesmo dia aparece com 52 notícias
+           no quadro dos picos e 109 no gráfico de volume, sem explicação. */
+        TRANSICAO_PICOS = d.transicao_fontes || null;
+        return d.historico;
+      }
     }catch(e){ /* segue */ }
   }
   return [];
@@ -2193,7 +2205,10 @@ function blocoTempestades(linhas){
 
   return `
     <div class="bloco">
-      <h2>⚡ Picos noticiosos registados${sufixoFoco()}</h2>
+      <h2>⚡ Picos noticiosos registados${sufixoFoco()}${TRANSICAO_PICOS
+        ? `<span class="tp-regime" title="Durante a transição de método, os picos são contados apenas nas ${
+            TRANSICAO_PICOS.publicacoes_de_referencia || ""} publicações cuja leitura não mudou. As contagens deste quadro são por isso menores do que as dos restantes, que contam todas as publicações.">contagem restrita</span>`
+        : ""}</h2>
       <div class="tp-ordem" id="ordemPicos">
         <span class="tp-ordem-rot">Ordenar por</span>
         <button data-ordem="data"${ordemPicos === "data" ? ' class="ativo"' : ""}>data</button>
@@ -2249,10 +2264,22 @@ function blocoTempestades(linhas){
         </div>` : ""}
       <p class="nota">Dias em que uma área teve um volume de notícias muito acima do habitual —
         mediana dos 28 dias anteriores à mesma hora, mais dois desvios robustos.
-        Depois de uma mudança de método de leitura — as marcas assinaladas no gráfico de
-        volume —, tanto o dia como a base passam a ser contados apenas nas publicações
-        cuja leitura não mudou, até a base se renovar por inteiro. Os picos desse período
-        medem-se assim num subconjunto do corpus, mas comparam o comparável.
+        ${TRANSICAO_PICOS ? `<strong>Nota importante sobre os números deste quadro:</strong>
+        depois da mudança de método de leitura, tanto o dia como a base passam a ser
+        contados apenas nas
+        ${TRANSICAO_PICOS.publicacoes_de_referencia || ""} publicações cuja leitura não
+        mudou — é o que torna a comparação legítima. <strong>Por isso as contagens aqui
+        são menores do que as dos outros quadros</strong>, que contam todas as
+        publicações: no mesmo dia e na mesma área, um pico pode dizer 52 notícias e o
+        gráfico de volume dizer 109, sem que nenhum esteja errado. São universos
+        diferentes, e assim ficam até ${
+          TRANSICAO_PICOS.fim ? `${TRANSICAO_PICOS.fim.slice(8)}/${
+            TRANSICAO_PICOS.fim.slice(5, 7)}/${TRANSICAO_PICOS.fim.slice(0, 4)}` : "a base renovar"},
+        quando a base de comparação estiver toda no método novo e voltar a contar-se
+        tudo.`
+        : `Depois de uma mudança de método de leitura — as marcas assinaladas no gráfico
+        de volume —, tanto o dia como a base passam a ser contados apenas nas publicações
+        cuja leitura não mudou, até a base se renovar por inteiro.`}
         O número à esquerda é quantas vezes o dia esteve acima da mediana da área —
         o seu volume habitual —, e é por ele que a lista está ordenada: o maior
         primeiro, e não o mais recente. Mede-se contra a mediana e não contra o
