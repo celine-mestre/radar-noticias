@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-20 03:42",
+ "gerado": "2026-08-20 03:52",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "nota": "O que aconteceu nos dias em que a cobertura de uma área foi negativa em 75% ou mais, a partir dos títulos das notícias negativas desse dia. Descreve acontecimentos, não a atitude das publicações.",
@@ -43,6 +43,26 @@
    "texto": "No dia 16 de agosto de 2026, registou-se um incêndio de reativação em Torre de Moncorvo, suscitando preocupações sobre a gestão de risco e prevenção de incêndios florestais. Paralelamente, a cobertura mediática focou-se em declarações críticas de Luís Montenegro, nomeadamente por parte de Pedro Nuno Santos, que o acusaram de censura e de falta de projeto político, com particular ênfase na gestão da REN e no regresso do Estado ao seu capital. O tema dominante foi a perceção de fragilidade governamental e a crítica à gestão de políticas públicas, nomeadamente no que concerne ao custo de vida e à transparência na gestão de empresas públicas.",
    "n": 10,
    "pct": 83
+  },
+  "2026-08-16|Ambiente e Energia": {
+   "texto": "No dia 16 de agosto de 2026, verificaram-se múltiplos acontecimentos que mereceram cobertura negativa na área do Ambiente e Energia. A compra de 13,7% da REN por parte de um assessor do ministro Galamba suscitou críticas, enquanto a Nvidia reduziu a garantia de um centro de dados da OpenAI. Adicionalmente, um suspeito de incêndio florestal foi sujeito a prisão preventiva no Sabugal e um furacão, o primeiro a atingir o Havai desde 1992, provocou cortes de energia. Paralelamente, a produção de resíduos em Portugal intensificou-se, colocando os aterros próximos da saturação. O tema dominante foi a degradação da gestão ambiental e energética.",
+   "n": 5,
+   "pct": 75
+  },
+  "2026-08-18|Justiça": {
+   "texto": "No dia 18 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza judicial e prisional, predominantemente no âmbito da justiça criminal e administrativa. Destacam-se a aplicação de medidas de prisão preventiva a indivíduos por diversos crimes, incluindo homicídio, roubo, agressão e fraude, em diferentes localidades de Portugal. Adicionalmente, verifica-se a ocorrência de mortes em estabelecimentos prisionais, associadas a doenças contagiosas, e a condenação de um cidadão ucraniano por atos de sabotagem na Alemanha. O TPI e a Meta enfrentaram medidas sancionatórias dos EUA, com implicações no Estado de Direito e no impacto das redes sociais em jovens, respetivamente.",
+   "n": 27,
+   "pct": 76
+  },
+  "2026-08-19|Defesa Nacional": {
+   "texto": "No dia 19 de agosto de 2026, a área da Defesa Nacional registou uma série de acontecimentos marcados por conflitos bélicos e instabilidade geopolítica. Destacam-se ataques de drones russos contra instalações policiais ucranianas, que resultaram na morte de dois agentes, e a troca de 103 prisioneiros de guerra entre Kiev e Moscovo. Paralelamente, a crise energética na Rússia motivou a importação de combustível, enquanto a Ucrânia intensificou ataques aéreos, incluindo um ataque a uma central térmica ucraniana. Adicionalmente, registaram-se demissões de altos responsáveis da Presidência ucraniana por suspeitas de corrupção e a tomada de posse de um novo ministro da Defesa em pleno contexto de crise política. O tema dominante foi a escalada do conflito na Ucrânia e a ameaça de alargamento do conflito a outros atores internacionais, nomeadamente através de ameaças de ataques a infraestruturas militares na Europa.",
+   "n": 44,
+   "pct": 78
+  },
+  "2026-08-19|Administração Interna": {
+   "texto": "No dia 19 de agosto de 2026, registaram-se múltiplos incidentes de segurança pública e ocorrências criminais em diversas regiões de Portugal. Destacam-se a ocorrência de incêndios florestais em Torre de Moncorvo, Arouca e Santo Tirso, com quase 1250 operacionais envolvidos, e a queda de uma grua em Belas, resultando na morte de dois trabalhadores. Adicionalmente, verificaram-se detenções por crimes diversos, incluindo tráfico de estupefacientes, rapto, roubo, violação e maus-tratos a pais, bem como apreensões de material pirotécnico ilegal. O tema dominante é a criminalidade e a segurança pública, com particular incidência em ocorrências violentas e infrações relacionadas com a ordem pública.",
+   "n": 42,
+   "pct": 81
   }
  }
 }
