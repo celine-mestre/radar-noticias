@@ -1,34 +1,14 @@
 {
- "gerado": "2026-08-21 15:12",
+ "gerado": "2026-08-21 17:43",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
  "nota": "O que aconteceu nos dias em que a cobertura de uma área foi negativa em 75% ou mais, ou positiva em 50% ou mais, a partir dos títulos das notícias desse tom nesse dia. Descreve acontecimentos, não a atitude das publicações. As chaves com «|+» no fim são do lado positivo.",
  "resumos": {
-  "2026-08-04|Justiça": {
-   "texto": "No dia 2026-08-04, a área da Justiça registou múltiplos acontecimentos de natureza judicial e prisional. Três indivíduos foram detidos na operação Flamma e colocados em prisão preventiva, um deles por incêndio criminoso contra a sua companheira na Amadora. Adicionalmente, um homem foi sujeito a preventiva por crimes sexuais, conforme noticiado. Observou-se ainda a exclusão de criminosos sexuais da possibilidade de libertação antecipada, e casos de reclusos com penas pendentes detidos em condições de sobrelotação, como o caso de um indivíduo encontrado em Vagos com um ano e dois meses de pena por cumprir. Por fim, registou-se um homicídio seguido de ocultação de cadáver na Lagoa de Óbidos, envolvendo uma consultora. O tema dominante parece ser a execução de penas, a segurança prisional e a atuação judicial em casos de crimes graves.",
-   "n": 12,
-   "pct": 86
-  },
   "2026-08-06|Trabalho, Solidariedade e Segurança Social": {
    "texto": "No dia 6 de agosto de 2026, registaram-se múltiplos acontecimentos negativos na área do Trabalho, Solidariedade e Segurança Social. Destacam-se o encerramento de uma fábrica de calçado em Gaia, com despedimento de 54 trabalhadores, e a falta de resposta adequada do Estado ao apoio social, conforme criticado pelo seguro. Adicionalmente, verificou-se um défice de 100 mil camas para estudantes deslocados e a deteção de situações de exploração laboral no Alentejo. Observou-se também uma instabilidade laboral na RTP, com salários em risco devido a um relatório da IGF, e decisões pendentes sobre o futuro da empresa Conta Lá. O tema dominante é a crise no emprego e a insuficiência de respostas sociais face a desafios económicos e laborais.",
    "n": 11,
    "pct": 79
-  },
-  "2026-08-09|Defesa Nacional": {
-   "texto": "No dia 2026-08-09, a área da Defesa Nacional foi marcada por múltiplos eventos de cariz internacional, com foco em conflitos e ameaças à segurança global. Destacam-se o ataque jihadista a militares no Mali, que resultou em pelo menos dez mortos, e o aumento do número de vítimas mortais em ataques na Ucrânia, com a CNN Portugal a referir que \"não é comum termos este número de vítimas mortais em ataques na Ucrânia\". Adicionalmente, registaram-se ataques com drones e mísseis russos na Ucrânia, com consequências em perdas humanas e danos materiais, e a destruição de mais de 150 drones ucranianos pelas forças russas. Paralelamente, a situação geopolítica no Médio Oriente foi marcada por exigências iranianas para a reabertura do estreito de Ormuz e por debates sobre potenciais opções militares contra o Irão, enquanto o Pentágono apelava à aceleração da produção de defesa face à escassez de munições.",
-   "n": 17,
-   "pct": 85
-  },
-  "2026-08-09|Saúde": {
-   "texto": "No dia 9 de agosto de 2026, registou-se uma colisão aquática no Alqueva, resultando na ferida grave de uma mulher de 49 anos, conforme noticiado pela RTP Notícias, Observador e Healthnews. Adicionalmente, verificou-se uma situação de carência económica entre cidadãos portugueses residentes na Venezuela, tema abordado pelo Observador. A cobertura noticiosa evidenciou ainda a falta de previsão de reforço de especialistas em oftalmologia nos hospitais, face a um eclipse, e dificuldades no acompanhamento pós-hospitalar de doentes com dano cerebral, conforme reportado pelo Observador e CNN Portugal. O tema dominante foi, assim, a saúde, com foco em eventos adversos e limitações nos serviços.",
-   "n": 7,
-   "pct": 88
-  },
-  "2026-08-10|Presidência": {
-   "texto": "No dia 10 de agosto de 2026, os títulos negativos da área da Presidência refletem uma crise migratória em Ceuta, com impacto económico e social. Empresários locais reportam perdas superiores a 17,8 milhões de euros devido à instabilidade migratória, enquanto a tensão fronteiriça manifesta-se em relatos de cidadãos a confrontar forças policiais. Paralelamente, Itália e Dinamarca criticam o \"descontrolo da imigração\" e propõem o reforço das deportações, reiterando posições em diversos órgãos de comunicação. Adicionalmente, um incêndio numa fábrica na Arábia Saudita causou a morte de 16 trabalhadores migrantes do Bangladesh, evidenciando as consequências trágicas de fluxos migratórios descontrolados.",
-   "n": 9,
-   "pct": 75
   },
   "2026-08-15|Administração Interna": {
    "texto": "No dia 15 de agosto de 2026, ocorreram múltiplos incidentes de natureza diversa na área da Administração Interna. Destacam-se um acidente com uma viatura dos bombeiros em Amarante e outro em Celorico de Basto, com vítimas mortais, bem como um incêndio florestal em Bragança que mobilizou mais de 100 operacionais. Adicionalmente, registaram-se incidentes de sinistralidade rodoviária, com o Presidente a expressar preocupação com a situação, e um aumento da pressão migratória nas fronteiras de Ceuta, com utilização de gás lacrimogéneo pelas autoridades marroquinas. A área da segurança interna foi também afetada por eventos externos, como ataques a instalações espaciais russas e a ocorrência de incêndios florestais em França, Bélgica e Balcãs.",
@@ -49,54 +29,6 @@
    "texto": "No dia 19 de agosto de 2026, registaram-se múltiplos incidentes de segurança pública e ocorrências criminais em diversas regiões de Portugal. Destacam-se a ocorrência de incêndios florestais em Torre de Moncorvo, Arouca e Santo Tirso, com quase 1250 operacionais envolvidos, e a queda de uma grua em Belas, resultando na morte de dois trabalhadores. Adicionalmente, verificaram-se detenções por crimes diversos, incluindo tráfico de estupefacientes, rapto, roubo, violação e maus-tratos a pais, bem como apreensões de material pirotécnico ilegal. O tema dominante é a criminalidade e a segurança pública, com particular incidência em ocorrências violentas e infrações relacionadas com a ordem pública.",
    "n": 42,
    "pct": 81
-  },
-  "2026-08-04|Agricultura e Mar|+": {
-   "texto": "O Governo implementou medidas de apoio à formação e informação no âmbito do plano da Política Agrícola Comum (PAC), destinadas a mais de 170 mil agricultores e pescadores. Simultaneamente, foi efetuado o pagamento antecipado de 87,1 milhões de euros a 170 mil agricultores e pescadores, abrangendo apoios de outubro, incluindo adiantamentos a explorações pecuárias afetadas pela língua azul. Este conjunto de ações, concretizadas em julho, reflete um tema dominante de reforço financeiro e apoio setorial no âmbito da agricultura e do mar.",
-   "n": 8,
-   "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-05|Ambiente e Energia|+": {
-   "texto": "No dia 5 de agosto de 2026, foram noticiados diversos desenvolvimentos na área do Ambiente e Energia. As autoridades moçambicanas reforçaram a assistência a 250 mil pessoas em risco de seca, através de medidas de mitigação e apoio alimentar. A Agência Portuguesa do Ambiente e do Mar (APAEM) anunciou a atribuição de mais de 3 milhões de euros para novos projetos em áreas protegidas, visando a conservação da biodiversidade e a gestão sustentável dos recursos naturais. Adicionalmente, o governo cabo-verdiano procedeu à redução de tarifas no setor elétrico, procurando facilitar o acesso à energia para a população. Paralelamente, a Moove concretizou a transformação de 65 postos de abastecimento em comunidades de energia, promovendo a descentralização da produção e distribuição de energia renovável.",
-   "n": 7,
-   "pct": 54,
-   "lado": "positivas"
-  },
-  "2026-08-10|Cultura, Juventude e Desporto|+": {
-   "texto": "No dia 10 de agosto de 2026, registaram-se vários acontecimentos relevantes nas áreas da cultura, juventude e desporto. O programa \"Playback\" sobre Carlos Paião alcançou o primeiro lugar no ranking de filmes portugueses mais vistos do ano, enquanto a equipa feminina de 4x200 livres estabeleceu um novo recorde nacional no Campeonato Europeu de natação. Paralelamente, o Prémio Salarial de 2026 iniciou o pagamento aos jovens beneficiários, conforme noticiado por diversos órgãos de comunicação. No plano desportivo, atletas como Diogo Ribeiro, Camila Rebelo e Francisca Martins contribuíram para a melhoria de recordes nacionais, e a Taça dos Mil Mártires marcou o regresso do futebol federado à Palestina.",
-   "n": 16,
-   "pct": 64,
-   "lado": "positivas"
-  },
-  "2026-08-10|Reforma do Estado|+": {
-   "texto": "No dia 10 de agosto de 2026, a área governativa da Reforma do Estado não registou desenvolvimentos diretamente relacionados com os títulos noticiados. Os títulos divulgados referem-se a avanços em tecnologias de inteligência artificial (Endel, Nvidia, Meta), não a medidas ou acordos no âmbito da Reforma do Estado. A cobertura noticiosa observada nesse dia foi, de facto, predominantemente positiva, mas os eventos reportados não se inserem no âmbito da Reforma do Estado.",
-   "n": 4,
-   "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-10|Trabalho, Solidariedade e Segurança Social|+": {
-   "texto": "No âmbito da área governamental do Trabalho, Solidariedade e Segurança Social, verificaram-se desenvolvimentos em torno da transparência salarial e da modernização dos apoios sociais.  A legislação que promove a transparência salarial, com divulgação de informação sobre remunerações, foi objeto de debate e esclarecimento.  Adicionalmente, a atribuição do abono de família pré-natal foi automatizada, simplificando o acesso ao apoio.  Não se registaram, contudo, medidas governamentais específicas de alteração de políticas de emprego ou de proteção social, sendo que os títulos refletem mais a discussão pública e a análise de dados económicos.",
-   "n": 7,
-   "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-11|Negócios Estrangeiros|+": {
-   "texto": "No âmbito da cooperação internacional, Portugal comprometeu-se a contribuir com 100 mil euros para apoiar iniciativas na Colômbia. A emigração portuguesa para o exterior manteve-se estável em cerca de 70 mil pessoas nos últimos três anos, segundo dados do Jornal de Negócios. O Ministro dos Negócios Estrangeiros, João Gomes de Albares, assegurou o repatriamento de todos os migrantes irregulares em Ceuta, conforme noticiado pelo Observador. A União Europeia, a Meta e o TikTok estabeleceram uma parceria para combater a desinformação relacionada com a situação em Ceuta, conforme divulgado pela RTP Notícias.",
-   "n": 6,
-   "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-12|Infraestruturas e Habitação|+": {
-   "texto": "No primeiro trimestre de 2026, 50,6% dos desempregados registados mantiveram a inscrição até junho, indicando uma melhoria sustentada na retenção de beneficiários. O Governo aprovou um seguro que permite transportes públicos gratuitos para ex-combatentes em todo o território nacional, abrangendo todas as regiões do país. Uma cooperativa na Lousã concluiu a construção de habitações destinadas a famílias com crianças doentes, reforçando o apoio social nesta área. O Governo da Colômbia anunciou um subsídio para famílias afetadas por um sismo recente, demonstrando uma resposta internacional a catástrofes naturais. O tema dominante é o apoio social a grupos vulneráveis, abrangendo desemprego, ex-combatentes, saúde infantil e assistência pós-desastre.",
-   "n": 5,
-   "pct": 56,
-   "lado": "positivas"
-  },
-  "2026-08-13|Administração Interna": {
-   "texto": "No dia 13 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza diversa na área da Administração Interna. Um cidadão britânico com demência enfrentou uma situação de deportação na Suécia, motivada por questões de saúde e integração. Simultaneamente, a Espanha antecipou uma nova tentativa de entrada ilegal em massa, prevista para 15 de agosto, o que motivou o reforço de medidas na fronteira. Adicionalmente, verificou-se um incêndio, presumivelmente de origem criminosa, em Viseu, envolvendo um homem de 22 anos. Por fim, a GNR desenvolveu mais de 400 operações de proteção e socorro em áreas de montanha desde o início de 2024, no âmbito da salvaguarda de populações vulneráveis.",
-   "n": 4,
-   "pct": 77,
-   "lado": "negativas"
   },
   "2026-08-14|Defesa Nacional": {
    "texto": "No dia 14 de agosto de 2026, registou-se um incidente de segurança no espaço aéreo da Letónia, com o abate de um drone que o invadiu, efetuado por caças da NATO. Simultaneamente, Taiwan concluiu exercícios militares anuais, com particular ênfase na preparação para uma possível invasão chinesa. Adicionalmente, os Estados Unidos ameaçaram o Irão com um isolamento económico \"sem precedentes\". O tema dominante destes acontecimentos é a tensão geopolítica e a segurança internacional.",
@@ -167,6 +99,84 @@
   "2026-08-21|Cultura, Juventude e Desporto|+": {
    "texto": "1. **Academia de Cinema**: Foram divulgados os seis filmes pré-selecionados para a candidatura portuguesa aos Óscares, marcando um reconhecimento internacional do cinema nacional.\n\n2. **Cinema e Espetáculo**: O grupo musical \"Milagre Metaleiro\" estreou-se com as bandas \"Paradise Lost\" e \"The Haunted\" em concerto, evidenciando a dinâmica cultural e a abertura a influências internacionais.\n\n3. **Desporto – Jogos do Mediterrâneo**: Portugal iniciou a competição em Itália com 167 atletas, ambicionando a defesa de cinco títulos já conquistados, reforçando a presença nacional em eventos multidesportivos.\n\n4. **Cultura e Política**: O partido Chega propôs a criação de um museu nacional dedicado aos Descobrimentos, refletindo um debate sobre a memória histórica e o património cultural.\n\n5. **Cinema e Comunicação**: Fábio Porchat apresentou um espetáculo em Moçambique, com potencial para futuros intercâmbios culturais, demonstrando a projeção internacional de artistas portugueses.\n\n6. **Direitos Desportivos**: A condenação do \"New York Times\" a indemnizar um atleta por ligação falsa a um tiroteio, reforça a proteção dos direitos individuais e a responsabilidade mediática.\n\n7. **Saúde e Juventude**: Observa-se um aumento preocupante na procura de cirurgia estética por parte de jovens, indicando",
    "n": 10,
+   "pct": 55,
+   "lado": "positivas"
+  },
+  "2026-08-05|Defesa Nacional": {
+   "texto": "No dia 2026-08-05, a cobertura noticiosa da área da Defesa Nacional foi maioritariamente negativa, centrando-se em eventos relacionados com o conflito na Ucrânia e ações militares russas. Destacam-se vários ataques russos a Kiev, com registo de pelo menos 17 mortos, e bombardeamentos que causaram vítimas civis em território ucraniano e russo. Adicionalmente, regista-se a condenação da ONU por ataques russos que resultaram em 377 mortes de civis em julho. A área militar interna também foi afetada por um processo disciplinar instaurado ao General Gandra d’Almeida, embora não esteja diretamente relacionado com o conflito externo.",
+   "n": 14,
+   "pct": 93,
+   "lado": "negativas"
+  },
+  "2026-08-06|Presidência": {
+   "texto": "No dia 6 de agosto de 2026, a área da Presidência foi marcada por acontecimentos relacionados com a crise migratória em Ceuta, Marrocos. A situação no enclave espanhol foi caracterizada por um elevado número de pessoas sem documentos (6000), a recuperação de 82 corpos, incluindo dois identificados, e a detenção de dois homens por suspeitas de tráfico de pessoas envolvendo crianças africanas. Paralelamente, registou-se uma escalada de violência contra migrantes, com patrulhas de moradores a utilizarem máscaras e bastões de basebol, e com a disseminação de um sentimento de medo e hostilidade, incentivado por indivíduos que se autodenominaram \"caçadores de imigrantes\". A crise migratória foi objeto de debate no Parlamento Europeu, com a Comissão Europeia a propor uma diretiva que poderá ser interpretada como uma criminalização da solidariedade com migrantes.",
+   "n": 10,
+   "pct": 83,
+   "lado": "negativas"
+  },
+  "2026-08-07|Presidência": {
+   "texto": "No dia 2026-08-07, foram registados múltiplos acontecimentos relacionados com a Presidência e a política de imigração. A Associação dos Advogados Portugueses aplaudiu o envio da \"Lei do Retorno\" para o Tribunal Constitucional, enquanto a Agência para a Integração, Migrações e Asilo (AIMA) recebeu um prazo de sete dias para agendar o pedido de residência de um jovem deportado. Adicionalmente, o óbito do antigo secretário-geral da Assembleia da República, Albino Azevedo Soares, marcou o dia. O tema dominante foi a crise migratória, evidenciada pela situação em Ceuta, com Espanha a exigir reciprocidade de Itália, a transferência de menores e a morte de um migrante durante uma tentativa de entrada na cidade. Paralelamente, os EUA iniciaram ações para localizar migrantes deportados e cobrar-lhes multas.",
+   "n": 12,
+   "pct": 80,
+   "lado": "negativas"
+  },
+  "2026-08-08|Administração Interna": {
+   "texto": "No dia 8 de agosto de 2026, registaram-se múltiplos incidentes de natureza diversa na área da Administração Interna. Um drone despenhou-se no nordeste da Bulgária, tendo ocorrido um acidente de viação nas Caldas da Rainha, com a queda de um bebé de 22 meses, que resultou em ferimentos graves. Adicionalmente, um acidente de viação no Seixal, envolvendo a GNR, causou dois mortos, e foi detetada a presença de droga e arma no local. Paralelamente, verificaram-se um incêndio em Carrazeda de Ansiães, que mobilizou mais de 160 bombeiros, e a queda de uma aeronave no aeródromo de Portimão, resultando na morte do piloto. Por fim, foram encontrados os corpos de cinco alpinistas desaparecidos desde 2025, e registaram-se detenções de indivíduos procurados pela Interpol em Espanha e Portugal, bem como a implementação de controlos nas fronteiras espanholas e em Ceuta. O tema dominante dos acontecimentos foi a ocorrência de acidentes de viação e incidentes de segurança pública, complementados por questões relacionadas com a imigração ilegal.",
+   "n": 14,
+   "pct": 88,
+   "lado": "negativas"
+  },
+  "2026-08-10|Ambiente e Energia": {
+   "texto": "No dia 10 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza ambiental e energética. A Jerónimo Martins viu encerradas aproximadamente 200 lojas Ara na Colômbia, motivadas por um sismo. A seca extrema no rio Danúbio fez reaparecer navios afundados durante a Segunda Guerra Mundial. Adicionalmente, ondas de calor extremas na Europa impactaram as perspetivas económicas dos países, e um eclipse previsto para breve deverá reduzir a produção de energia solar em cerca de 45%. O tema dominante foi o impacto de fenómenos climáticos e naturais na atividade económica e infraestruturas.",
+   "n": 6,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-13|Defesa Nacional": {
+   "texto": "No dia 13 de agosto de 2026, vários acontecimentos marcaram a área da Defesa Nacional. A reaparição pública de Raúl Castro, após vários meses de ausência, foi noticiada pelo Observador. Paralelamente, a cobertura mediática focou-se na guerra na Ucrânia, com a CNN Portugal a reportar sobre ataques russos a infraestruturas energéticas, a utilização de mísseis de alta velocidade e a ameaça de um inverno de ataques cirúrgicos. Adicionalmente, o Jornal Económico divulgou um pedido de PSD e CDS-PP para audição parlamentar de Nuno Melo sobre a aquisição de fragatas a Itália, enquanto a PJ detinha 20 pessoas por suspeita de fornecimento de droga. Não se verificou registo de desenvolvimentos sobre o acordo nuclear com o Irão, conforme reportado pelo Observador.",
+   "n": 12,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-21|Presidência": {
+   "texto": "No dia 21 de agosto de 2026, a cobertura noticiosa focou-se em múltiplos acontecimentos relacionados com a imigração, a segurança pública e a política energética. A nível migratório, a tensão em Ceuta, com milhares de migrantes nas ruas e a resposta do governo espanhol, foi um tema central, acompanhado de críticas de organismos europeus e de denúncias de perseguição por associações. No plano interno, a criação de uma nova unidade da PSP foi alvo de acusações de direcionamento contra imigrantes, reiteradas por diversas associações. Paralelamente, a política energética registou alterações com a exclusão de mais de 50 municípios do “mapa verde” de renováveis após consulta pública.",
+   "n": 9,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-04|Educação, Ciência e Inovação|+": {
+   "texto": "1. **Aumento da procura no ensino superior**: A primeira fase de candidatura ao ensino superior registou um número superior de candidatos ao verificado no ano letivo anterior, evidenciando um reforço do interesse dos jovens por esta via formativa.\n\n2. **Manutenção de serviços de educação pré-escolar**: O infantário de Vilar de Mouros foi confirmado como aberto para o próximo ano letivo, assegurando a continuidade dos serviços de educação pré-escolar naquela localidade.\n\n3. **Colaboração internacional em investigação**: Dez universidades espanholas estabeleceram uma rede de excelência em Inteligência Artificial responsável, promovendo a cooperação científica e o desenvolvimento de tecnologias éticas.\n\n4. **Melhoria de resultados académicos**: A reapreciação dos exames permitiu uma melhoria das notas para cerca de 70% dos alunos, demonstrando a eficácia do processo de revisão de provas.\n\n5. **Aumento da procura no ensino superior devido a dificuldades digitais**: Observa-se uma correlação entre o período de instabilidade digital e um aumento do número de candidatos ao ensino superior, embora este fenómeno exija análise aprofundada.\n\n6. **Avanços em investigação sobre o cérebro**: Um estudo científico revelou que o consumo moderado de cafeína pode reduzir o impacto da obesidade no cérebro, abrindo novas perspetivas na investigação de doenças metabólicas.",
+   "n": 11,
+   "pct": 65,
+   "lado": "positivas"
+  },
+  "2026-08-05|Economia e Coesão Territorial|+": {
+   "texto": "A 5 de agosto de 2026, o Banco de Fomento lançou uma nova linha de financiamento no valor de 1.500 milhões de euros, destinada a empresas, num esforço para estimular o investimento e o crescimento económico. Adicionalmente, foi divulgado um concurso da Agência Europeia de Defesa no qual uma empresa portuguesa se classificou em quarto lugar entre as melhores a nível europeu, evidenciando a capacidade industrial do país. No âmbito da coesão territorial, foram concedidos apoios à fertilidade a 411 utentes na Madeira, e foram financiados projetos em áreas protegidas com mais de 3 milhões de euros. O tema dominante dos acontecimentos reportados é o apoio ao investimento e ao desenvolvimento económico, tanto a nível interno como internacional.",
+   "n": 13,
+   "pct": 72,
+   "lado": "positivas"
+  },
+  "2026-08-06|Cultura, Juventude e Desporto|+": {
+   "texto": "No âmbito da cultura e do desporto, Nélson Évora, campeão olímpico de atletismo, anunciou o fim da sua carreira aos 42 anos, após uma última competição. No domínio da educação, a Região Autónoma da Madeira investiu 188 mil euros na aquisição de manuais digitais para alunos do ensino básico. No setor da inovação rural, o projeto Rural Innovation Challenges abriu um prazo de dez dias para a apresentação de candidaturas a mais de 20 mil euros em prémios. O espetáculo aéreo com mais de 500 drones sobre o rio Tejo assinala a celebração dos 60 anos da Ponte 25 de Abril, no âmbito das comemorações da infraestrutura.",
+   "n": 8,
+   "pct": 53,
+   "lado": "positivas"
+  },
+  "2026-08-07|Trabalho, Solidariedade e Segurança Social|+": {
+   "texto": "No dia 2026-08-07, foram noticiados diversos desenvolvimentos na área do Trabalho, Solidariedade e Segurança Social, embora os títulos refiram predominantemente a dinâmicas laborais e económicas. O Governo promoveu incentivos para médicos no Serviço Nacional de Saúde, visando reforçar o recrutamento e fixação de profissionais. Adicionalmente, foi reiterado o compromisso com a Parcela Única de Solidariedade (PSU), assegurando que esta será igual ou superior para 94% dos futuros beneficiários. Paralelamente, a análise da evolução salarial indica um aumento significativo dos rendimentos dos trabalhadores com salários superiores a 3.000 euros, embora persista uma parcela considerável com remunerações entre 900 e 1.200 euros. A relação fiscal da cerveja, com cada euro de receita a gerar 37 euros para o Estado, demonstra o contributo de setores específicos para as finanças públicas.",
+   "n": 6,
+   "pct": 55,
+   "lado": "positivas"
+  },
+  "2026-08-10|Economia e Coesão Territorial|+": {
+   "texto": "1. **Financiamento tecnológico e investimento desportivo**: O Jornal de Negócios noticiou que a Nvidia prepara um pacote de financiamento de 500 mil milhões de dólares com instituições financeiras de Wall Street, evidenciando um reforço significativo no investimento tecnológico. Paralelamente, o Jornal Económico e o Público divulgaram que um consórcio liderado por Jeff Bezos está próximo de adquirir um terço do clube de futebol Liverpool, marcando um investimento privado de grande escala no desporto profissional.\n\n2. **Investimento público na investigação científica**: O Público informou que a fatia do orçamento do Governo destinada à investigação científica em 2025 atingirá o valor mais elevado desde 2019, indicando um reforço substancial no investimento em ciência e inovação.\n\n3. **Investigação de atividades ilícitas**: O ECON noticiou que o FBI estabeleceu uma ligação entre uma empresa portuguesa e uma rede de venda de helicópteros para o Irão, revelando uma investigação em curso sobre atividades ilícitas no âmbito da segurança internacional.",
+   "n": 5,
+   "pct": 56,
+   "lado": "positivas"
+  },
+  "2026-08-13|Infraestruturas e Habitação|+": {
+   "texto": "O Ministério da Habitação procedeu à alteração das condições de acesso às bolsas de apoio ao alojamento estudantil, permitindo a sua atribuição sem a exigência prévia de contrato de arrendamento, conforme noticiado pela RTP Notícias e pelo Jornal de Negócios. Adicionalmente, o Governo aprovou medidas de flexibilização dos despejos para a realização de obras profundas em edifícios habitacionais, conforme divulgado pelo Jornal de Negócios. Estas iniciativas visam facilitar o acesso à habitação, tanto para estudantes como para agregados familiares em situação de reabilitação. O tema dominante é, portanto, a modernização e flexibilização das políticas de habitação.",
+   "n": 6,
    "pct": 55,
    "lado": "positivas"
   }
