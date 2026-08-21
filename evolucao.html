@@ -251,6 +251,13 @@ main{padding:1.6rem 0 3rem}
 .mini-tom svg{width:100%;height:34px;display:block;margin-top:.15rem}
 .mt-rot{font-size:.7rem;color:var(--texto-ligeiro);display:block}
 .mt-rot small{opacity:.85;margin-left:.3rem}
+/* Legenda das cores dos pontos do tom */
+.mt-leg{display:flex;align-items:center;flex-wrap:wrap;gap:.2rem .45rem;margin-top:.15rem;
+  font-size:.66rem;color:var(--texto-ligeiro);line-height:1.5}
+.mt-leg i{width:7px;height:7px;border-radius:50%;display:inline-block;flex:none;
+  margin-left:.25rem}
+.mt-leg i:first-child{margin-left:0}
+.mt-leg small{flex-basis:100%;font-size:.98em;opacity:.9;margin:0}
 .mt-meio{opacity:.8}
 .mini-cx{border:1px solid var(--borda);border-radius:var(--raio-s);padding:.7rem .8rem}
 .mini-cx h3{font-size:.72rem;font-weight:500;color:var(--texto-suave);line-height:1.3;
@@ -1511,7 +1518,16 @@ function linhaDoTom(nome, chaves, iMarca){
 
   return `<div class="mini-tom">
     <span class="mt-rot">Tom · <b style="color:${corDoTom(ultimo)}">${ultimo}% negativas</b>
-      <small>no período todo: ${medio}%</small></span>
+      <small>no ${ultimoAgreg()}${medio !== ultimo ? ` · ${medio}% no período todo` : ""}</small></span>
+    <!-- Sem esta legenda, ficam duas perguntas por responder: de que percentagem
+         se fala (a das negativas, e não «mais negativas do que positivas»), e o
+         que distingue um ponto verde de um cinzento. -->
+    <span class="mt-leg">
+      <i style="background:var(--verde)"></i>até 40%
+      <i style="background:#9aa1a8"></i>40 a 60%
+      <i style="background:var(--vermelho,#B23A3A)"></i>mais de 60%
+      <small>de <strong>notícias negativas</strong> em cada ${agregNome()}; o resto
+        são neutras e positivas</small></span>
     <svg viewBox="0 0 100 30" preserveAspectRatio="none">
       <line class="mt-meio" x1="0" y1="${y(50).toFixed(1)}" x2="100" y2="${y(50).toFixed(1)}"
         stroke="${cor50}" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>
@@ -2810,9 +2826,16 @@ function desenhar(){
       <p class="nota">A trajetória mostra <strong>volume</strong>: é a leitura de quem
         procura onde a atenção subiu ou desceu. Os <strong>losangos vermelhos</strong>
         assinalam os dias em que a área teve um pico noticioso — vê-se assim a forma que
-        cada pico fez na história da área, e o quadro seguinte diz o que o motivou. O tom
-        da cobertura tem quadro próprio, mais abaixo, com as proporções exatas.
-        ${origem === "todas" ? "A linha cheia é o volume total e a tracejada é só a parte de Portugal." : ""}</p>
+        cada pico fez na história da área, e o quadro seguinte diz o que o motivou.
+        ${origem === "todas" ? "A linha cheia é o volume total e a tracejada é só a parte de Portugal." : ""}
+        ${areaEscolhida ? `<br>Por baixo, a <strong>linha do tom</strong>: a percentagem de
+        notícias <strong>negativas</strong> em cada ${agregNome()} — e só isso. Não diz que
+        houve mais negativas do que positivas: as neutras, que costumam ser a maior parte,
+        não entram nesta conta. A linha tracejada a meio marca os 50%, e cada ponto toma a
+        cor do seu valor: verde até 40% de negativas, cinzento entre 40 e 60, vermelho
+        acima de 60. Onde a linha se interrompe, esse ${agregNome()} não teve avaliações
+        suficientes. As três proporções juntas — positivas, neutras e negativas — estão no
+        quadro do sentimento, mais abaixo.` : ""}</p>
     </div>
 
     ${blocoTempestades(linhas)}
