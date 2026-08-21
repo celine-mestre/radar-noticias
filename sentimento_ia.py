@@ -73,6 +73,13 @@ VALORES = ("positivo", "neutro", "negativo")
 # favoreça quer prejudique quem governa. A instrução di-lo explicitamente
 # porque um classificador que medisse «bom ou mau para o Governo» seria
 # indefensável num organismo do Estado.
+# Versão das regras de classificação. Sobe sempre que a INSTRUCAO mudar de
+# forma que possa alterar resultados. Cada avaliação fica marcada com a versão
+# que a produziu — sem isso não há maneira de saber o que já foi refeito e o
+# que não foi, e uma reavaliação faseada torna-se um jogo às cegas: repetir uma
+# corrida apagaria trabalho bom em vez de continuar de onde ia.
+INSTRUCAO_VERSAO = 2
+
 INSTRUCAO = (
     "És um classificador de tom noticioso para a administração pública "
     "portuguesa. Recebes uma lista numerada de notícias (título e, quando "
@@ -585,11 +592,17 @@ def harmonizar(args, sintese, repo, ficheiro, noticias, avaliacoes,
     print(f"harmonizar: {corrigidos} acontecimentos passaram a ter uma só avaliação")
 
 
-def aplicar(grupo, tom, avaliacoes, conhecidas, arquivadas):
+def aplicar(grupo, tom, avaliacoes, conhecidas, arquivadas, origem_versao=None):
     """Escreve o mesmo tom em todas as peças do acontecimento."""
     for x in grupo:
         lig = ligacao(x)
+        # Herda também a VERSÃO: uma peça que recebe o tom de um acontecimento
+        # já reavaliado conta como reavaliada, e uma que herde de uma avaliação
+        # antiga fica marcada como antiga — senão a contagem do que falta
+        # mentiria nos dois sentidos.
         valor = {"s": tom, "d": (x.get("data") or "")[:10]}
+        if isinstance(origem_versao, int):
+            valor["v"] = origem_versao
         avaliacoes[lig] = valor
         conhecidas[lig] = valor
         arquivadas.pop(lig, None)
@@ -676,6 +689,12 @@ def principal():
     ap.add_argument("--arquivo-sentimento", default="sentimento-meses",
                     dest="arquivo_sentimento",
                     help="pasta do arquivo permanente das avaliações, por mês")
+    ap.add_argument("--marcar-versao-desde", default=None, metavar="AAAA-MM-DD",
+                    help="Marca como sendo da versão atual as avaliações do "
+                         "ficheiro de trabalho a partir desta data, SEM as "
+                         "reavaliar. Serve uma vez só: para não deitar fora o "
+                         "trabalho de corridas feitas com as regras novas antes "
+                         "de existir a marca de versão.")
     ap.add_argument("--refazer-desde", default=None, metavar="AAAA-MM-DD",
                     help="Descarta as avaliações a partir desta data e volta a "
                          "classificar com a instrução atual. Serve para aplicar "
@@ -744,6 +763,21 @@ def principal():
                   if (v.get("d") or "9999") >= limite
                   or (v.get("d") or "") in datas_extra}
 
+    # Marcação retroativa da versão. Uma reavaliação feita antes de existir o
+    # campo «v» produziu avaliações boas mas indistinguíveis das antigas: sem
+    # isto, a corrida seguinte refá-las-ia — horas de computação deitadas fora.
+    # Aplica-se uma vez, com a data a partir da qual se sabe que o ficheiro de
+    # trabalho só tem avaliações já feitas com as regras atuais.
+    if getattr(args, "marcar_versao_desde", None):
+        marcadas = 0
+        for lig, v in avaliacoes.items():
+            if (v.get("d") or "") >= args.marcar_versao_desde and "v" not in v:
+                v["v"] = INSTRUCAO_VERSAO
+                marcadas += 1
+        print(f"marcação: {marcadas} avaliações de {args.marcar_versao_desde} em "
+              f"diante passam a contar como versão {INSTRUCAO_VERSAO} "
+              f"(não foram reavaliadas — só marcadas)")
+
     # Reavaliação retroativa: quando as REGRAS mudam, o que já foi classificado
     # continua a valer as regras antigas — e uma notícia avaliada nunca volta à
     # fila. Descartar as avaliações a partir de uma data devolve-as à fila e a
@@ -759,18 +793,36 @@ def principal():
         # avaliação antiga e o aviso di-lo, para não haver ilusão de que a
         # revisão alcançou tudo.
         disponiveis = {ligacao(n) for n in noticias if ligacao(n)}
+
         def refazer(lig, v):
-            return (v.get("d") or "") >= desde and lig in disponiveis
-        podia = [lig for lig, v in avaliacoes.items() if (v.get("d") or "") >= desde]
+            """Volta à fila? Só o que é do período, está disponível e ainda não
+            foi classificado pela versão atual das regras.
+
+            Esta última condição é o que torna a reavaliação RETOMÁVEL: correr
+            outra vez continua de onde ia, em vez de deitar fora o que a corrida
+            anterior já fez. Sem ela, uma reavaliação que não coubesse no tempo
+            disponível nunca terminaria — cada tentativa apagaria a anterior."""
+            return ((v.get("d") or "") >= desde
+                    and lig in disponiveis
+                    and v.get("v") != INSTRUCAO_VERSAO)
+
+        doPeriodo = [lig for lig, v in avaliacoes.items()
+                     if (v.get("d") or "") >= desde]
+        jaFeitas = sum(1 for lig in doPeriodo
+                       if avaliacoes[lig].get("v") == INSTRUCAO_VERSAO)
         avaliacoes = {lig: v for lig, v in avaliacoes.items() if not refazer(lig, v)}
         arquivadas = {lig: v for lig, v in arquivadas.items() if not refazer(lig, v)}
-        refeitas = sum(1 for lig in podia if lig in disponiveis)
-        print(f"refazer: {refeitas} avaliações de {desde} em diante voltam à fila "
-              f"com a instrução atual")
-        if len(podia) > refeitas:
-            print(f"  ({len(podia) - refeitas} ficam com a avaliação antiga: as "
-                  f"notícias já não estão na janela — use --recuperar para as "
-                  f"trazer do arquivo mensal)")
+        volta = sum(1 for lig in doPeriodo
+                    if lig in disponiveis and lig not in avaliacoes)
+        print(f"refazer (regras v{INSTRUCAO_VERSAO}): {volta} avaliações voltam à "
+              f"fila de {desde} em diante")
+        if jaFeitas:
+            print(f"  ({jaFeitas} já estavam classificadas pelas regras atuais "
+                  f"e ficam como estão — a reavaliação continua de onde ia)")
+        fora = len(doPeriodo) - jaFeitas - volta
+        if fora > 0:
+            print(f"  ({fora} não estão na janela de trabalho — use --recuperar "
+                  f"para as trazer do arquivo mensal)")
 
     # Para saber o que falta e para reconstruir a série, vale tudo o que já se
     # sabe: a janela de trabalho mais o arquivo de sempre.
@@ -842,6 +894,23 @@ def principal():
     if herdadas:
         print(f"  {herdadas} peças herdaram a avaliação do seu acontecimento")
 
+    # O ficheiro de trabalho tem de ficar completo para os dias que mostra: é
+    # dele que o RADAR lê o sentimento, e ele não conhece o arquivo permanente.
+    # Numa reavaliação faseada isto é o que evita o pior dos mundos — a
+    # evolução, que soma tudo o que se sabe, a dizer 100% avaliado enquanto o
+    # radar, que só lê este ficheiro, diz 35%. As avaliações que ainda não
+    # foram refeitas voltam com o valor antigo, e serão substituídas pelo novo
+    # quando lhes chegar a vez.
+    repostas = 0
+    for n in noticias:
+        lig = ligacao(n)
+        if lig and lig not in avaliacoes and lig in conhecidas:
+            avaliacoes[lig] = conhecidas[lig]
+            repostas += 1
+    if repostas:
+        print(f"  {repostas} avaliações repostas do arquivo permanente para o "
+              f"ficheiro de trabalho (aguardam a sua vez de serem refeitas)")
+
     novas, falhas = 0, 0
     total_lotes = (len(fila) + args.lote - 1) // args.lote
     for indice, inicio in enumerate(range(0, len(fila), args.lote)):
@@ -861,7 +930,8 @@ def principal():
         for i, n in enumerate(lote, start=1):
             if i not in lidas:
                 continue
-            valor = {"s": lidas[i], "d": (n.get("data") or "")[:10]}
+            valor = {"s": lidas[i], "d": (n.get("data") or "")[:10],
+                     "v": INSTRUCAO_VERSAO}
             for lig in n.get("_grupo") or [ligacao(n)]:
                 avaliacoes[lig] = valor
                 conhecidas[lig] = valor
