@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-21 18:15",
+ "gerado": "2026-08-21 20:55",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -73,12 +73,6 @@
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-08-21|Economia e Coesão Territorial|+": {
-   "texto": "No dia 21 de agosto de 2026, o Município de Penalva do Castelo, no âmbito de uma estratégia de promoção turística, iniciou um investimento destinado à captação de visitantes na região do Dão. Paralelamente, o Brasil divulgou um pacote de apoio financeiro de 375 milhões de euros para o desenvolvimento de inteligência artificial e de um supercomputador. Adicionalmente, a Argentina registou um crescimento de mais de 6.000% no excedente energético durante o mês de julho. O tema dominante destes acontecimentos é o investimento em tecnologias de ponta e o reforço da competitividade económica.",
-   "n": 4,
-   "pct": 50,
-   "lado": "positivas"
-  },
   "2026-08-21|Defesa Nacional": {
    "texto": "No dia 21 de agosto de 2026, ocorreram dois eventos distintos na área da Defesa Nacional. Em primeiro lugar, dois militares do Exército faleceram após serem atropelados na autoestrada A1, enquanto prestavam auxílio a um camionista acidentado na Mealhada. Em segundo lugar, os exercícios militares conjuntos com a Coreia do Sul foram antecipadamente interrompidos por ordem do Presidente dos Estados Unidos, Donald Trump, levando a uma conclusão seis dias antes do previsto. Nenhum destes eventos parece estar diretamente relacionado, mas ambos foram noticiados como desenvolvimentos relevantes para a área da Defesa Nacional.",
    "n": 21,
@@ -103,76 +97,64 @@
    "pct": 53,
    "lado": "positivas"
   },
-  "2026-08-04|Justiça": {
-   "texto": "As notícias deste dia já não estão no arquivo, ou ainda não têm avaliação de tom.",
-   "n": 0,
-   "pct": 86,
-   "lado": "negativas"
-  },
-  "2026-08-09|Defesa Nacional": {
-   "texto": "No dia 2026-08-09, a área da Defesa Nacional foi marcada por um conjunto de acontecimentos relacionados com a guerra na Ucrânia e a atividade diplomática portuguesa. Uma associação ucraniana questionou o Partido Socialista por via de um deputado que realizou uma viagem à Rússia, suscitando controvérsia. Paralelamente, foram reportados ataques russos à Ucrânia, com um balanço de três mortos e 25 feridos, e um elevado número de drones abatidos (mais de 150). A cobertura mediática deste dia evidenciou uma preocupação acrescida com a situação no conflito, não tendo sido reportados desenvolvimentos ou decisões de política interna portuguesa.",
-   "n": 5,
-   "pct": 75,
-   "lado": "negativas"
-  },
-  "2026-08-10|Presidência": {
-   "texto": "As notícias deste dia já não estão no arquivo, ou ainda não têm avaliação de tom.",
-   "n": 0,
-   "pct": 75,
-   "lado": "negativas"
-  },
-  "2026-08-13|Administração Interna": {
-   "texto": "No dia 13 de agosto de 2026, foram noticiados vários acontecimentos de natureza diversa na área da Administração Interna. Um cidadão britânico com demência enfrentou uma situação de potencial deportação na Suécia, motivada por questões legais e de saúde. Simultaneamente, a imprensa noticiou uma nova tentativa de entrada ilegal em massa prevista para 15 de agosto, levando a Espanha a reforçar o controlo nas fronteiras. Adicionalmente, foi reportado um incêndio de origem suspeita em Viseu, envolvendo um homem de 22 anos. Por fim, a GNR reportou a realização de mais de 400 operações de proteção e socorro em áreas de montanha desde 2024, no âmbito da salvaguarda de cidadãos e bens. O tema dominante parece ser a gestão de fluxos migratórios e a segurança pública.",
-   "n": 4,
-   "pct": 77,
-   "lado": "negativas"
-  },
   "2026-08-21|Justiça": {
    "texto": "No dia 21 de agosto de 2026, foram registados múltiplos acontecimentos de natureza judicial e de segurança pública. Destacam-se a prisão preventiva de uma mulher reincidente em crime de incêndio, de um homem que raptou uma mulher em Torres Novas e de uma mulher de 63 anos suspeita de incêndio em Vila Real, bem como a reincidência de um indivíduo procurado pelo Brasil por violação de menor. Adicionalmente, verificou-se a condenação a um ano de prisão de um turista suíço em Bali por violação de feriado hindu, e a prisão preventiva de um traficante de droga em Portalegre, juntamente com outros crimes. Um tema dominante é a aplicação de medidas de coação e a punição de infrações criminais, incluindo reincidência e crimes violentos.",
    "n": 15,
    "pct": 79,
    "lado": "negativas"
   },
-  "2026-08-05|Ambiente e Energia|+": {
-   "texto": "No dia 2026-08-05, a área de Ambiente e Energia registou desenvolvimentos diversos. Uma empresa italiana recuperou um bilhete de lotaria de um milhão de euros do lixo, embora este evento não esteja diretamente relacionado com políticas ambientais. Por outro lado, foram alocados mais de três milhões de euros para financiar novos projetos em áreas protegidas em todo o território nacional, promovendo a conservação da biodiversidade. Adicionalmente, Cabo Verde anunciou esforços para reduzir as tarifas no setor elétrico, visando melhorar o acesso à energia. Não obstante, a cobertura mediática do dia foi predominantemente positiva, destacando iniciativas de sustentabilidade e eficiência energética.",
-   "n": 3,
-   "pct": 54,
-   "lado": "positivas"
+  "2026-08-06|Defesa Nacional": {
+   "texto": "No dia 2026-08-06, a cobertura noticiosa da Defesa Nacional focou-se predominantemente na guerra na Ucrânia e nas suas implicações geopolíticas. Destacaram-se os ataques russos com mísseis, resultando em dezenas de vítimas civis, e a crescente fragilidade das defesas aéreas ucranianas face à escassez de mísseis fornecidos pelos aliados. Adicionalmente, registaram-se detenções de cidadãos ucranianos por suspeita de espionagem e acusações de corrupção a figuras diplomáticas, bem como a ameaça de ataques iranianos a infraestruturas energéticas do Golfo. O tema dominante foi a pressão sobre os sistemas de defesa e o fornecimento de armamento, evidenciando dificuldades logísticas e decisões estratégicas que afetam a capacidade de resposta da Ucrânia.",
+   "n": 24,
+   "pct": 75,
+   "lado": "negativas"
   },
-  "2026-08-05|Cultura, Juventude e Desporto|+": {
-   "texto": "No dia 5 de agosto de 2026, a Polícia Judiciária apreendeu uma quantidade de droga superior à registada em todo o ano de 2025, no âmbito de operações de combate ao tráfico. Paralelamente, Luís Montenegro elogiou a organização e o desempenho da Volta a Portugal, reconhecendo o seu impacto no turismo e na projeção internacional do desporto nacional. Adicionalmente, os teatros Variedades e Capitólio apresentaram mais de quarenta espetáculos, reforçando a oferta cultural e o acesso do público a atividades artísticas. O tema dominante destes acontecimentos é o reforço da segurança pública e a promoção da cultura e do desporto.",
-   "n": 3,
+  "2026-08-06|Trabalho, Solidariedade e Segurança Social": {
+   "texto": "No dia 2026-08-06, registaram-se múltiplos acontecimentos negativos na área governativa do Trabalho, Solidariedade e Segurança Social. Destacam-se o encerramento de uma fábrica de calçado em Gaia, que resultou no despedimento de 54 trabalhadores sem aviso prévio, e a falta de 100 mil camas para estudantes deslocados, evidenciando carências na oferta de alojamento estudantil. Adicionalmente, verificou-se a demora no pagamento de salários por parte da empresa Conta Lá, com acionistas a reunirem-se para decidir o futuro da mesma, e a detenção de um suspeito no Alentejo relacionada com exploração laboral, associada a promessas de emprego não cumpridas. O tema dominante é o impacto do desemprego e a insuficiência de serviços sociais.",
+   "n": 9,
+   "pct": 82,
+   "lado": "negativas"
+  },
+  "2026-08-06|Presidência": {
+   "texto": "No dia 2026-08-06, a cobertura mediática focou-se predominantemente na crise migratória em Ceuta. Ocorreram múltiplos acontecimentos relacionados com este tema: a permanência de seis mil pessoas sem documentos no enclave espanhol, a recuperação de 82 corpos de migrantes, dos quais apenas dois foram identificados, e a detenção de dois homens por suspeitas de tráfico de pessoas. Adicionalmente, registou-se uma escalada de violência contra migrantes, com patrulhas de moradores a utilizarem máscaras e bastões de basebol, e com a disseminação de atos de intimidação e agressão por parte de grupos de moradores. A Comissão Europeia propôs uma diretiva que poderá ser interpretada como uma criminalização da solidariedade com migrantes, e o Parlamento Europeu debateu a crise migratória.",
+   "n": 11,
+   "pct": 79,
+   "lado": "negativas"
+  },
+  "2026-08-10|Ambiente e Energia": {
+   "texto": "No dia 10 de agosto de 2026, verificaram-se múltiplos acontecimentos com impacto na área do Ambiente e Energia. A Jerónimo Martins encerrou aproximadamente 200 lojas Ara na Colômbia, motivado por um sismo. O Danúbio, afetado por uma seca extrema, assistiu ao reaparecimento de navios nazis afundados há mais de 80 anos. Adicionalmente, ondas de calor extremo na Europa impactaram as perspetivas económicas dos países, e um eclipse previsto na REN causou uma redução estimada de 45% na produção solar. O tema dominante foi o impacto de fenómenos climáticos extremos e eventos sísmicos.",
+   "n": 6,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-13|Defesa Nacional": {
+   "texto": "No dia 13 de agosto de 2026, foram noticiados múltiplos acontecimentos relacionados com a defesa nacional e a situação de conflito na Ucrânia. A reaparição pública de Raúl Castro, após um período de ausência, foi registada. Paralelamente, a cobertura mediática focou-se na guerra na Ucrânia, com relatos de ataques russos a infraestruturas energéticas, um comboio em Odessa e a utilização de mísseis de alta velocidade por parte da Rússia. Adicionalmente, foram noticiados pedidos de audição parlamentar sobre a aquisição de fragatas a Itália e detenções relacionadas com o fornecimento de droga. O tema dominante foi a instabilidade geopolítica e os conflitos bélicos.",
+   "n": 12,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-04|Educação, Ciência e Inovação|+": {
+   "texto": "**Aconteceu:**\n\n1. **Aumento da taxa de candidatura e aprovação na primeira fase do ensino superior**, com os candidatos a ultrapassar os números do ano letivo anterior em diversos meios de comunicação.\n\n2. **Manutenção da abertura do Infantário de Vilar de Mouros no próximo ano letivo**, medida que assegura a continuidade do serviço educativo na localidade.\n\n3. **Criação de uma rede de excelência em Inteligência Artificial responsável, envolvendo dez universidades espanholas**, com o objetivo de promover investigação ética nesta área.\n\n4. **Reapreciação dos exames nacionais, que resultou numa melhoria de 70% das notas revistas**, beneficiando os alunos e atenuando o impacto de erros de avaliação.\n\n**Tema dominante:** O dia foi marcado por avanços no ensino superior, na educação pré-escolar e na inovação tecnológica, com particular destaque para a melhoria do desempenho académico e a promoção de práticas inovadoras.",
+   "n": 14,
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-08-10|Cultura, Juventude e Desporto|+": {
-   "texto": "No âmbito da área governativa da Cultura, Juventude e Desporto, registaram-se dois acontecimentos notáveis. O músico Daniel Chapo promoveu iniciativas de capacitação económica de jovens, incentivando a sua autonomia financeira. Paralelamente, o filme \"Playback\", dedicado à obra de Carlos Paião, alcançou o estatuto de filme português mais visto do ano, evidenciando um interesse notável do público. O tema dominante destes eventos reside no fomento da criatividade e na valorização da produção cultural nacional.",
-   "n": 2,
-   "pct": 64,
+  "2026-08-05|Negócios Estrangeiros|+": {
+   "texto": "Nos Negócios Estrangeiros, foi noticiado um acordo entre o Irão e Omã relativo à navegação na rota de Ormuz, que visa assegurar a segurança e a eficiência do tráfego marítimo. A União Europeia anunciou a aplicação de 1,4 mil milhões de euros provenientes de juros sobre ativos russos para reforçar a assistência à Ucrânia, no quadro do apoio humanitário e militar. No âmbito da saúde pública, Portugal consolidou a sua posição como o sétimo Estado-membro da UE com menor prevalência de fumadores diários, evidenciando os resultados de políticas de prevenção. No domínio da cooperação internacional, Moçambique assinalou os 30 anos da CPLP, destacando a mobilidade como um avanço significativo na integração lusófona. A legislação da Inteligência Artificial progrediu na União Europeia, definindo novas regras e salvaguardas. O Estado português não detém capital direto na futura Gigafábrica de IA, indicando uma abordagem de financiamento indireto.",
+   "n": 7,
+   "pct": 58,
    "lado": "positivas"
   },
-  "2026-08-10|Saúde|+": {
-   "texto": "A Inspeção-Geral da Administração da Saúde (IGAS) concluiu que a resposta prestada no caso de um bebé prematuro nascido em ambulância foi adequada, confirmando a qualidade e a tempestividade dos cuidados de saúde prestados. Este parecer da IGAS, emitido após uma investigação, valida a atuação dos profissionais envolvidos e reforça a confiança no sistema de saúde. O evento enquadra-se no tema dominante da avaliação e garantia de qualidade dos cuidados de saúde em situações de emergência.",
-   "n": 1,
-   "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-10|Trabalho, Solidariedade e Segurança Social|+": {
-   "texto": "No dia 10 de agosto de 2026, foi noticiado que o ensino particular apresentou uma exigência de maior justiça na atribuição de apoios sociais, solicitando uma revisão das políticas de ação social. Paralelamente, o Jornal de Negócios divulgou um reconhecimento implícito da necessidade de aumentar os rendimentos dos trabalhadores portugueses, sem especificar medidas concretas. O tema dominante parece ser a discussão sobre a equidade na proteção social e a valorização do trabalho.",
-   "n": 2,
-   "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-11|Negócios Estrangeiros|+": {
-   "texto": "As notícias deste dia já não estão no arquivo, ou ainda não têm avaliação de tom.",
-   "n": 0,
-   "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-12|Infraestruturas e Habitação|+": {
-   "texto": "As notícias deste dia já não estão no arquivo, ou ainda não têm avaliação de tom.",
-   "n": 0,
+  "2026-08-10|Economia e Coesão Territorial|+": {
+   "texto": "1. Um consórcio liderado por Jeff Bezos, com a participação de grandes instituições financeiras de Wall Street, anunciou um plano de financiamento de 500 mil milhões de dólares para o clube de futebol Liverpool, estando este próximo de concretizar a aquisição de um terço da sua estrutura acionista.\n\n2. O Governo alocou a maior fatia do orçamento para investigação científica desde 2019, reforçando o investimento em projetos de desenvolvimento tecnológico e científico para o ano económico de 2025.\n\n3. As autoridades portuguesas identificaram uma empresa nacional ligada a uma rede de venda ilegal de helicópteros para o Irão, tendo sido estabelecida uma ligação com o FBI para investigação e eventual ação judicial.",
+   "n": 5,
    "pct": 56,
+   "lado": "positivas"
+  },
+  "2026-08-13|Infraestruturas e Habitação|+": {
+   "texto": "1. O Governo aprovou alterações ao regime de bolsas de alojamento para estudantes universitários, permitindo o acesso a apoios financeiros sem a exigência prévia de contrato de arrendamento, conforme noticiado pela RTP Notícias e pelo Jornal de Negócios.  \n2. A Federação Académica de Portugal (FAP) manifestou aprovação formal pela flexibilização das condições de acesso ao apoio ao alojamento estudantil, conforme divulgado pela RTP Notícias.  \n3. O Ministério das Infraestruturas e Habitação publicou um despacho que simplifica os procedimentos de despejo para a realização de obras profundas, conforme noticiado pelo Jornal de Negócios.  \n\nTema dominante: Flexibilização e simplificação de procedimentos relacionados com o acesso ao alojamento estudantil e a reabilitação habitacional.",
+   "n": 6,
+   "pct": 55,
    "lado": "positivas"
   }
  }
