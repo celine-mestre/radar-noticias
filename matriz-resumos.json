@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-21 14:32",
+ "gerado": "2026-08-21 15:12",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -150,6 +150,24 @@
    "texto": "No dia 21 de agosto de 2026, o Município de Penalva do Castelo, no âmbito de uma estratégia de promoção turística, iniciou um investimento destinado à captação de visitantes na região do Dão. Paralelamente, o Brasil divulgou um pacote de apoio financeiro de 375 milhões de euros para o desenvolvimento de inteligência artificial e de um supercomputador. Adicionalmente, a Argentina registou um crescimento de mais de 6.000% no excedente energético durante o mês de julho. O tema dominante destes acontecimentos é o investimento em tecnologias de ponta e o reforço da competitividade económica.",
    "n": 4,
    "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-21|Defesa Nacional": {
+   "texto": "No dia 21 de agosto de 2026, ocorreram dois eventos distintos na área da Defesa Nacional. Em primeiro lugar, dois militares do Exército faleceram após serem atropelados na autoestrada A1, enquanto prestavam auxílio a um camionista acidentado na Mealhada. Em segundo lugar, os exercícios militares conjuntos com a Coreia do Sul foram antecipadamente interrompidos por ordem do Presidente dos Estados Unidos, Donald Trump, levando a uma conclusão seis dias antes do previsto. Nenhum destes eventos parece estar diretamente relacionado, mas ambos foram noticiados como desenvolvimentos relevantes para a área da Defesa Nacional.",
+   "n": 21,
+   "pct": 92,
+   "lado": "negativas"
+  },
+  "2026-08-21|Finanças": {
+   "texto": "No dia 21 de agosto de 2026, foram noticiados diversos desenvolvimentos na área das Finanças. A cobertura mediática destacou o aumento da dívida pública, tanto em Portugal, atingindo 894 mil milhões de euros no primeiro semestre, como nos Estados Unidos, ultrapassando os 40 biliões de dólares. Adicionalmente, registou-se uma tensão nos mercados de dívida, exercendo pressão sobre o Orçamento do Estado. Paralelamente, a reforma da Segurança Social, com a fixação da idade de reforma como linha vermelha para o Orçamento de 2027, foi objeto de debate político, e verificou-se um incidente judicial envolvendo um membro do governo.",
+   "n": 7,
+   "pct": 88,
+   "lado": "negativas"
+  },
+  "2026-08-21|Cultura, Juventude e Desporto|+": {
+   "texto": "1. **Academia de Cinema**: Foram divulgados os seis filmes pré-selecionados para a candidatura portuguesa aos Óscares, marcando um reconhecimento internacional do cinema nacional.\n\n2. **Cinema e Espetáculo**: O grupo musical \"Milagre Metaleiro\" estreou-se com as bandas \"Paradise Lost\" e \"The Haunted\" em concerto, evidenciando a dinâmica cultural e a abertura a influências internacionais.\n\n3. **Desporto – Jogos do Mediterrâneo**: Portugal iniciou a competição em Itália com 167 atletas, ambicionando a defesa de cinco títulos já conquistados, reforçando a presença nacional em eventos multidesportivos.\n\n4. **Cultura e Política**: O partido Chega propôs a criação de um museu nacional dedicado aos Descobrimentos, refletindo um debate sobre a memória histórica e o património cultural.\n\n5. **Cinema e Comunicação**: Fábio Porchat apresentou um espetáculo em Moçambique, com potencial para futuros intercâmbios culturais, demonstrando a projeção internacional de artistas portugueses.\n\n6. **Direitos Desportivos**: A condenação do \"New York Times\" a indemnizar um atleta por ligação falsa a um tiroteio, reforça a proteção dos direitos individuais e a responsabilidade mediática.\n\n7. **Saúde e Juventude**: Observa-se um aumento preocupante na procura de cirurgia estética por parte de jovens, indicando",
+   "n": 10,
+   "pct": 55,
    "lado": "positivas"
   }
  }
