@@ -246,6 +246,21 @@ def principal():
 
     tons = avaliacoes(args.sentimentos)
     resumos = dict(anteriores)
+
+    # LIMPEZA. Uma reavaliação do tom muda as percentagens: uma célula que
+    # estava a 78% pode passar a 60% e deixar de merecer explicação. O resumo
+    # antigo continuaria no ficheiro e o painel mostrá-lo-ia numa célula que já
+    # não o justifica. Aqui retiram-se os que deixaram de passar o limiar —
+    # comparando com a série de sentimento ATUAL, não com a percentagem que foi
+    # guardada com o resumo.
+    validas = {chave_resumo(c["data"], c["area"], c["lado"]) for c in celulas}
+    obsoletos = [k for k in resumos if k not in validas]
+    for k in obsoletos:
+        del resumos[k]
+    if obsoletos:
+        print(f"limpeza: {len(obsoletos)} resumos retirados — as células já não "
+              f"passam o limiar (o tom foi reavaliado)")
+
     feitos = 0
     for c in celulas:
         chave = chave_resumo(c["data"], c["area"], c["lado"])

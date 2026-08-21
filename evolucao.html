@@ -816,6 +816,11 @@ let SERIE = [];        // [{data, areas:{nome:{noticias, novas, fontes, origens,
 let TEMPESTADES = [];  // [{data, area, hoje, mediana, limiar}] — do alertas.json
 let RESUMOS_PICOS = {}; // {"data|área": {texto, n}} — do picos-resumos.json
 let RESUMOS_TOM = {};   // {"data|área": {texto, n, pct}} — do matriz-resumos.json
+/* Os limiares com que os resumos foram gerados, lidos do próprio ficheiro. O
+   painel precisa deles para não mostrar um resumo numa célula que, entretanto,
+   deixou de os passar — uma reavaliação do tom muda as percentagens, e um
+   resumo órfão explicaria uma dureza que já não está no número. */
+let LIMIARES_TOM = { negativas: 75, positivas: 50 };
 let TRANSICAO_PICOS = null; // {marco, fim, publicacoes_de_referencia} — do alertas.json
 /* Patamar de leitura, partilhado pelo quadro do sentimento e pela faixa de tom
    das trajetórias: abaixo disto uma proporção é ruído, não leitura. */
@@ -959,7 +964,11 @@ async function carregarResumosTom(){
       const r = await fetch(caminho, { cache: "no-store" });
       if(!r.ok) continue;
       const d = await r.json();
-      if(d.resumos) return d.resumos;
+      if(d.resumos){
+        if(d.limiar) LIMIARES_TOM.negativas = d.limiar;
+        if(d.limiar_positivo) LIMIARES_TOM.positivas = d.limiar_positivo;
+        return d.resumos;
+      }
     }catch(e){ /* segue */ }
   }
   return {};
@@ -1677,7 +1686,13 @@ function blocoMatrizTom(linhas, pares, areas){
        dia a 76%, dando a entender que os 64% estavam explicados. Ou a célula
        responde pelo que mostra, ou não deve mostrar nada. */
     const chaveR = dd => `${dd}|${n}` + (neg ? "" : "|+");
-    const dias = agregacao === "dia"
+    /* Só se mostra o resumo se a célula continuar a passar o limiar. Sem esta
+       verificação, uma reavaliação do tom que baixasse uma célula de 78% para
+       60% deixaria lá o resumo — a explicar uma dureza que o número já não
+       mostra. O resumo obsoleto não desaparece do ficheiro, mas deixa de ser
+       mostrado onde não se aplica. */
+    const passaLimiar = p >= (neg ? LIMIARES_TOM.negativas : LIMIARES_TOM.positivas);
+    const dias = (agregacao === "dia" && passaLimiar)
       ? diasDoPeriodo(k).filter(dd => RESUMOS_TOM[chaveR(dd)]) : [];
     const resumo = dias.map(dd => {
       const r = RESUMOS_TOM[chaveR(dd)];
