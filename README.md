@@ -725,7 +725,9 @@ explicada:
 2. **Volume por área governativa**, em **marcações** — porque aqui uma notícia conta em
    cada área que satisfaz —, com a parte de cada área e o rácio entre marcações e notícias.
 3. **Trajetória de cada área**: uma linha por área a percorrer o período todo, a cheia com
-   o volume total e a tracejada só com a parte de Portugal. **Losangos vermelhos** marcam
+   o volume total e a tracejada só com a parte de Portugal, com a escala de cada área à
+   esquerda e o período em baixo. Cada cartão tem escala própria — as alturas não se
+   comparam entre áreas. **Losangos vermelhos** marcam
    os dias de pico — vê-se a forma que cada pico fez na história da área, e o quadro
    seguinte diz o que o motivou. Com uma área escolhida, junta-se-lhe a **evolução do
    tom**: a percentagem de negativas período a período, com a linha interrompida onde
@@ -757,12 +759,13 @@ explicada:
 9. **Palavras do período**: nuvem com as expressões que trouxeram notícias — o tamanho vale
    pela quantidade, e as que ficaram a zero são candidatas a revisão.
 
-10. **Áreas lado a lado**, escolhendo comparar: até **quatro** áreas na mesma escala,
+10. **Áreas lado a lado**, escolhendo comparar: até **três** áreas na mesma escala,
    distinguidas pela cor e pelo traço — duas áreas do mesmo agrupamento partilham a cor —,
    e um quadro com totais, médias, maior período, períodos em que cada uma foi a mais
    noticiada, origem das notícias, picos, quem mais as cobre, os **assuntos que mais
-   pesaram** em cada uma e o tom. Quatro é o limite prático: acima disso as linhas
-   tornam-se um novelo e a tabela deixa de caber. Para ver as dezassete, a trajetória é a
+   pesaram** em cada uma e o tom. Três é o limite prático: acima disso as linhas
+   tornam-se um novelo — sobretudo porque áreas do mesmo agrupamento partilham a cor — e
+   a tabela deixa de caber. Para ver as dezassete, a trajetória é a
    forma certa — pequenos múltiplos em vez de tudo sobreposto. Fecha o painel porque é uma síntese: usa o que os quadros anteriores
    estabeleceram — publicações, picos, tom — para responder a uma pergunta que nenhum
    deles faz sozinho.
