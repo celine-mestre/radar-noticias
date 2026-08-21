@@ -226,7 +226,14 @@ def dia_da_serie(data, registo):
 # Quantas publicações se guardam por área e por dia. O cruzamento área ×
 # publicação precisa de uma tabela por dia, mas a cauda longa não interessa a
 # ninguém: guardam-se as que mais noticiaram e o ficheiro fica sob controlo.
-PUBS_POR_AREA = 12
+#
+# O valor era 12 e serviu enquanto uma área era noticiada por nove ou dez
+# publicações por dia. Depois do alargamento da leitura, a mediana passou a
+# dezanove e o máximo a vinte e nove — e o corte, que perdia 1% das marcações,
+# passou a perder 17,5%. Medido em agosto de 2026: com 20 a perda cai para 1,2%
+# e com 25 para 0,2%. Fica em 25, que cobre praticamente tudo sem inchar o
+# ficheiro: são poucos quilobytes por dia mais.
+PUBS_POR_AREA = 25
 
 # Nomes que não são publicações: créditos de fotografia e restos de título que
 # alguns publicadores metem no campo <source> do artigo. A recolha já deixou de

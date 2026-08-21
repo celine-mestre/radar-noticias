@@ -2051,9 +2051,9 @@ function blocoPublicacoes(linhas, areas){
         carrega com a força da especialização.
         O <strong>peso</strong> de que se fala aqui é o do quadro anterior: a parte que
         cada publicação tem no conjunto. Especializar-se é cobrir uma área acima dessa
-        parte. Vale também o limite ali explicado: por dia e por área ficam registadas no
-        máximo doze publicações, o que deixa de fora cerca de 5% das marcações do mês,
-        sempre de quem teve pouco volume nesse dia.</p>
+        parte. Vale também o limite ali explicado: por dia e por área ficam registadas as
+        25 publicações com mais volume, o que hoje deixa de fora cerca de 1% das
+        marcações.</p>
     </div>`;
 }
 
@@ -2160,13 +2160,13 @@ function blocoPesoPublicacoes(linhas){
         a conta nos 100%. Nota diferente e a não confundir com esta: o arquivo guarda, por
         cada área e cada dia, até doze publicações, e o que fica além disso — cerca de 5%
         das marcações do mês, sempre de publicações com pouco volume nesse dia — não entra
-        neste quadro nem no seguinte.
-        <br><strong>Por outras palavras:</strong> em cada dia, e para cada área, ficam
-        registadas no máximo doze publicações — as que mais noticiaram essa área nesse
-        dia. Se a Saúde foi noticiada por quinze publicações num dia, guardam-se as doze
-        com mais notícias e as outras três não ficam registadas nesse dia e nessa área.
-        Ao fim do mês isso soma cerca de 5% das marcações, sempre de quem teve pouco
-        volume.
+        neste quadro nem no seguinte. A soma das linhas fecha certa <em>com o total
+        aqui mostrado</em> — e é esse o ponto: o total já é o que ficou registado, não
+        tudo o que foi noticiado. Em cada dia, e para cada área, guardam-se as
+        <strong>25 publicações</strong> que mais noticiaram essa área nesse dia; se uma
+        área foi noticiada por trinta num dia, as últimas cinco não ficam registadas.
+        Com este limite fica de fora cerca de 1% das marcações, sempre de quem teve pouco
+        volume nesse dia.
         <br>É deste peso que sai o quadro a seguir: uma publicação diz-se especializada
         quando cobre uma área <em>acima</em> da quota que aqui tem.</p>
     </div>`;
