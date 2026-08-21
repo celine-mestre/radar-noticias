@@ -752,13 +752,25 @@ def principal():
     # a frente e deixar um degrau no meio dos dados.
     if getattr(args, "refazer_desde", None):
         desde = args.refazer_desde
-        antes = len(avaliacoes)
-        avaliacoes = {lig: v for lig, v in avaliacoes.items()
-                      if (v.get("d") or "") < desde}
-        arquivadas = {lig: v for lig, v in arquivadas.items()
-                      if (v.get("d") or "") < desde}
-        print(f"refazer: descartadas {antes - len(avaliacoes)} avaliações "
-              f"de {desde} em diante — voltam à fila com a instrução atual")
+        # SÓ se descarta o que se consegue voltar a avaliar. Uma notícia cuja
+        # data já saiu da janela de trabalho e não foi repescada com
+        # --recuperar não está aqui para ser reclassificada: apagar-lhe a
+        # avaliação não a corrigiria, apagá-la-ia. O que fica de fora mantém a
+        # avaliação antiga e o aviso di-lo, para não haver ilusão de que a
+        # revisão alcançou tudo.
+        disponiveis = {ligacao(n) for n in noticias if ligacao(n)}
+        def refazer(lig, v):
+            return (v.get("d") or "") >= desde and lig in disponiveis
+        podia = [lig for lig, v in avaliacoes.items() if (v.get("d") or "") >= desde]
+        avaliacoes = {lig: v for lig, v in avaliacoes.items() if not refazer(lig, v)}
+        arquivadas = {lig: v for lig, v in arquivadas.items() if not refazer(lig, v)}
+        refeitas = sum(1 for lig in podia if lig in disponiveis)
+        print(f"refazer: {refeitas} avaliações de {desde} em diante voltam à fila "
+              f"com a instrução atual")
+        if len(podia) > refeitas:
+            print(f"  ({len(podia) - refeitas} ficam com a avaliação antiga: as "
+                  f"notícias já não estão na janela — use --recuperar para as "
+                  f"trazer do arquivo mensal)")
 
     # Para saber o que falta e para reconstruir a série, vale tudo o que já se
     # sabe: a janela de trabalho mais o arquivo de sempre.
