@@ -1,10 +1,21 @@
 {
- "recolhido": "2026-08-21 19:53",
- "horas_desde_a_anterior": 2.1,
+ "recolhido": "2026-08-21 23:33",
+ "horas_desde_a_anterior": 3.6,
  "fontes": 66,
- "sem_artigos": 3,
- "por_recurso": 1,
+ "sem_artigos": 18,
+ "por_recurso": 0,
  "detalhe": [
+  {
+   "fonte": "Angop",
+   "dominio": "angop.ao",
+   "origem": "lusofonas",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
   {
    "fonte": "Construir",
    "dominio": "construir.pt",
@@ -14,7 +25,106 @@
    "via": "google",
    "lidos": 0,
    "marcados": 0,
-   "erro": ""
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Deutsche Welle (português)",
+   "dominio": "dw.com",
+   "origem": "internacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Diário de Notícias",
+   "dominio": "dn.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Diário de Notícias da Madeira",
+   "dominio": "dnoticias.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Executive Digest",
+   "dominio": "executivedigest.sapo.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Expresso",
+   "dominio": "expresso.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Inforpress (Cabo Verde)",
+   "dominio": "inforpress.cv",
+   "origem": "lusofonas",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "JM Madeira",
+   "dominio": "jm-madeira.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Jornal de Angola",
+   "dominio": "jornaldeangola.ao",
+   "origem": "lusofonas",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Jornal de Notícias",
+   "dominio": "jn.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
   },
   {
    "fonte": "Jornal i",
@@ -25,7 +135,62 @@
    "via": "google",
    "lidos": 0,
    "marcados": 0,
-   "erro": ""
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Lusa",
+   "dominio": "lusa.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Novo Jornal (Angola)",
+   "dominio": "novojornal.co.ao",
+   "origem": "lusofonas",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "Renascença",
+   "dominio": "rr.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "SIC Notícias",
+   "dominio": "sicnoticias.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
+  },
+  {
+   "fonte": "TSF",
+   "dominio": "tsf.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 0,
+   "marcados": 0,
+   "erro": "HTTP Error 503: Service Unavailable"
   },
   {
    "fonte": "Vida Económica",
@@ -36,7 +201,7 @@
    "via": "google",
    "lidos": 0,
    "marcados": 0,
-   "erro": ""
+   "erro": "HTTP Error 503: Service Unavailable"
   },
   {
    "fonte": "O País (Moçambique)",
@@ -46,7 +211,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 5,
-   "marcados": 1,
+   "marcados": 2,
    "erro": ""
   },
   {
@@ -79,7 +244,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 22,
+   "marcados": 12,
    "erro": ""
   },
   {
@@ -101,7 +266,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 5,
+   "marcados": 4,
    "erro": ""
   },
   {
@@ -134,7 +299,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 4,
+   "marcados": 5,
    "erro": ""
   },
   {
@@ -156,7 +321,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 5,
+   "marcados": 3,
    "erro": ""
   },
   {
@@ -193,35 +358,35 @@
    "erro": ""
   },
   {
-   "fonte": "Le Monde",
-   "dominio": "lemonde.fr",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 15,
-   "marcados": 0,
-   "erro": ""
-  },
-  {
    "fonte": "Dinheiro Vivo",
    "dominio": "dinheirovivo.pt",
    "origem": "nacionais",
    "pt": true,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 18,
-   "marcados": 2,
+   "lidos": 14,
+   "marcados": 5,
    "erro": ""
   },
   {
-   "fonte": "Le Figaro",
-   "dominio": "lefigaro.fr",
+   "fonte": "Le Monde",
+   "dominio": "lemonde.fr",
    "origem": "internacionais",
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 18,
+   "lidos": 16,
+   "marcados": 0,
+   "erro": ""
+  },
+  {
+   "fonte": "Correio da Manhã",
+   "dominio": "cmjornal.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 20,
    "marcados": 0,
    "erro": ""
   },
@@ -244,7 +409,18 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 20,
-   "marcados": 11,
+   "marcados": 10,
+   "erro": ""
+  },
+  {
+   "fonte": "Le Figaro",
+   "dominio": "lefigaro.fr",
+   "origem": "internacionais",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 20,
+   "marcados": 0,
    "erro": ""
   },
   {
@@ -288,7 +464,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 22,
-   "marcados": 15,
+   "marcados": 14,
    "erro": ""
   },
   {
@@ -332,18 +508,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 25,
-   "marcados": 8,
-   "erro": ""
-  },
-  {
-   "fonte": "France Info",
-   "dominio": "francetvinfo.fr",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 27,
-   "marcados": 0,
+   "marcados": 10,
    "erro": ""
   },
   {
@@ -353,7 +518,7 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 28,
+   "lidos": 25,
    "marcados": 0,
    "erro": ""
   },
@@ -364,7 +529,18 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 29,
+   "lidos": 28,
+   "marcados": 0,
+   "erro": ""
+  },
+  {
+   "fonte": "France Info",
+   "dominio": "francetvinfo.fr",
+   "origem": "internacionais",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 28,
    "marcados": 0,
    "erro": ""
   },
@@ -413,39 +589,6 @@
    "erro": ""
   },
   {
-   "fonte": "Inforpress (Cabo Verde)",
-   "dominio": "inforpress.cv",
-   "origem": "lusofonas",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 31,
-   "marcados": 1,
-   "erro": ""
-  },
-  {
-   "fonte": "Angop",
-   "dominio": "angop.ao",
-   "origem": "lusofonas",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 32,
-   "marcados": 2,
-   "erro": ""
-  },
-  {
-   "fonte": "Novo Jornal (Angola)",
-   "dominio": "novojornal.co.ao",
-   "origem": "lusofonas",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 32,
-   "marcados": 5,
-   "erro": ""
-  },
-  {
    "fonte": "BBC Mundo",
    "dominio": "bbc.com",
    "origem": "internacionais",
@@ -475,7 +618,18 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 50,
-   "marcados": 11,
+   "marcados": 20,
+   "erro": ""
+  },
+  {
+   "fonte": "Euronews (português)",
+   "dominio": "pt.euronews.com",
+   "origem": "internacionais",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 50,
+   "marcados": 23,
    "erro": ""
   },
   {
@@ -508,7 +662,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 51,
-   "marcados": 28,
+   "marcados": 31,
    "erro": ""
   },
   {
@@ -523,17 +677,6 @@
    "erro": ""
   },
   {
-   "fonte": "Deutsche Welle (português)",
-   "dominio": "dw.com",
-   "origem": "internacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 63,
-   "marcados": 4,
-   "erro": ""
-  },
-  {
    "fonte": "Corriere della Sera",
    "dominio": "corriere.it",
    "origem": "internacionais",
@@ -545,94 +688,6 @@
    "erro": ""
   },
   {
-   "fonte": "JM Madeira",
-   "dominio": "jm-madeira.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 77,
-   "marcados": 9,
-   "erro": ""
-  },
-  {
-   "fonte": "Jornal de Angola",
-   "dominio": "jornaldeangola.ao",
-   "origem": "lusofonas",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 96,
-   "marcados": 10,
-   "erro": ""
-  },
-  {
-   "fonte": "TSF",
-   "dominio": "tsf.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 96,
-   "marcados": 16,
-   "erro": ""
-  },
-  {
-   "fonte": "Diário de Notícias",
-   "dominio": "dn.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 98,
-   "marcados": 12,
-   "erro": ""
-  },
-  {
-   "fonte": "Diário de Notícias da Madeira",
-   "dominio": "dnoticias.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 100,
-   "marcados": 12,
-   "erro": ""
-  },
-  {
-   "fonte": "Euronews (português)",
-   "dominio": "pt.euronews.com",
-   "origem": "internacionais",
-   "pt": true,
-   "via_config": "feed",
-   "via": "google (recurso)",
-   "lidos": 100,
-   "marcados": 33,
-   "erro": ""
-  },
-  {
-   "fonte": "Executive Digest",
-   "dominio": "executivedigest.sapo.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 100,
-   "marcados": 15,
-   "erro": ""
-  },
-  {
-   "fonte": "Expresso",
-   "dominio": "expresso.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 100,
-   "marcados": 27,
-   "erro": ""
-  },
-  {
    "fonte": "Folha de S.Paulo · Mundo",
    "dominio": "folha.uol.com.br",
    "origem": "lusofonas",
@@ -640,62 +695,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 100,
-   "marcados": 41,
-   "erro": ""
-  },
-  {
-   "fonte": "Jornal de Notícias",
-   "dominio": "jn.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 100,
-   "marcados": 28,
-   "erro": ""
-  },
-  {
-   "fonte": "Lusa",
-   "dominio": "lusa.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 100,
-   "marcados": 2,
-   "erro": ""
-  },
-  {
-   "fonte": "Renascença",
-   "dominio": "rr.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 100,
-   "marcados": 9,
-   "erro": ""
-  },
-  {
-   "fonte": "SIC Notícias",
-   "dominio": "sicnoticias.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 100,
-   "marcados": 30,
-   "erro": ""
-  },
-  {
-   "fonte": "Correio da Manhã",
-   "dominio": "cmjornal.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta + Google",
-   "lidos": 120,
-   "marcados": 23,
+   "marcados": 42,
    "erro": ""
   },
   {
@@ -716,7 +716,7 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 148,
+   "lidos": 149,
    "marcados": 0,
    "erro": ""
   },
@@ -727,8 +727,8 @@
    "pt": true,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 700,
-   "marcados": 99,
+   "lidos": 490,
+   "marcados": 78,
    "erro": ""
   }
  ]
