@@ -389,7 +389,17 @@ table.mtz td.mtz-forte{color:#fff}
 table.mtz .mtz-semana{border-left:1.5px dashed var(--texto-ligeiro)}
 /* Célula com resumo do Amália: um canto dobrado, discreto, para se saber onde
    vale a pena parar o cursor — um tooltip que ninguém adivinha não existe. */
-table.mtz td.mtz-com-resumo{position:relative;cursor:help}
+table.mtz td.mtz-com-resumo{position:relative;cursor:pointer}
+table.mtz td.mtz-com-resumo:focus-visible{outline:2px solid var(--azul);outline-offset:-2px}
+/* Painel do resumo — para quem toca em vez de apontar. */
+.mtz-painel{position:relative;margin:.2rem 0 .9rem;padding:.85rem 2.2rem .85rem 1rem;
+  border-radius:var(--raio-s);background:var(--superficie-alt);
+  border-left:3px solid var(--vermelho,#B23A3A)}
+.mtz-painel h4{margin:0 0 .35rem;font-size:.78rem;color:var(--texto-suave);font-weight:600}
+.mtz-painel p{margin:0;font-size:.84rem;line-height:1.6;white-space:pre-line}
+.mtz-fechar{position:absolute;top:.4rem;right:.5rem;border:0;background:transparent;
+  color:var(--texto-ligeiro);font-size:.9rem;cursor:pointer;line-height:1;padding:.2rem}
+.mtz-fechar:hover{color:var(--texto)}
 table.mtz td.mtz-com-resumo::after{content:"";position:absolute;top:1px;right:1px;
   border:3px solid transparent;border-top-color:currentColor;border-right-color:currentColor;
   opacity:.55}
@@ -618,6 +628,15 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
             período. Célula vazia quer dizer avaliações insuficientes, não ausência de
             notícias.</span>
         </div>
+        <div class="aj-c" style="--c:var(--azul)">
+          <div class="aj-ic">📊</div>
+          <b>De onde vêm as notícias</b>
+          <span>O peso de cada publicação no que o painel conta — a leitura de
+            <strong>dependência</strong>. Um órgão que se reparte por todas as áreas, sem
+            se destacar em nenhuma, pode ser ainda assim a maior fonte do corpus. A nota
+            diz quantas publicações chegam para metade de tudo. É deste peso que sai o
+            quadro seguinte.</span>
+        </div>
         <div class="aj-c" style="--c:var(--dourado)">
           <div class="aj-ic">📰</div>
           <b>Publicações especializadas</b>
@@ -776,6 +795,11 @@ let dias = 30, agregacao = "dia", diaEscolhido = null, origem = "todas", areaEsc
    pico de ontem importa mais do que um pico maior de há três semanas. Quem
    está a fazer análise retrospetiva quer o contrário, e tem o botão. */
 let ordemPicos = "data";
+/* Que lado do tom a matriz mostra. A cobertura muito negativa é a que costuma
+   exigir explicação, mas a muito positiva é informação igualmente legítima e
+   passava despercebida — ficam as duas, à escolha, na mesma matriz. Duas
+   matrizes lado a lado seriam o dobro do espaço para metade da atenção. */
+let ladoTom = "negativas";
 /* Quem escolhe a agregação manda: só se ajusta sozinha enquanto ninguém tocou
    no seletor. Sem isto, uma escolha explícita era desfeita no desenho seguinte. */
 let agregacaoManual = false;
@@ -1584,34 +1608,61 @@ function blocoMatrizTom(linhas, pares, areas){
       return `<td class="mtz-vazia ${sem}" title="${descreverPeriodo(k)}: ${
         c ? `só ${c.av} avaliadas` : "sem avaliações"} — o mínimo são ${MINIMO_AVALIADAS}">·</td>`;
     }
-    const p = Math.round(100 * c.negativo / c.av);
+    const neg = ladoTom === "negativas";
+    const p = Math.round(100 * (neg ? c.negativo : c.positivo) / c.av);
     /* Acima do limiar, a célula carrega o resumo do Amália no próprio tooltip.
        Como o quadro pode estar agregado a semana ou mês, junta-se o resumo de
        CADA dia desse período que tenha passado o limiar — os resumos são
        gerados por dia, que é o átomo que não muda, e a vista agregada limita-se
        a encadeá-los por ordem. */
-    const dias = diasDoPeriodo(k).filter(dd => RESUMOS_TOM[dd + "|" + n]);
+    /* Os resumos existem para o lado negativo: é o que o Amália foi encarregado
+       de explicar. Do lado positivo a célula continua a informar, sem resumo. */
+    const dias = neg ? diasDoPeriodo(k).filter(dd => RESUMOS_TOM[dd + "|" + n]) : [];
     const resumo = dias.map(dd => {
       const r = RESUMOS_TOM[dd + "|" + n];
       return (dias.length > 1 ? dataCurtaPt(dd) + " · " : "")
         + `${r.pct}% negativas de ${r.n} notícias\n${r.texto}`;
     }).join("\n\n");
-    /* A matriz mede UMA coisa — a percentagem de negativas —, e uma medida só
-       pede uma escala só: do claro ao carregado, a acompanhar o valor. Pintar de
-       verde os valores baixos sugeria um segundo indicador («positividade») que
-       não está aqui: 18% de negativas não quer dizer 82% de positivas, porque
-       pelo meio há as neutras, que costumam ser a maioria. */
-    const i = Math.min(1, p / 90).toFixed(2);
-    const claro = p < 55;
-    const base = `${n} · ${descreverPeriodo(k)}: ${p}% de notícias negativas, de ${c.av} avaliadas`;
+    /* Uma medida de cada vez, uma escala de cada vez: do claro ao carregado, a
+       acompanhar o valor — vermelho para as negativas, verde para as positivas.
+       Nunca as duas na mesma matriz com cores opostas, porque não são
+       complementares: 18% de negativas não quer dizer 82% de positivas, já que
+       pelo meio estão as neutras, em geral maioritárias. É por serem medidas
+       independentes que se mostram à vez.
+
+       A escala das positivas é mais curta porque a realidade também é: as
+       positivas raramente passam de metade, e uma escala até 90% deixaria a
+       matriz inteira quase branca. */
+    const i = Math.min(1, p / (neg ? 90 : 60)).toFixed(2);
+    const claro = p < (neg ? 55 : 38);
+    const base = `${n} · ${descreverPeriodo(k)}: ${p}% de notícias ${ladoTom}, de ${c.av} avaliadas`;
+    const corBase = neg ? "var(--vermelho, #B23A3A)" : "var(--verde)";
+    /* No telemóvel não há cursor: o tooltip nativo não abre ao toque, e um
+       resumo que só existe para quem tem rato não existe. A célula com resumo
+       passa a ser um botão que abre o texto por baixo da matriz. */
     return `<td class="${claro ? "" : "mtz-forte"} ${sem}${resumo ? " mtz-com-resumo" : ""}"
-      style="background:color-mix(in srgb, var(--vermelho, #B23A3A) ${Math.round(i * 85)}%, transparent)"
+      ${resumo ? `data-resumo="${textoAtributo(resumo)}" data-cab="${textoAtributo(base)}"
+        tabindex="0" role="button"` : ""}
+      style="background:color-mix(in srgb, ${corBase} ${Math.round(i * 85)}%, transparent)"
       title="${textoAtributo(resumo ? base + "\n\n" + resumo : base)}">${p}</td>`;
   };
 
   return `
     <div class="bloco">
-      <h2>Tom por área e período <span class="h2-foco">· % de notícias negativas</span></h2>
+      <h2>Tom por área e período <span class="h2-foco">· % de notícias ${ladoTom}</span></h2>
+      <div class="tp-ordem" id="ladoTom">
+        <span class="tp-ordem-rot">Mostrar</span>
+        <button data-lado="negativas"${ladoTom === "negativas" ? ' class="ativo"' : ""}>negativas</button>
+        <button data-lado="positivas"${ladoTom === "positivas" ? ' class="ativo"' : ""}>positivas</button>
+      </div>
+      <!-- Painel do resumo, para quem toca em vez de apontar. Fica logo abaixo
+           da matriz, onde o dedo o alcança sem tapar a célula que se acabou de
+           tocar. -->
+      <div class="mtz-painel" id="painelResumo" hidden>
+        <button class="mtz-fechar" id="fecharResumo" aria-label="Fechar">✕</button>
+        <h4 id="painelResumoCab"></h4>
+        <p id="painelResumoTexto"></p>
+      </div>
       <div class="mtz-rolo">
         <table class="mtz">
           <tr><th></th>${chaves.map((k, i) =>
@@ -1622,19 +1673,24 @@ function blocoMatrizTom(linhas, pares, areas){
           </tr>`).join("")}
         </table>
       </div>
-      <p class="nota">Percentagem de notícias negativas em cada área e período, sobre a
-        comunicação social nacional avaliada pelo Amália, em validação. A cor carrega com
-        o valor: quanto mais escura, maior a proporção de negativas. Não há verde porque
-        a matriz mede uma coisa só — 18% de negativas não quer dizer 82% de positivas,
-        já que pelo meio estão as neutras, em geral maioritárias; as três proporções
-        estão no quadro do sentimento, acima. Um ponto quer dizer que esse período não
-        chegou a ${MINIMO_AVALIADAS} notícias avaliadas nessa área — não que não tenha
-        havido notícias. Áreas sem nenhuma célula desenhável não entram na matriz.
-        As células com um <strong>canto dobrado</strong> passaram os 75% de negativas e
-        têm, ao passar o cursor, um resumo do Amália sobre o que aconteceu nesse dia —
-        escrito a partir dos títulos das notícias negativas, e a descrever
-        acontecimentos, não a atitude das publicações. Os resumos são feitos ao dia; nas
-        vistas por semana ou por mês, a célula junta os dos dias que a compõem.</p>
+      <p class="nota">Percentagem de notícias <strong>${ladoTom}</strong> em cada área e
+        período, sobre a comunicação social nacional avaliada pelo Amália, em validação.
+        A cor carrega com o valor. <strong>Os dois lados mostram-se à vez, e não na mesma
+        matriz</strong>, porque não são complementares: 18% de negativas não quer dizer
+        82% de positivas, já que pelo meio estão as neutras, em geral maioritárias — as
+        três proporções juntas estão no quadro do sentimento, acima. Um ponto quer dizer
+        que esse período não chegou a ${MINIMO_AVALIADAS} notícias avaliadas nessa área —
+        não que não tenha havido notícias. Áreas sem nenhuma célula desenhável não entram
+        na matriz.${ladoTom === "negativas"
+        ? ` As células com um <strong>canto dobrado</strong> passaram os 75% de negativas:
+        têm um resumo do Amália sobre o que aconteceu nesse dia — <strong>toque ou clique
+        para o ler</strong> —, escrito a partir dos títulos das notícias negativas e a
+        descrever acontecimentos, não a atitude das publicações. Os resumos são feitos ao
+        dia; nas vistas por semana ou por mês, a célula junta os dos dias que a compõem.`
+        : ` Do lado positivo não há resumos: o Amália foi encarregado de explicar as
+        coberturas duras, que são as que costumam exigir explicação. A escala é mais curta
+        do que a das negativas — as positivas raramente passam de metade — pelo que as
+        cores dos dois lados não se comparam entre si.`}</p>
     </div>`;
 }
 
@@ -1989,25 +2045,28 @@ function blocoPublicacoes(linhas, areas){
         proporcional à maior das mostradas: diz de onde vem o volume que o painel conta,
         e mostra quando o retrato depende muito de poucos órgãos. A cor das etiquetas
         carrega com a força da especialização.
-        <strong>Um limite do registo, que não se deve confundir com a lista acima.</strong>
-        Todos os dias, e para cada área, o painel arquiva as publicações que mais
-        noticiaram essa área nesse dia — cabem doze. As que ficarem além dessas doze
-        <em>nesse dia e nessa área</em> não chegam a ser registadas, e somam cerca de
-        <strong>5% das marcações do mês</strong>: são sempre publicações de pouco volume
-        nesse dia, pelo que os totais das mais pequenas ficam um pouco abaixo do real.
-        Coisa diferente é o número de linhas que estes quadros mostram: aí ninguém se
-        perde — o que não cabe na lista aparece agregado no fim.</p>
+        O <strong>peso</strong> de que se fala aqui é o do quadro anterior: a parte que
+        cada publicação tem no conjunto. Especializar-se é cobrir uma área acima dessa
+        parte. Vale também o limite ali explicado — em cada área e em cada dia arquivam-se
+        até doze publicações, e o que fica além disso, cerca de 5% das marcações do mês,
+        não chega a ser registado.</p>
     </div>`;
 }
 
 /* DE ONDE VÊM AS NOTÍCIAS — o peso de cada publicação no corpus.
-   
-   O quadro anterior responde a «quem se especializa»; este responde a «de quem
-   dependemos». São perguntas diferentes e a resposta é quase oposta: o
-   Observador não se especializa em área nenhuma — reparte-se por todas — e é
-   ainda assim a maior fonte do corpus, com quase um quinto das marcações. Sem
-   este quadro, os órgãos transversais eram invisíveis no painel precisamente
-   por serem transversais.
+
+   Vem ANTES das publicações especializadas, e não depois, por uma razão que não
+   é de gosto: o índice de especialização do quadro seguinte é calculado sobre
+   estes números — é a quota de uma publicação numa área a dividir pela quota que
+   ela tem no conjunto. Quem lê primeiro o peso tem o denominador na cabeça
+   quando chega ao «2,4×»; pela ordem inversa, vê um quociente antes de saber
+   sobre o que é.
+
+   E as duas perguntas são diferentes, com respostas quase opostas: o Observador
+   não se especializa em área nenhuma — reparte-se por todas — e é ainda assim a
+   maior fonte do corpus, com quase um quinto das marcações. Sem este quadro, os
+   órgãos transversais eram invisíveis no painel precisamente por serem
+   transversais.
 
    BARRAS e não círculo. Um donut com 38 fatias é ilegível, e um donut com as
    seis maiores mais uma fatia «outras» esconde exatamente o que aqui interessa:
@@ -2097,7 +2156,9 @@ function blocoPesoPublicacoes(linhas){
         a conta nos 100%. Nota diferente e a não confundir com esta: o arquivo guarda, por
         cada área e cada dia, até doze publicações, e o que fica além disso — cerca de 5%
         das marcações do mês, sempre de publicações com pouco volume nesse dia — não entra
-        em nenhum destes quadros.</p>
+        neste quadro nem no seguinte. É deste peso que sai o quadro a seguir: uma
+        publicação diz-se especializada quando cobre uma área <em>acima</em> da quota que
+        aqui tem.</p>
     </div>`;
 }
 
@@ -2752,9 +2813,9 @@ function desenhar(){
 
     ${blocoComparacao(linhas, pares)}
 
-    ${blocoPublicacoes(linhas, areas)}
-
     ${blocoPesoPublicacoes(linhas)}
+
+    ${blocoPublicacoes(linhas, areas)}
 
     <div class="bloco">
       <h2>${areaEscolhida ? "Palavras da área" : "Palavras do período"} ${rotuloFoco}</h2>
@@ -3168,6 +3229,33 @@ catch(e){ aplicarTema("claro"); }
 /* Clique num pico: expande/recolhe o resumo do que o motivou. Delegação no
    documento, porque os picos são redesenhados a cada mudança de filtro. */
 function alternarPico(alvo){
+  /* Lado do tom na matriz. */
+  const lado = alvo.closest && alvo.closest("#ladoTom button");
+  if(lado){
+    ladoTom = lado.dataset.lado;
+    desenhar();
+    return;
+  }
+
+  /* Resumo de uma célula da matriz: abre no painel por baixo. É o mesmo texto
+     que o tooltip dá a quem tem rato — aqui serve quem toca. */
+  if(alvo.closest && alvo.closest("#fecharResumo")){
+    const p = document.getElementById("painelResumo");
+    if(p) p.hidden = true;
+    return;
+  }
+  const cel = alvo.closest && alvo.closest("td[data-resumo]");
+  if(cel){
+    const p = document.getElementById("painelResumo");
+    if(p){
+      document.getElementById("painelResumoCab").textContent = cel.dataset.cab || "";
+      document.getElementById("painelResumoTexto").textContent = cel.dataset.resumo || "";
+      p.hidden = false;
+      p.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    return;
+  }
+
   /* O seletor de leitura do registo de picos. Fica aqui, com os restantes
      cliques do corpo, porque o corpo é redesenhado a cada mudança e um ouvinte
      preso ao botão morria com ele. */
