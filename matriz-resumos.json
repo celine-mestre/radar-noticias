@@ -1,8 +1,9 @@
 {
- "gerado": "2026-08-20 10:06",
+ "gerado": "2026-08-21 01:59",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
- "nota": "O que aconteceu nos dias em que a cobertura de uma área foi negativa em 75% ou mais, a partir dos títulos das notícias negativas desse dia. Descreve acontecimentos, não a atitude das publicações.",
+ "limiar_positivo": 50,
+ "nota": "O que aconteceu nos dias em que a cobertura de uma área foi negativa em 75% ou mais, ou positiva em 50% ou mais, a partir dos títulos das notícias desse tom nesse dia. Descreve acontecimentos, não a atitude das publicações. As chaves com «|+» no fim são do lado positivo.",
  "resumos": {
   "2026-08-04|Justiça": {
    "texto": "No dia 2026-08-04, a área da Justiça registou múltiplos acontecimentos de natureza judicial e prisional. Três indivíduos foram detidos na operação Flamma e colocados em prisão preventiva, um deles por incêndio criminoso contra a sua companheira na Amadora. Adicionalmente, um homem foi sujeito a preventiva por crimes sexuais, conforme noticiado. Observou-se ainda a exclusão de criminosos sexuais da possibilidade de libertação antecipada, e casos de reclusos com penas pendentes detidos em condições de sobrelotação, como o caso de um indivíduo encontrado em Vagos com um ano e dois meses de pena por cumprir. Por fim, registou-se um homicídio seguido de ocultação de cadáver na Lagoa de Óbidos, envolvendo uma consultora. O tema dominante parece ser a execução de penas, a segurança prisional e a atuação judicial em casos de crimes graves.",
@@ -68,6 +69,48 @@
    "texto": "No dia 20 de agosto de 2026, a cobertura noticiosa da Defesa Nacional foi predominantemente negativa, centrando-se em conflitos armados e ameaças à segurança. Atacados russos contra a Ucrânia, nomeadamente em Kiev e arredores, resultaram em múltiplas baixas civis e militares, com um total de pelo menos 18 vítimas mortais e dezenas de feridos reportados. Paralelamente, foram noticiados incidentes de suspeita de sabotagem contra gasodutos, bem como declarações públicas sobre a escalada do conflito e a preparação da NATO para potenciais ameaças do Irão e da Rússia. Não se identificou um único evento central, mas sim uma série de acontecimentos relacionados com a guerra na Ucrânia, que constituíram o tema dominante.",
    "n": 12,
    "pct": 92
+  },
+  "2026-08-04|Agricultura e Mar|+": {
+   "texto": "O Governo implementou medidas de apoio à formação e informação no âmbito do plano da Política Agrícola Comum (PAC), destinadas a mais de 170 mil agricultores e pescadores. Simultaneamente, foi efetuado o pagamento antecipado de 87,1 milhões de euros a 170 mil agricultores e pescadores, abrangendo apoios de outubro, incluindo adiantamentos a explorações pecuárias afetadas pela língua azul. Este conjunto de ações, concretizadas em julho, reflete um tema dominante de reforço financeiro e apoio setorial no âmbito da agricultura e do mar.",
+   "n": 8,
+   "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-05|Ambiente e Energia|+": {
+   "texto": "No dia 5 de agosto de 2026, foram noticiados diversos desenvolvimentos na área do Ambiente e Energia. As autoridades moçambicanas reforçaram a assistência a 250 mil pessoas em risco de seca, através de medidas de mitigação e apoio alimentar. A Agência Portuguesa do Ambiente e do Mar (APAEM) anunciou a atribuição de mais de 3 milhões de euros para novos projetos em áreas protegidas, visando a conservação da biodiversidade e a gestão sustentável dos recursos naturais. Adicionalmente, o governo cabo-verdiano procedeu à redução de tarifas no setor elétrico, procurando facilitar o acesso à energia para a população. Paralelamente, a Moove concretizou a transformação de 65 postos de abastecimento em comunidades de energia, promovendo a descentralização da produção e distribuição de energia renovável.",
+   "n": 7,
+   "pct": 54,
+   "lado": "positivas"
+  },
+  "2026-08-10|Cultura, Juventude e Desporto|+": {
+   "texto": "No dia 10 de agosto de 2026, registaram-se vários acontecimentos relevantes nas áreas da cultura, juventude e desporto. O programa \"Playback\" sobre Carlos Paião alcançou o primeiro lugar no ranking de filmes portugueses mais vistos do ano, enquanto a equipa feminina de 4x200 livres estabeleceu um novo recorde nacional no Campeonato Europeu de natação. Paralelamente, o Prémio Salarial de 2026 iniciou o pagamento aos jovens beneficiários, conforme noticiado por diversos órgãos de comunicação. No plano desportivo, atletas como Diogo Ribeiro, Camila Rebelo e Francisca Martins contribuíram para a melhoria de recordes nacionais, e a Taça dos Mil Mártires marcou o regresso do futebol federado à Palestina.",
+   "n": 16,
+   "pct": 64,
+   "lado": "positivas"
+  },
+  "2026-08-10|Reforma do Estado|+": {
+   "texto": "No dia 10 de agosto de 2026, a área governativa da Reforma do Estado não registou desenvolvimentos diretamente relacionados com os títulos noticiados. Os títulos divulgados referem-se a avanços em tecnologias de inteligência artificial (Endel, Nvidia, Meta), não a medidas ou acordos no âmbito da Reforma do Estado. A cobertura noticiosa observada nesse dia foi, de facto, predominantemente positiva, mas os eventos reportados não se inserem no âmbito da Reforma do Estado.",
+   "n": 4,
+   "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-10|Trabalho, Solidariedade e Segurança Social|+": {
+   "texto": "No âmbito da área governamental do Trabalho, Solidariedade e Segurança Social, verificaram-se desenvolvimentos em torno da transparência salarial e da modernização dos apoios sociais.  A legislação que promove a transparência salarial, com divulgação de informação sobre remunerações, foi objeto de debate e esclarecimento.  Adicionalmente, a atribuição do abono de família pré-natal foi automatizada, simplificando o acesso ao apoio.  Não se registaram, contudo, medidas governamentais específicas de alteração de políticas de emprego ou de proteção social, sendo que os títulos refletem mais a discussão pública e a análise de dados económicos.",
+   "n": 7,
+   "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-11|Negócios Estrangeiros|+": {
+   "texto": "No âmbito da cooperação internacional, Portugal comprometeu-se a contribuir com 100 mil euros para apoiar iniciativas na Colômbia. A emigração portuguesa para o exterior manteve-se estável em cerca de 70 mil pessoas nos últimos três anos, segundo dados do Jornal de Negócios. O Ministro dos Negócios Estrangeiros, João Gomes de Albares, assegurou o repatriamento de todos os migrantes irregulares em Ceuta, conforme noticiado pelo Observador. A União Europeia, a Meta e o TikTok estabeleceram uma parceria para combater a desinformação relacionada com a situação em Ceuta, conforme divulgado pela RTP Notícias.",
+   "n": 6,
+   "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-12|Infraestruturas e Habitação|+": {
+   "texto": "No primeiro trimestre de 2026, 50,6% dos desempregados registados mantiveram a inscrição até junho, indicando uma melhoria sustentada na retenção de beneficiários. O Governo aprovou um seguro que permite transportes públicos gratuitos para ex-combatentes em todo o território nacional, abrangendo todas as regiões do país. Uma cooperativa na Lousã concluiu a construção de habitações destinadas a famílias com crianças doentes, reforçando o apoio social nesta área. O Governo da Colômbia anunciou um subsídio para famílias afetadas por um sismo recente, demonstrando uma resposta internacional a catástrofes naturais. O tema dominante é o apoio social a grupos vulneráveis, abrangendo desemprego, ex-combatentes, saúde infantil e assistência pós-desastre.",
+   "n": 5,
+   "pct": 56,
+   "lado": "positivas"
   }
  }
 }
