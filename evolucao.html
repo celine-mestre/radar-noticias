@@ -289,6 +289,15 @@ main{padding:1.6rem 0 3rem}
 }
 
 /* Comparação de duas áreas */
+/* Fichas das áreas em comparação, cada uma com a sua cor e a sua cruz. */
+.cmp-ficha{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .3rem .2rem .6rem;
+  border-radius:999px;font-size:.78rem;color:var(--texto);
+  background:color-mix(in srgb, var(--c) 12%, transparent);
+  border:1px solid color-mix(in srgb, var(--c) 45%, var(--borda))}
+.cmp-tira{border:0;background:transparent;color:var(--texto-ligeiro);cursor:pointer;
+  font-size:.72rem;line-height:1;padding:.15rem .25rem;border-radius:50%}
+.cmp-tira:hover{color:var(--vermelho,#B23A3A);background:var(--superficie-alt)}
+.cmp-cheio{color:var(--texto-ligeiro);font-size:.74rem}
 .cmp-sel{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:.7rem 0 .2rem;
   font-size:.8rem;color:var(--texto-suave)}
 .cmp-sel select{font-family:var(--fonte);font-size:.82rem;color:var(--texto);
@@ -624,9 +633,11 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
         </div>
         <div class="aj-c" style="--c:var(--verde)">
           <div class="aj-ic">🆚</div>
-          <b>Comparar duas áreas</b>
-          <span>Duas linhas na mesma escala, com uma tabela de totais, média, dia mais
-            forte e tom. A segunda área desenha-se a tracejado.</span>
+          <b>Comparar áreas</b>
+          <span>Até <strong>quatro áreas</strong> na mesma escala, com uma tabela de
+            totais, média, período mais forte, origem, picos, publicações, assuntos e tom.
+            Distinguem-se pelo traço além da cor, porque áreas do mesmo agrupamento
+            partilham a cor. Para ver todas de uma vez, a trajetória é o quadro certo.</span>
         </div>
         <div class="aj-c" style="--c:var(--vermelho)">
           <div class="aj-ic">🌡️</div>
@@ -807,6 +818,12 @@ let ordemPicos = "data";
    passava despercebida — ficam as duas, à escolha, na mesma matriz. Duas
    matrizes lado a lado seriam o dobro do espaço para metade da atenção. */
 let ladoTom = "negativas";
+/* Quantas áreas se podem pôr lado a lado. Quatro é o limite prático, e não uma
+   escolha tímida: acima disso as linhas do gráfico tornam-se um novelo e a
+   tabela deixa de caber sem rolar, mesmo em ecrã largo. Quem quer ver as
+   dezassete tem a trajetória, que é a forma certa para muitas — pequenos
+   múltiplos, uma leitura por cartão, em vez de todas sobrepostas. */
+const MAX_COMPARAR = 4;
 /* Quem escolhe a agregação manda: só se ajusta sozinha enquanto ninguém tocou
    no seletor. Sem isto, uma escolha explícita era desfeita no desenho seguinte. */
 let agregacaoManual = false;
@@ -1731,16 +1748,19 @@ function blocoMatrizTom(linhas, pares, areas){
    cada área. Os três quadros seguintes fazem isso, com os dados que já existem. */
 
 /* Duas linhas na mesma escala: sem escala comum, comparar era enganador. */
-function duasLinhas(vA, vB, corA, corB){
-  const alto = Math.max(1, ...vA, ...vB);
+/* Traços diferentes por linha, e não só cores: duas áreas do mesmo agrupamento
+   têm a mesma cor, e a olho não se distinguiriam. */
+const TRACOS = ["", "5 3", "1.5 2.5", "8 3 1.5 3"];
+
+function linhasComparadas(series, cores){
+  const alto = Math.max(1, ...series.flat());
   const L = 100, A = 60;
   const caminho = v => v.map((x, i) =>
     `${i ? "L" : "M"}${(i * L / Math.max(v.length - 1, 1)).toFixed(1)},${(A - 4 - (x / alto) * (A - 10)).toFixed(1)}`).join(" ");
   return `<svg class="cmp-svg" viewBox="0 0 ${L} ${A}" preserveAspectRatio="none">
-    <path d="${caminho(vA)}" fill="none" stroke="${corA}" stroke-width="2"
-      vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
-    <path d="${caminho(vB)}" fill="none" stroke="${corB}" stroke-width="2"
-      stroke-dasharray="4 3" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+    ${series.map((v, i) => `<path d="${caminho(v)}" fill="none" stroke="${cores[i]}"
+      stroke-width="2" ${TRACOS[i] ? `stroke-dasharray="${TRACOS[i]}"` : ""}
+      vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`).join("")}
   </svg>`;
 }
 
@@ -1756,32 +1776,45 @@ function tomDaArea(nome, primeiro, ultimo, chaveFoco){
   return av >= 8 ? Math.round(neg / av * 100) : null;
 }
 
+/* As áreas com que a escolhida se compara. Guarda-se uma lista; o seletor
+   acrescenta uma de cada vez e cada uma sai pela sua própria cruz. */
+function comparadas(){
+  return (areaComparada || "").split("|").filter(Boolean);
+}
+
 function seletorComparar(){
-  const outras = AREAS.map(a => a.nome)
-    .filter(n => AREAS_VISTAS.includes(n) && n !== areaEscolhida);
-  return `<label class="cmp-sel">
+  const jaComparadas = comparadas();
+  const outras = AREAS.map(a => a.nome).filter(n =>
+    AREAS_VISTAS.includes(n) && n !== areaEscolhida && !jaComparadas.includes(n));
+  const cheio = jaComparadas.length >= MAX_COMPARAR - 1;
+  return `<div class="cmp-sel">
     <span>Comparar ${areaEscolhida} com</span>
-    <select id="comparar">
-      <option value="">— escolha uma área —</option>
-      ${outras.map(n => `<option value="${n}"${n === areaComparada ? " selected" : ""}>${n}</option>`).join("")}
-    </select>
-    ${areaComparada ? `<button class="btn-atalho" id="limparCmp" type="button">limpar</button>` : ""}
-  </label>`;
+    ${jaComparadas.map(n => `<span class="cmp-ficha" style="--c:${cor(grupoDaArea(n))}">
+      ${n}<button class="cmp-tira" data-tirar="${n}" type="button"
+        aria-label="Retirar ${n}">✕</button></span>`).join("")}
+    ${cheio ? `<small class="cmp-cheio">máximo de ${MAX_COMPARAR} áreas</small>` : `
+      <select id="comparar">
+        <option value="">${jaComparadas.length ? "— juntar outra área —" : "— escolha uma área —"}</option>
+        ${outras.map(n => `<option value="${n}">${n}</option>`).join("")}
+      </select>`}
+    ${jaComparadas.length ? `<button class="btn-atalho" id="limparCmp" type="button">limpar</button>` : ""}
+  </div>`;
 }
 
 function blocoComparacao(linhas, pares){
   /* Sem área escolhida não há o que comparar; com uma, o quadro aparece com o
      seletor lá dentro, à espera da segunda. */
   if(!areaEscolhida) return "";
-  if(!areaComparada) return `
+  if(!comparadas().length) return `
     <div class="bloco bloco-convite">
-      <h2>Duas áreas lado a lado</h2>
+      <h2>Áreas lado a lado</h2>
       ${seletorComparar()}
-      <p class="nota">Escolha uma segunda área para ver as duas na mesma escala, com os
-        totais, a média por período, o maior período e o tom de cada uma.</p>
+      <p class="nota">Escolha outra área para as ver na mesma escala, com os totais, a
+        média por período, o maior período, a origem, os picos, os assuntos e o tom de
+        cada uma. Pode juntar até ${MAX_COMPARAR} áreas.</p>
     </div>`;
   const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
-  const nomes = [areaEscolhida, areaComparada];
+  const nomes = [areaEscolhida, ...comparadas()];
   const cores = nomes.map(n => cor(grupoDaArea(n)));
   const vals = nomes.map(n => pares.map(([, d]) => contar(d.areas[n])));
   const somas = vals.map(v => v.reduce((a, b) => a + b, 0));
@@ -1856,11 +1889,15 @@ function blocoComparacao(linhas, pares){
     return topo ? { pub: topo[0], n: topo[1] } : null;
   });
 
-  /* Em quantos períodos cada uma esteve à frente da outra */
-  const frente = [0, 0];
-  vals[0].forEach((v, i) => {
-    if(v > vals[1][i]) frente[0]++;
-    else if(vals[1][i] > v) frente[1]++;
+  /* Em quantos períodos cada uma foi a mais noticiada das escolhidas. Empates
+     não contam para ninguém: com três ou quatro áreas seria enganador dar o
+     período a duas ao mesmo tempo. */
+  const frente = nomes.map(() => 0);
+  vals[0].forEach((_, i) => {
+    const col = vals.map(v => v[i] || 0);
+    const topo = Math.max(...col);
+    if(topo > 0 && col.filter(x => x === topo).length === 1)
+      frente[col.indexOf(topo)]++;
   });
 
   const pctOrigem = i => {
@@ -1876,15 +1913,16 @@ function blocoComparacao(linhas, pares){
 
   return `
     <div class="bloco">
-      <h2>Duas áreas lado a lado <span class="h2-foco">· ${nomes.join(" e ")}</span></h2>
+      <h2>${nomes.length === 2 ? "Duas áreas" : `${nomes.length} áreas`} lado a lado
+        <span class="h2-foco">· ${nomes.join(" · ")}</span></h2>
       ${seletorComparar()}
       <div class="cmp-legenda">
         ${nomes.map((n, i) => `<span class="cmp-eti">
-          <i class="${i ? "tracejada" : ""}" style="${i
+          <i style="${TRACOS[i]
             ? `background:repeating-linear-gradient(90deg,${cores[i]} 0 4px,transparent 4px 7px)`
             : `background:${cores[i]}`}"></i>${n}</span>`).join("")}
       </div>
-      ${duasLinhas(vals[0], vals[1], cores[0], cores[1])}
+      ${linhasComparadas(vals, cores)}
       <table class="cmp">
         <tr><th></th>${nomes.map((n, i) =>
           `<th style="color:${cores[i]}">${n}</th>`).join("")}</tr>
@@ -1916,8 +1954,10 @@ function blocoComparacao(linhas, pares){
             return t === null ? "<small>amostra pequena</small>" : t + "%";
           })}` : ""}
       </table>
-      <p class="nota">As duas linhas partilham a mesma escala, para a comparação não
-        enganar: a tracejada é a segunda área. Os <strong>assuntos</strong> são as
+      <p class="nota">As linhas partilham a mesma escala, para a comparação não enganar,
+        e distinguem-se pelo traço além da cor — duas áreas do mesmo agrupamento têm a
+        mesma cor. «${agregNome(true)} à frente» conta os períodos em que cada uma foi a
+        mais noticiada das escolhidas. Os <strong>assuntos</strong> são as
         palavras-chave que trouxeram as notícias, e a percentagem é a parte que cada uma
         vale na área — não se comparam entre colunas, porque cada área tem o seu próprio
         conjunto de expressões e não há termos em comum: servem para ver de que falava
@@ -1926,7 +1966,7 @@ function blocoComparacao(linhas, pares){
         é por isso que num único ${agregNome()} costuma aparecer «amostra pequena», mesmo
         estando tudo avaliado. «Quem mais a cobre» conta todas as origens, porque o ficheiro
         das publicações não as separa.
-        ${somas[1] ? `No período, ${nomes[0]} teve
+        ${nomes.length === 2 && somas[1] ? `No período, ${nomes[0]} teve
           ${(somas[0] / somas[1]).toFixed(2).replace(".", ",")} vezes o volume de ${nomes[1]}.` : ""}</p>
     </div>`;
 }
@@ -3478,13 +3518,21 @@ function encherAreas(){
 
 /* Delegado, porque o seletor é redesenhado com o quadro a cada desenho. */
 document.addEventListener("change", e => {
-  if(e.target && e.target.id === "comparar"){
-    areaComparada = e.target.value;
+  if(e.target && e.target.id === "comparar" && e.target.value){
+    /* Acrescenta, não substitui: a lista cresce até ao máximo. */
+    const atuais = comparadas();
+    if(!atuais.includes(e.target.value) && atuais.length < MAX_COMPARAR - 1)
+      areaComparada = [...atuais, e.target.value].join("|");
     desenhar();
   }
 });
 document.addEventListener("click", e => {
-  if(e.target && e.target.id === "limparCmp"){ areaComparada = ""; desenhar(); }
+  if(e.target && e.target.id === "limparCmp"){ areaComparada = ""; desenhar(); return; }
+  const tira = e.target.closest && e.target.closest("[data-tirar]");
+  if(tira){
+    areaComparada = comparadas().filter(n => n !== tira.dataset.tirar).join("|");
+    desenhar();
+  }
 });
 
 $("#grupo").addEventListener("change", e => {
@@ -3502,7 +3550,9 @@ $("#area").addEventListener("change", e => {
   /* A segunda área depende da primeira: sem repor a lista, o seletor de
      comparação ficava desligado depois de se escolher uma área, e podia
      oferecer a própria área escolhida. */
-  if(areaComparada === areaEscolhida) areaComparada = "";
+  /* Uma área não se compara consigo mesma: se a nova escolhida estava na lista,
+     sai de lá. */
+  areaComparada = comparadas().filter(n => n !== areaEscolhida).join("|");
   encherAreas();
   desenhar();
 });
