@@ -44,19 +44,78 @@ from datetime import datetime, timedelta, timezone
 
 VALORES = ("positivo", "neutro", "negativo")
 
+# ── A INSTRUÇÃO ──────────────────────────────────────────────────────────────
+# Reescrita depois de uma auditoria a 5 042 títulos já classificados (agosto de
+# 2026). Duas medições motivaram cada regra:
+#
+#   · numa amostra de 40 títulos anotada à mão, a concordância era de 69%;
+#   · em 1 196 pares do MESMO acontecimento noticiado por jornais diferentes, o
+#     modelo dava tons diferentes em 25% dos casos.
+#
+# Os enganos não eram aleatórios: caíam em seis padrões, e cada um deles tem
+# agora uma regra explícita, porque a instrução anterior deixava o caso em
+# aberto e o modelo resolvia-o de maneira diferente de cada vez.
+#
+#   A. alertas e preocupações («devem preocupar», «alerta para») saíam neutros
+#      — o acontecimento é o problema que se denuncia, e esse é negativo;
+#   B. propostas e declarações («PSP defende criminalização») saíam positivas
+#      — uma proposta ainda não é um facto;
+#   C. consequências claras («cancela voos devido à greve») saíam neutras;
+#   D. avanços úteis com uma palavra dura no título saíam negativos — o caso
+#      «IA que prevê incêndios mais perigosos 16 dias antes» classificado como
+#      negativo é o exemplo puro: o modelo agarrou-se a «incêndios»;
+#   E. indicadores sem regra («descida do preço dos combustíveis») saíam
+#      neutros por não se saber para que lado olhar;
+#   F. títulos de opinião e títulos degenerados não tinham destino.
+#
+# NEUTRALIDADE, que aqui é requisito e não preferência: o tom é do
+# ACONTECIMENTO, nunca do seu efeito político. Um facto mau é negativo quer
+# favoreça quer prejudique quem governa. A instrução di-lo explicitamente
+# porque um classificador que medisse «bom ou mau para o Governo» seria
+# indefensável num organismo do Estado.
 INSTRUCAO = (
     "És um classificador de tom noticioso para a administração pública "
     "portuguesa. Recebes uma lista numerada de notícias (título e, quando "
     "exista, o início do resumo). Para cada uma, classificas o TOM DO "
     "ACONTECIMENTO NOTICIADO:\n"
-    "- positivo: facto favorável, melhoria, conquista, boa notícia para o "
-    "setor ou para as pessoas.\n"
-    "- negativo: problema, crise, acidente, crime, conflito, crítica, "
-    "degradação, má notícia.\n"
-    "- neutro: anúncio, agenda, nomeação, informação factual sem carga, "
-    "processo em curso sem desfecho.\n"
-    "Classificas o acontecimento, não a tua opinião nem a qualidade do "
-    "texto. Na dúvida entre dois valores, escolhe neutro.\n"
+    "- positivo: facto favorável já concretizado ou decidido — melhoria, "
+    "conquista, acordo fechado, apoio atribuído, indicador que melhora a vida "
+    "das pessoas.\n"
+    "- negativo: problema, crise, acidente, crime, conflito, degradação, "
+    "perda, risco assinalado, acusação, ou consequência prejudicial para "
+    "alguém.\n"
+    "- neutro: anúncio de agenda, nomeação, informação factual sem carga, "
+    "processo em curso sem desfecho, proposta ou intenção ainda por decidir, "
+    "declaração de posição, pergunta ou debate sem facto novo.\n"
+    "\n"
+    "REGRAS PARA OS CASOS DUVIDOSOS:\n"
+    "1. Quem alerta, critica, acusa ou denuncia um problema traz uma notícia "
+    "NEGATIVA: o acontecimento é o problema, não o ato de falar. «X alerta "
+    "para falta de meios» é negativo.\n"
+    "2. Uma proposta, defesa de ideia ou intenção ainda não decidida é "
+    "NEUTRA, por melhor que pareça. «Y defende a criação de Z» é neutro; "
+    "«Z foi criado» é positivo.\n"
+    "3. Classifica pela CONSEQUÊNCIA quando ela está no título: «cancela voos "
+    "devido a greve» é negativo, porque quem viaja fica sem voo.\n"
+    "4. Não te deixes levar por uma palavra dura isolada. Uma solução, um "
+    "avanço ou uma prevenção são POSITIVOS mesmo que falem de um mal: "
+    "«sistema que prevê incêndios com antecedência» é positivo; «campanha "
+    "contra a violência» é positivo.\n"
+    "5. Indicadores: melhora a vida de quem os sofre = positivo (preços a "
+    "descer, desemprego a descer, salários a subir, listas de espera a "
+    "encurtar); piora = negativo. Um número sem direção clara é neutro.\n"
+    "6. Títulos de opinião, crónica, entrevista ou programa, e títulos "
+    "demasiado curtos ou truncados para se perceber o que aconteceu: NEUTRO.\n"
+    "7. Um acontecimento com dois lados classifica-se pelo que domina o "
+    "título; se estiverem equilibrados, neutro.\n"
+    "8. Morte de pessoa: negativo. Homenagem ou legado de alguém já falecido: "
+    "neutro.\n"
+    "\n"
+    "Classificas o acontecimento, e nunca o efeito político: um facto mau é "
+    "negativo quer favoreça quer prejudique o Governo, a oposição ou "
+    "qualquer outra parte. Não avalias a qualidade do texto nem a orientação "
+    "do jornal. Notícias estrangeiras seguem as mesmas regras.\n"
+    "Na dúvida entre dois valores, escolhe neutro.\n"
     "RESPONDE APENAS com uma linha por notícia, no formato exato\n"
     "N=valor\n"
     "(exemplo: «3=negativo»), sem repetir os títulos, sem comentários, "
@@ -293,7 +352,14 @@ def compor_lote(lote):
     linhas = []
     for i, n in enumerate(lote, start=1):
         resumo = (n.get("resumo") or "").strip()
-        extra = f" — {resumo[:140]}" if resumo else ""
+        # 140 caracteres cortavam 93% dos resumos a meio (a mediana anda pelos
+        # 198): o modelo via o princípio da frase e perdia a parte onde muitas
+        # vezes está o que decide o tom. 280 cobrem a grande maioria inteira,
+        # ao custo de umas centenas de tokens por lote. Um título sem resumo
+        # continua a ser classificado só pelo título, e é bom lembrar que é o
+        # caso de 29% das notícias — daí a ressalva de que o indicador lê o
+        # que a notícia mostra à entrada, e não a peça toda.
+        extra = f" — {resumo[:280]}" if resumo else ""
         linhas.append(f"[{i}] {n.get('titulo', '').strip()}{extra}")
     return "\n".join(linhas)
 
@@ -610,6 +676,12 @@ def principal():
     ap.add_argument("--arquivo-sentimento", default="sentimento-meses",
                     dest="arquivo_sentimento",
                     help="pasta do arquivo permanente das avaliações, por mês")
+    ap.add_argument("--refazer-desde", default=None, metavar="AAAA-MM-DD",
+                    help="Descarta as avaliações a partir desta data e volta a "
+                         "classificar com a instrução atual. Serve para aplicar "
+                         "ao passado uma revisão das regras: sem isto, uma "
+                         "notícia já avaliada nunca mais volta à fila, e a "
+                         "correção só valeria daí para a frente.")
     ap.add_argument("--harmonizar", action="store_true",
                     help="repõe a coerência no que JÁ está classificado: "
                          "acontecimentos com avaliações divergentes passam a ter "
@@ -671,6 +743,22 @@ def principal():
     avaliacoes = {lig: v for lig, v in avaliacoes.items()
                   if (v.get("d") or "9999") >= limite
                   or (v.get("d") or "") in datas_extra}
+
+    # Reavaliação retroativa: quando as REGRAS mudam, o que já foi classificado
+    # continua a valer as regras antigas — e uma notícia avaliada nunca volta à
+    # fila. Descartar as avaliações a partir de uma data devolve-as à fila e a
+    # instrução atual aplica-se ao passado. É a única forma de uma revisão do
+    # classificador alcançar a série já publicada, em vez de valer só daí para
+    # a frente e deixar um degrau no meio dos dados.
+    if getattr(args, "refazer_desde", None):
+        desde = args.refazer_desde
+        antes = len(avaliacoes)
+        avaliacoes = {lig: v for lig, v in avaliacoes.items()
+                      if (v.get("d") or "") < desde}
+        arquivadas = {lig: v for lig, v in arquivadas.items()
+                      if (v.get("d") or "") < desde}
+        print(f"refazer: descartadas {antes - len(avaliacoes)} avaliações "
+              f"de {desde} em diante — voltam à fila com a instrução atual")
 
     # Para saber o que falta e para reconstruir a série, vale tudo o que já se
     # sabe: a janela de trabalho mais o arquivo de sempre.
