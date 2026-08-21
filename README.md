@@ -743,7 +743,9 @@ explicada:
    complementares (18% de negativas não quer dizer 82% de positivas: pelo meio estão as
    neutras). As células que passam o limiar têm um canto dobrado e trazem o **resumo do
    Amália** sobre o que aconteceu nesse dia — no cursor, ou ao toque, num painel por baixo
-   da matriz.
+   da matriz. Os resumos aparecem apenas na leitura **por dia**: numa célula semanal ou
+   mensal a percentagem é a do período inteiro, e mostrar ali a explicação de um único dia
+   daria a entender que ela explica o conjunto.
 7. **De onde vêm as notícias**: quantas marcações vieram de cada publicação, em barras
    ordenadas. É a leitura de **dependência** e não de especialização: um órgão transversal,
    que não se destaca em área nenhuma, pode ser ainda assim a maior fonte do corpus. A nota

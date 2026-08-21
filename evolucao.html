@@ -1633,9 +1633,16 @@ function blocoMatrizTom(linhas, pares, areas){
        a encadeá-los por ordem. */
     /* Os resumos existem dos dois lados, com chaves diferentes: as negativas
        ficaram com a chave original e as positivas levam «|+» no fim, para os
-       resumos já gerados continuarem válidos. */
+       resumos já gerados continuarem válidos.
+
+       SÓ NA LEITURA POR DIA. Os resumos são de dias que passaram o limiar; numa
+       célula semanal ou mensal, a percentagem mostrada é a do período inteiro e
+       pode ficar bem abaixo dele — uma semana a 64% exibia a explicação de um
+       dia a 76%, dando a entender que os 64% estavam explicados. Ou a célula
+       responde pelo que mostra, ou não deve mostrar nada. */
     const chaveR = dd => `${dd}|${n}` + (neg ? "" : "|+");
-    const dias = diasDoPeriodo(k).filter(dd => RESUMOS_TOM[chaveR(dd)]);
+    const dias = agregacao === "dia"
+      ? diasDoPeriodo(k).filter(dd => RESUMOS_TOM[chaveR(dd)]) : [];
     const resumo = dias.map(dd => {
       const r = RESUMOS_TOM[chaveR(dd)];
       return (dias.length > 1 ? dataCurtaPt(dd) + " · " : "")
@@ -1703,11 +1710,14 @@ function blocoMatrizTom(linhas, pares, areas){
         ? ` As células com um <strong>canto dobrado</strong> passaram os 75% de negativas:
         têm um resumo do Amália sobre o que aconteceu nesse dia — <strong>toque ou clique
         para o ler</strong> —, escrito a partir dos títulos das notícias negativas e a
-        descrever acontecimentos, não a atitude das publicações. Os resumos são feitos ao
-        dia; nas vistas por semana ou por mês, a célula junta os dos dias que a compõem.`
+        descrever acontecimentos, não a atitude das publicações. Os resumos <strong>só aparecem
+        na leitura por dia</strong>: são de dias concretos que passaram o limiar, e numa
+        célula semanal ou mensal a percentagem é a do período inteiro — mostrar ali a
+        explicação de um dia daria a entender que ela explica o conjunto.`
         : ` As células com um <strong>canto dobrado</strong> passaram os 50% de positivas
         — metade das notícias de uma área serem positivas já é um dia fora do comum — e
-        trazem também um resumo do Amália, <strong>toque ou clique para o ler</strong>.
+        trazem também um resumo do Amália, <strong>toque ou clique para o ler</strong> —
+        também aqui só na leitura por dia.
         O limiar é mais baixo e a escala mais curta do que do lado negativo, porque as
         positivas raramente passam de metade; as cores dos dois lados não se comparam
         entre si.`}</p>
