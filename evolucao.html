@@ -310,7 +310,9 @@ main{padding:1.6rem 0 3rem}
 /* A segunda área desenha-se a tracejado no gráfico: a legenda tem de o dizer,
    senão os dois quadradinhos iguais mandam procurar duas linhas contínuas. */
 .cmp-eti i.tracejada{border-radius:0}
-.cmp-svg{width:100%;height:90px}
+.cmp-svg{width:100%;height:160px;display:block;margin-top:.2rem}
+/* Amostra do traço na legenda, com o mesmo tracejado da linha. */
+.cmp-tra{width:26px;height:6px;flex:none;margin-right:.1rem}
 table.cmp{width:100%;border-collapse:collapse;margin-top:.9rem;font-size:.82rem}
 table.cmp th,table.cmp td{padding:.42rem .5rem;border-top:1px solid var(--borda);text-align:right}
 table.cmp th:first-child{text-align:left;font-weight:500;color:var(--texto-suave)}
@@ -1752,15 +1754,44 @@ function blocoMatrizTom(linhas, pares, areas){
    têm a mesma cor, e a olho não se distinguiriam. */
 const TRACOS = ["", "5 3", "1.5 2.5", "8 3 1.5 3"];
 
-function linhasComparadas(series, cores){
+/* O gráfico deixou de ser esticado (preserveAspectRatio="none") e passou a ter
+   eixos. Sem escala, duas linhas dizem qual está acima da outra mas não de
+   quanto se fala — e sem datas não se sabe onde no tempo aconteceu o que se vê.
+   O esticamento tinha ainda o efeito de deformar os tracejados, alongando-os na
+   horizontal até o pontilhado e o traço-ponto ficarem parecidos. */
+function linhasComparadas(series, cores, chaves){
   const alto = Math.max(1, ...series.flat());
-  const L = 100, A = 60;
+  const L = 620, A = 150, esq = 42, base = A - 22, topo = 12;
+  const passo = (L - esq - 8) / Math.max(series[0].length - 1, 1);
+  const y = v => base - (v / alto) * (base - topo);
   const caminho = v => v.map((x, i) =>
-    `${i ? "L" : "M"}${(i * L / Math.max(v.length - 1, 1)).toFixed(1)},${(A - 4 - (x / alto) * (A - 10)).toFixed(1)}`).join(" ");
-  return `<svg class="cmp-svg" viewBox="0 0 ${L} ${A}" preserveAspectRatio="none">
+    `${i ? "L" : "M"}${(esq + i * passo).toFixed(1)},${y(x).toFixed(1)}`).join(" ");
+
+  /* Três níveis no eixo vertical — zero, metade e o máximo — que é quanto basta
+     para dar noção de grandeza sem encher o gráfico de linhas. */
+  const niveis = [0, alto / 2, alto].map(v => `
+    <line class="grade" x1="${esq}" y1="${y(v).toFixed(1)}" x2="${L - 8}" y2="${y(v).toFixed(1)}"/>
+    <text class="rot" x="${esq - 6}" y="${(y(v) + 3).toFixed(1)}" text-anchor="end">${
+      num(Math.round(v))}</text>`).join("");
+
+  /* No eixo do tempo, marcas espaçadas o suficiente para não se atropelarem —
+     e a última é sempre a do fim do período, que é a que se procura primeiro. */
+  const n = chaves ? chaves.length : 0;
+  const salto = Math.max(1, Math.ceil(n / 6));
+  const etiquetas = chaves ? chaves.map((k, i) => {
+    if(i % salto !== 0 && i !== n - 1) return "";
+    if(i !== n - 1 && n - 1 - i < salto * 0.6) return "";   // evita colisão com a última
+    return `<text class="rot" x="${(esq + i * passo).toFixed(1)}" y="${A - 6}"
+      text-anchor="middle">${rotuloCurto(k)}</text>`;
+  }).join("") : "";
+
+  return `<svg class="cmp-svg" viewBox="0 0 ${L} ${A}">
+    ${niveis}
+    <line class="eixo" x1="${esq}" y1="${base}" x2="${L - 8}" y2="${base}"/>
+    ${etiquetas}
     ${series.map((v, i) => `<path d="${caminho(v)}" fill="none" stroke="${cores[i]}"
       stroke-width="2" ${TRACOS[i] ? `stroke-dasharray="${TRACOS[i]}"` : ""}
-      vector-effect="non-scaling-stroke" stroke-linejoin="round"/>`).join("")}
+      vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`).join("")}
   </svg>`;
 }
 
@@ -1918,11 +1949,15 @@ function blocoComparacao(linhas, pares){
       ${seletorComparar()}
       <div class="cmp-legenda">
         ${nomes.map((n, i) => `<span class="cmp-eti">
-          <i style="${TRACOS[i]
-            ? `background:repeating-linear-gradient(90deg,${cores[i]} 0 4px,transparent 4px 7px)`
-            : `background:${cores[i]}`}"></i>${n}</span>`).join("")}
+          <!-- A amostra do traço é desenhada com o MESMO stroke-dasharray da
+               linha: com um gradiente igual para todas, o pontilhado e o
+               traço-ponto ficavam indistinguíveis na legenda. -->
+          <svg class="cmp-tra" viewBox="0 0 26 6" aria-hidden="true">
+            <line x1="1" y1="3" x2="25" y2="3" stroke="${cores[i]}" stroke-width="2"
+              ${TRACOS[i] ? `stroke-dasharray="${TRACOS[i]}"` : ""} stroke-linecap="round"/>
+          </svg>${n}</span>`).join("")}
       </div>
-      ${linhasComparadas(vals, cores)}
+      ${linhasComparadas(vals, cores, pares.map(([k]) => k))}
       <table class="cmp">
         <tr><th></th>${nomes.map((n, i) =>
           `<th style="color:${cores[i]}">${n}</th>`).join("")}</tr>
@@ -1954,9 +1989,9 @@ function blocoComparacao(linhas, pares){
             return t === null ? "<small>amostra pequena</small>" : t + "%";
           })}` : ""}
       </table>
-      <p class="nota">As linhas partilham a mesma escala, para a comparação não enganar,
-        e distinguem-se pelo traço além da cor — duas áreas do mesmo agrupamento têm a
-        mesma cor. «${agregNome(true)} à frente» conta os períodos em que cada uma foi a
+      <p class="nota">As linhas partilham a mesma escala — a do eixo à esquerda, em
+        notícias por ${agregNome()} — para a comparação não enganar, e distinguem-se pelo
+        traço além da cor, porque duas áreas do mesmo agrupamento têm a mesma cor. «${agregNome(true)} à frente» conta os períodos em que cada uma foi a
         mais noticiada das escolhidas. Os <strong>assuntos</strong> são as
         palavras-chave que trouxeram as notícias, e a percentagem é a parte que cada uma
         vale na área — não se comparam entre colunas, porque cada área tem o seu próprio
