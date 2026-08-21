@@ -1,0 +1,97 @@
+name: Remarcar o arquivo
+
+# Corre a mao, no botao "Run workflow". Aplica as regras de marcacao ATUAIS ao
+# arquivo ja recolhido: atualiza as palavras-chave de cada noticia e retira as
+# marcacoes que hoje ja nao se sustentam. Reconstroi depois as series e os
+# alertas, porque tudo isso deriva do arquivo mensal.
+#
+# COMECE SEMPRE PELO MODO "ensaio": mostra o que mudaria e nao escreve nada.
+# O relatorio fica no Summary da execucao.
+
+on:
+  workflow_dispatch:
+    inputs:
+      modo:
+        description: "O que fazer"
+        required: true
+        default: ensaio
+        type: choice
+        options:
+          - ensaio
+          - ensaio-completo
+          - palavras
+          - completo
+      mes:
+        description: "Limitar a um mes (AAAA-MM). Vazio = todos."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gravacao-repositorio
+  cancel-in-progress: false
+
+jobs:
+  remarcar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter o repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        # O remarcar importa o extrair_noticias.py, que importa o openpyxl no
+        # topo: sem isto a importacao rebenta antes de ler uma linha.
+        run: pip install --quiet openpyxl
+
+      - name: Remarcar
+        id: remarcar
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.mes }}" ]; then ARGS="$ARGS --mes ${{ inputs.mes }}"; fi
+          case "${{ inputs.modo }}" in
+            ensaio)          ARGS="$ARGS --ensaio" ;;
+            # Ver o efeito da reclassificação total sem correr o risco de a
+            # aplicar: é o passo que faltava para se decidir com dados à vista.
+            ensaio-completo) ARGS="$ARGS --completo --ensaio" ;;
+            completo)        ARGS="$ARGS --completo" ;;
+          esac
+          echo "## Remarcacao — modo \`${{ inputs.modo }}\`" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          python remarcar.py $ARGS | tee -a $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Reconstruir as series
+        # As series derivam todas do arquivo mensal: mexido o arquivo, tem de se
+        # refazer o historico, as publicacoes e a serie do sentimento. No modo
+        # de ensaio nada mudou, e este passo nao corre.
+        if: inputs.modo != 'ensaio' && inputs.modo != 'ensaio-completo'
+        run: |
+          python reconstruir_series.py
+          # Se os alertas falharem, a remarcação não se perde: saem corrigidos
+          # na recolha seguinte, que os recalcula de qualquer maneira.
+          python alertas.py --mensal meses --saida alertas.json || \
+            echo "alertas: nao foi possivel recalcular agora; sai na proxima recolha"
+
+      - name: Gravar
+        if: inputs.modo != 'ensaio' && inputs.modo != 'ensaio-completo'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          # As copias .antes ficam de fora do repositorio: sao a rede de
+          # seguranca da propria execucao, nao historico a versionar.
+          find meses -name "*.antes" -delete 2>/dev/null || true
+          git add meses historico.json publicacoes.json sentimento-serie.json alertas.json
+          git diff --cached --quiet || git commit -m "Remarcacao do arquivo (${{ inputs.modo }})"
+          for tentativa in 1 2 3; do
+            git pull --rebase --autostash -X theirs || { git rebase --abort 2>/dev/null || true; }
+            if git push; then break; fi
+            if [ "$tentativa" = "3" ]; then echo "Gravacao falhou apos 3 tentativas."; exit 1; fi
+            sleep $((tentativa * 10))
+          done
