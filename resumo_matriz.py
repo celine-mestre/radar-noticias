@@ -35,10 +35,15 @@ from datetime import datetime, timedelta, timezone
 # O limiar a partir do qual uma célula merece explicação. Medido nos dados de
 # agosto de 2026: 75% dá cerca de meia célula por dia — uma dúzia por mês.
 # Baixá-lo para 70% duplicaria o número e começaria a apanhar dias banais.
-LIMIAR = 75
+LIMIAR = 75               # cobertura muito negativa
+LIMIAR_POSITIVO = 50      # cobertura muito positiva — o lado bom raramente vai
+                          # tão alto: metade das notícias de uma área serem
+                          # positivas já é um dia fora do comum. Medido em
+                          # agosto de 2026: 12 células acima de 75% de negativas
+                          # e 7 acima de 50% de positivas, no mesmo período.
 MINIMO_AVALIADAS = 8      # o mesmo do painel: abaixo disto a proporção é ruído
 
-INSTRUCAO = (
+INSTRUCAO_NEGATIVO = (
     "És um analista de comunicação social da administração pública "
     "portuguesa. Recebes os títulos das notícias NEGATIVAS de UMA área "
     "governativa num único dia — um dia em que a cobertura dessa área foi "
@@ -51,6 +56,25 @@ INSTRUCAO = (
     "opinião. Não inventes nada que não esteja nos títulos: se os títulos "
     "não bastarem para perceber o que se passou, di-lo com franqueza."
 )
+
+INSTRUCAO_POSITIVO = (
+    "És um analista de comunicação social da administração pública "
+    "portuguesa. Recebes os títulos das notícias POSITIVAS de UMA área "
+    "governativa num único dia — um dia em que boa parte da cobertura dessa "
+    "área foi positiva, o que é raro. A tua tarefa é dizer, em três a quatro "
+    "frases, O QUE ACONTECEU: que medidas, resultados, acordos ou "
+    "reconhecimentos concretos estão por trás desses títulos. Agrupa por "
+    "acontecimento e nomeia os factos; se houver um tema dominante, diz qual. "
+    "Escreve em português europeu, de forma sóbria e informativa. Descreve os "
+    "ACONTECIMENTOS, nunca a atitude dos jornais nem a qualidade da cobertura, "
+    "e não faças propaganda: relata, não celebra. Não inventes nada que não "
+    "esteja nos títulos; se os títulos não bastarem, di-lo com franqueza."
+)
+
+# A chave com que cada resumo é guardado. As negativas mantêm a chave antiga,
+# para os resumos já gerados continuarem a valer; as positivas levam sufixo.
+def chave_resumo(data, area, lado):
+    return f"{data}|{area}" + ("" if lado == "negativas" else "|+")
 
 
 def agora_lisboa():
@@ -71,8 +95,8 @@ def modulos():
     return mod
 
 
-def celulas_negativas(caminho_serie, limiar=LIMIAR):
-    """Pares (dia, área) cuja cobertura foi negativa acima do limiar.
+def celulas_extremas(caminho_serie, lado="negativas", limiar=None):
+    """Pares (dia, área) cuja cobertura passou o limiar, de um dos lados.
 
     Lê a mesma série que alimenta a matriz do painel, para que o que se resume
     seja exatamente o que se vê — sem recontar por outro caminho, que é como
@@ -83,6 +107,10 @@ def celulas_negativas(caminho_serie, limiar=LIMIAR):
             dias = json.load(origem).get("dias", [])
     except (json.JSONDecodeError, OSError):
         return []
+    neg = lado == "negativas"
+    if limiar is None:
+        limiar = LIMIAR if neg else LIMIAR_POSITIVO
+    campo = "negativo" if neg else "positivo"
     fora = []
     for d in dias:
         data = d.get("data")
@@ -90,10 +118,11 @@ def celulas_negativas(caminho_serie, limiar=LIMIAR):
             av = c.get("avaliadas", 0)
             if av < MINIMO_AVALIADAS:
                 continue
-            pct = round(100 * c.get("negativo", 0) / av)
+            pct = round(100 * c.get(campo, 0) / av)
             if pct >= limiar:
                 fora.append({"data": data, "area": area, "pct": pct,
-                             "avaliadas": av, "negativas": c.get("negativo", 0)})
+                             "avaliadas": av, "quantas": c.get(campo, 0),
+                             "lado": lado})
     fora.sort(key=lambda x: x["data"])
     return fora
 
@@ -107,8 +136,8 @@ def avaliacoes(caminho="sentimentos.json"):
         return {}
 
 
-def negativas_do_dia_area(pasta_mensal, dia, area, tons):
-    """Títulos das notícias NEGATIVAS de uma área num dia, do arquivo mensal.
+def titulos_do_dia_area(pasta_mensal, dia, area, tons, tom_alvo="negativo"):
+    """Títulos das notícias de um dado tom, de uma área num dia, do arquivo.
 
     A avaliação está indexada pela ligação, com o título em minúsculas como
     recurso — é a convenção que o sentimento usa, e repeti-la aqui evita que
@@ -133,35 +162,35 @@ def negativas_do_dia_area(pasta_mensal, dia, area, tons):
                 continue
             aval = tons.get(chave) or tons.get(titulo.lower())
             tom = (aval or {}).get("s") if isinstance(aval, dict) else aval
-            if tom != "negativo":
+            if tom != tom_alvo:
                 continue
             vistos.add(chave)
             titulos.append((r.get("fonte", ""), titulo))
     return titulos
 
 
-def pedir_local(sintese, titulos, area, dia, repo, ficheiro):
+def pedir_local(sintese, titulos, area, dia, repo, ficheiro, instrucao):
     modelo = sintese.carregar_modelo_local(repo, ficheiro)
     lista = "\n".join(f"- [{f}] {t}" for f, t in titulos if t)
     resposta = modelo.create_chat_completion(
-        messages=[{"role": "system", "content": INSTRUCAO},
+        messages=[{"role": "system", "content": instrucao},
                   {"role": "user", "content": (f"Área: {area}\nDia: {dia}\n\n"
-                                               f"Títulos negativos:\n{lista}")}],
+                                               f"Títulos:\n{lista}")}],
         temperature=0.3,
         max_tokens=320,
     )
     return resposta["choices"][0]["message"]["content"].strip()
 
 
-def pedir_servico(endereco, chave, titulos, area, dia, modelo_nome,
+def pedir_servico(endereco, chave, titulos, area, dia, modelo_nome, instrucao,
                   tempo_limite=180):
     import urllib.request
     lista = "\n".join(f"- [{f}] {t}" for f, t in titulos if t)
     corpo = json.dumps({
         "model": modelo_nome, "temperature": 0.3, "max_tokens": 320,
-        "messages": [{"role": "system", "content": INSTRUCAO},
+        "messages": [{"role": "system", "content": instrucao},
                      {"role": "user", "content": (f"Área: {area}\nDia: {dia}\n\n"
-                                                  f"Títulos negativos:\n{lista}")}],
+                                                  f"Títulos:\n{lista}")}],
     }).encode("utf-8")
     pedido = urllib.request.Request(
         endereco, data=corpo,
@@ -178,7 +207,10 @@ def principal():
     ap.add_argument("--sentimentos", default="sentimentos.json")
     ap.add_argument("--mensal", default="meses")
     ap.add_argument("--saida", default="matriz-resumos.json")
-    ap.add_argument("--limiar", type=int, default=LIMIAR)
+    ap.add_argument("--limiar", type=int, default=None,
+                    help="Sobrepõe o limiar; só com um lado escolhido.")
+    ap.add_argument("--lado", default="ambos",
+                    choices=["ambos", "negativas", "positivas"])
     ap.add_argument("--teto", type=int, default=8,
                     help="Máximo de resumos por execução, para não prender o fluxo.")
     ap.add_argument("--local", action="store_true")
@@ -195,9 +227,13 @@ def principal():
         print("Sem modo local nem ponto de acesso. Nada a fazer.")
         return
 
-    celulas = celulas_negativas(args.serie, args.limiar)
+    lados = ["negativas", "positivas"] if args.lado == "ambos" else [args.lado]
+    celulas = []
+    for lado in lados:
+        limiar = args.limiar if (args.limiar and len(lados) == 1) else None
+        celulas += celulas_extremas(args.serie, lado, limiar)
     if not celulas:
-        print(f"Nenhuma área acima de {args.limiar}% de negativas — nada a resumir.")
+        print("Nenhuma área passou os limiares — nada a resumir.")
         return
 
     anteriores = {}
@@ -212,50 +248,57 @@ def principal():
     resumos = dict(anteriores)
     feitos = 0
     for c in celulas:
-        chave = f"{c['data']}|{c['area']}"
+        chave = chave_resumo(c["data"], c["area"], c["lado"])
         if chave in resumos:
             continue
         if feitos >= args.teto:
             print(f"  (teto de {args.teto} atingido nesta passagem; "
                   f"o resto fica para a próxima)")
             break
-        titulos = negativas_do_dia_area(args.mensal, c["data"], c["area"], tons)
+        neg = c["lado"] == "negativas"
+        titulos = titulos_do_dia_area(args.mensal, c["data"], c["area"], tons,
+                                      "negativo" if neg else "positivo")
         if not titulos:
             # Sem títulos não se inventa resumo — e regista-se porquê, para o
             # painel poder dizer alguma coisa em vez de ficar mudo.
             resumos[chave] = {
                 "texto": "As notícias deste dia já não estão no arquivo, ou "
                          "ainda não têm avaliação de tom.",
-                "n": 0, "pct": c["pct"]}
+                "n": 0, "pct": c["pct"], "lado": c["lado"]}
             continue
         try:
+            instrucao = INSTRUCAO_NEGATIVO if neg else INSTRUCAO_POSITIVO
             if args.local:
                 texto = pedir_local(sintese, titulos, c["area"], c["data"],
-                                    repo, ficheiro)
+                                    repo, ficheiro, instrucao)
             else:
                 texto = pedir_servico(args.endereco, chave_api, titulos,
-                                      c["area"], c["data"], sintese.MODELO)
+                                      c["area"], c["data"], sintese.MODELO, instrucao)
         except Exception as erro:                              # noqa: BLE001
             print(f"  {chave}: falhou ({type(erro).__name__}) — fica para a próxima")
             continue
-        resumos[chave] = {"texto": texto, "n": len(titulos), "pct": c["pct"]}
+        resumos[chave] = {"texto": texto, "n": len(titulos), "pct": c["pct"],
+                          "lado": c["lado"]}
         feitos += 1
-        print(f"  {chave}: resumido ({c['pct']}% negativas, {len(titulos)} notícias)")
+        print(f"  {chave}: resumido ({c['pct']}% {c['lado']}, {len(titulos)} notícias)")
 
     with open(args.saida, "w", encoding="utf-8") as destino:
         json.dump({
             "gerado": agora_lisboa().strftime("%Y-%m-%d %H:%M"),
             "modelo": sintese.MODELO,
-            "limiar": args.limiar,
+            "limiar": LIMIAR,
+            "limiar_positivo": LIMIAR_POSITIVO,
             "nota": ("O que aconteceu nos dias em que a cobertura de uma área foi "
-                     f"negativa em {args.limiar}% ou mais, a partir dos títulos "
-                     "das notícias negativas desse dia. Descreve acontecimentos, "
-                     "não a atitude das publicações."),
+                     f"negativa em {LIMIAR}% ou mais, ou positiva em "
+                     f"{LIMIAR_POSITIVO}% ou mais, a partir dos títulos das "
+                     "notícias desse tom nesse dia. Descreve acontecimentos, não a "
+                     "atitude das publicações. As chaves com «|+» no fim são do "
+                     "lado positivo."),
             "resumos": resumos,
         }, destino, ensure_ascii=False, indent=1)
 
-    print(f"resumo da matriz: {feitos} novos, {len(resumos)} no total "
-          f"em {args.saida} (limiar {args.limiar}%)")
+    print(f"resumo da matriz: {feitos} novos, {len(resumos)} no total em "
+          f"{args.saida} (limiares: {LIMIAR}% negativas, {LIMIAR_POSITIVO}% positivas)")
 
 
 if __name__ == "__main__":

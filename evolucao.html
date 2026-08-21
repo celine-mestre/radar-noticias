@@ -1615,13 +1615,15 @@ function blocoMatrizTom(linhas, pares, areas){
        CADA dia desse período que tenha passado o limiar — os resumos são
        gerados por dia, que é o átomo que não muda, e a vista agregada limita-se
        a encadeá-los por ordem. */
-    /* Os resumos existem para o lado negativo: é o que o Amália foi encarregado
-       de explicar. Do lado positivo a célula continua a informar, sem resumo. */
-    const dias = neg ? diasDoPeriodo(k).filter(dd => RESUMOS_TOM[dd + "|" + n]) : [];
+    /* Os resumos existem dos dois lados, com chaves diferentes: as negativas
+       ficaram com a chave original e as positivas levam «|+» no fim, para os
+       resumos já gerados continuarem válidos. */
+    const chaveR = dd => `${dd}|${n}` + (neg ? "" : "|+");
+    const dias = diasDoPeriodo(k).filter(dd => RESUMOS_TOM[chaveR(dd)]);
     const resumo = dias.map(dd => {
-      const r = RESUMOS_TOM[dd + "|" + n];
+      const r = RESUMOS_TOM[chaveR(dd)];
       return (dias.length > 1 ? dataCurtaPt(dd) + " · " : "")
-        + `${r.pct}% negativas de ${r.n} notícias\n${r.texto}`;
+        + `${r.pct}% ${ladoTom} de ${r.n} notícias\n${r.texto}`;
     }).join("\n\n");
     /* Uma medida de cada vez, uma escala de cada vez: do claro ao carregado, a
        acompanhar o valor — vermelho para as negativas, verde para as positivas.
@@ -1687,10 +1689,12 @@ function blocoMatrizTom(linhas, pares, areas){
         para o ler</strong> —, escrito a partir dos títulos das notícias negativas e a
         descrever acontecimentos, não a atitude das publicações. Os resumos são feitos ao
         dia; nas vistas por semana ou por mês, a célula junta os dos dias que a compõem.`
-        : ` Do lado positivo não há resumos: o Amália foi encarregado de explicar as
-        coberturas duras, que são as que costumam exigir explicação. A escala é mais curta
-        do que a das negativas — as positivas raramente passam de metade — pelo que as
-        cores dos dois lados não se comparam entre si.`}</p>
+        : ` As células com um <strong>canto dobrado</strong> passaram os 50% de positivas
+        — metade das notícias de uma área serem positivas já é um dia fora do comum — e
+        trazem também um resumo do Amália, <strong>toque ou clique para o ler</strong>.
+        O limiar é mais baixo e a escala mais curta do que do lado negativo, porque as
+        positivas raramente passam de metade; as cores dos dois lados não se comparam
+        entre si.`}</p>
     </div>`;
 }
 
@@ -2047,9 +2051,9 @@ function blocoPublicacoes(linhas, areas){
         carrega com a força da especialização.
         O <strong>peso</strong> de que se fala aqui é o do quadro anterior: a parte que
         cada publicação tem no conjunto. Especializar-se é cobrir uma área acima dessa
-        parte. Vale também o limite ali explicado — em cada área e em cada dia arquivam-se
-        até doze publicações, e o que fica além disso, cerca de 5% das marcações do mês,
-        não chega a ser registado.</p>
+        parte. Vale também o limite ali explicado: por dia e por área ficam registadas no
+        máximo doze publicações, o que deixa de fora cerca de 5% das marcações do mês,
+        sempre de quem teve pouco volume nesse dia.</p>
     </div>`;
 }
 
@@ -2156,9 +2160,15 @@ function blocoPesoPublicacoes(linhas){
         a conta nos 100%. Nota diferente e a não confundir com esta: o arquivo guarda, por
         cada área e cada dia, até doze publicações, e o que fica além disso — cerca de 5%
         das marcações do mês, sempre de publicações com pouco volume nesse dia — não entra
-        neste quadro nem no seguinte. É deste peso que sai o quadro a seguir: uma
-        publicação diz-se especializada quando cobre uma área <em>acima</em> da quota que
-        aqui tem.</p>
+        neste quadro nem no seguinte.
+        <br><strong>Por outras palavras:</strong> em cada dia, e para cada área, ficam
+        registadas no máximo doze publicações — as que mais noticiaram essa área nesse
+        dia. Se a Saúde foi noticiada por quinze publicações num dia, guardam-se as doze
+        com mais notícias e as outras três não ficam registadas nesse dia e nessa área.
+        Ao fim do mês isso soma cerca de 5% das marcações, sempre de quem teve pouco
+        volume.
+        <br>É deste peso que sai o quadro a seguir: uma publicação diz-se especializada
+        quando cobre uma área <em>acima</em> da quota que aqui tem.</p>
     </div>`;
 }
 
@@ -3248,6 +3258,9 @@ function alternarPico(alvo){
   if(cel){
     const p = document.getElementById("painelResumo");
     if(p){
+      // A cor da barra lateral acompanha o lado que está a ser mostrado.
+      p.style.borderLeftColor = ladoTom === "positivas"
+        ? "var(--verde)" : "var(--vermelho,#B23A3A)";
       document.getElementById("painelResumoCab").textContent = cel.dataset.cab || "";
       document.getElementById("painelResumoTexto").textContent = cel.dataset.resumo || "";
       p.hidden = false;
