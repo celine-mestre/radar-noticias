@@ -1,4 +1,4 @@
-name: Resumo das coberturas negativas pelo Amalia
+name: Resumo das coberturas marcantes pelo Amalia
 
 # Para cada dia em que uma area teve cobertura negativa acima do limiar (75%),
 # pede ao Amalia um resumo do que aconteceu, a partir dos titulos das noticias
@@ -37,21 +37,25 @@ jobs:
         with:
           ref: main
 
-      - name: Ha coberturas negativas por resumir?
+      - name: Ha coberturas marcantes por resumir?
         id: v
         run: |
           python3 - <<'PY'
           import json, os
 
-          LIMIAR, MINIMO = 75, 8
+          LIMIAR_NEG, LIMIAR_POS, MINIMO = 75, 50, 8
           celulas = []
           if os.path.exists("sentimento-serie.json"):
               with open("sentimento-serie.json", encoding="utf-8") as f:
                   for d in json.load(f).get("dias", []):
                       for area, c in (d.get("areas") or {}).items():
                           av = c.get("avaliadas", 0)
-                          if av >= MINIMO and round(100 * c.get("negativo", 0) / av) >= LIMIAR:
+                          if av < MINIMO:
+                              continue
+                          if round(100 * c.get("negativo", 0) / av) >= LIMIAR_NEG:
                               celulas.append(f"{d.get('data')}|{area}")
+                          if round(100 * c.get("positivo", 0) / av) >= LIMIAR_POS:
+                              celulas.append(f"{d.get('data')}|{area}|+")
           feitos = {}
           if os.path.exists("matriz-resumos.json"):
               with open("matriz-resumos.json", encoding="utf-8") as f:
@@ -62,7 +66,7 @@ jobs:
           # rejeita o ficheiro inteiro se lá encontrar outra coisa.
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as saida:
               saida.write(f"seguir={'sim' if faltam else 'nao'}\n")
-          print(f"{len(faltam)} coberturas negativas por resumir, {len(feitos)} ja feitas")
+          print(f"{len(faltam)} coberturas marcantes por resumir, {len(feitos)} ja feitas")
           PY
 
   resumir:
@@ -90,8 +94,8 @@ jobs:
           path: ~/.cache/huggingface
           key: amalia-gguf
 
-      - name: Resumir as coberturas negativas
-        run: python resumo_matriz.py --local --teto 8
+      - name: Resumir as coberturas marcantes
+        run: python resumo_matriz.py --local --teto 15
 
       - name: Gravar os resumos
         run: |
@@ -103,7 +107,7 @@ jobs:
           for tentativa in 1 2 3 4 5; do
             git add matriz-resumos.json 2>/dev/null || true
             git diff --cached --quiet && { echo "Nada a gravar."; break; }
-            git commit -m "Resumo das coberturas negativas" || true
+            git commit -m "Resumo das coberturas marcantes" || true
             git pull --rebase --autostash -X theirs origin main || { git rebase --abort 2>/dev/null || true; }
             if git push origin HEAD:main; then
               echo "Gravado na tentativa $tentativa."
