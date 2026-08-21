@@ -755,8 +755,12 @@ explicada:
 9. **Palavras do período**: nuvem com as expressões que trouxeram notícias — o tamanho vale
    pela quantidade, e as que ficaram a zero são candidatas a revisão.
 
-E ainda, escolhendo comparar, **duas áreas lado a lado**, na mesma escala e com totais,
-médias, maior período, origem das notícias, picos e tom.
+10. **Duas áreas lado a lado**, escolhendo comparar: as duas linhas na mesma escala e um
+   quadro com totais, médias, maior período, períodos em que cada uma esteve à frente,
+   origem das notícias, picos, quem mais as cobre, os **assuntos que mais pesaram** em
+   cada uma e o tom. Fecha o painel porque é uma síntese: usa o que os quadros anteriores
+   estabeleceram — publicações, picos, tom — para responder a uma pergunta que nenhum
+   deles faz sozinho.
 
 - **As explicações vivem atrás de um «i»** ao lado do título de cada quadro, para não
   encherem o ecrã no telemóvel; na impressão voltam todas à vista.

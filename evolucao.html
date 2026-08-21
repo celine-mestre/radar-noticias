@@ -1799,6 +1799,40 @@ function blocoComparacao(linhas, pares){
   const picos = nomes.map(n => TEMPESTADES.filter(t => t.area === n &&
     t.data >= primeiro && t.data <= ultimo).length);
 
+  /* Os ASSUNTOS de cada área no período, das palavras-chave que trouxeram as
+     notícias. Duas leituras diferentes e ambas úteis:
+       · o dominante — o que mais pesou na cobertura da área;
+       · o distintivo — o que essa área tem e a outra quase não tem. É a
+         pergunta que a comparação faz e que nenhum dos quadros anteriores
+         responde: não «do que se falou», mas «o que separa uma da outra».
+     O distintivo só se calcula quando o assunto tem presença que chegue, senão
+     qualquer palavra rara da outra área ganhava por ausência. */
+  const palavrasDe = nome => {
+    const c = {};
+    linhas.forEach(d => {
+      const v = (d.areas || {})[nome];
+      Object.entries((v || {}).palavras || {}).forEach(([p, q]) => {
+        c[p] = (c[p] || 0) + q;
+      });
+    });
+    return c;
+  };
+  const pal = nomes.map(palavrasDe);
+  const totalPal = pal.map(c => Object.values(c).reduce((a, b) => a + b, 0) || 1);
+  const dominante = pal.map((c, i) => {
+    const t = Object.entries(c).sort((a, b) => b[1] - a[1])[0];
+    return t ? { termo: t[0], q: t[1], pct: Math.round(100 * t[1] / totalPal[i]) } : null;
+  });
+  /* Cheguei a calcular aqui um «assunto que distingue uma área da outra», e o
+     ensaio mostrou que a ideia não se aplica: cada área tem o SEU vocabulário
+     de palavras-chave, sem termos em comum, pelo que qualquer assunto da Saúde
+     vale zero na Justiça e todos «distinguem» por igual. A comparação útil é
+     outra — os assuntos que mais pesaram em cada uma, lado a lado, para se ver
+     de que falava cada área enquanto a outra falava de outra coisa. */
+  const topAssuntos = pal.map((c, i) => Object.entries(c)
+    .sort((a, b) => b[1] - a[1]).slice(0, 3)
+    .map(([p, q]) => ({ termo: p, pct: Math.round(100 * q / totalPal[i]) })));
+
   /* Quem mais cobre cada uma, do ficheiro das publicações. Diz de onde vem o
      volume: duas áreas com números iguais podem ser sustentadas por órgãos
      diferentes. */
@@ -1854,6 +1888,14 @@ function blocoComparacao(linhas, pares){
         ${linha("Picos no período", i => picos[i] ? num(picos[i]) : "—")}
         ${PUBLICACOES.length ? linha("Quem mais a cobre", i => principal[i]
           ? `${principal[i].pub} <small>(${num(principal[i].n)})</small>` : "—") : ""}
+        ${linha("Assunto dominante", i => dominante[i]
+          ? `${dominante[i].termo} <small>${dominante[i].pct}% das marcações da área</small>`
+          : "—")}
+        ${topAssuntos.some(x => x.length > 1) ? linha(
+          "A seguir, em peso", i => topAssuntos[i].slice(1).length
+            ? topAssuntos[i].slice(1).map(x =>
+                `${x.termo} <small>${x.pct}%</small>`).join(" · ")
+            : "—") : ""}
         ${linha("Tom negativo <small>(nacional, período)</small>", i =>
           toms[i] === null ? "<small>amostra pequena</small>" : toms[i] + "%")}
         ${iM >= 0 ? `
@@ -1865,7 +1907,11 @@ function blocoComparacao(linhas, pares){
           })}` : ""}
       </table>
       <p class="nota">As duas linhas partilham a mesma escala, para a comparação não
-        enganar: a tracejada é a segunda área. O tom vem da avaliação do Amália sobre a
+        enganar: a tracejada é a segunda área. Os <strong>assuntos</strong> são as
+        palavras-chave que trouxeram as notícias, e a percentagem é a parte que cada uma
+        vale na área — não se comparam entre colunas, porque cada área tem o seu próprio
+        conjunto de expressões e não há termos em comum: servem para ver de que falava
+        cada uma enquanto a outra falava de outra coisa. O tom vem da avaliação do Amália sobre a
         comunicação social nacional e só se mostra com pelo menos oito notícias avaliadas —
         é por isso que num único ${agregNome()} costuma aparecer «amostra pequena», mesmo
         estando tudo avaliado. «Quem mais a cobre» conta todas as origens, porque o ficheiro
@@ -2844,8 +2890,6 @@ function desenhar(){
 
     ${blocoMatrizTom(linhas, pares, areas)}
 
-    ${blocoComparacao(linhas, pares)}
-
     ${blocoPesoPublicacoes(linhas)}
 
     ${blocoPublicacoes(linhas, areas)}
@@ -2860,7 +2904,9 @@ function desenhar(){
             não trouxeram notícias neste período.` : ""}${origem !== "todas"
         ? " Com uma origem escolhida, os valores são estimados pela proporção dessa origem na área."
         : ""}</p>
-    </div>`;
+    </div>
+
+    ${blocoComparacao(linhas, pares)}`;
 
   arrumarNotas(corpo);
 
