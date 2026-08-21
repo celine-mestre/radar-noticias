@@ -27,6 +27,11 @@ on:
         type: string
         required: false
         default: ""
+      marcar_versao_desde:
+        description: "So marcar como versao atual (sem reavaliar) a partir desta data. Usar uma vez."
+        type: string
+        required: false
+        default: ""
   workflow_call:
     inputs:
       encadeado:
@@ -142,11 +147,21 @@ jobs:
           if [ -n "${{ inputs.refazer_desde }}" ]; then
             EXTRA="--refazer-desde ${{ inputs.refazer_desde }}"
           fi
+          if [ -n "${{ inputs.marcar_versao_desde }}" ]; then
+            EXTRA="$EXTRA --marcar-versao-desde ${{ inputs.marcar_versao_desde }}"
+          fi
           python sentimento_ia.py --local \
             --teto "${{ inputs.teto || '600' }}" \
             --recuperar "${{ inputs.recuperar || '' }}" $EXTRA
 
       - name: Gravar as avaliacoes
+        # SEMPRE, mesmo que a classificação tenha sido interrompida. O script
+        # grava o progresso em disco de dois em dois lotes precisamente para
+        # sobreviver a um corte; sem este «always», um limite de tempo atingido
+        # ao fim de uma hora deitaria fora uma hora de trabalho já feito e já
+        # escrito. Numa corrida longa — uma reavaliação do passado, por exemplo
+        # — é a diferença entre perder tudo e perder o último lote.
+        if: always()
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
