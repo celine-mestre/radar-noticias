@@ -22,6 +22,11 @@ on:
         type: string
         required: false
         default: ""
+      refazer_desde:
+        description: "Reavaliar tudo a partir desta data (AAAA-MM-DD). Vazio = so o que falta."
+        type: string
+        required: false
+        default: ""
   workflow_call:
     inputs:
       encadeado:
@@ -133,9 +138,13 @@ jobs:
 
       - name: Classificar
         run: |
+          EXTRA=""
+          if [ -n "${{ inputs.refazer_desde }}" ]; then
+            EXTRA="--refazer-desde ${{ inputs.refazer_desde }}"
+          fi
           python sentimento_ia.py --local \
             --teto "${{ inputs.teto || '600' }}" \
-            --recuperar "${{ inputs.recuperar || '' }}"
+            --recuperar "${{ inputs.recuperar || '' }}" $EXTRA
 
       - name: Gravar as avaliacoes
         run: |
