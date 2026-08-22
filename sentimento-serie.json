@@ -1,5 +1,5 @@
 {
- "atualizado": "2026-08-22 17:40",
+ "atualizado": "2026-08-22 18:01",
  "estado": "em validação — leitura humana em curso",
  "dias": [
   {
@@ -1407,13 +1407,6 @@
      "neutro": 1,
      "negativo": 1
     },
-    "Ambiente e Energia": {
-     "nacionais": 28,
-     "avaliadas": 28,
-     "positivo": 7,
-     "neutro": 10,
-     "negativo": 11
-    },
     "Justiça": {
      "nacionais": 12,
      "avaliadas": 12,
@@ -1455,20 +1448,6 @@
      "positivo": 3,
      "neutro": 8,
      "negativo": 1
-    },
-    "Saúde": {
-     "nacionais": 37,
-     "avaliadas": 37,
-     "positivo": 16,
-     "neutro": 4,
-     "negativo": 17
-    },
-    "Trabalho, Solidariedade e Segurança Social": {
-     "nacionais": 18,
-     "avaliadas": 18,
-     "positivo": 4,
-     "neutro": 7,
-     "negativo": 7
     }
    }
   },
@@ -1737,13 +1716,20 @@
   {
    "data": "2026-08-15",
    "total": {
-    "nacionais": 158,
-    "avaliadas": 158,
-    "positivo": 34,
-    "neutro": 51,
-    "negativo": 73
+    "nacionais": 164,
+    "avaliadas": 164,
+    "positivo": 36,
+    "neutro": 53,
+    "negativo": 75
    },
    "areas": {
+    "Cultura, Juventude e Desporto": {
+     "nacionais": 15,
+     "avaliadas": 15,
+     "positivo": 7,
+     "neutro": 5,
+     "negativo": 3
+    },
     "Administração Interna": {
      "nacionais": 26,
      "avaliadas": 26,
@@ -1758,53 +1744,18 @@
      "neutro": 0,
      "negativo": 6
     },
-    "Ambiente e Energia": {
-     "nacionais": 9,
-     "avaliadas": 9,
-     "positivo": 0,
-     "neutro": 8,
+    "Negócios Estrangeiros": {
+     "nacionais": 8,
+     "avaliadas": 8,
+     "positivo": 3,
+     "neutro": 4,
      "negativo": 1
-    },
-    "Cultura, Juventude e Desporto": {
-     "nacionais": 15,
-     "avaliadas": 15,
-     "positivo": 7,
-     "neutro": 5,
-     "negativo": 3
     },
     "Defesa Nacional": {
      "nacionais": 9,
      "avaliadas": 9,
      "positivo": 1,
      "neutro": 3,
-     "negativo": 5
-    },
-    "Economia e Coesão Territorial": {
-     "nacionais": 12,
-     "avaliadas": 12,
-     "positivo": 7,
-     "neutro": 4,
-     "negativo": 1
-    },
-    "Educação, Ciência e Inovação": {
-     "nacionais": 10,
-     "avaliadas": 10,
-     "positivo": 2,
-     "neutro": 1,
-     "negativo": 7
-    },
-    "Finanças": {
-     "nacionais": 2,
-     "avaliadas": 2,
-     "positivo": 1,
-     "neutro": 1,
-     "negativo": 0
-    },
-    "Infraestruturas e Habitação": {
-     "nacionais": 21,
-     "avaliadas": 21,
-     "positivo": 9,
-     "neutro": 7,
      "negativo": 5
     },
     "Justiça": {
@@ -1814,26 +1765,47 @@
      "neutro": 1,
      "negativo": 6
     },
-    "Negócios Estrangeiros": {
-     "nacionais": 7,
-     "avaliadas": 7,
-     "positivo": 2,
-     "neutro": 4,
-     "negativo": 1
+    "Primeiro-Ministro": {
+     "nacionais": 26,
+     "avaliadas": 26,
+     "positivo": 6,
+     "neutro": 11,
+     "negativo": 9
     },
     "Presidência": {
-     "nacionais": 12,
-     "avaliadas": 12,
+     "nacionais": 13,
+     "avaliadas": 13,
      "positivo": 1,
      "neutro": 1,
-     "negativo": 10
+     "negativo": 11
     },
-    "Primeiro-Ministro": {
-     "nacionais": 25,
-     "avaliadas": 25,
-     "positivo": 6,
-     "neutro": 10,
-     "negativo": 9
+    "Infraestruturas e Habitação": {
+     "nacionais": 22,
+     "avaliadas": 22,
+     "positivo": 10,
+     "neutro": 7,
+     "negativo": 5
+    },
+    "Ambiente e Energia": {
+     "nacionais": 9,
+     "avaliadas": 9,
+     "positivo": 0,
+     "neutro": 8,
+     "negativo": 1
+    },
+    "Saúde": {
+     "nacionais": 24,
+     "avaliadas": 24,
+     "positivo": 1,
+     "neutro": 7,
+     "negativo": 16
+    },
+    "Economia e Coesão Territorial": {
+     "nacionais": 13,
+     "avaliadas": 13,
+     "positivo": 7,
+     "neutro": 5,
+     "negativo": 1
     },
     "Reforma do Estado": {
      "nacionais": 4,
@@ -1842,12 +1814,19 @@
      "neutro": 3,
      "negativo": 1
     },
-    "Saúde": {
-     "nacionais": 22,
-     "avaliadas": 22,
+    "Educação, Ciência e Inovação": {
+     "nacionais": 11,
+     "avaliadas": 11,
+     "positivo": 3,
+     "neutro": 1,
+     "negativo": 7
+    },
+    "Finanças": {
+     "nacionais": 2,
+     "avaliadas": 2,
      "positivo": 1,
-     "neutro": 6,
-     "negativo": 15
+     "neutro": 1,
+     "negativo": 0
     },
     "Trabalho, Solidariedade e Segurança Social": {
      "nacionais": 2,
@@ -1861,33 +1840,47 @@
   {
    "data": "2026-08-16",
    "total": {
-    "nacionais": 131,
-    "avaliadas": 131,
-    "positivo": 21,
-    "neutro": 38,
-    "negativo": 72
+    "nacionais": 138,
+    "avaliadas": 138,
+    "positivo": 22,
+    "neutro": 40,
+    "negativo": 76
    },
    "areas": {
+    "Saúde": {
+     "nacionais": 13,
+     "avaliadas": 13,
+     "positivo": 2,
+     "neutro": 2,
+     "negativo": 9
+    },
+    "Primeiro-Ministro": {
+     "nacionais": 12,
+     "avaliadas": 12,
+     "positivo": 1,
+     "neutro": 1,
+     "negativo": 10
+    },
     "Administração Interna": {
-     "nacionais": 18,
-     "avaliadas": 18,
-     "positivo": 3,
+     "nacionais": 19,
+     "avaliadas": 19,
+     "positivo": 4,
      "neutro": 3,
      "negativo": 12
     },
-    "Agricultura e Mar": {
+    "Negócios Estrangeiros": {
      "nacionais": 7,
      "avaliadas": 7,
-     "positivo": 1,
+     "positivo": 3,
      "neutro": 1,
-     "negativo": 5
+     "negativo": 3
     },
-    "Ambiente e Energia": {
-     "nacionais": 7,
-     "avaliadas": 7,
-     "positivo": 0,
-     "neutro": 1,
-     "negativo": 6
+    "Educação, Ciência e Inovação": {
+     "nacionais": 13,
+     "avaliadas": 13,
+     "positivo": 2,
+     "neutro": 7,
+     "negativo": 4
     },
     "Cultura, Juventude e Desporto": {
      "nacionais": 19,
@@ -1896,13 +1889,6 @@
      "neutro": 6,
      "negativo": 6
     },
-    "Defesa Nacional": {
-     "nacionais": 25,
-     "avaliadas": 25,
-     "positivo": 1,
-     "neutro": 6,
-     "negativo": 18
-    },
     "Economia e Coesão Territorial": {
      "nacionais": 10,
      "avaliadas": 10,
@@ -1910,12 +1896,19 @@
      "neutro": 5,
      "negativo": 3
     },
-    "Educação, Ciência e Inovação": {
-     "nacionais": 12,
-     "avaliadas": 12,
-     "positivo": 2,
-     "neutro": 6,
-     "negativo": 4
+    "Trabalho, Solidariedade e Segurança Social": {
+     "nacionais": 4,
+     "avaliadas": 4,
+     "positivo": 1,
+     "neutro": 1,
+     "negativo": 2
+    },
+    "Presidência": {
+     "nacionais": 6,
+     "avaliadas": 6,
+     "positivo": 0,
+     "neutro": 3,
+     "negativo": 3
     },
     "Finanças": {
      "nacionais": 6,
@@ -1924,11 +1917,39 @@
      "neutro": 3,
      "negativo": 1
     },
-    "Infraestruturas e Habitação": {
+    "Ambiente e Energia": {
      "nacionais": 8,
      "avaliadas": 8,
+     "positivo": 0,
+     "neutro": 1,
+     "negativo": 7
+    },
+    "Defesa Nacional": {
+     "nacionais": 28,
+     "avaliadas": 28,
      "positivo": 1,
-     "neutro": 4,
+     "neutro": 6,
+     "negativo": 21
+    },
+    "Agricultura e Mar": {
+     "nacionais": 8,
+     "avaliadas": 8,
+     "positivo": 2,
+     "neutro": 1,
+     "negativo": 5
+    },
+    "Reforma do Estado": {
+     "nacionais": 1,
+     "avaliadas": 1,
+     "positivo": 0,
+     "neutro": 1,
+     "negativo": 0
+    },
+    "Infraestruturas e Habitação": {
+     "nacionais": 9,
+     "avaliadas": 9,
+     "positivo": 1,
+     "neutro": 5,
      "negativo": 3
     },
     "Justiça": {
@@ -1937,144 +1958,53 @@
      "positivo": 0,
      "neutro": 0,
      "negativo": 2
-    },
-    "Negócios Estrangeiros": {
-     "nacionais": 7,
-     "avaliadas": 7,
-     "positivo": 3,
-     "neutro": 1,
-     "negativo": 3
-    },
-    "Presidência": {
-     "nacionais": 6,
-     "avaliadas": 6,
-     "positivo": 0,
-     "neutro": 3,
-     "negativo": 3
-    },
-    "Primeiro-Ministro": {
-     "nacionais": 11,
-     "avaliadas": 11,
-     "positivo": 1,
-     "neutro": 1,
-     "negativo": 9
-    },
-    "Reforma do Estado": {
-     "nacionais": 1,
-     "avaliadas": 1,
-     "positivo": 0,
-     "neutro": 1,
-     "negativo": 0
-    },
-    "Saúde": {
-     "nacionais": 13,
-     "avaliadas": 13,
-     "positivo": 2,
-     "neutro": 2,
-     "negativo": 9
-    },
-    "Trabalho, Solidariedade e Segurança Social": {
-     "nacionais": 4,
-     "avaliadas": 4,
-     "positivo": 1,
-     "neutro": 1,
-     "negativo": 2
     }
    }
   },
   {
    "data": "2026-08-17",
    "total": {
-    "nacionais": 400,
-    "avaliadas": 400,
-    "positivo": 85,
-    "neutro": 128,
-    "negativo": 187
+    "nacionais": 426,
+    "avaliadas": 426,
+    "positivo": 93,
+    "neutro": 129,
+    "negativo": 204
    },
    "areas": {
-    "Administração Interna": {
-     "nacionais": 49,
-     "avaliadas": 49,
-     "positivo": 11,
-     "neutro": 13,
-     "negativo": 25
-    },
     "Agricultura e Mar": {
-     "nacionais": 10,
-     "avaliadas": 10,
+     "nacionais": 11,
+     "avaliadas": 11,
      "positivo": 3,
      "neutro": 2,
-     "negativo": 5
+     "negativo": 6
     },
-    "Ambiente e Energia": {
-     "nacionais": 25,
-     "avaliadas": 25,
-     "positivo": 6,
-     "neutro": 16,
-     "negativo": 3
+    "Administração Interna": {
+     "nacionais": 52,
+     "avaliadas": 52,
+     "positivo": 13,
+     "neutro": 13,
+     "negativo": 26
     },
-    "Assuntos Parlamentares": {
-     "nacionais": 1,
-     "avaliadas": 1,
-     "positivo": 0,
-     "neutro": 1,
-     "negativo": 0
-    },
-    "Cultura, Juventude e Desporto": {
-     "nacionais": 26,
-     "avaliadas": 26,
-     "positivo": 10,
-     "neutro": 12,
-     "negativo": 4
-    },
-    "Defesa Nacional": {
-     "nacionais": 57,
-     "avaliadas": 57,
-     "positivo": 8,
-     "neutro": 12,
-     "negativo": 37
-    },
-    "Economia e Coesão Territorial": {
-     "nacionais": 33,
-     "avaliadas": 33,
-     "positivo": 15,
-     "neutro": 14,
-     "negativo": 4
-    },
-    "Educação, Ciência e Inovação": {
-     "nacionais": 21,
-     "avaliadas": 21,
-     "positivo": 0,
-     "neutro": 12,
-     "negativo": 9
-    },
-    "Finanças": {
-     "nacionais": 29,
-     "avaliadas": 29,
-     "positivo": 9,
-     "neutro": 9,
-     "negativo": 11
-    },
-    "Infraestruturas e Habitação": {
-     "nacionais": 27,
-     "avaliadas": 27,
-     "positivo": 5,
+    "Primeiro-Ministro": {
+     "nacionais": 24,
+     "avaliadas": 24,
+     "positivo": 2,
      "neutro": 11,
      "negativo": 11
     },
-    "Justiça": {
-     "nacionais": 37,
-     "avaliadas": 37,
-     "positivo": 4,
-     "neutro": 6,
-     "negativo": 27
+    "Economia e Coesão Territorial": {
+     "nacionais": 35,
+     "avaliadas": 35,
+     "positivo": 16,
+     "neutro": 14,
+     "negativo": 5
     },
     "Negócios Estrangeiros": {
-     "nacionais": 21,
-     "avaliadas": 21,
+     "nacionais": 22,
+     "avaliadas": 22,
      "positivo": 8,
      "neutro": 5,
-     "negativo": 8
+     "negativo": 9
     },
     "Presidência": {
      "nacionais": 27,
@@ -2083,12 +2013,68 @@
      "neutro": 6,
      "negativo": 15
     },
-    "Primeiro-Ministro": {
-     "nacionais": 23,
-     "avaliadas": 23,
-     "positivo": 2,
-     "neutro": 11,
+    "Justiça": {
+     "nacionais": 41,
+     "avaliadas": 41,
+     "positivo": 4,
+     "neutro": 6,
+     "negativo": 31
+    },
+    "Ambiente e Energia": {
+     "nacionais": 25,
+     "avaliadas": 25,
+     "positivo": 6,
+     "neutro": 16,
+     "negativo": 3
+    },
+    "Finanças": {
+     "nacionais": 33,
+     "avaliadas": 33,
+     "positivo": 12,
+     "neutro": 9,
+     "negativo": 12
+    },
+    "Trabalho, Solidariedade e Segurança Social": {
+     "nacionais": 28,
+     "avaliadas": 28,
+     "positivo": 3,
+     "neutro": 4,
+     "negativo": 21
+    },
+    "Cultura, Juventude e Desporto": {
+     "nacionais": 26,
+     "avaliadas": 26,
+     "positivo": 10,
+     "neutro": 12,
+     "negativo": 4
+    },
+    "Educação, Ciência e Inovação": {
+     "nacionais": 22,
+     "avaliadas": 22,
+     "positivo": 0,
+     "neutro": 12,
      "negativo": 10
+    },
+    "Infraestruturas e Habitação": {
+     "nacionais": 30,
+     "avaliadas": 30,
+     "positivo": 8,
+     "neutro": 11,
+     "negativo": 11
+    },
+    "Saúde": {
+     "nacionais": 39,
+     "avaliadas": 39,
+     "positivo": 4,
+     "neutro": 10,
+     "negativo": 25
+    },
+    "Defesa Nacional": {
+     "nacionais": 63,
+     "avaliadas": 63,
+     "positivo": 8,
+     "neutro": 12,
+     "negativo": 43
     },
     "Reforma do Estado": {
      "nacionais": 17,
@@ -2097,80 +2083,80 @@
      "neutro": 9,
      "negativo": 3
     },
-    "Saúde": {
-     "nacionais": 36,
-     "avaliadas": 36,
-     "positivo": 4,
-     "neutro": 9,
-     "negativo": 23
-    },
-    "Trabalho, Solidariedade e Segurança Social": {
-     "nacionais": 27,
-     "avaliadas": 27,
-     "positivo": 3,
-     "neutro": 4,
-     "negativo": 20
+    "Assuntos Parlamentares": {
+     "nacionais": 1,
+     "avaliadas": 1,
+     "positivo": 0,
+     "neutro": 1,
+     "negativo": 0
     }
    }
   },
   {
    "data": "2026-08-18",
    "total": {
-    "nacionais": 575,
-    "avaliadas": 573,
-    "positivo": 112,
-    "neutro": 224,
-    "negativo": 237
+    "nacionais": 612,
+    "avaliadas": 610,
+    "positivo": 121,
+    "neutro": 236,
+    "negativo": 253
    },
    "areas": {
-    "Administração Interna": {
-     "nacionais": 41,
-     "avaliadas": 41,
-     "positivo": 11,
-     "neutro": 7,
-     "negativo": 23
-    },
-    "Agricultura e Mar": {
-     "nacionais": 14,
-     "avaliadas": 14,
-     "positivo": 2,
-     "neutro": 4,
-     "negativo": 8
+    "Economia e Coesão Territorial": {
+     "nacionais": 54,
+     "avaliadas": 54,
+     "positivo": 21,
+     "neutro": 20,
+     "negativo": 13
     },
     "Ambiente e Energia": {
-     "nacionais": 32,
-     "avaliadas": 32,
-     "positivo": 11,
-     "neutro": 14,
-     "negativo": 7
-    },
-    "Assuntos Parlamentares": {
-     "nacionais": 5,
-     "avaliadas": 5,
-     "positivo": 0,
-     "neutro": 3,
-     "negativo": 2
+     "nacionais": 37,
+     "avaliadas": 37,
+     "positivo": 14,
+     "neutro": 15,
+     "negativo": 8
     },
     "Cultura, Juventude e Desporto": {
-     "nacionais": 43,
-     "avaliadas": 41,
+     "nacionais": 44,
+     "avaliadas": 42,
      "positivo": 3,
      "neutro": 25,
-     "negativo": 13
+     "negativo": 14
+    },
+    "Saúde": {
+     "nacionais": 61,
+     "avaliadas": 61,
+     "positivo": 17,
+     "neutro": 17,
+     "negativo": 27
+    },
+    "Trabalho, Solidariedade e Segurança Social": {
+     "nacionais": 126,
+     "avaliadas": 126,
+     "positivo": 11,
+     "neutro": 62,
+     "negativo": 53
+    },
+    "Justiça": {
+     "nacionais": 37,
+     "avaliadas": 37,
+     "positivo": 1,
+     "neutro": 7,
+     "negativo": 29
+    },
+    "Finanças": {
+     "nacionais": 38,
+     "avaliadas": 38,
+     "positivo": 3,
+     "neutro": 14,
+     "negativo": 21
     },
     "Defesa Nacional": {
-     "nacionais": 65,
-     "avaliadas": 65,
-     "positivo": 6,
-     "neutro": 18,
-     "negativo": 41
-    },
-    "Economia e Coesão Territorial": {
-     "nacionais": 50,
-     "avaliadas": 50,
-     "positivo": 19,
-     "neutro": 18,
-     "negativo": 13
+     "nacionais": 68,
+     "avaliadas": 68,
+     "positivo": 7,
+     "neutro": 19,
+     "negativo": 42
     },
     "Educação, Ciência e Inovação": {
      "nacionais": 47,
@@ -2179,27 +2165,6 @@
      "neutro": 17,
      "negativo": 18
     },
-    "Finanças": {
-     "nacionais": 35,
-     "avaliadas": 35,
-     "positivo": 2,
-     "neutro": 13,
-     "negativo": 20
-    },
-    "Infraestruturas e Habitação": {
-     "nacionais": 36,
-     "avaliadas": 36,
-     "positivo": 8,
-     "neutro": 10,
-     "negativo": 18
-    },
-    "Justiça": {
-     "nacionais": 35,
-     "avaliadas": 35,
-     "positivo": 1,
-     "neutro": 7,
-     "negativo": 27
-    },
     "Negócios Estrangeiros": {
      "nacionais": 11,
      "avaliadas": 11,
@@ -2207,19 +2172,40 @@
      "neutro": 6,
      "negativo": 3
     },
-    "Presidência": {
-     "nacionais": 22,
-     "avaliadas": 22,
-     "positivo": 4,
-     "neutro": 10,
-     "negativo": 8
+    "Infraestruturas e Habitação": {
+     "nacionais": 42,
+     "avaliadas": 42,
+     "positivo": 8,
+     "neutro": 11,
+     "negativo": 23
     },
     "Primeiro-Ministro": {
-     "nacionais": 45,
-     "avaliadas": 45,
-     "positivo": 14,
+     "nacionais": 49,
+     "avaliadas": 49,
+     "positivo": 17,
      "neutro": 26,
-     "negativo": 5
+     "negativo": 6
+    },
+    "Administração Interna": {
+     "nacionais": 43,
+     "avaliadas": 43,
+     "positivo": 11,
+     "neutro": 7,
+     "negativo": 25
+    },
+    "Assuntos Parlamentares": {
+     "nacionais": 5,
+     "avaliadas": 5,
+     "positivo": 0,
+     "neutro": 3,
+     "negativo": 2
+    },
+    "Presidência": {
+     "nacionais": 23,
+     "avaliadas": 23,
+     "positivo": 4,
+     "neutro": 11,
+     "negativo": 8
     },
     "Reforma do Estado": {
      "nacionais": 10,
@@ -2228,52 +2214,87 @@
      "neutro": 5,
      "negativo": 0
     },
-    "Saúde": {
-     "nacionais": 55,
-     "avaliadas": 55,
-     "positivo": 16,
-     "neutro": 16,
-     "negativo": 23
-    },
-    "Trabalho, Solidariedade e Segurança Social": {
-     "nacionais": 118,
-     "avaliadas": 118,
-     "positivo": 10,
-     "neutro": 57,
-     "negativo": 51
+    "Agricultura e Mar": {
+     "nacionais": 15,
+     "avaliadas": 15,
+     "positivo": 2,
+     "neutro": 5,
+     "negativo": 8
     }
    }
   },
   {
    "data": "2026-08-19",
    "total": {
-    "nacionais": 488,
-    "avaliadas": 488,
-    "positivo": 67,
-    "neutro": 159,
-    "negativo": 262
+    "nacionais": 532,
+    "avaliadas": 532,
+    "positivo": 70,
+    "neutro": 174,
+    "negativo": 288
    },
    "areas": {
-    "Administração Interna": {
-     "nacionais": 53,
-     "avaliadas": 53,
+    "Cultura, Juventude e Desporto": {
+     "nacionais": 39,
+     "avaliadas": 39,
+     "positivo": 9,
+     "neutro": 24,
+     "negativo": 6
+    },
+    "Defesa Nacional": {
+     "nacionais": 63,
+     "avaliadas": 63,
+     "positivo": 5,
+     "neutro": 17,
+     "negativo": 41
+    },
+    "Finanças": {
+     "nacionais": 27,
+     "avaliadas": 27,
      "positivo": 4,
      "neutro": 7,
-     "negativo": 42
+     "negativo": 16
     },
-    "Agricultura e Mar": {
+    "Justiça": {
+     "nacionais": 41,
+     "avaliadas": 41,
+     "positivo": 2,
+     "neutro": 9,
+     "negativo": 30
+    },
+    "Primeiro-Ministro": {
+     "nacionais": 10,
+     "avaliadas": 10,
+     "positivo": 0,
+     "neutro": 6,
+     "negativo": 4
+    },
+    "Presidência": {
      "nacionais": 20,
      "avaliadas": 20,
-     "positivo": 3,
-     "neutro": 9,
-     "negativo": 8
+     "positivo": 2,
+     "neutro": 5,
+     "negativo": 13
     },
-    "Ambiente e Energia": {
-     "nacionais": 19,
-     "avaliadas": 19,
+    "Trabalho, Solidariedade e Segurança Social": {
+     "nacionais": 115,
+     "avaliadas": 115,
+     "positivo": 10,
+     "neutro": 52,
+     "negativo": 53
+    },
+    "Administração Interna": {
+     "nacionais": 61,
+     "avaliadas": 61,
+     "positivo": 4,
+     "neutro": 7,
+     "negativo": 50
+    },
+    "Saúde": {
+     "nacionais": 58,
+     "avaliadas": 58,
      "positivo": 3,
-     "neutro": 8,
-     "negativo": 8
+     "neutro": 10,
+     "negativo": 45
     },
     "Assuntos Parlamentares": {
      "nacionais": 2,
@@ -2282,20 +2303,6 @@
      "neutro": 1,
      "negativo": 1
     },
-    "Cultura, Juventude e Desporto": {
-     "nacionais": 33,
-     "avaliadas": 33,
-     "positivo": 9,
-     "neutro": 18,
-     "negativo": 6
-    },
-    "Defesa Nacional": {
-     "nacionais": 58,
-     "avaliadas": 58,
-     "positivo": 5,
-     "neutro": 14,
-     "negativo": 39
-    },
     "Economia e Coesão Territorial": {
      "nacionais": 38,
      "avaliadas": 38,
@@ -2303,33 +2310,19 @@
      "neutro": 17,
      "negativo": 13
     },
-    "Educação, Ciência e Inovação": {
-     "nacionais": 39,
-     "avaliadas": 39,
-     "positivo": 10,
-     "neutro": 16,
-     "negativo": 13
-    },
-    "Finanças": {
-     "nacionais": 25,
-     "avaliadas": 25,
-     "positivo": 4,
-     "neutro": 7,
-     "negativo": 14
-    },
-    "Infraestruturas e Habitação": {
-     "nacionais": 18,
-     "avaliadas": 18,
-     "positivo": 2,
-     "neutro": 8,
+    "Agricultura e Mar": {
+     "nacionais": 24,
+     "avaliadas": 24,
+     "positivo": 5,
+     "neutro": 11,
      "negativo": 8
     },
-    "Justiça": {
-     "nacionais": 39,
-     "avaliadas": 39,
-     "positivo": 2,
-     "neutro": 9,
-     "negativo": 28
+    "Educação, Ciência e Inovação": {
+     "nacionais": 43,
+     "avaliadas": 43,
+     "positivo": 11,
+     "neutro": 16,
+     "negativo": 16
     },
     "Negócios Estrangeiros": {
      "nacionais": 11,
@@ -2338,20 +2331,6 @@
      "neutro": 4,
      "negativo": 6
     },
-    "Presidência": {
-     "nacionais": 19,
-     "avaliadas": 19,
-     "positivo": 1,
-     "neutro": 5,
-     "negativo": 13
-    },
-    "Primeiro-Ministro": {
-     "nacionais": 9,
-     "avaliadas": 9,
-     "positivo": 0,
-     "neutro": 5,
-     "negativo": 4
-    },
     "Reforma do Estado": {
      "nacionais": 12,
      "avaliadas": 12,
@@ -2359,80 +2338,101 @@
      "neutro": 4,
      "negativo": 1
     },
-    "Saúde": {
-     "nacionais": 53,
-     "avaliadas": 53,
+    "Ambiente e Energia": {
+     "nacionais": 19,
+     "avaliadas": 19,
      "positivo": 3,
-     "neutro": 10,
-     "negativo": 40
+     "neutro": 8,
+     "negativo": 8
     },
-    "Trabalho, Solidariedade e Segurança Social": {
-     "nacionais": 107,
-     "avaliadas": 107,
-     "positivo": 10,
-     "neutro": 49,
-     "negativo": 48
+    "Infraestruturas e Habitação": {
+     "nacionais": 20,
+     "avaliadas": 20,
+     "positivo": 2,
+     "neutro": 8,
+     "negativo": 10
     }
    }
   },
   {
    "data": "2026-08-20",
    "total": {
-    "nacionais": 554,
-    "avaliadas": 524,
-    "positivo": 89,
-    "neutro": 201,
-    "negativo": 234
+    "nacionais": 593,
+    "avaliadas": 563,
+    "positivo": 96,
+    "neutro": 222,
+    "negativo": 245
    },
    "areas": {
-    "Administração Interna": {
-     "nacionais": 56,
-     "avaliadas": 53,
-     "positivo": 2,
-     "neutro": 9,
-     "negativo": 42
-    },
-    "Agricultura e Mar": {
-     "nacionais": 18,
-     "avaliadas": 17,
-     "positivo": 2,
-     "neutro": 6,
-     "negativo": 9
-    },
-    "Ambiente e Energia": {
-     "nacionais": 30,
-     "avaliadas": 29,
-     "positivo": 10,
-     "neutro": 11,
-     "negativo": 8
-    },
-    "Assuntos Parlamentares": {
-     "nacionais": 4,
-     "avaliadas": 4,
-     "positivo": 2,
-     "neutro": 1,
-     "negativo": 1
-    },
-    "Cultura, Juventude e Desporto": {
-     "nacionais": 38,
-     "avaliadas": 32,
-     "positivo": 5,
-     "neutro": 20,
-     "negativo": 7
-    },
-    "Defesa Nacional": {
-     "nacionais": 75,
-     "avaliadas": 70,
-     "positivo": 7,
-     "neutro": 14,
-     "negativo": 49
+    "Infraestruturas e Habitação": {
+     "nacionais": 48,
+     "avaliadas": 47,
+     "positivo": 12,
+     "neutro": 23,
+     "negativo": 12
     },
     "Economia e Coesão Territorial": {
-     "nacionais": 55,
-     "avaliadas": 54,
-     "positivo": 17,
+     "nacionais": 65,
+     "avaliadas": 64,
+     "positivo": 19,
+     "neutro": 34,
+     "negativo": 11
+    },
+    "Defesa Nacional": {
+     "nacionais": 77,
+     "avaliadas": 72,
+     "positivo": 8,
+     "neutro": 14,
+     "negativo": 50
+    },
+    "Ambiente e Energia": {
+     "nacionais": 32,
+     "avaliadas": 31,
+     "positivo": 11,
+     "neutro": 12,
+     "negativo": 8
+    },
+    "Administração Interna": {
+     "nacionais": 59,
+     "avaliadas": 56,
+     "positivo": 2,
+     "neutro": 9,
+     "negativo": 45
+    },
+    "Trabalho, Solidariedade e Segurança Social": {
+     "nacionais": 116,
+     "avaliadas": 110,
+     "positivo": 16,
+     "neutro": 51,
+     "negativo": 43
+    },
+    "Presidência": {
+     "nacionais": 52,
+     "avaliadas": 50,
+     "positivo": 12,
      "neutro": 27,
+     "negativo": 11
+    },
+    "Saúde": {
+     "nacionais": 31,
+     "avaliadas": 30,
+     "positivo": 4,
+     "neutro": 6,
+     "negativo": 20
+    },
+    "Agricultura e Mar": {
+     "nacionais": 19,
+     "avaliadas": 18,
+     "positivo": 2,
+     "neutro": 6,
      "negativo": 10
+    },
+    "Finanças": {
+     "nacionais": 27,
+     "avaliadas": 27,
+     "positivo": 1,
+     "neutro": 12,
+     "negativo": 14
     },
     "Educação, Ciência e Inovação": {
      "nacionais": 38,
@@ -2441,40 +2441,26 @@
      "neutro": 18,
      "negativo": 13
     },
-    "Finanças": {
-     "nacionais": 24,
-     "avaliadas": 24,
-     "positivo": 1,
-     "neutro": 10,
-     "negativo": 13
-    },
-    "Infraestruturas e Habitação": {
-     "nacionais": 42,
-     "avaliadas": 41,
-     "positivo": 11,
-     "neutro": 19,
-     "negativo": 11
+    "Cultura, Juventude e Desporto": {
+     "nacionais": 38,
+     "avaliadas": 32,
+     "positivo": 5,
+     "neutro": 20,
+     "negativo": 7
     },
     "Justiça": {
-     "nacionais": 34,
-     "avaliadas": 33,
+     "nacionais": 36,
+     "avaliadas": 35,
      "positivo": 2,
-     "neutro": 9,
+     "neutro": 11,
      "negativo": 22
     },
     "Negócios Estrangeiros": {
-     "nacionais": 17,
-     "avaliadas": 17,
+     "nacionais": 18,
+     "avaliadas": 18,
      "positivo": 4,
      "neutro": 9,
-     "negativo": 4
-    },
-    "Presidência": {
-     "nacionais": 45,
-     "avaliadas": 43,
-     "positivo": 12,
-     "neutro": 22,
-     "negativo": 9
+     "negativo": 5
     },
     "Primeiro-Ministro": {
      "nacionais": 6,
@@ -2484,100 +2470,58 @@
      "negativo": 5
     },
     "Reforma do Estado": {
-     "nacionais": 10,
-     "avaliadas": 10,
-     "positivo": 3,
+     "nacionais": 11,
+     "avaliadas": 11,
+     "positivo": 4,
      "neutro": 6,
      "negativo": 1
     },
-    "Saúde": {
-     "nacionais": 31,
-     "avaliadas": 30,
-     "positivo": 4,
-     "neutro": 6,
-     "negativo": 20
-    },
-    "Trabalho, Solidariedade e Segurança Social": {
-     "nacionais": 107,
-     "avaliadas": 101,
-     "positivo": 14,
-     "neutro": 46,
-     "negativo": 41
+    "Assuntos Parlamentares": {
+     "nacionais": 4,
+     "avaliadas": 4,
+     "positivo": 2,
+     "neutro": 1,
+     "negativo": 1
     }
    }
   },
   {
    "data": "2026-08-21",
    "total": {
-    "nacionais": 601,
-    "avaliadas": 549,
-    "positivo": 110,
-    "neutro": 161,
-    "negativo": 278
+    "nacionais": 662,
+    "avaliadas": 606,
+    "positivo": 125,
+    "neutro": 173,
+    "negativo": 308
    },
    "areas": {
-    "Administração Interna": {
-     "nacionais": 75,
-     "avaliadas": 69,
-     "positivo": 1,
-     "neutro": 16,
-     "negativo": 52
-    },
-    "Agricultura e Mar": {
-     "nacionais": 30,
-     "avaliadas": 28,
-     "positivo": 12,
-     "neutro": 1,
-     "negativo": 15
-    },
-    "Ambiente e Energia": {
-     "nacionais": 23,
-     "avaliadas": 23,
+    "Justiça": {
+     "nacionais": 39,
+     "avaliadas": 36,
      "positivo": 3,
-     "neutro": 10,
-     "negativo": 10
-    },
-    "Assuntos Parlamentares": {
-     "nacionais": 4,
-     "avaliadas": 3,
-     "positivo": 0,
-     "neutro": 2,
-     "negativo": 1
-    },
-    "Cultura, Juventude e Desporto": {
-     "nacionais": 51,
-     "avaliadas": 44,
-     "positivo": 17,
-     "neutro": 19,
-     "negativo": 8
-    },
-    "Defesa Nacional": {
-     "nacionais": 95,
-     "avaliadas": 88,
-     "positivo": 6,
-     "neutro": 9,
-     "negativo": 73
-    },
-    "Economia e Coesão Territorial": {
-     "nacionais": 46,
-     "avaliadas": 43,
-     "positivo": 17,
-     "neutro": 18,
-     "negativo": 8
+     "neutro": 8,
+     "negativo": 25
     },
     "Educação, Ciência e Inovação": {
-     "nacionais": 71,
-     "avaliadas": 68,
-     "positivo": 23,
-     "neutro": 22,
-     "negativo": 23
+     "nacionais": 82,
+     "avaliadas": 79,
+     "positivo": 29,
+     "neutro": 24,
+     "negativo": 26
     },
-    "Finanças": {
-     "nacionais": 26,
-     "avaliadas": 25,
-     "positivo": 2,
-     "neutro": 10,
-     "negativo": 13
+    "Defesa Nacional": {
+     "nacionais": 105,
+     "avaliadas": 97,
+     "positivo": 6,
+     "neutro": 9,
+     "negativo": 82
+    },
+    "Economia e Coesão Territorial": {
+     "nacionais": 48,
+     "avaliadas": 45,
+     "positivo": 17,
+     "neutro": 18,
+     "negativo": 10
     },
     "Infraestruturas e Habitação": {
      "nacionais": 31,
@@ -2586,12 +2530,12 @@
      "neutro": 9,
      "negativo": 6
     },
-    "Justiça": {
-     "nacionais": 36,
-     "avaliadas": 33,
-     "positivo": 3,
-     "neutro": 6,
-     "negativo": 24
+    "Reforma do Estado": {
+     "nacionais": 18,
+     "avaliadas": 16,
+     "positivo": 4,
+     "neutro": 12,
+     "negativo": 0
     },
     "Negócios Estrangeiros": {
      "nacionais": 13,
@@ -2600,143 +2544,185 @@
      "neutro": 4,
      "negativo": 4
     },
-    "Presidência": {
-     "nacionais": 27,
-     "avaliadas": 24,
-     "positivo": 1,
-     "neutro": 4,
-     "negativo": 19
+    "Administração Interna": {
+     "nacionais": 84,
+     "avaliadas": 77,
+     "positivo": 2,
+     "neutro": 20,
+     "negativo": 55
     },
-    "Primeiro-Ministro": {
-     "nacionais": 27,
-     "avaliadas": 25,
-     "positivo": 1,
-     "neutro": 13,
-     "negativo": 11
+    "Agricultura e Mar": {
+     "nacionais": 32,
+     "avaliadas": 30,
+     "positivo": 13,
+     "neutro": 1,
+     "negativo": 16
     },
-    "Reforma do Estado": {
-     "nacionais": 18,
-     "avaliadas": 16,
-     "positivo": 4,
-     "neutro": 12,
-     "negativo": 0
-    },
-    "Saúde": {
-     "nacionais": 42,
-     "avaliadas": 38,
-     "positivo": 11,
-     "neutro": 3,
-     "negativo": 24
+    "Assuntos Parlamentares": {
+     "nacionais": 4,
+     "avaliadas": 3,
+     "positivo": 0,
+     "neutro": 2,
+     "negativo": 1
     },
     "Trabalho, Solidariedade e Segurança Social": {
-     "nacionais": 61,
-     "avaliadas": 54,
-     "positivo": 6,
-     "neutro": 20,
-     "negativo": 28
+     "nacionais": 67,
+     "avaliadas": 59,
+     "positivo": 7,
+     "neutro": 22,
+     "negativo": 30
+    },
+    "Presidência": {
+     "nacionais": 32,
+     "avaliadas": 29,
+     "positivo": 1,
+     "neutro": 5,
+     "negativo": 23
+    },
+    "Saúde": {
+     "nacionais": 47,
+     "avaliadas": 42,
+     "positivo": 12,
+     "neutro": 3,
+     "negativo": 27
+    },
+    "Ambiente e Energia": {
+     "nacionais": 24,
+     "avaliadas": 24,
+     "positivo": 3,
+     "neutro": 10,
+     "negativo": 11
+    },
+    "Cultura, Juventude e Desporto": {
+     "nacionais": 56,
+     "avaliadas": 49,
+     "positivo": 22,
+     "neutro": 19,
+     "negativo": 8
+    },
+    "Finanças": {
+     "nacionais": 28,
+     "avaliadas": 27,
+     "positivo": 2,
+     "neutro": 12,
+     "negativo": 13
+    },
+    "Primeiro-Ministro": {
+     "nacionais": 30,
+     "avaliadas": 28,
+     "positivo": 1,
+     "neutro": 13,
+     "negativo": 14
     }
    }
   },
   {
    "data": "2026-08-22",
    "total": {
-    "nacionais": 214,
-    "avaliadas": 109,
-    "positivo": 31,
-    "neutro": 32,
-    "negativo": 46
+    "nacionais": 240,
+    "avaliadas": 138,
+    "positivo": 43,
+    "neutro": 41,
+    "negativo": 54
    },
    "areas": {
-    "Administração Interna": {
-     "nacionais": 26,
-     "avaliadas": 13,
-     "positivo": 2,
-     "neutro": 2,
-     "negativo": 9
-    },
-    "Educação, Ciência e Inovação": {
-     "nacionais": 62,
-     "avaliadas": 27,
-     "positivo": 13,
-     "neutro": 7,
-     "negativo": 7
-    },
-    "Cultura, Juventude e Desporto": {
-     "nacionais": 11,
-     "avaliadas": 5,
-     "positivo": 2,
-     "neutro": 2,
-     "negativo": 1
-    },
-    "Trabalho, Solidariedade e Segurança Social": {
-     "nacionais": 15,
-     "avaliadas": 7,
-     "positivo": 2,
-     "neutro": 4,
-     "negativo": 1
-    },
-    "Justiça": {
-     "nacionais": 9,
-     "avaliadas": 4,
-     "positivo": 1,
-     "neutro": 0,
-     "negativo": 3
-    },
-    "Finanças": {
-     "nacionais": 16,
-     "avaliadas": 6,
-     "positivo": 0,
+    "Defesa Nacional": {
+     "nacionais": 42,
+     "avaliadas": 30,
+     "positivo": 8,
      "neutro": 3,
-     "negativo": 3
-    },
-    "Infraestruturas e Habitação": {
-     "nacionais": 10,
-     "avaliadas": 4,
-     "positivo": 1,
-     "neutro": 2,
-     "negativo": 1
+     "negativo": 19
     },
     "Presidência": {
-     "nacionais": 14,
-     "avaliadas": 6,
+     "nacionais": 17,
+     "avaliadas": 9,
      "positivo": 1,
      "neutro": 2,
-     "negativo": 3
+     "negativo": 6
     },
-    "Negócios Estrangeiros": {
-     "nacionais": 6,
-     "avaliadas": 3,
-     "positivo": 1,
-     "neutro": 0,
-     "negativo": 2
-    },
-    "Economia e Coesão Territorial": {
-     "nacionais": 12,
+    "Trabalho, Solidariedade e Segurança Social": {
+     "nacionais": 16,
      "avaliadas": 8,
      "positivo": 2,
      "neutro": 4,
      "negativo": 2
     },
-    "Defesa Nacional": {
-     "nacionais": 38,
-     "avaliadas": 24,
-     "positivo": 4,
+    "Educação, Ciência e Inovação": {
+     "nacionais": 66,
+     "avaliadas": 33,
+     "positivo": 14,
+     "neutro": 11,
+     "negativo": 8
+    },
+    "Infraestruturas e Habitação": {
+     "nacionais": 12,
+     "avaliadas": 9,
+     "positivo": 6,
      "neutro": 2,
-     "negativo": 18
+     "negativo": 1
+    },
+    "Ambiente e Energia": {
+     "nacionais": 6,
+     "avaliadas": 4,
+     "positivo": 2,
+     "neutro": 1,
+     "negativo": 1
+    },
+    "Justiça": {
+     "nacionais": 14,
+     "avaliadas": 5,
+     "positivo": 1,
+     "neutro": 0,
+     "negativo": 4
+    },
+    "Administração Interna": {
+     "nacionais": 29,
+     "avaliadas": 18,
+     "positivo": 6,
+     "neutro": 2,
+     "negativo": 10
+    },
+    "Saúde": {
+     "nacionais": 9,
+     "avaliadas": 7,
+     "positivo": 2,
+     "neutro": 3,
+     "negativo": 2
+    },
+    "Finanças": {
+     "nacionais": 18,
+     "avaliadas": 8,
+     "positivo": 0,
+     "neutro": 4,
+     "negativo": 4
+    },
+    "Cultura, Juventude e Desporto": {
+     "nacionais": 11,
+     "avaliadas": 6,
+     "positivo": 3,
+     "neutro": 2,
+     "negativo": 1
+    },
+    "Negócios Estrangeiros": {
+     "nacionais": 6,
+     "avaliadas": 4,
+     "positivo": 1,
+     "neutro": 1,
+     "negativo": 2
+    },
+    "Economia e Coesão Territorial": {
+     "nacionais": 13,
+     "avaliadas": 10,
+     "positivo": 3,
+     "neutro": 5,
+     "negativo": 2
     },
     "Assuntos Parlamentares": {
      "nacionais": 2,
-     "avaliadas": 0,
+     "avaliadas": 1,
      "positivo": 0,
-     "neutro": 0,
+     "neutro": 1,
      "negativo": 0
-    },
-    "Saúde": {
-     "nacionais": 8,
-     "avaliadas": 6,
-     "positivo": 2,
-     "neutro": 3,
-     "negativo": 1
     },
     "Reforma do Estado": {
      "nacionais": 3,
@@ -2753,18 +2739,11 @@
      "negativo": 1
     },
     "Agricultura e Mar": {
-     "nacionais": 6,
-     "avaliadas": 5,
+     "nacionais": 7,
+     "avaliadas": 6,
      "positivo": 0,
      "neutro": 2,
-     "negativo": 3
-    },
-    "Ambiente e Energia": {
-     "nacionais": 5,
-     "avaliadas": 3,
-     "positivo": 2,
-     "neutro": 0,
-     "negativo": 1
+     "negativo": 4
     }
    }
   }
