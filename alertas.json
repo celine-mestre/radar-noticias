@@ -1,78 +1,16 @@
 {
- "atualizado": "2026-08-21 23:33",
- "dia": "2026-08-21",
- "corte": "23:33",
+ "atualizado": "2026-08-22 07:57",
+ "dia": "2026-08-22",
+ "corte": "07:57",
  "dias_base": 17,
- "regra": "Tempestade quando a contagem do dia, até às 23:33, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 19 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 07:57, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 16 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
-  "publicacoes_de_referencia": 19
+  "publicacoes_de_referencia": 16
  },
- "tempestades": [
-  {
-   "area": "Administração Interna",
-   "hoje": 46,
-   "mediana": 30,
-   "limiar": 44.8,
-   "excesso": 16,
-   "variacao_pct": 53,
-   "dias_base": 17,
-   "tempestade": true
-  }
- ],
- "momentum": [
-  {
-   "area": "Defesa Nacional",
-   "hoje": 64,
-   "mediana": 45,
-   "limiar": 83.5,
-   "excesso": 19,
-   "variacao_pct": 42,
-   "dias_base": 17,
-   "tempestade": false
-  },
-  {
-   "area": "Administração Interna",
-   "hoje": 46,
-   "mediana": 30,
-   "limiar": 44.8,
-   "excesso": 16,
-   "variacao_pct": 53,
-   "dias_base": 17,
-   "tempestade": true
-  },
-  {
-   "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 36,
-   "mediana": 23,
-   "limiar": 64.5,
-   "excesso": 13,
-   "variacao_pct": 57,
-   "dias_base": 17,
-   "tempestade": false
-  },
-  {
-   "area": "Educação, Ciência e Inovação",
-   "hoje": 41,
-   "mediana": 31,
-   "limiar": 48.8,
-   "excesso": 10,
-   "variacao_pct": 32,
-   "dias_base": 17,
-   "tempestade": false
-  },
-  {
-   "area": "Agricultura e Mar",
-   "hoje": 28,
-   "mediana": 18,
-   "limiar": 29.9,
-   "excesso": 10,
-   "variacao_pct": 56,
-   "dias_base": 17,
-   "tempestade": false
-  }
- ],
+ "tempestades": [],
+ "momentum": [],
  "historico": [
   {
    "data": "2026-08-11",
@@ -140,72 +78,44 @@
   {
    "data": "2026-08-17",
    "area": "Infraestruturas e Habitação",
-   "hoje": 28,
-   "mediana": 15,
-   "limiar": 26.9
+   "hoje": 18,
+   "mediana": 10,
+   "limiar": 18
   },
   {
    "data": "2026-08-18",
-   "area": "Cultura, Juventude e Desporto",
-   "hoje": 49,
-   "mediana": 28.0,
-   "limiar": 45.8
-  },
-  {
-   "data": "2026-08-18",
-   "area": "Finanças",
-   "hoje": 28,
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 43,
    "mediana": 11.0,
    "limiar": 27.3
   },
   {
-   "data": "2026-08-18",
-   "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 62,
-   "mediana": 19.5,
-   "limiar": 40.3
-  },
-  {
-   "data": "2026-08-19",
-   "area": "Justiça",
-   "hoje": 49,
-   "mediana": 31,
-   "limiar": 45.8
-  },
-  {
    "data": "2026-08-19",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 58,
-   "mediana": 20,
-   "limiar": 46.7
-  },
-  {
-   "data": "2026-08-20",
-   "area": "Infraestruturas e Habitação",
-   "hoje": 30,
-   "mediana": 16.5,
-   "limiar": 26.9
+   "hoje": 31,
+   "mediana": 12,
+   "limiar": 29.8
   },
   {
    "data": "2026-08-20",
    "area": "Presidência",
-   "hoje": 31,
-   "mediana": 15.5,
-   "limiar": 28.8
+   "hoje": 22,
+   "mediana": 9.5,
+   "limiar": 19.9
   },
   {
    "data": "2026-08-20",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 73,
-   "mediana": 21.5,
-   "limiar": 51.2
+   "hoje": 43,
+   "mediana": 12.5,
+   "limiar": 31.8
   },
   {
    "data": "2026-08-21",
    "area": "Administração Interna",
-   "hoje": 46,
-   "mediana": 30,
-   "limiar": 44.8
+   "hoje": 28,
+   "mediana": 19,
+   "limiar": 27
   }
  ]
 }
