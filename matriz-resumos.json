@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-22 13:39",
+ "gerado": "2026-08-22 16:23",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -79,12 +79,6 @@
    "pct": 53,
    "lado": "positivas"
   },
-  "2026-08-21|Justiça": {
-   "texto": "No dia 21 de agosto de 2026, foram registados múltiplos acontecimentos de natureza judicial e de segurança pública. Destacam-se a prisão preventiva de uma mulher reincidente em crime de incêndio, de um homem que raptou uma mulher em Torres Novas e de uma mulher de 63 anos suspeita de incêndio em Vila Real, bem como a reincidência de um indivíduo procurado pelo Brasil por violação de menor. Adicionalmente, verificou-se a condenação a um ano de prisão de um turista suíço em Bali por violação de feriado hindu, e a prisão preventiva de um traficante de droga em Portalegre, juntamente com outros crimes. Um tema dominante é a aplicação de medidas de coação e a punição de infrações criminais, incluindo reincidência e crimes violentos.",
-   "n": 15,
-   "pct": 79,
-   "lado": "negativas"
-  },
   "2026-08-04|Justiça": {
    "texto": "No dia 2026-08-04, a área da Justiça registou múltiplos acontecimentos de natureza judicial e prisional. Foram detidos três indivíduos na operação Flamma, encontrando-se em prisão preventiva; um homem com pena por cumprir foi encontrado em Vagos pela GNR, após um ano e dois meses de pena pendentes; e um indivíduo foi detido por homicídio, tendo matado uma consultora e enterrado o corpo na Lagoa de Óbidos. Adicionalmente, o tema dominante foi a gestão de processos judiciais, evidenciada pela exclusão de criminosos sexuais de libertação antecipada, a retirada de validade a atos de um advogado oficioso por José Sócrates e a contestação de decisões fiscais pelo Tribunal Arbitral e pela CMVM.",
    "n": 11,
@@ -151,12 +145,6 @@
    "pct": 80,
    "lado": "negativas"
   },
-  "2026-08-14|Agricultura e Mar": {
-   "texto": "No dia 14 de agosto de 2026, registaram-se múltiplos incidentes relacionados com incêndios florestais e fenómenos meteorológicos adversos, afetando o Reino Unido, França, Grécia e Moçambique. Em território nacional, cinco vagas de calor intensificaram a situação de seca, colocando em risco as colheitas agrícolas, conforme alertado por agricultores britânicos. Adicionalmente, verificou-se um incêndio florestal nas Landes, França, que obrigou ao realojamento de 525 pessoas, e outro no norte da Grécia, motivando a retirada de centenas de turistas. Paralelamente, em Moçambique, um relator identificou alegadas violações no âmbito do combate ao terrorismo, sem que se detalhem as implicações específicas do caso. O tema dominante é a ocorrência de incêndios florestais e a ameaça de seca, com impacto na produção alimentar e na segurança das populações.",
-   "n": 6,
-   "pct": 75,
-   "lado": "negativas"
-  },
   "2026-08-22|Defesa Nacional": {
    "texto": "No dia 22 de agosto de 2026, registaram-se múltiplos incidentes de natureza militar e de segurança na área da Defesa Nacional. Destacam-se ataques com mísseis contra Kiev e o sul da Ucrânia, que resultaram em cinco mortes, atribuídos a Rússia, Coreia do Norte e grupos não identificados. Adicionalmente, verificou-se a demissão de dirigentes de um jornal militar do Pentágono por insubordinação e um acidente fatal envolvendo dois soldados durante uma missão de ajuda. A cobertura mediática também abordou a proibição de transmissão de um programa infantil russo pela Ucrânia, justificada como ameaça à segurança nacional.",
    "n": 11,
@@ -169,16 +157,46 @@
    "pct": 75,
    "lado": "negativas"
   },
-  "2026-08-11|Economia e Coesão Territorial|+": {
-   "texto": "No âmbito da coesão territorial e desenvolvimento regional, foram implementadas diversas iniciativas. Braga inaugurou uma residência universitária com 786 camas, com mensalidades a partir de 94 euros, reforçando o acesso ao ensino superior. O Turismo de Portugal alocou um milhão de euros para a criação de refúgios climáticos, visando mitigar os efeitos das alterações climáticas em diversas localidades. Adicionalmente, a Região de Coimbra estabeleceu um acordo com uma agência de desenvolvimento ucraniana, promovendo a cooperação e o apoio mútuo. Paralelamente, foram financiadas intervenções de reabilitação florestal em Figueiró dos Vinhos, no valor de 203 mil euros, após eventos meteorológicos adversos, e o PRR assegurou a modernização dos cuidados de saúde na ilha do Pico.",
-   "n": 14,
-   "pct": 61,
-   "lado": "positivas"
-  },
   "2026-08-14|Cultura, Juventude e Desporto|+": {
    "texto": "No dia 14 de agosto de 2026, o atletismo português destacou-se nos Europeus de Natação, com a qualificação de Pedro Buaró e Isaac Nader para as meias-finais e de Delvis Santos para a final dos 200 metros, bem como a conquista de um bronze pelo judoca paralímpico Djibrilo Iafa. Paralelamente, Camila Rebelo melhorou o recorde nacional nos 100 metros costas, assegurando a presença na final. O tema dominante foi o desporto, com eventos de alto rendimento e a valorização da proteção de menores em casos sensíveis. Adicionalmente, a Polícia brasileira recuperou obras de Henri Matisse roubadas em dezembro, e o ICNF sublinhou a compatibilização entre desporto e natureza.",
    "n": 13,
    "pct": 52,
+   "lado": "positivas"
+  },
+  "2026-08-14|Defesa Nacional": {
+   "texto": "No dia 14 de agosto de 2026, a área da Defesa Nacional registou múltiplos acontecimentos de natureza internacional e interna. Um sobrinho-neto de John F. Kennedy foi incluído na lista de procurados da Rússia, alvo de ordem de prisão por combater na Ucrânia, e caças da NATO abateram um drone que invadiu o espaço aéreo da Letónia. Paralelamente, Espanha e Marrocos reforçaram a segurança fronteiriça em Ceuta, enquanto Taiwan realizou exercícios militares com foco em cenários de invasão chinesa, e a Ucrânia enfrentou ataques russos e um alerta aéreo em Odessa. Adicionalmente, foram reportadas ameaças de isolamento económico por parte dos EUA ao Irão e um incidente de violência doméstica em território nacional.",
+   "n": 10,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-19|Saúde": {
+   "texto": "No dia 19 de agosto de 2026, registaram-se múltiplos incidentes e problemas na área da saúde, com destaque para a ocorrência de um tiroteio em Queluz, que resultou no internamento de um jovem de 21 anos em estado instável; um surto de norovírus no Faial causou gastroenterite em vários indivíduos; e um incêndio num lar no Caramulo obrigou ao realojamento de idosos e ao transporte de dois para o hospital. Adicionalmente, verificaram-se falhas no modelo rotativo das urgências de obstetrícia em Setúbal, com impacto na assistência, e inspeções revelaram fragilidades no planeamento de serviços de ginecologia e obstetrícia na ULS da Arrábida. O tema dominante foi a instabilidade e as insuficiências nos serviços de saúde, nomeadamente em áreas de urgência e obstetrícia, com problemas de organização, recursos e capacidade de resposta.",
+   "n": 40,
+   "pct": 78,
+   "lado": "negativas"
+  },
+  "2026-08-09|Ambiente e Energia|+": {
+   "texto": "No dia 2026-08-09, a área governamental do Ambiente e Energia registou desenvolvimentos diversos. O Governo alterou o regime de compensações a ataques de lobo ibérico, visando mitigar perdas económicas a agricultores. Adicionalmente, foram noticiados campos de sal da Indonésia que florescem devido à seca provocada pelo El Niño, um fenómeno climático que motivou a discussão europeia sobre a seca. Não se identificou um tema dominante comum a todos os factos noticiados.",
+   "n": 4,
+   "pct": 55,
+   "lado": "positivas"
+  },
+  "2026-08-10|Finanças|+": {
+   "texto": "O Ministério das Finanças procedeu ao pagamento do prémio salarial de 2026 aos jovens, uma medida que visa mitigar o impacto da inflação nos rendimentos dos trabalhadores mais jovens. Este pagamento, que teve início na segunda-feira, é a concretização de um programa de incentivo à contratação e progressão profissional de jovens, anunciado em 2024 e 2025, e que abrange diferentes setores da economia. O tema dominante é, portanto, a resposta do governo à questão do poder de compra dos jovens, através de medidas de apoio ao rendimento e ao emprego.",
+   "n": 6,
+   "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-12|Economia e Coesão Territorial|+": {
+   "texto": "No âmbito da economia e coesão territorial, o Governo definiu máximos de venda de produtos apícolas, visando a regulação do mercado e a proteção dos produtores. Paralelamente, o Fundo Soberano da Noruega atingiu um volume de ativos recorde, superando os 2 biliões de euros, e registou um lucro semestral de 159,6 mil milhões de euros. Adicionalmente, o setor do turismo em Cabo Verde registou um clima económico superior ao de 2025, e o mercado de trabalho do setor tem vindo a expandir-se, com recrutamento ao longo de todo o ano. A nível local, a reabilitação de infraestruturas, como o posto da GNR no Cartaxo por 449 mil euros, demonstra o investimento na coesão territorial.",
+   "n": 17,
+   "pct": 55,
+   "lado": "positivas"
+  },
+  "2026-08-13|Cultura, Juventude e Desporto|+": {
+   "texto": "No domínio da cultura e do desporto, o dia foi marcado por reconhecimentos atléticos e iniciativas educativas. A nadadora Sara Curtis estabeleceu um novo recorde mundial nos 50 metros costas, enquanto Fatumata Diallo conquistou um bronze nos 400 metros barreiras nos Europeus de Atletismo, sendo este último reconhecimento reiterado pelo Público e pelo Observador. Adicionalmente, estudantes de Portugal e da Estónia participaram num voo parabólico simulando uma viagem espacial, no âmbito do programa Astronauta por um Dia, com partida de Santa Maria. O único acontecimento de natureza cultural foi a estreia em Portugal de um filme protagonizado por uma atriz travesti brasileira, gerando um sentimento de orgulho nacional.",
+   "n": 12,
+   "pct": 50,
    "lado": "positivas"
   }
  }
