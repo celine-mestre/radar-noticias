@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-22 18:06",
+ "gerado": "2026-08-22 21:14",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -151,46 +151,40 @@
    "pct": 52,
    "lado": "positivas"
   },
-  "2026-08-14|Defesa Nacional": {
-   "texto": "No dia 14 de agosto de 2026, a área da Defesa Nacional registou múltiplos acontecimentos de natureza internacional e interna. Um sobrinho-neto de John F. Kennedy foi incluído na lista de procurados da Rússia, alvo de ordem de prisão por combater na Ucrânia, e caças da NATO abateram um drone que invadiu o espaço aéreo da Letónia. Paralelamente, Espanha e Marrocos reforçaram a segurança fronteiriça em Ceuta, enquanto Taiwan realizou exercícios militares com foco em cenários de invasão chinesa, e a Ucrânia enfrentou ataques russos e um alerta aéreo em Odessa. Adicionalmente, foram reportadas ameaças de isolamento económico por parte dos EUA ao Irão e um incidente de violência doméstica em território nacional.",
-   "n": 10,
-   "pct": 75,
-   "lado": "negativas"
-  },
   "2026-08-19|Saúde": {
    "texto": "No dia 19 de agosto de 2026, registaram-se múltiplos incidentes e problemas na área da saúde, com destaque para a ocorrência de um tiroteio em Queluz, que resultou no internamento de um jovem de 21 anos em estado instável; um surto de norovírus no Faial causou gastroenterite em vários indivíduos; e um incêndio num lar no Caramulo obrigou ao realojamento de idosos e ao transporte de dois para o hospital. Adicionalmente, verificaram-se falhas no modelo rotativo das urgências de obstetrícia em Setúbal, com impacto na assistência, e inspeções revelaram fragilidades no planeamento de serviços de ginecologia e obstetrícia na ULS da Arrábida. O tema dominante foi a instabilidade e as insuficiências nos serviços de saúde, nomeadamente em áreas de urgência e obstetrícia, com problemas de organização, recursos e capacidade de resposta.",
    "n": 40,
    "pct": 78,
    "lado": "negativas"
   },
-  "2026-08-09|Ambiente e Energia|+": {
-   "texto": "No dia 2026-08-09, a área governamental do Ambiente e Energia registou desenvolvimentos diversos. O Governo alterou o regime de compensações a ataques de lobo ibérico, visando mitigar perdas económicas a agricultores. Adicionalmente, foram noticiados campos de sal da Indonésia que florescem devido à seca provocada pelo El Niño, um fenómeno climático que motivou a discussão europeia sobre a seca. Não se identificou um tema dominante comum a todos os factos noticiados.",
-   "n": 4,
-   "pct": 55,
-   "lado": "positivas"
-  },
-  "2026-08-10|Finanças|+": {
-   "texto": "O Ministério das Finanças procedeu ao pagamento do prémio salarial de 2026 aos jovens, uma medida que visa mitigar o impacto da inflação nos rendimentos dos trabalhadores mais jovens. Este pagamento, que teve início na segunda-feira, é a concretização de um programa de incentivo à contratação e progressão profissional de jovens, anunciado em 2024 e 2025, e que abrange diferentes setores da economia. O tema dominante é, portanto, a resposta do governo à questão do poder de compra dos jovens, através de medidas de apoio ao rendimento e ao emprego.",
+  "2026-08-14|Agricultura e Mar": {
+   "texto": "No dia 14 de agosto de 2026, registaram-se múltiplos incidentes relacionados com incêndios florestais e fenómenos meteorológicos extremos em diferentes países europeus e em Moçambique. Na Grécia, um incêndio no norte do país motivou a retirada de centenas de turistas, enquanto na França um incêndio na floresta das Landes obrigou ao realojamento de 525 pessoas. Paralelamente, cinco vagas de calor e a seca ameaçaram as colheitas britânicas, alertando para uma possível subida dos preços dos alimentos. Adicionalmente, em Moçambique, um relator apontou alegadas violações no combate ao terrorismo, e nos Açores foi decretada a proibição da caça ao pombo devido à doença Newcastle. O tema dominante é a ocorrência de incêndios florestais e fenómenos meteorológicos adversos, com impacto em diferentes regiões geográficas.",
    "n": 6,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-20|Justiça": {
+   "texto": "No dia 20 de agosto de 2026, a área da Justiça registou múltiplos acontecimentos de natureza diversa. Vários tribunais aplicaram sanções de retirada de carta a condutores de trotineta alcoolizados, no âmbito de iniciativas de segurança rodoviária. Paralelamente, o Ministério Público iniciou um inquérito à queda de uma grua em Sintra, após o falecimento de trabalhadores no local. Adicionalmente, registaram-se detenções e prisões preventivas por crimes diversos, incluindo roubo e abuso de menores, com casos notórios como o de Algés e a condenação do fundador da Evergrande a prisão perpétua na China. O tema dominante foi a aplicação da lei penal em casos criminais graves, com destaque para a fraude financeira e crimes contra menores.",
+   "n": 25,
+   "pct": 77,
+   "lado": "negativas"
+  },
+  "2026-08-22|Justiça": {
+   "texto": "No dia 22 de agosto de 2026, o tribunal federal dos Estados Unidos anulou a suspensão de vistos a 75 países, decisão tomada durante a presidência de Donald Trump, considerada \"manifestamente ilegal\" e que afetava a mobilidade de cidadãos estrangeiros. Adicionalmente, o mesmo tribunal recusou a aplicação da doutrina \"árvore envenenada\" no âmbito da Operação Picoas, um processo judicial anterior. Paralelamente, ocorreu a detenção de um indivíduo por violência doméstica em Salvaterra de Magos, enquanto o relatório final sobre o acidente do elevador da Glória foi adiado para o primeiro trimestre de 2027. O tema dominante é a anulação de decisões administrativas e judiciais relacionadas com a política de vistos e processos criminais.",
+   "n": 7,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-11|Economia e Coesão Territorial|+": {
+   "texto": "**Economia e Coesão Territorial: Acontecimentos Principais**\n\n1. **Conclusão de residência universitária em Braga**: Aprovada a construção de uma residência universitária com 786 camas, com mensalidades a partir de 94 euros, reforçando o acesso ao ensino superior em regiões periféricas.\n\n2. **Resolução de falhas no abastecimento de água em Almada**: O presidente da Câmara Municipal de Almada anunciou a resolução das falhas no sistema de abastecimento de água, melhorando a qualidade de vida dos munícipes.\n\n3. **Aprovação do projeto de plantação de tangerinas em Alcácer do Sal**: Foi aprovado o projeto reformulado de plantação de tangerinas, promovendo a diversificação agrícola e o desenvolvimento económico local.\n\n4. **Instalação de sistema de videovigilância em Mangualde**: A Câmara Municipal de Mangualde instalou um sistema de videovigilância na cidade, reforçando a segurança pública.\n\n5. **Publicação do Mapa Verde das Renováveis**: O Mapa Verde das Renováveis foi finalizado e submetido ao Conselho de Ministros, facilitando a identificação de potenciais investimentos em energias renováveis.\n\n6. **Investimento num resort turístico no interior**: Um projeto de resort turístico no interior do país, com um investimento de 3 milhões de euros, foi aprovado, visando dinamizar",
+   "n": 14,
+   "pct": 61,
+   "lado": "positivas"
+  },
+  "2026-08-22|Educação, Ciência e Inovação|+": {
+   "texto": "No dia 22 de agosto de 2026, registou-se um elevado número de colocações no Ensino Superior, com mais de 1.600 alunos carenciados beneficiando do contingente prioritário, evidenciando a eficácia de medidas de apoio. Observa-se um aumento significativo na procura por cursos de formação de professores, com 97% das vagas ocupadas na primeira fase, refletindo um renovado interesse na profissão docente. Adicionalmente, a Universidade do Porto destacou-se com a Engenharia Aeroespacial a registar a média mais alta de acesso ao Ensino Superior, 19,5 valores, e a Universidade do Minho com vagas esgotadas em novas licenciaturas duplas, demonstrando a qualidade e atratividade da oferta formativa. O tema dominante é o sucesso no acesso ao Ensino Superior, com um aumento de colocações e resultados notáveis.",
+   "n": 25,
    "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-12|Economia e Coesão Territorial|+": {
-   "texto": "No âmbito da economia e coesão territorial, o Governo definiu máximos de venda de produtos apícolas, visando a regulação do mercado e a proteção dos produtores. Paralelamente, o Fundo Soberano da Noruega atingiu um volume de ativos recorde, superando os 2 biliões de euros, e registou um lucro semestral de 159,6 mil milhões de euros. Adicionalmente, o setor do turismo em Cabo Verde registou um clima económico superior ao de 2025, e o mercado de trabalho do setor tem vindo a expandir-se, com recrutamento ao longo de todo o ano. A nível local, a reabilitação de infraestruturas, como o posto da GNR no Cartaxo por 449 mil euros, demonstra o investimento na coesão territorial.",
-   "n": 17,
-   "pct": 55,
-   "lado": "positivas"
-  },
-  "2026-08-13|Cultura, Juventude e Desporto|+": {
-   "texto": "No domínio da cultura e do desporto, o dia foi marcado por reconhecimentos atléticos e iniciativas educativas. A nadadora Sara Curtis estabeleceu um novo recorde mundial nos 50 metros costas, enquanto Fatumata Diallo conquistou um bronze nos 400 metros barreiras nos Europeus de Atletismo, sendo este último reconhecimento reiterado pelo Público e pelo Observador. Adicionalmente, estudantes de Portugal e da Estónia participaram num voo parabólico simulando uma viagem espacial, no âmbito do programa Astronauta por um Dia, com partida de Santa Maria. O único acontecimento de natureza cultural foi a estreia em Portugal de um filme protagonizado por uma atriz travesti brasileira, gerando um sentimento de orgulho nacional.",
-   "n": 12,
-   "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-22|Infraestruturas e Habitação|+": {
-   "texto": "O Passe Ferroviário Verde foi implementado nas linhas de Guimarães e Braga em setembro, facilitando o acesso ferroviário integrado para passageiros. A GPIAAF formalizou e Carris e IMT aceitaram as suas recomendações de segurança, reforçando a segurança ferroviária nacional. Adicionalmente, a cidade de Seul promoveu a restauração de uma antiga estação ferroviária na fronteira com a Coreia do Norte, um ato de reconciliação diplomática e patrimonial. O tema dominante é a melhoria da segurança ferroviária e a promoção da cooperação internacional.",
-   "n": 4,
-   "pct": 67,
    "lado": "positivas"
   }
  }
