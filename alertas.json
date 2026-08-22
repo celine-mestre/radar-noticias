@@ -1,22 +1,22 @@
 {
- "atualizado": "2026-08-22 16:25",
+ "atualizado": "2026-08-22 17:37",
  "dia": "2026-08-22",
- "corte": "16:25",
+ "corte": "17:37",
  "dias_base": 18,
- "regra": "Tempestade quando a contagem do dia, até às 16:25, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 18 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 17:37, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 19 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
-  "publicacoes_de_referencia": 18
+  "publicacoes_de_referencia": 19
  },
  "tempestades": [
   {
    "area": "Educação, Ciência e Inovação",
-   "hoje": 39,
-   "mediana": 17.5,
-   "limiar": 32.3,
-   "excesso": 21.5,
-   "variacao_pct": 123,
+   "hoje": 43,
+   "mediana": 22.5,
+   "limiar": 38.8,
+   "excesso": 20.5,
+   "variacao_pct": 91,
    "dias_base": 18,
    "tempestade": true
   }
@@ -24,21 +24,21 @@
  "momentum": [
   {
    "area": "Educação, Ciência e Inovação",
-   "hoje": 39,
-   "mediana": 17.5,
-   "limiar": 32.3,
-   "excesso": 21.5,
-   "variacao_pct": 123,
+   "hoje": 43,
+   "mediana": 22.5,
+   "limiar": 38.8,
+   "excesso": 20.5,
+   "variacao_pct": 91,
    "dias_base": 18,
    "tempestade": true
   },
   {
    "area": "Presidência",
-   "hoje": 12,
-   "mediana": 11.0,
-   "limiar": 22.9,
-   "excesso": 1.0,
-   "variacao_pct": 9,
+   "hoje": 17,
+   "mediana": 12.5,
+   "limiar": 24.4,
+   "excesso": 4.5,
+   "variacao_pct": 36,
    "dias_base": 18,
    "tempestade": false
   },
@@ -120,65 +120,79 @@
   {
    "data": "2026-08-17",
    "area": "Infraestruturas e Habitação",
-   "hoje": 26,
-   "mediana": 14,
-   "limiar": 25.9
+   "hoje": 28,
+   "mediana": 15,
+   "limiar": 26.9
+  },
+  {
+   "data": "2026-08-18",
+   "area": "Cultura, Juventude e Desporto",
+   "hoje": 49,
+   "mediana": 28.0,
+   "limiar": 45.8
   },
   {
    "data": "2026-08-18",
    "area": "Finanças",
-   "hoje": 26,
+   "hoje": 28,
    "mediana": 11.0,
-   "limiar": 24.3
+   "limiar": 27.3
   },
   {
    "data": "2026-08-18",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 59,
-   "mediana": 18.5,
-   "limiar": 37.8
+   "hoje": 62,
+   "mediana": 19.5,
+   "limiar": 40.3
   },
   {
    "data": "2026-08-19",
    "area": "Justiça",
-   "hoje": 45,
-   "mediana": 30,
-   "limiar": 41.9
+   "hoje": 49,
+   "mediana": 31,
+   "limiar": 45.8
   },
   {
    "data": "2026-08-19",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 54,
-   "mediana": 19,
-   "limiar": 39.8
+   "hoje": 58,
+   "mediana": 20,
+   "limiar": 46.7
+  },
+  {
+   "data": "2026-08-20",
+   "area": "Infraestruturas e Habitação",
+   "hoje": 30,
+   "mediana": 16.5,
+   "limiar": 26.9
   },
   {
    "data": "2026-08-20",
    "area": "Presidência",
-   "hoje": 28,
-   "mediana": 13.0,
-   "limiar": 23.4
+   "hoje": 31,
+   "mediana": 15.5,
+   "limiar": 28.8
   },
   {
    "data": "2026-08-20",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 69,
-   "mediana": 21.0,
-   "limiar": 46.2
+   "hoje": 73,
+   "mediana": 21.5,
+   "limiar": 51.2
   },
   {
    "data": "2026-08-21",
-   "area": "Agricultura e Mar",
-   "hoje": 29,
-   "mediana": 18,
-   "limiar": 26.9
+   "area": "Administração Interna",
+   "hoje": 46,
+   "mediana": 30,
+   "limiar": 44.8
   },
   {
    "data": "2026-08-22",
    "area": "Educação, Ciência e Inovação",
-   "hoje": 39,
-   "mediana": 17.5,
-   "limiar": 32.3
+   "hoje": 43,
+   "mediana": 22.5,
+   "limiar": 38.8
   }
  ]
 }
