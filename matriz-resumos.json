@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-22 16:23",
+ "gerado": "2026-08-22 18:06",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -145,18 +145,6 @@
    "pct": 80,
    "lado": "negativas"
   },
-  "2026-08-22|Defesa Nacional": {
-   "texto": "No dia 22 de agosto de 2026, registaram-se múltiplos incidentes de natureza militar e de segurança na área da Defesa Nacional. Destacam-se ataques com mísseis contra Kiev e o sul da Ucrânia, que resultaram em cinco mortes, atribuídos a Rússia, Coreia do Norte e grupos não identificados. Adicionalmente, verificou-se a demissão de dirigentes de um jornal militar do Pentágono por insubordinação e um acidente fatal envolvendo dois soldados durante uma missão de ajuda. A cobertura mediática também abordou a proibição de transmissão de um programa infantil russo pela Ucrânia, justificada como ameaça à segurança nacional.",
-   "n": 11,
-   "pct": 76,
-   "lado": "negativas"
-  },
-  "2026-08-22|Administração Interna": {
-   "texto": "No dia 22 de agosto de 2026, a cobertura mediática da área da Administração Interna revelou um aumento de corridas ilegais, com a GNR a apreender oito veículos modificados diariamente. Adicionalmente, foi noticiado um excesso de mortalidade associado ao calor extremo na Europa, embora este fenómeno não esteja diretamente relacionado com a área governativa. Contudo, a informação disponível não permite identificar outros acontecimentos concretos específicos da área da Administração Interna para além destas ocorrências. O tema dominante da cobertura negativa, neste dia, foi o aumento de atividades ilícitas relacionadas com o trânsito.",
-   "n": 4,
-   "pct": 75,
-   "lado": "negativas"
-  },
   "2026-08-14|Cultura, Juventude e Desporto|+": {
    "texto": "No dia 14 de agosto de 2026, o atletismo português destacou-se nos Europeus de Natação, com a qualificação de Pedro Buaró e Isaac Nader para as meias-finais e de Delvis Santos para a final dos 200 metros, bem como a conquista de um bronze pelo judoca paralímpico Djibrilo Iafa. Paralelamente, Camila Rebelo melhorou o recorde nacional nos 100 metros costas, assegurando a presença na final. O tema dominante foi o desporto, com eventos de alto rendimento e a valorização da proteção de menores em casos sensíveis. Adicionalmente, a Polícia brasileira recuperou obras de Henri Matisse roubadas em dezembro, e o ICNF sublinhou a compatibilização entre desporto e natureza.",
    "n": 13,
@@ -197,6 +185,12 @@
    "texto": "No domínio da cultura e do desporto, o dia foi marcado por reconhecimentos atléticos e iniciativas educativas. A nadadora Sara Curtis estabeleceu um novo recorde mundial nos 50 metros costas, enquanto Fatumata Diallo conquistou um bronze nos 400 metros barreiras nos Europeus de Atletismo, sendo este último reconhecimento reiterado pelo Público e pelo Observador. Adicionalmente, estudantes de Portugal e da Estónia participaram num voo parabólico simulando uma viagem espacial, no âmbito do programa Astronauta por um Dia, com partida de Santa Maria. O único acontecimento de natureza cultural foi a estreia em Portugal de um filme protagonizado por uma atriz travesti brasileira, gerando um sentimento de orgulho nacional.",
    "n": 12,
    "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-22|Infraestruturas e Habitação|+": {
+   "texto": "O Passe Ferroviário Verde foi implementado nas linhas de Guimarães e Braga em setembro, facilitando o acesso ferroviário integrado para passageiros. A GPIAAF formalizou e Carris e IMT aceitaram as suas recomendações de segurança, reforçando a segurança ferroviária nacional. Adicionalmente, a cidade de Seul promoveu a restauração de uma antiga estação ferroviária na fronteira com a Coreia do Norte, um ato de reconciliação diplomática e patrimonial. O tema dominante é a melhoria da segurança ferroviária e a promoção da cooperação internacional.",
+   "n": 4,
+   "pct": 67,
    "lado": "positivas"
   }
  }
