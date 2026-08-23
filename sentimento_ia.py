@@ -558,14 +558,38 @@ def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias,
             pass
 
     limite = (agora_lisboa() - timedelta(days=dias)).strftime("%Y-%m-%d")
+    hoje_str = agora_lisboa().strftime("%Y-%m-%d")
+    # UMA RÉGUA SÓ PARA O TOTAL DO DIA. O gráfico de barras do volume conta
+    # notícias distintas a partir do ARQUIVO MENSAL, já limpo de endereços
+    # duplicados (via Google Notícias); o corpus de trabalho de onde este
+    # contador lê ainda os carrega. Sempre que uma corrida do sentimento
+    # reescrevia os dias da janela, o total saía por uma régua diferente da do
+    # gráfico — e as duas somas do painel desencontravam-se. Regra definitiva:
+    # o total de um dia FECHADO pertence ao reconstruir_series (a régua do
+    # mensal, a mesma do gráfico) e preserva-se aqui; este contador só calcula
+    # o total do DIA CORRENTE, que mais ninguém escreve, e fá-lo com a mesma
+    # fusão de identidades do reconstruir (ligação OU título+fonte), para o
+    # desvio de hoje ser o menor possível até o dia fechar.
+    totais_fechados = {d.get("data"): d.get("total")
+                       for d in serie["dias"]
+                       if d.get("data") and d.get("total")}
     por_dia = {}
-    # Além das áreas, um bloco "total" por dia com as notícias DISTINTAS: uma
-    # peça que satisfaz três áreas conta em cada uma delas, pelo que somar as
-    # áreas dá marcações e inflacionava a distribuição do painel. A identidade
-    # é título+fonte, a mesma do arquivo e do reconstruir_series.py — sem este
-    # bloco, os dias que o sentimento reescreve ficavam noutra base que os dias
-    # fechados pelo reconstruir, e o mesmo gráfico misturava as duas contagens.
-    distintas = {}
+    pai = {}
+
+    def raiz(x):
+        pai.setdefault(x, x)
+        while pai[x] != x:
+            pai[x] = pai[pai[x]]
+            x = pai[x]
+        return x
+
+    def unir(a, b):
+        ra, rb = raiz(a), raiz(b)
+        if ra != rb:
+            pai[rb] = ra
+
+    ligacoes_por_no = {}
+    dia_do_no = {}
     for n in noticias:
         dia = (n.get("data") or "")[:10]
         area = n.get("area")
@@ -583,21 +607,53 @@ def atualizar_serie(caminho, noticias, avaliacoes, origem_da_fonte, dias,
             registo["avaliadas"] += 1
             registo[avaliacao["s"]] += 1
 
-        chave = ((n.get("titulo") or "").strip().lower(),
-                 (n.get("fonte") or n.get("dominio") or "").strip().lower())
-        distintas.setdefault(dia, {})[chave] = (
-            avaliacao.get("s") if avaliacao and avaliacao.get("s") in VALORES else None)
+        # dois registos são o mesmo artigo se partilharem a ligação OU o par
+        # título+fonte — a mesma junção do reconstruir_series
+        no_l = (dia, "l", n.get("ligacao") or "")
+        no_t = (dia, "t", (n.get("titulo") or "").strip().lower(),
+                (n.get("fonte") or n.get("dominio") or "").strip().lower())
+        if n.get("ligacao"):
+            unir(no_l, no_t)
+            alvo = no_l
+        else:
+            alvo = no_t
+        r = raiz(alvo)
+        dia_do_no[r] = dia
+        if n.get("ligacao"):
+            ligacoes_por_no.setdefault(raiz(alvo), set()).add(n["ligacao"])
 
     recontados = set(por_dia)
     serie["dias"] = [d for d in serie["dias"] if d.get("data") not in recontados]
+
+    # tons por artigo distinto (raiz da união), por ordem fixa das ligações,
+    # para a série não mudar entre execuções sem os dados terem mudado
+    totais_calc = {}
+    raizes = {}
+    for no in list(pai):
+        raizes.setdefault(raiz(no), None)
+    for r in raizes:
+        dia = dia_do_no.get(r) or r[0]
+        total = totais_calc.setdefault(dia, {
+            "nacionais": 0, "avaliadas": 0,
+            "positivo": 0, "neutro": 0, "negativo": 0})
+        total["nacionais"] += 1
+        tom = None
+        for lig in sorted(ligacoes_por_no.get(r, ())):
+            v = avaliacoes.get(lig)
+            if v and v.get("s") in VALORES:
+                tom = v["s"]
+                break
+        if tom:
+            total["avaliadas"] += 1
+            total[tom] += 1
+
     for dia, areas in por_dia.items():
-        total = {"nacionais": 0, "avaliadas": 0,
-                 "positivo": 0, "neutro": 0, "negativo": 0}
-        for tom in distintas.get(dia, {}).values():
-            total["nacionais"] += 1
-            if tom:
-                total["avaliadas"] += 1
-                total[tom] += 1
+        if dia != hoje_str and totais_fechados.get(dia):
+            total = totais_fechados[dia]
+        else:
+            total = totais_calc.get(dia, {
+                "nacionais": 0, "avaliadas": 0,
+                "positivo": 0, "neutro": 0, "negativo": 0})
         serie["dias"].append({"data": dia, "total": total, "areas": areas})
     serie["dias"].sort(key=lambda d: d.get("data", ""))
     serie["atualizado"] = agora_lisboa().strftime("%Y-%m-%d %H:%M")
