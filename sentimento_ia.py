@@ -197,6 +197,65 @@ def caminho_sentimento_mensal(pasta, mes):
     return os.path.join(pasta, f"{mes}.jsonl.gz")
 
 
+def sincronizar_versoes_arquivo(pasta, avaliacoes):
+    """Leva ao arquivo permanente as marcas de versão que só existem no
+    ficheiro de trabalho.
+
+    O arquivo é escrito em acréscimo e nunca reescrito, pelo que avaliações
+    guardadas antes de a marca existir ficaram lá sem ela. Ao serem relidas
+    pareciam antigas e voltavam à fila — refeitas vezes sem conta, sem nunca
+    convergir. Esta passagem reescreve os meses uma única vez, acrescentando a
+    versão às entradas que a têm no ficheiro de trabalho. Não altera nenhuma
+    classificação: só a etiqueta que diz com que regras foi feita.
+    """
+    import gzip
+    if not os.path.isdir(pasta):
+        return 0
+    marcadas = 0
+    for caminho in sorted(glob.glob(os.path.join(pasta, "*.jsonl.gz"))):
+        # DEDUPLICAR pelo caminho. O arquivo é escrito em acréscimo, pelo que
+        # uma notícia reavaliada deixa lá as duas versões — e, ao fim de
+        # algumas reavaliações, o ficheiro tem várias vezes o tamanho do que
+        # representa. A leitura já ficava com a última de cada ligação, que é
+        # a boa; aqui gravamos só essa e o ficheiro volta ao tamanho real.
+        ultimo = {}
+        ordem = []
+        linhas = 0
+        with gzip.open(caminho, "rt", encoding="utf-8") as origem:
+            for linha in origem:
+                try:
+                    r = json.loads(linha)
+                except json.JSONDecodeError:
+                    continue
+                lig = r.get("lig")
+                if not lig:
+                    continue
+                linhas += 1
+                if lig not in ultimo:
+                    ordem.append(lig)
+                ultimo[lig] = r
+        registos = []
+        for lig in ordem:
+            r = ultimo[lig]
+            conhecida = avaliacoes.get(lig)
+            if conhecida and conhecida.get("v") and not r.get("v"):
+                r["v"] = conhecida["v"]
+                marcadas += 1
+            registos.append(r)
+        if linhas > len(registos):
+            print(f"  {os.path.basename(caminho)}: {linhas} linhas → "
+                  f"{len(registos)} (retirados {linhas - len(registos)} repetidos)")
+        temporario = caminho + ".novo"
+        with gzip.open(temporario, "wt", encoding="utf-8") as destino:
+            for r in registos:
+                destino.write(json.dumps(r, ensure_ascii=False) + "\n")
+        os.replace(temporario, caminho)
+    if marcadas:
+        print(f"arquivo permanente: {marcadas} avaliações passaram a levar a "
+              f"marca da versão com que foram feitas")
+    return marcadas
+
+
 def carregar_sentimento_arquivado(pasta):
     """Todas as avaliações já feitas, de sempre, do arquivo permanente.
 
@@ -222,6 +281,10 @@ def carregar_sentimento_arquivado(pasta):
                     lig = r.get("lig")
                     if lig and r.get("s") in VALORES:
                         arquivadas[lig] = {"s": r["s"], "d": r.get("d", "")}
+                        # A versão vem com ela: é o que distingue uma avaliação
+                        # já refeita de uma que ainda espera a sua vez.
+                        if r.get("v"):
+                            arquivadas[lig]["v"] = r["v"]
         except OSError:
             continue
     return arquivadas
@@ -243,8 +306,15 @@ def arquivar_sentimento(pasta, avaliacoes, ja_arquivadas):
         mes = (v.get("d") or "")[:7]
         if len(mes) != 7:
             continue
-        por_mes.setdefault(mes, []).append(
-            {"lig": lig, "s": v["s"], "d": v.get("d", "")})
+        registo = {"lig": lig, "s": v["s"], "d": v.get("d", "")}
+        # A VERSÃO das regras vai para o arquivo permanente. Sem ela, uma
+        # avaliação recente perdia a marca ao ser arquivada e, se o dia
+        # voltasse a ser repescado, reaparecia como se fosse antiga — a ser
+        # refeita outra vez, indefinidamente. A marca só serve para alguma
+        # coisa se sobreviver ao arquivo.
+        if v.get("v"):
+            registo["v"] = v["v"]
+        por_mes.setdefault(mes, []).append(registo)
     total = 0
     for mes, registos in sorted(por_mes.items()):
         with gzip.open(caminho_sentimento_mensal(pasta, mes), "at",
@@ -777,6 +847,9 @@ def principal():
         print(f"marcação: {marcadas} avaliações de {args.marcar_versao_desde} em "
               f"diante passam a contar como versão {INSTRUCAO_VERSAO} "
               f"(não foram reavaliadas — só marcadas)")
+        # E leva-se a marca ao arquivo permanente, senão ela perde-se assim que
+        # a avaliação sair da janela de trabalho.
+        sincronizar_versoes_arquivo(args.arquivo_sentimento, avaliacoes)
 
     # Reavaliação retroativa: quando as REGRAS mudam, o que já foi classificado
     # continua a valer as regras antigas — e uma notícia avaliada nunca volta à
