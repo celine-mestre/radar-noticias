@@ -417,6 +417,11 @@ table.mtz .mtz-vazia{color:var(--texto-ligeiro);background:none}
 table.mtz td.mtz-forte{color:#fff}
 /* Fronteira de semana, o mesmo ritmo dos gráficos */
 table.mtz .mtz-semana{border-left:1.5px dashed var(--texto-ligeiro)}
+/* A coluna do período em foco: molduras nos lados e um fundo muito ténue, para
+   se destacar sem competir com a escala de cor, que é o que a matriz mede. */
+table.mtz .mtz-foco,table.mtz .mtz-foco-cab{
+  box-shadow:inset 1px 0 0 var(--azul,#1F4E79),inset -1px 0 0 var(--azul,#1F4E79)}
+table.mtz .mtz-foco-cab{font-weight:700;color:var(--azul,#1F4E79)}
 /* Célula com resumo do Amália: um canto dobrado, discreto, para se saber onde
    vale a pena parar o cursor — um tooltip que ninguém adivinha não existe. */
 table.mtz td.mtz-com-resumo{position:relative;cursor:pointer}
@@ -1716,7 +1721,12 @@ function blocoMatrizTom(linhas, pares, areas){
     /* No telemóvel não há cursor: o tooltip nativo não abre ao toque, e um
        resumo que só existe para quem tem rato não existe. A célula com resumo
        passa a ser um botão que abre o texto por baixo da matriz. */
-    return `<td class="${claro ? "" : "mtz-forte"} ${sem}${resumo ? " mtz-com-resumo" : ""}"
+    /* A coluna do período em foco fica realçada em vez de a matriz se reduzir
+       a ela. Filtrar deixaria uma coluna só — e uma matriz de uma coluna já não
+       é uma matriz: o que aqui se lê é justamente a diferença entre os dias.
+       Assim o clique tem efeito visível sem destruir a comparação. */
+    const emFoco = diaEscolhido && k === diaEscolhido;
+    return `<td class="${claro ? "" : "mtz-forte"} ${sem}${resumo ? " mtz-com-resumo" : ""}${emFoco ? " mtz-foco" : ""}"
       ${resumo ? `data-resumo="${textoAtributo(resumo)}" data-cab="${textoAtributo(base)}"
         tabindex="0" role="button"` : ""}
       style="background:color-mix(in srgb, ${corBase} ${Math.round(i * 85)}%, transparent)"
@@ -1725,7 +1735,8 @@ function blocoMatrizTom(linhas, pares, areas){
 
   return `
     <div class="bloco">
-      <h2>Tom por área e período <span class="h2-foco">· % de notícias ${ladoTom}</span></h2>
+      <h2>Tom por área e período <span class="h2-foco">· % de notícias ${ladoTom}${
+        diaEscolhido ? ` · ${descreverPeriodo(diaEscolhido)} em destaque` : ""}</span></h2>
       <div class="tp-ordem" id="ladoTom">
         <span class="tp-ordem-rot">Mostrar</span>
         <button data-lado="negativas"${ladoTom === "negativas" ? ' class="ativo"' : ""}>negativas</button>
@@ -1742,7 +1753,8 @@ function blocoMatrizTom(linhas, pares, areas){
       <div class="mtz-rolo">
         <table class="mtz">
           <tr><th></th>${chaves.map((k, i) =>
-            `<th class="${semanaNova(k, i)}" title="${descreverPeriodo(k)}">${rotuloCurto(k)}</th>`).join("")}</tr>
+            `<th class="${semanaNova(k, i)}${diaEscolhido && k === diaEscolhido ? " mtz-foco-cab" : ""}"
+              title="${descreverPeriodo(k)}">${rotuloCurto(k)}</th>`).join("")}</tr>
           ${comDados.map(n => `<tr>
             <th class="mtz-lin" title="${n}">${n}</th>
             ${chaves.map((k, i) => celula(n, k, semanaNova(k, i))).join("")}
@@ -2311,7 +2323,7 @@ function blocoPesoPublicacoes(linhas){
 
   return `
     <div class="bloco">
-      <h2>De onde vêm as notícias <span class="h2-foco">· peso de cada publicação</span></h2>
+      <h2>De onde vêm as notícias <span class="h2-foco">· peso de cada publicação</span>${sufixoFoco()}</h2>
       <div class="mtz-rolo">
         <table class="pp">
           <tr><th></th><th>Publicação</th><th></th><th class="num">Marcações</th>
