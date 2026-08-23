@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-23 15:28",
+ "gerado": "2026-08-23 15:43",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -177,12 +177,6 @@
    "pct": 77,
    "lado": "negativas"
   },
-  "2026-08-23|Trabalho, Solidariedade e Segurança Social": {
-   "texto": "No dia 23 de agosto de 2026, verificou-se uma greve de trabalhadores da REN Atlântico, com adesão total, que se prolongou até terça-feira, afetando as operações do terminal de GNL de Sines. Adicionalmente, registaram-se exclusões de estudantes carenciados do acesso ao ensino superior e a privação de pensões a uma idosa durante nove meses, decorrente de uma falha informática no sistema da Segurança Social. O tema dominante é a instabilidade laboral e a fragilidade dos serviços sociais, evidenciados por estes incidentes.",
-   "n": 13,
-   "pct": 83,
-   "lado": "negativas"
-  },
   "2026-08-05|Economia e Coesão Territorial|+": {
    "texto": "No dia 2026-08-05, foram registados diversos acontecimentos relevantes nas áreas da economia e coesão territorial. Em Barcelos, foi aprovado um concurso público para a construção de uma nova Estação de Tratamento de Águas Residuais (ETAR) no valor de 35 milhões de euros. O Governo anunciou uma nova linha de financiamento através do Banco de Fomento, no valor de 1.500 milhões de euros, destinada a empresas. A ESA abriu um novo ciclo de financiamento para empresas portuguesas do setor espacial, e a Neuraspace recebeu um investimento de 15,6 milhões de euros, além de conversações com a Força Aérea para instalação de um radar. Adicionalmente, foram aprovados apoios à fertilidade na Madeira para 411 utentes, e projetos de valorização de biorresíduos através do programa Ambilital, com um investimento de 9 milhões de euros.",
    "n": 27,
@@ -218,6 +212,18 @@
    "n": 7,
    "pct": 58,
    "lado": "positivas"
+  },
+  "2026-08-23|Justiça": {
+   "texto": "No dia 23 de agosto de 2026, foram noticiados dois eventos principais na área da justiça. Em primeiro lugar, um ex-ministro da Defesa ucraniano, Fedorov, afirmou que o Presidente ucraniano, Volodymyr Zelensky, deveria responder por casos de corrupção, reiterando a acusação em vários órgãos de comunicação social. Em paralelo, o Presidente do Tribunal Penal Internacional apelou ao apoio do Japão face a sanções impostas pelos Estados Unidos, numa situação que se relaciona com a ameaça de desmantelamento institucional. Adicionalmente, registou-se uma detenção preventiva de três de oito indivíduos envolvidos numa investigação na vila açoriana de Rabo de Peixe, enquanto a justiça peruana renovou o mandado de captura contra uma antiga primeira-ministra exilada no México. O tema dominante, embora não explicitamente declarado, é a instabilidade política e a crise institucional em diferentes jurisdições.",
+   "n": 10,
+   "pct": 77,
+   "lado": "negativas"
+  },
+  "2026-08-23|Trabalho, Solidariedade e Segurança Social": {
+   "texto": "No dia 23 de agosto de 2026, verificou-se uma greve com adesão total (100%) no terminal de GNL de Sines, afetando a atividade do setor energético. Paralelamente, trabalhadores da REN Atlântico, incluindo o terminal de gás em Sines, iniciaram uma greve que se prolongou até terça-feira, motivada por exigências de pré-reforma. Adicionalmente, foram reportados erros administrativos que resultaram na privação de pensões a beneficiários idosos, incluindo um caso de uma mulher de 95 anos sem acesso a prestações sociais durante nove meses. O tema dominante foi a instabilidade laboral e falhas na gestão de serviços sociais.",
+   "n": 16,
+   "pct": 75,
+   "lado": "negativas"
   }
  }
 }
