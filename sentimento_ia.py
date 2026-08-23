@@ -314,6 +314,11 @@ def arquivar_sentimento(pasta, avaliacoes, ja_arquivadas):
         # coisa se sobreviver ao arquivo.
         if v.get("v"):
             registo["v"] = v["v"]
+        # A marca HUMANA também sobrevive ao arquivo: uma correção da leitura
+        # de validação que a perdesse voltaria a ser tratada como avaliação do
+        # modelo — e uma reavaliação futura podia desfazê-la.
+        if v.get("h"):
+            registo["h"] = 1
         por_mes.setdefault(mes, []).append(registo)
     total = 0
     for mes, registos in sorted(por_mes.items()):
@@ -898,7 +903,10 @@ def principal():
             disponível nunca terminaria — cada tentativa apagaria a anterior."""
             return ((v.get("d") or "") >= desde
                     and lig in disponiveis
-                    and v.get("v") != INSTRUCAO_VERSAO)
+                    and v.get("v") != INSTRUCAO_VERSAO
+                    # As correções humanas são a palavra final da validação:
+                    # nenhuma reavaliação, presente ou futura, as põe em causa.
+                    and not v.get("h"))
 
         # As contas fazem-se sobre TUDO o que se sabe — janela de trabalho MAIS
         # arquivo permanente. Era aqui que o relatório mentia: as avaliações
@@ -941,6 +949,43 @@ def principal():
     # sabe: a janela de trabalho mais o arquivo de sempre.
     conhecidas = dict(arquivadas)
     conhecidas.update(avaliacoes)
+
+    # CORREÇÕES HUMANAS. O rótulo «em validação» promete leitura humana; este
+    # é o sítio onde ela tem a palavra final. O correcoes.json guarda pares
+    # {ligação: tom} decididos por quem valida; aplicam-se em cada passagem,
+    # ganham a marca «h», vão para o arquivo permanente (onde a última linha
+    # vence) e nenhum refazer as volta a pôr na fila. Editar o ficheiro de
+    # trabalho à mão não serviria: a recolha seguinte repunha o arquivo.
+    correcoes = {}
+    if os.path.exists("correcoes.json"):
+        try:
+            with open("correcoes.json", encoding="utf-8") as origem:
+                correcoes = json.load(origem).get("correcoes", {})
+        except (json.JSONDecodeError, OSError):
+            print("aviso: correcoes.json ilegível — correções ignoradas")
+    if correcoes:
+        datas_corpus = {ligacao(n): (n.get("data") or "")[:10]
+                        for n in noticias if ligacao(n)}
+        aplicadas = 0
+        for lig, tom in correcoes.items():
+            if tom not in VALORES:
+                print(f"aviso: correção com tom desconhecido «{tom}» — ignorada")
+                continue
+            atual = conhecidas.get(lig)
+            if atual and atual.get("s") == tom and atual.get("h"):
+                continue  # já aplicada numa passagem anterior
+            dia = (atual or {}).get("d") or datas_corpus.get(lig, "")
+            if not dia:
+                continue  # sem data não há onde a pendurar; fica para quando houver
+            valor = {"s": tom, "d": dia, "v": INSTRUCAO_VERSAO, "h": 1}
+            avaliacoes[lig] = valor
+            conhecidas[lig] = valor
+            # Sai do retrato do arquivo em memória para que o arquivar a
+            # acrescente de novo — no ficheiro em disco, a última linha vence.
+            arquivadas.pop(lig, None)
+            aplicadas += 1
+        if aplicadas:
+            print(f"correções humanas: {aplicadas} aplicadas de correcoes.json")
 
     if args.harmonizar:
         harmonizar(args, sintese, repo, ficheiro, noticias, avaliacoes,
