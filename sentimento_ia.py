@@ -1072,6 +1072,51 @@ def principal():
         if (indice + 1) % 2 == 0:
             gravar()
 
+    # SEGUNDA VOLTA, UMA A UMA. Com temperatura zero o modelo é determinístico:
+    # ao mesmo lote responde sempre o mesmo — e quando essa resposta traz a
+    # contagem errada de classificações (11 tons para 10 notícias), repetir a
+    # corrida repete o erro, porque as sobras se realinham nos mesmos lotes.
+    # A saída é mudar a pergunta: o que ficou por ler volta ao modelo notícia a
+    # notícia, onde uma contagem errada é impossível — uma pergunta, um tom.
+    def ainda_por_refazer(n):
+        for lig_g in (n.get("_grupo") or [ligacao(n)]):
+            v = avaliacoes.get(lig_g)
+            if v is not None and v.get("v") == INSTRUCAO_VERSAO:
+                return False
+        return True
+    resistentes = [n for n in fila if ainda_por_refazer(n)]
+    if resistentes:
+        print(f"  repergunta individual: {len(resistentes)} notícias cujos "
+              f"lotes vieram com contagens erradas")
+        for j, n in enumerate(resistentes, start=1):
+            try:
+                if args.local:
+                    resposta = perguntar_local(sintese, [n], repo, ficheiro)
+                else:
+                    resposta = perguntar_servico(args.endereco, chave, [n],
+                                                 sintese.MODELO)
+            except Exception as erro:                          # noqa: BLE001
+                falhas += 1
+                print(f"    {j}/{len(resistentes)}: falhou "
+                      f"({type(erro).__name__}) — fica para a próxima")
+                continue
+            lidas = interpretar(resposta, 1)
+            if 1 in lidas:
+                valor = {"s": lidas[1], "d": (n.get("data") or "")[:10],
+                         "v": INSTRUCAO_VERSAO}
+                for lig_g in n.get("_grupo") or [ligacao(n)]:
+                    avaliacoes[lig_g] = valor
+                    conhecidas[lig_g] = valor
+                    novas += 1
+            else:
+                excerto = " ".join(resposta.split())[:160]
+                print(f"    {j}/{len(resistentes)}: sem leitura — "
+                      f"excerto: «{excerto}»")
+            if j % 20 == 0:
+                gravar()
+                print(f"    …{j}/{len(resistentes)} reperguntadas, "
+                      f"progresso gravado")
+
     gravar()
     print(f"sentimento: {novas} novas avaliações, {falhas} lotes falhados, "
           f"{len(avaliacoes)} no total em {args.saida}")
