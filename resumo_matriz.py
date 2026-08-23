@@ -253,13 +253,25 @@ def principal():
     # não o justifica. Aqui retiram-se os que deixaram de passar o limiar —
     # comparando com a série de sentimento ATUAL, não com a percentagem que foi
     # guardada com o resumo.
-    validas = {chave_resumo(c["data"], c["area"], c["lado"]) for c in celulas}
-    obsoletos = [k for k in resumos if k not in validas]
+    validas = {chave_resumo(c["data"], c["area"], c["lado"]): c["pct"]
+               for c in celulas}
+    # Dois motivos para um resumo sair: a célula deixou de passar o limiar, ou
+    # a percentagem com que o resumo foi escrito já não é a da célula — sinal
+    # de que o tom foi reavaliado e o texto descreve um conjunto de notícias
+    # que mudou. Nos dois casos o resumo é história de outra série; no segundo,
+    # a célula continua válida e volta à fila para receber texto novo. (O n
+    # guardado não entra na comparação: conta os títulos lidos do arquivo, uma
+    # medida legitimamente diferente das avaliadas da série, e compará-los
+    # regeneraria resumos para sempre.)
+    obsoletos = [k for k in resumos
+                 if k not in validas
+                 or (resumos[k].get("pct") is not None
+                     and round(resumos[k]["pct"]) != validas[k])]
     for k in obsoletos:
         del resumos[k]
     if obsoletos:
-        print(f"limpeza: {len(obsoletos)} resumos retirados — as células já não "
-              f"passam o limiar (o tom foi reavaliado)")
+        print(f"limpeza: {len(obsoletos)} resumos retirados — células fora do "
+              f"limiar ou com o tom reavaliado desde que o resumo foi escrito")
 
     feitos = 0
     for c in celulas:
