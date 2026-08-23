@@ -422,6 +422,11 @@ table.mtz .mtz-semana{border-left:1.5px dashed var(--texto-ligeiro)}
 table.mtz .mtz-foco,table.mtz .mtz-foco-cab{
   box-shadow:inset 1px 0 0 var(--azul,#1F4E79),inset -1px 0 0 var(--azul,#1F4E79)}
 table.mtz .mtz-foco-cab{font-weight:700;color:var(--azul,#1F4E79)}
+/* A risca do dia em foco no gráfico comparado: discreta, por trás das linhas
+   das áreas, que são o assunto do quadro. Os pontos, esses, vão à cor de cada
+   área para se ler de imediato o valor de cada uma nesse dia. */
+.cmp-foco-risca{stroke:var(--azul,#1F4E79);stroke-width:1;stroke-dasharray:3 3;opacity:.45}
+.cmp-foco-ponto{stroke:var(--fundo,#fff);stroke-width:1.5}
 /* Célula com resumo do Amália: um canto dobrado, discreto, para se saber onde
    vale a pena parar o cursor — um tooltip que ninguém adivinha não existe. */
 table.mtz td.mtz-com-resumo{position:relative;cursor:pointer}
@@ -1829,8 +1834,20 @@ function linhasComparadas(series, cores, chaves){
       text-anchor="middle">${rotuloCurto(k)}</text>`;
   }).join("") : "";
 
+  /* O dia em foco marcado também aqui. A tabela em baixo já dá os números
+     desse dia; sem uma marca no gráfico, era preciso contar as posições para
+     saber ONDE no desenho ele cai — e é no desenho que se vê se o dia foi um
+     pico, um vale ou nada de especial. */
+  const iFoco = chaves && diaEscolhido ? chaves.indexOf(diaEscolhido) : -1;
+  const marcaFoco = iFoco >= 0 ? `
+    <line class="cmp-foco-risca" x1="${(esq + iFoco * passo).toFixed(1)}" y1="${topo - 4}"
+      x2="${(esq + iFoco * passo).toFixed(1)}" y2="${base}"/>
+    ${series.map((v, s) => `<circle class="cmp-foco-ponto" cx="${(esq + iFoco * passo).toFixed(1)}"
+      cy="${y(v[iFoco] || 0).toFixed(1)}" r="3.5" fill="${cores[s]}"/>`).join("")}` : "";
+
   return `<svg class="cmp-svg" viewBox="0 0 ${L} ${A}">
     ${niveis}
+    ${marcaFoco}
     <line class="eixo" x1="${esq}" y1="${base}" x2="${L - 8}" y2="${base}"/>
     ${etiquetas}
     ${series.map((v, i) => `<path d="${caminho(v)}" fill="none" stroke="${cores[i]}"
