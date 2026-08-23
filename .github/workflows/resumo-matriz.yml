@@ -40,11 +40,19 @@ jobs:
       - name: Ha coberturas marcantes por resumir?
         id: v
         run: |
+          if [ "${{ inputs.encadeado }}" != "true" ]; then
+            # Execucao manual: segue sempre. Sem esta porta, uma correcao ao
+            # script (por exemplo, a limpeza de resumos desatualizados) nunca
+            # chegaria a correr enquanto todas as celulas tivessem resumo -
+            # mesmo que fosse um resumo velho.
+            echo "Execucao manual: segue sempre."
+            echo "seguir=sim" >> "$GITHUB_OUTPUT"; exit 0
+          fi
           python3 - <<'PY'
           import json, os
 
           LIMIAR_NEG, LIMIAR_POS, MINIMO = 75, 50, 8
-          celulas = []
+          celulas = {}
           if os.path.exists("sentimento-serie.json"):
               with open("sentimento-serie.json", encoding="utf-8") as f:
                   for d in json.load(f).get("dias", []):
@@ -52,21 +60,33 @@ jobs:
                           av = c.get("avaliadas", 0)
                           if av < MINIMO:
                               continue
-                          if round(100 * c.get("negativo", 0) / av) >= LIMIAR_NEG:
-                              celulas.append(f"{d.get('data')}|{area}")
-                          if round(100 * c.get("positivo", 0) / av) >= LIMIAR_POS:
-                              celulas.append(f"{d.get('data')}|{area}|+")
+                          pn = round(100 * c.get("negativo", 0) / av)
+                          if pn >= LIMIAR_NEG:
+                              celulas[f"{d.get('data')}|{area}"] = pn
+                          pp = round(100 * c.get("positivo", 0) / av)
+                          if pp >= LIMIAR_POS:
+                              celulas[f"{d.get('data')}|{area}|+"] = pp
           feitos = {}
           if os.path.exists("matriz-resumos.json"):
               with open("matriz-resumos.json", encoding="utf-8") as f:
                   feitos = json.load(f).get("resumos", {})
-          faltam = [c for c in celulas if c not in feitos]
+          # Falta resumo a uma celula em dois casos: nunca o teve, ou tem um
+          # escrito com outra percentagem - sinal de que o tom foi reavaliado
+          # e o texto descreve um conjunto de noticias que entretanto mudou.
+          # E o mesmo criterio da limpeza do resumo_matriz.py: se o porteiro
+          # nao o partilhar, as passagens encadeadas nunca curam resumos
+          # desatualizados, porque "todas as celulas tem resumo".
+          faltam = [c for c, pct in celulas.items()
+                    if c not in feitos
+                    or (feitos[c].get("pct") is not None
+                        and round(feitos[c]["pct"]) != pct)]
 
-          # Só a linha «nome=valor» entra no ficheiro de resultados: o GitHub
-          # rejeita o ficheiro inteiro se lá encontrar outra coisa.
+          # So a linha «nome=valor» entra no ficheiro de resultados: o GitHub
+          # rejeita o ficheiro inteiro se la encontrar outra coisa.
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as saida:
               saida.write(f"seguir={'sim' if faltam else 'nao'}\n")
-          print(f"{len(faltam)} coberturas marcantes por resumir, {len(feitos)} ja feitas")
+          print(f"{len(faltam)} coberturas marcantes por resumir ou "
+                f"desatualizadas, {len(feitos)} ja feitas")
           PY
 
   resumir:
