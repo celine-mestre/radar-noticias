@@ -1706,8 +1706,16 @@ function blocoMatrizTom(linhas, pares, areas){
       ? diasDoPeriodo(k).filter(dd => RESUMOS_TOM[chaveR(dd)]) : [];
     const resumo = dias.map(dd => {
       const r = RESUMOS_TOM[chaveR(dd)];
+      /* O cabeçalho do cartão já mostra a percentagem e as avaliadas VIVAS,
+         lidas da série. Repetir aqui o pct e o n guardados com o resumo punha
+         dois pares de números no mesmo cartão — e como o n guardado conta os
+         títulos que o resumo leu no arquivo (uma medida diferente das
+         avaliadas da série), os pares raramente coincidiam e o cartão parecia
+         contradizer-se. A linha diz agora o que aquilo é de facto: a matéria-
+         prima do resumo. */
+      const rotulo = ladoTom === "negativas" ? "negativos" : "positivos";
       return (dias.length > 1 ? dataCurtaPt(dd) + " · " : "")
-        + `${r.pct}% ${ladoTom} de ${r.n} notícias\n${r.texto}`;
+        + `Resumo elaborado a partir de ${r.n} títulos ${rotulo} do arquivo\n${r.texto}`;
     }).join("\n\n");
     /* Uma medida de cada vez, uma escala de cada vez: do claro ao carregado, a
        acompanhar o valor — vermelho para as negativas, verde para as positivas.
