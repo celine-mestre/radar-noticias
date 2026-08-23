@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-23 14:32",
+ "gerado": "2026-08-23 15:20",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -15,23 +15,6 @@
    "n": 10,
    "pct": 83
   },
-  "2026-08-19|Administração Interna": {
-   "texto": "No dia 19 de agosto de 2026, registaram-se múltiplos incidentes de segurança pública e ocorrências criminais em diversas regiões de Portugal. Destacam-se a ocorrência de incêndios florestais em Torre de Moncorvo, Arouca e Santo Tirso, com quase 1250 operacionais envolvidos, e a queda de uma grua em Belas, resultando na morte de dois trabalhadores. Adicionalmente, verificaram-se detenções por crimes diversos, incluindo tráfico de estupefacientes, rapto, roubo, violação e maus-tratos a pais, bem como apreensões de material pirotécnico ilegal. O tema dominante é a criminalidade e a segurança pública, com particular incidência em ocorrências violentas e infrações relacionadas com a ordem pública.",
-   "n": 42,
-   "pct": 81
-  },
-  "2026-08-15|Presidência": {
-   "texto": "No dia 15 de agosto de 2026, as autoridades marroquinas intercetaram múltiplas tentativas de entrada irregular de migrantes em território espanhol, especificamente na cidade autónoma de Ceuta. A operação, noticiada por diversos meios de comunicação social, resultou na detenção de mais de 100 indivíduos, com relatos de centenas de pessoas envolvidas nas tentativas de travessia. O evento foi caracterizado por um aumento da pressão migratória na fronteira entre Marrocos e Espanha, constituindo um acontecimento recorrente e de impacto significativo.",
-   "n": 6,
-   "pct": 77,
-   "lado": "negativas"
-  },
-  "2026-08-20|Administração Interna": {
-   "texto": "No dia 20 de agosto de 2026, registaram-se incidentes de segurança pública em Rabo de Peixe, nos Açores, relacionados com detenções por tráfico de droga, que motivaram desacatos e agressões contra agentes da PSP, tendo em alguns casos obrigado ao uso de força. Adicionalmente, a PSP efetuou detenções em Lisboa, incluindo um caso de homicídio cometido no Brasil há 17 anos, e um indivíduo apanhado a tentar atravessar a Ponte 25 de Abril numa trotinete elétrica com elevada taxa de álcool. Paralelamente, a GNR reportou um aumento significativo de acidentes com motociclos no primeiro semestre do ano, com um total de mais de três mil acidentes e 52 mortes registadas.",
-   "n": 21,
-   "pct": 76,
-   "lado": "negativas"
-  },
   "2026-08-18|Reforma do Estado|+": {
    "texto": "No âmbito da Reforma do Estado, a implementação de ferramentas de Inteligência Artificial no setor do luxo atingiu uma adesão de 85% dos consumidores, evidenciando a modernização dos serviços públicos e a melhoria da experiência do cidadão. Adicionalmente, a empresa brasileira Darede estabeleceu Lisboa como centro de operações europeu, comprometendo-se a aumentar o quadro de pessoal em mais dez colaboradores. Estes eventos refletem uma tendência de atração de investimento estrangeiro e de reforço da capacidade tecnológica do país. Não obstante, a informação disponível limita-se a estes dois acontecimentos concretos.",
    "n": 2,
@@ -42,30 +25,6 @@
    "texto": "No âmbito da reforma do Estado, o Governo implementou a utilização de inteligência artificial na mediação imobiliária, com efeitos imediatos na eficiência e transparência dos processos. Paralelamente, a Associação Portuguesa de Marketing lançou um detetor de burla digital, reforçando a proteção dos consumidores e a segurança transacional. O Banco Central Europeu, num alerta emitido no contexto da reforma estrutural, considerou o modelo de crescimento europeu \"corroído\" e recomendou uma aposta estratégica na inteligência artificial para a sua revitalização. Estes desenvolvimentos evidenciam um tema dominante de modernização e digitalização dos serviços públicos e da economia.",
    "n": 4,
    "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-21|Defesa Nacional": {
-   "texto": "No dia 21 de agosto de 2026, ocorreram dois eventos distintos na área da Defesa Nacional. Em primeiro lugar, dois militares do Exército faleceram após serem atropelados na autoestrada A1, enquanto prestavam auxílio a um camionista acidentado na Mealhada. Em segundo lugar, os exercícios militares conjuntos com a Coreia do Sul foram antecipadamente interrompidos por ordem do Presidente dos Estados Unidos, Donald Trump, levando a uma conclusão seis dias antes do previsto. Nenhum destes eventos parece estar diretamente relacionado, mas ambos foram noticiados como desenvolvimentos relevantes para a área da Defesa Nacional.",
-   "n": 21,
-   "pct": 92,
-   "lado": "negativas"
-  },
-  "2026-08-21|Presidência": {
-   "texto": "No dia 21 de agosto de 2026, a cobertura noticiosa focou-se em múltiplos acontecimentos relacionados com a imigração, a segurança pública e a política energética. A nível migratório, a tensão em Ceuta, com milhares de migrantes nas ruas e a resposta do governo espanhol, foi um tema central, acompanhado de críticas de organismos europeus e de denúncias de perseguição por associações. No plano interno, a criação de uma nova unidade da PSP foi alvo de acusações de direcionamento contra imigrantes, reiteradas por diversas associações. Paralelamente, a política energética registou alterações com a exclusão de mais de 50 municípios do “mapa verde” de renováveis após consulta pública.",
-   "n": 9,
-   "pct": 75,
-   "lado": "negativas"
-  },
-  "2026-08-05|Economia e Coesão Territorial|+": {
-   "texto": "A 5 de agosto de 2026, o Banco de Fomento lançou uma nova linha de financiamento no valor de 1.500 milhões de euros, destinada a empresas, num esforço para estimular o investimento e o crescimento económico. Adicionalmente, foi divulgado um concurso da Agência Europeia de Defesa no qual uma empresa portuguesa se classificou em quarto lugar entre as melhores a nível europeu, evidenciando a capacidade industrial do país. No âmbito da coesão territorial, foram concedidos apoios à fertilidade a 411 utentes na Madeira, e foram financiados projetos em áreas protegidas com mais de 3 milhões de euros. O tema dominante dos acontecimentos reportados é o apoio ao investimento e ao desenvolvimento económico, tanto a nível interno como internacional.",
-   "n": 13,
-   "pct": 72,
-   "lado": "positivas"
-  },
-  "2026-08-06|Cultura, Juventude e Desporto|+": {
-   "texto": "No âmbito da cultura e do desporto, Nélson Évora, campeão olímpico de atletismo, anunciou o fim da sua carreira aos 42 anos, após uma última competição. No domínio da educação, a Região Autónoma da Madeira investiu 188 mil euros na aquisição de manuais digitais para alunos do ensino básico. No setor da inovação rural, o projeto Rural Innovation Challenges abriu um prazo de dez dias para a apresentação de candidaturas a mais de 20 mil euros em prémios. O espetáculo aéreo com mais de 500 drones sobre o rio Tejo assinala a celebração dos 60 anos da Ponte 25 de Abril, no âmbito das comemorações da infraestrutura.",
-   "n": 8,
-   "pct": 53,
    "lado": "positivas"
   },
   "2026-08-04|Justiça": {
@@ -98,34 +57,10 @@
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-08-14|Economia e Coesão Territorial|+": {
-   "texto": "**Economia e Coesão Territorial – Resumo de Eventos:**\n\nO Estado reintegrou o seu capital na REN, adquirindo 13,7% ao acionista maioritário, num processo conduzido pela Parpública, e anunciou a aprovação de um hotel em Amarante, numa área classificada como reserva agrícola, justificado por interesse público. Paralelamente, foi disponibilizada uma verba de mais de 1,3 milhões de euros para requalificação de equipamentos coletivos e espaços públicos no Alentejo 2030, reforçando o investimento em territórios não urbanos. Adicionalmente, o Governo atribuiu novos equipamentos de intervenção aos bombeiros da Madeira e anunciou um investimento de 44,220 milhões de euros por parte de petrolíferas (YPF, Eni e XGR) em gás natural argentino.",
-   "n": 17,
-   "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-15|Economia e Coesão Territorial|+": {
-   "texto": "O Governo concretizou a entrega de 28.000 habitações de arrendamento público até ao final de agosto, no âmbito do Plano de Recuperação e Resiliência (PRR), ultrapassando a meta inicialmente prevista. Adicionalmente, o PRR regista um progresso significativo na habitação, com a previsão de conclusão de mais de 40.000 casas até dezembro. Na área da economia, Angola inaugurou uma nova fábrica de lapidação de diamantes, gerando 130 postos de trabalho. O tema dominante é a habitação pública, com múltiplos títulos a confirmar a entrega célere de habitações, enquanto a área da lapidação de diamantes representa um desenvolvimento industrial específico.",
-   "n": 7,
-   "pct": 54,
-   "lado": "positivas"
-  },
   "2026-08-06|Presidência": {
    "texto": "No dia 2026-08-06, a cobertura mediática focou-se predominantemente na crise migratória em Ceuta. Ocorreram dois acontecimentos principais: a deteção de dois homens por suspeitas de tráfico de pessoas, com 82 corpos de migrantes recuperados, dos quais apenas dois foram identificados, e a violência perpetrada por patrulhas de moradores contra migrantes remanescentes no enclave espanhol. Adicionalmente, registou-se uma declaração de António Vitorino alertando para a possibilidade de a crise se estender a outros países, e uma proposta da Comissão Europeia que poderá criminalizar a solidariedade com migrantes. Não foram reportados eventos significativos na área da Presidência para além desta crise.",
    "n": 12,
    "pct": 80,
-   "lado": "negativas"
-  },
-  "2026-08-14|Cultura, Juventude e Desporto|+": {
-   "texto": "No dia 14 de agosto de 2026, o atletismo português destacou-se nos Europeus de Natação, com a qualificação de Pedro Buaró e Isaac Nader para as meias-finais e de Delvis Santos para a final dos 200 metros, bem como a conquista de um bronze pelo judoca paralímpico Djibrilo Iafa. Paralelamente, Camila Rebelo melhorou o recorde nacional nos 100 metros costas, assegurando a presença na final. O tema dominante foi o desporto, com eventos de alto rendimento e a valorização da proteção de menores em casos sensíveis. Adicionalmente, a Polícia brasileira recuperou obras de Henri Matisse roubadas em dezembro, e o ICNF sublinhou a compatibilização entre desporto e natureza.",
-   "n": 13,
-   "pct": 52,
-   "lado": "positivas"
-  },
-  "2026-08-20|Justiça": {
-   "texto": "No dia 20 de agosto de 2026, a área da Justiça registou múltiplos acontecimentos de natureza diversa. Vários tribunais aplicaram sanções de retirada de carta a condutores de trotineta alcoolizados, no âmbito de iniciativas de segurança rodoviária. Paralelamente, o Ministério Público iniciou um inquérito à queda de uma grua em Sintra, após o falecimento de trabalhadores no local. Adicionalmente, registaram-se detenções e prisões preventivas por crimes diversos, incluindo roubo e abuso de menores, com casos notórios como o de Algés e a condenação do fundador da Evergrande a prisão perpétua na China. O tema dominante foi a aplicação da lei penal em casos criminais graves, com destaque para a fraude financeira e crimes contra menores.",
-   "n": 25,
-   "pct": 77,
    "lado": "negativas"
   },
   "2026-08-09|Ambiente e Energia|+": {
@@ -150,24 +85,6 @@
    "texto": "No dia 13 de agosto de 2026, a área da Cultura, Juventude e Desporto registou múltiplos acontecimentos notáveis. Destacaram-se a conquista do bronze por Fatumata Diallo nos 400 metros barreiras nos Europeus de Atletismo, repetida em cobertura do Público e Observador, e a obtenção da melhor marca de qualificação para a final do Triplo Salto por Pedro Pichardo. Adicionalmente, estudantes portugueses e estónios participaram num voo parabólico simulando uma viagem espacial, no âmbito do programa Astronauta por um Dia, com partida de Santa Maria. O único evento não desportivo de relevância cultural foi a estreia em Portugal do filme protagonizado por uma atriz travesti brasileira, gerando um sentimento de orgulho nacional.",
    "n": 12,
    "pct": 50,
-   "lado": "positivas"
-  },
-  "2026-08-22|Presidência": {
-   "texto": "No dia 22 de agosto de 2026, a cobertura mediática focou-se predominantemente em questões migratórias e administrativas relacionadas com a AIMA (Agência para a Integração, Migrações e Asilo).  \n\nA Ordem dos Advogados acusou a AIMA de dificultar a defesa dos imigrantes, denunciando problemas no atendimento. Simultaneamente, uma cidadã brasileira obteve dois cartões de residência após recorrer de uma notificação de abandono, evidenciando dificuldades processuais. Advogados da Ordem exigiram a criação de um portal digital para mitigar o caos no atendimento.  \n\nEm Espanha, a HRW instou o Governo a oferecer asilo a migrantes ilegais em Ceuta, enquanto relatos de meios de comunicação social documentaram a persistência de milhares de migrantes nas ruas de Ceuta, mesmo após três semanas de entrada. A situação foi acompanhada pela iminente extinção do controverso centro de detenção de migrantes da Florida, designado como “Alligator Alcatraz”.  \n\nA cobertura destacou ainda um contraste temático entre a situação migratória e a área das pensões, com o Observador a alertar para o risco de incumprimento de obrigações, e o Nascer do SOL a referir a existência de portas fechadas na administração pública portuguesa.",
-   "n": 13,
-   "pct": 76,
-   "lado": "negativas"
-  },
-  "2026-08-23|Trabalho, Solidariedade e Segurança Social": {
-   "texto": "Os títulos reportam, predominantemente, uma greve de trabalhadores da REN Atlântico, com adesão total, que decorre entre o dia 23 e 25 de agosto, motivada pela exigência de pré-reforma para os trabalhadores do terminal de GNL de Sines. Adicionalmente, registam-se casos de exclusão de alunos com dificuldades financeiras no acesso ao ensino superior e a privação de pensões a uma idosa durante nove meses, decorrente de uma falha informática na Segurança Social. O tema dominante é, assim, a fragilidade do sistema de proteção social e a precariedade de situações individuais.",
-   "n": 11,
-   "pct": 79,
-   "lado": "negativas"
-  },
-  "2026-08-11|Economia e Coesão Territorial|+": {
-   "texto": "No domínio da economia e coesão territorial, registaram-se vários desenvolvimentos concretos. O Governo anunciou que a manutenção integral das novas fragatas adquiridas à Itália será efetuada em estaleiros portugueses, reforçando a capacidade industrial naval nacional. A cidade de Braga terá uma residência universitária com 786 camas, operando a 94 euros mensais, a partir de setembro, promovendo o acesso ao ensino superior. Adicionalmente, foi aprovado o projeto reformulado de plantação de tangerinas em Alcácer do Sal, e o Mapa Verde das renováveis foi finalizado para aprovação no Conselho de Ministros, evidenciando o impulso em energias limpas. Estes eventos, agrupados em medidas de reforço industrial, habitação estudantil, agricultura e energias renováveis, refletem um esforço de desenvolvimento territorial e económico.",
-   "n": 17,
-   "pct": 52,
    "lado": "positivas"
   },
   "2026-08-12|Cultura, Juventude e Desporto|+": {
@@ -216,6 +133,90 @@
    "texto": "O dia ficou marcado por um aumento significativo das colocações no Ensino Superior, com mais de 1.600 alunos carenciados beneficiando do contingente prioritário e 82,6% dos candidatos a ingressar, sobretudo na primeira opção. Destacou-se a Engenharia Aeroespacial na Universidade do Porto, com uma média de acesso de 19,5 valores, liderando também em outras instituições. Paralelamente, observou-se um crescimento do Ensino Politécnico e um aumento da procura por cursos de formação de professores, com quase 97% das vagas ocupadas na primeira fase. O preenchimento de vagas em cursos duplos e a colocação de 1.595 estudantes madeirenses na primeira fase evidenciam também o sucesso do sistema de acesso.",
    "n": 39,
    "pct": 51,
+   "lado": "positivas"
+  },
+  "2026-08-15|Presidência": {
+   "texto": "No dia 15 de agosto de 2026, verificou-se uma nova tentativa de entrada de migrantes em Ceuta, tendo as autoridades marroquinas interceptado centenas de indivíduos que se dirigiam ao território espanhol. A ação conjunta entre Marrocos e Espanha resultou na detenção e devolução dos migrantes ao país de origem, conforme reportado por diversos meios de comunicação social. Adicionalmente, as autoridades marroquinas ordenaram a expulsão de jornalistas espanhóis que estavam a cobrir a crise migratória, intensificando a pressão sobre a fronteira e as relações diplomáticas entre os dois países. O tema dominante foi a crise migratória na fronteira entre Marrocos e Espanha, com particular foco na gestão da pressão migratória e nas ações de controlo fronteiriço.",
+   "n": 10,
+   "pct": 83,
+   "lado": "negativas"
+  },
+  "2026-08-19|Administração Interna": {
+   "texto": "No dia 19 de agosto de 2026, registaram-se múltiplos incidentes de natureza diversa na área da Administração Interna. Destacam-se a ocorrência de dois acidentes laborais fatais, envolvendo a queda de uma grua em Belas, e a detenção de um líder de rede internacional de tráfico de droga pela GNR, após um período prolongado de fuga. Adicionalmente, verificaram-se detenções por infrações rodoviárias (circulação de trotinete em contramão na Ponte 25 de Abril), apreensões de artigos pirotécnicos e estupefacientes, e um incidente de abandono de criança em Braga. Observou-se, ainda, um aumento da atividade relacionada com incêndios florestais, com quase mil e 250 operacionais envolvidos nos fogos em Torre de Moncorvo, Arouca e Santo Tirso, e a deteção de condutores sob efeito de álcool.",
+   "n": 42,
+   "pct": 82,
+   "lado": "negativas"
+  },
+  "2026-08-20|Administração Interna": {
+   "texto": "No dia 20 de agosto de 2026, registaram-se múltiplos incidentes na ilha de São Miguel, em Rabo de Peixe, envolvendo agentes da PSP durante uma operação de cumprimento de mandados de busca por suspeitas de tráfico de droga. Os acontecimentos concretos incluem agressões a viaturas policiais, tentativas de agressão aos agentes e, como resposta, a emissão de disparos para o ar pela PSP. Adicionalmente, a PSP efetuou detenções em Lisboa relacionadas com um homicídio cometido no Brasil há 17 anos, e a GNR apreendeu grandes quantidades de combustível em Aljezur, no âmbito de operações contra o tráfico de droga.",
+   "n": 44,
+   "pct": 80,
+   "lado": "negativas"
+  },
+  "2026-08-20|Justiça": {
+   "texto": "No dia 2026-08-20, a área da Justiça registou múltiplos acontecimentos, destacando-se a resolução de processos de proteção de menores pelas Comissões de Proteção de Crianças e Jovens (CPCJ) quando transitavam para tribunal, a cobrança coerciva de impostos relativos à venda de barragens pela Autoridade Tributária, a detenção de um indivíduo em Lisboa por homicídio perpetrado no Brasil em 2009, a condenação a 17 anos de prisão de um homem belga por tentativa de homicídio de um alegado abusador de criança, a cobrança de impostos sobre o negócio das barragens pela mesma autoridade, a retirada de cartas de condução a condutores de trotineta alcoolizados e a queda de uma grua em Sintra, motivando um inquérito do Ministério Público. Adicionalmente, verificaram-se detenções preventivas por roubo em ourivesaria, uma providência cautelar que travou restrições ao TVDE, a libertação de um indivíduo detido por sequestro, violação e roubo, e a condenação do fundador da Evergrande a prisão perpétua por fraude financeira, reiterada por diversas fontes noticiosas.",
+   "n": 26,
+   "pct": 78,
+   "lado": "negativas"
+  },
+  "2026-08-21|Defesa Nacional": {
+   "texto": "No dia 21 de agosto de 2026, foram reportados múltiplos acontecimentos relacionados com a guerra na Ucrânia, envolvendo intervenções externas e ataques diretos. Destaca-se a acusação de envia de operadores de drones por parte da Coreia do Norte para apoiar as forças russas, conforme noticiado por diversos órgãos de comunicação social. Adicionalmente, ocorreram ataques russos contra infraestruturas ucranianas, incluindo um ataque a um posto fronteiriço com a Moldova e a intensificação de operações de drones contra centros comerciais na região de Odessa. Paralelamente, registaram-se incidentes trágicos envolvendo militares portugueses, nomeadamente o atropelamento de dois militares do Exército na autoestrada A1, enquanto prestavam auxílio a um camionista, resultando em múltiplas fatalidades.",
+   "n": 73,
+   "pct": 78,
+   "lado": "negativas"
+  },
+  "2026-08-21|Presidência": {
+   "texto": "No dia 21 de agosto de 2026, os títulos noticiam uma crise migratória em Ceuta, Marrocos, com múltiplos acontecimentos relacionados com a gestão de fluxos irregulares de migrantes. Destacam-se a retomada da ocupação de praias por migrantes após operações de limpeza, a atuação de redes de tráfico humano que cobram quantias elevadas pela passagem para Espanha, e a desarticulação destas redes pelas autoridades espanholas. Paralelamente, regista-se a criação de uma nova unidade da PSP, alvo de críticas por alegadas práticas de perseguição a imigrantes, e a contestação de políticas governamentais relativas à AIMA e à proteção de menores. Observa-se um tema dominante centrado na gestão da imigração irregular e na resposta institucional a esta problemática.",
+   "n": 22,
+   "pct": 81,
+   "lado": "negativas"
+  },
+  "2026-08-22|Presidência": {
+   "texto": "No dia 22 de agosto de 2026, a cobertura mediática focou-se predominantemente em questões migratórias e administrativas relacionadas com o atendimento a imigrantes. A Ordem dos Advogados acusou a Agência para a Imigração e Asilo (AIMA) de dificultar a defesa dos direitos de imigrantes, nomeadamente através de problemas no atendimento e falta de transparência. Adicionalmente, casos concretos de concessão de residência e a situação de milhares de migrantes em Ceuta, com enterramentos e ausência de soluções, foram noticiados. Paralelamente, um tema transversal foi a crítica à gestão da imigração e ao atendimento aos requerentes de proteção internacional, evidenciando dificuldades no sistema português e espanhol.",
+   "n": 15,
+   "pct": 77,
+   "lado": "negativas"
+  },
+  "2026-08-23|Trabalho, Solidariedade e Segurança Social": {
+   "texto": "No dia 23 de agosto de 2026, verificou-se uma greve de trabalhadores da REN Atlântico, com adesão total, que se prolongou até terça-feira, afetando as operações do terminal de GNL de Sines. Adicionalmente, registaram-se exclusões de estudantes carenciados do acesso ao ensino superior e a privação de pensões a uma idosa durante nove meses, decorrente de uma falha informática no sistema da Segurança Social. O tema dominante é a instabilidade laboral e a fragilidade dos serviços sociais, evidenciados por estes incidentes.",
+   "n": 13,
+   "pct": 83,
+   "lado": "negativas"
+  },
+  "2026-08-05|Economia e Coesão Territorial|+": {
+   "texto": "No dia 2026-08-05, foram registados diversos acontecimentos relevantes nas áreas da economia e coesão territorial. Em Barcelos, foi aprovado um concurso público para a construção de uma nova Estação de Tratamento de Águas Residuais (ETAR) no valor de 35 milhões de euros. O Governo anunciou uma nova linha de financiamento através do Banco de Fomento, no valor de 1.500 milhões de euros, destinada a empresas. A ESA abriu um novo ciclo de financiamento para empresas portuguesas do setor espacial, e a Neuraspace recebeu um investimento de 15,6 milhões de euros, além de conversações com a Força Aérea para instalação de um radar. Adicionalmente, foram aprovados apoios à fertilidade na Madeira para 411 utentes, e projetos de valorização de biorresíduos através do programa Ambilital, com um investimento de 9 milhões de euros.",
+   "n": 27,
+   "pct": 61,
+   "lado": "positivas"
+  },
+  "2026-08-06|Cultura, Juventude e Desporto|+": {
+   "texto": "No âmbito da área governativa da Cultura, Juventude e Desporto, registaram-se vários acontecimentos distintos. Nélson Évora, atleta olímpico, anunciou o fim da sua carreira desportiva aos 42 anos. O Governo da Madeira investiu 188 mil euros na aquisição de manuais digitais para o sistema educativo. Duas longas-metragens portuguesas foram selecionadas para a 79ª edição do Festival Internacional de Cinema de Locarno. Quase 12 mil jovens solicitaram cheques para consultas gratuitas de psicologia e nutrição, no primeiro mês de implementação do programa. Isabella Rossellini e Joaquim Silva expressaram perspetivas sobre a experiência e a liberdade, respetivamente. O filme \"Soy Cuba\" foi alvo de uma nova edição com apoio de Hollywood. O projeto \"Mapa\" apresentou uma visão para uma cidade do Porto mais sustentável até 2050. O projeto Rural Innovation Challenges abriu candidaturas para projetos inovadores em territórios rurais, com um prémio total de mais de 20 mil euros. A Ponte 25 de Abril foi palco de um espetáculo aéreo com mais de 500 drones, assinalando a sua efeméride.",
+   "n": 11,
+   "pct": 55,
+   "lado": "positivas"
+  },
+  "2026-08-11|Economia e Coesão Territorial|+": {
+   "texto": "O dia foi marcado por uma série de desenvolvimentos em infraestruturas, investimento e coesão territorial. O Governo anunciou que a manutenção integral das novas fragatas adquiridas a Itália será assegurada em estaleiros portugueses, reforçando a capacidade industrial nacional. Paralelamente, a cidade de Braga inaugurou uma residência universitária com 786 camas, com rendas acessíveis, promovendo o acesso ao ensino superior. Adicionalmente, o Mapa Verde das renováveis foi finalizado e submetido a Conselho de Ministros, evidenciando o progresso na transição energética, e o Turismo de Portugal alocou um milhão de euros para a criação de refúgios climáticos. O tema dominante foi o investimento em infraestruturas e desenvolvimento regional, com particular foco na coesão territorial e na modernização de serviços públicos.",
+   "n": 19,
+   "pct": 58,
+   "lado": "positivas"
+  },
+  "2026-08-14|Cultura, Juventude e Desporto|+": {
+   "texto": "No dia 14 de agosto de 2026, registaram-se vários acontecimentos no âmbito da Cultura, Juventude e Desporto. Em termos desportivos, Camila Rebelo melhorou o recorde nacional nos 100 metros costas, alcançando a final dos Europeus de Natação, onde competiu também nas meias-finais ao lado de Vasco Morgado. Paralelamente, Pedro Buaró, Isaac Nader, Delvis Santos e outros atletas qualificaram-se para as finais ou para a final dos Europeus de Atletismo, demonstrando progresso e sucesso competitivo. Adicionalmente, o judoca paralímpico Djibrilo Iafa conquistou uma medalha de bronze nos Campeonatos Europeus IBSA, evidenciando a excelência do desporto paralímpico. O tema dominante foi o desporto, com ênfase no desempenho atlético e nos resultados alcançados em competições europeias e internacionais.",
+   "n": 13,
+   "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-14|Economia e Coesão Territorial|+": {
+   "texto": "No domínio da Economia e Coesão Territorial, verificaram-se múltiplos acontecimentos. O Estado reintegrou a sua participação na REN, adquirindo 13,7% ao acionista minoritário, e disponibilizou mais de 1,3 milhões de euros para requalificação de equipamentos coletivos no Alentejo. Adicionalmente, foram aprovados investimentos turísticos em zonas agrícolas de Amarante, bem como novos equipamentos para bombeiros na Madeira. O PRR reforçou o SNS com 630 milhões de euros, enquanto a coesão territorial beneficiou de medidas como a possibilidade de pagamento de IVA com fundos europeus e a redução da massa salarial do Estado em Moçambique.",
+   "n": 19,
+   "pct": 53,
+   "lado": "positivas"
+  },
+  "2026-08-15|Economia e Coesão Territorial|+": {
+   "texto": "O Governo concretizou a entrega de 28.000 habitações de arrendamento público até ao final de agosto, abrangendo programas como o PRR, 1.º Direito e a resposta a emergências habitacionais. Adicionalmente, o PRR ultrapassou a meta de 28 mil casas entregues até ao final do oitavo trimestre, com previsão de 40 mil casas concluídas até dezembro. Paralelamente, Angola inaugurou uma nova fábrica de lapidação de diamantes, gerando 130 postos de trabalho e reforçando a cooperação económica bilateral. O tema dominante é o progresso na habitação pública e a expansão da atividade económica, nomeadamente no setor dos recursos minerais.",
+   "n": 7,
+   "pct": 58,
    "lado": "positivas"
   }
  }
