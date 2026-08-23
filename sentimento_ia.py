@@ -477,6 +477,21 @@ def interpretar(texto, tamanho):
         valor = classificar(depois) or classificar(linha)
         if valor:
             resultado[i] = valor
+
+    # LEITURA POSICIONAL, o plano B: há versões do modelo que copiam o molde
+    # «N=valor» à letra — dez «N=negativo N=neutro…» pela ordem das notícias,
+    # sem um único dígito — e a via numerada lê zero de respostas que estão
+    # completas. Quando a via numerada nada leu E a resposta traz EXATAMENTE
+    # tantas classificações quantas as notícias do lote, leem-se pela posição.
+    # As duas condições são a salvaguarda: com leituras numeradas parciais não
+    # se mistura, e com contagem diferente do lote não se adivinha — fica por
+    # avaliar, que é o comportamento honesto.
+    if not resultado:
+        tons = [equivalencias[_sem_acentos(p).lower()]
+                for p in re.findall(r"[A-Za-zÀ-ÿ]+", texto)
+                if _sem_acentos(p).lower() in equivalencias]
+        if len(tons) == tamanho:
+            resultado = {i: v for i, v in enumerate(tons, start=1)}
     return resultado
 
 
