@@ -486,7 +486,12 @@ def perguntar_local(sintese, lote, repo, ficheiro):
         messages=[{"role": "system", "content": INSTRUCAO},
                   {"role": "user", "content": compor_lote(lote)}],
         temperature=0.0,
-        max_tokens=16 * len(lote) + 64,
+        # 16 por notícia chegavam para «N: neutro», mas um modelo que abra
+        # com um preâmbulo ou ecoe os títulos esgota o orçamento antes de
+        # dar uma única classificação legível — e a resposta cortada lê-se
+        # como «0/10 avaliadas» sem pista nenhuma. 48 por notícia dão folga
+        # a respostas faladoras, por custo irrelevante.
+        max_tokens=48 * len(lote) + 128,
     )
     return resposta["choices"][0]["message"]["content"].strip()
 
@@ -498,7 +503,7 @@ def perguntar_servico(endereco, chave, lote, modelo_nome, tempo_limite=90):
         data=json.dumps({
             "model": modelo_nome,
             "temperature": 0.0,
-            "max_tokens": 12 * len(lote) + 40,
+            "max_tokens": 48 * len(lote) + 128,
             "messages": [{"role": "system", "content": INSTRUCAO},
                          {"role": "user", "content": compor_lote(lote)}],
         }).encode("utf-8"),
@@ -1026,6 +1031,16 @@ def principal():
             falhas += 1
             continue
         lidas = interpretar(resposta, len(lote))
+        # Uma resposta de que nada (ou quase nada) se lê é um facto a
+        # INVESTIGAR, não a esconder: sem ver a resposta crua, um «0/10
+        # avaliadas» não diz se o modelo mudou de formato, se abriu com um
+        # preâmbulo, ou se a resposta veio cortada. Mostra-se um excerto
+        # delimitado, para o registo do GitHub contar a história completa.
+        if len(lidas) < max(1, len(lote) // 2):
+            excerto = " ".join(resposta.split())[:400]
+            print(f"  lote {indice + 1}/{total_lotes}: resposta difícil "
+                  f"de ler ({len(lidas)}/{len(lote)}) — excerto: "
+                  f"«{excerto}»")
         for i, n in enumerate(lote, start=1):
             if i not in lidas:
                 continue

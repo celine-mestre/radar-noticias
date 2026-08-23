@@ -356,18 +356,35 @@ def principal():
     # régua errada — contagem cheia contra medianas do regime anterior. São
     # reavaliados aqui, fechados (dia inteiro) e com a régua do conjunto de
     # referência; os que sobreviverem eram picos reais e voltam ao registo.
-    historico = [r for r in (anterior.get("historico") or [])
-                 if not (INICIO_ALARGAMENTO <= r.get("data", "") < hoje)]
+    #
+    # COM REDE: o registo de um dia passado só é substituído quando a
+    # reavaliação desse dia é digna de confiança — o dia existe nas contagens
+    # com volume plausível e a linha de base tem a profundidade mínima. Antes
+    # desta guarda, uma execução que apanhasse o arquivo incompleto ou
+    # ilegível (um pull falhado, um ficheiro a meio de escrita) reavaliava
+    # os dias «para o vazio» e amputava silenciosamente o registo de picos
+    # reais, gravando a amputação para sempre. Um pico que não se consegue
+    # reavaliar hoje mantém-se como está e volta a ser reavaliado amanhã.
+    historico = list(anterior.get("historico") or [])
     dias_fechados = contagens_ate_ao_corte(linhas, "23:59", referencia)
     d = datetime.strptime(INICIO_ALARGAMENTO, "%Y-%m-%d")
     while d.strftime("%Y-%m-%d") < hoje:
         dia_passado = d.strftime("%Y-%m-%d")
-        t_dia, _, _ = avaliar(dias_fechados, dia_passado, args.dias, inicio)
+        d += timedelta(days=1)
+        t_dia, _, base_dia = avaliar(dias_fechados, dia_passado, args.dias,
+                                     inicio)
+        total_dia = sum(dias_fechados.get(dia_passado, {}).values())
+        if total_dia < PISO_ABSOLUTO or base_dia < MINIMO_DIAS:
+            if any(r.get("data") == dia_passado for r in historico):
+                print(f"alertas: reavaliação de {dia_passado} sem dados "
+                      f"suficientes (total {total_dia}, base {base_dia} dias) "
+                      f"— registo desse dia mantido como está")
+            continue
+        historico = [r for r in historico if r.get("data") != dia_passado]
         for t in t_dia:
             historico.append({"data": dia_passado, "area": t["area"],
                               "hoje": t["hoje"], "mediana": t["mediana"],
                               "limiar": t["limiar"]})
-        d += timedelta(days=1)
 
     resultado = {
         "atualizado": agora.strftime("%Y-%m-%d %H:%M"),
