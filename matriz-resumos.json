@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-23 14:15",
+ "gerado": "2026-08-23 14:32",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -170,22 +170,52 @@
    "pct": 52,
    "lado": "positivas"
   },
-  "2026-08-21|Administração Interna": {
-   "texto": "No dia 21 de agosto de 2026, registaram-se múltiplos acontecimentos na área da Administração Interna, predominantemente relacionados com incidentes de segurança pública e questões de gestão governamental. Destacam-se a ocorrência de ataques a viaturas da PSP em Rabo de Peixe, com desacatos e danos materiais, e a detenção de um homem procurado no Brasil por violação de menor, conduzindo a uma condenação governamental e autárquica. Adicionalmente, verificou-se um conjunto de incidentes envolvendo a PSP, incluindo suspeitas de utilização indevida de viaturas e acusações de perseguição a imigrantes, com alertas de sindicatos e associações. Paralelamente, surgiram casos de incêndios florestais, com a identificação de um menor como suspeito em Seia, e questões de conduta de agentes da GNR e militares, nomeadamente o uso indevido de veículos da Guarda. Um tema dominante é a instabilidade na gestão da pasta da Administração Interna, evidenciada pela exoneração proposta pelo Chega e pela rejeição de queixas de quebra de protocolo de segurança.",
-   "n": 58,
-   "pct": 77,
-   "lado": "negativas"
-  },
   "2026-08-12|Cultura, Juventude e Desporto|+": {
    "texto": "1. **Estado exerce preferência sobre manuscritos de Pessoa e outros autores portugueses**: O Estado português formalizou a preferência na aquisição de manuscritos de Fernando Pessoa e outros autores nacionais, reforçando a preservação do património literário nacional.\n\n2. **JMJ Seul 2027 já tem mil jovens portugueses inscritos**: A Jornada Mundial da Juventude, em Seul em 2027, regista um número significativo de jovens portugueses inscritos, evidenciando a mobilização e o interesse da juventude portuguesa em eventos internacionais de dimensão global.\n\n3. **Nadadora Sara Curtis quebra recorde mundial dos 50 metros costas**: A nadadora Sara Curtis estabeleceu um novo recorde mundial nos 50 metros costas, demonstrando o elevado nível de excelência desportiva alcançado por atletas portugueses em competições internacionais.\n\n4. **Fatoumata Diallo medalha de bronze europeia e nos 400 metros barreiras nos Europeus**: A atleta Fatoumata Diallo conquistou uma medalha de bronze nos 400 metros barreiras nos Campeonatos Europeus, evidenciando o sucesso do desporto feminino português em competições de alto nível.\n\n**Tema dominante**: Desporto e cultura, com destaque para conquistas individuais e a valorização do património cultural e literário português.",
    "n": 9,
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-08-22|Agricultura e Mar|+": {
-   "texto": "No dia 22 de agosto de 2026, verificou-se a implementação de projetos agrovoltaicos em concelhos da área governativa da Agricultura e Mar, visando a conciliação da produção energética com a preservação ambiental. Paralelamente, em Abrantes, foi combatido um incêndio florestal por uma força de 500 bombeiros, resultando na extinção do foco de incêndio. Adicionalmente, a área governativa reconheceu e divulgou iniciativas de bem-estar, nomeadamente a promoção de banhos de floresta e terapias, no âmbito do património natural da região da Malcata. Não foram reportados acordos ou medidas de âmbito setorial específico para a área governativa em questão.",
-   "n": 4,
-   "pct": 50,
+  "2026-08-16|Ambiente e Energia": {
+   "texto": "No dia 16 de agosto de 2026, verificaram-se múltiplos acontecimentos no âmbito da área governativa do Ambiente e Energia. Um suspeito de incêndio florestal foi sujeito a prisão preventiva no Sabugal, tendo sido detetado o seu envolvimento num foco de incêndio. Paralelamente, a REN registou uma aquisição de 13,7% por parte de um membro do governo, suscitando críticas públicas sobre potenciais conflitos de interesse. Adicionalmente, um centro de dados da OpenAI enfrentou cortes de energia, motivados pela redução da garantia da Nvidia para menos de 120 mil milhões de unidades. Por fim, a produção de resíduos em Portugal intensificou-se, colocando os aterros sanitários próximos da saturação, conforme noticiado pelo Público. O tema dominante parece ser a gestão de riscos ambientais e energéticos, incluindo a prevenção de incêndios, a sustentabilidade de infraestruturas tecnológicas e a gestão de resíduos.",
+   "n": 6,
+   "pct": 88,
+   "lado": "negativas"
+  },
+  "2026-08-16|Defesa Nacional": {
+   "texto": "No dia 16 de agosto de 2026, a Ucrânia foi alvo de múltiplos ataques com drones contra a Rússia, tendo sido registados mais de 800 lançamentos na madrugada, dos quais resultou pelo menos um morto na Rússia e seis na Ucrânia. Paralelamente, ataques ucranianos desativaram sete dos dez maiores centros de distribuição da Wildberries na Rússia, e a falta de exportações de cereais, devido à degradação do porto de Odessa, agravou a situação económica do país. Adicionalmente, um drone que invadiu o espaço aéreo romeno foi abatido por um caça da NATO, e foram ouvidas explosões em Kiev após um alerta de mísseis balísticos, evidenciando a instabilidade no leste europeu. O tema dominante foi a intensificação do conflito armado e as suas consequências humanitárias e económicas.",
+   "n": 18,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-17|Justiça": {
+   "texto": "No dia 17 de agosto de 2026, foram noticiados múltiplos acontecimentos de natureza judicial e administrativa. Destacam-se a detenção de um homem evadido desde 2023 para cumprimento de pena, a confirmação da destituição de Florbela Malaquias, líder do PHA, por um tribunal, e a manutenção dessa decisão por outros tribunais, incluindo em Angola e na esfera partidária. Adicionalmente, registou-se um caso de incitamento ao ódio, a condenação de um bispo evangélico e de uma mulher por auxílio à imigração ilegal, e a acusação de discriminação e incitamento ao ódio contra o autarca de Albufeira, reiterada por diversos meios. Um tema dominante é a instabilidade em torno de figuras públicas e a persistência de casos judiciais complexos.",
+   "n": 27,
+   "pct": 76,
+   "lado": "negativas"
+  },
+  "2026-08-17|Trabalho, Solidariedade e Segurança Social": {
+   "texto": "No dia 17 de agosto de 2026, registou-se um acontecimento central de forte impacto mediático: mais de uma centena de migrantes marroquinos em Ceuta iniciaram uma greve de fome na praia do Trampolín, reivindicando asilo em Espanha. Paralelamente, a cobertura negativa focou-se em fragilidades do sistema de proteção social, nomeadamente a redução do ganho de poder de compra dos salários, com o salário médio mensal a situar-se abaixo dos 870 euros para mais de 1,6 milhões de pensionistas, e atrasos no pagamento de apoios da Segurança Social. Adicionalmente, um grupo de trabalho governamental apresentou um relatório com propostas de poupança, incluindo reformas antecipadas e a TSU na mira, enquanto a imprensa internacional noticiou potenciais medidas de contenção orçamental em França e no Reino Unido, com impacto nas pensões e nos apoios sociais. O tema dominante foi, assim, a crise social, com ênfase nas dificuldades económicas e na pressão sobre as políticas de migração e segurança social.",
+   "n": 20,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-19|Saúde": {
+   "texto": "No dia 19 de agosto de 2026, ocorreram múltiplos incidentes e problemas no setor da saúde e áreas relacionadas. Um jovem de 21 anos foi baleado no abdómen em Queluz, resultando em estado instável e necessitando de internamento hospitalar. Um surto de norovírus provocou gastroenterite num lar no Faial, levando ao realojamento de 45 idosos após um incêndio que obrigou ao seu deslocamento. Adicionalmente, a urgência de obstetrícia em Setúbal enfrentou rotatividade problemática, com a IGAS a identificar falhas no planeamento e funcionamento. Paralelamente, a Inspeção-Geral da Administração da Saúde (IGAS) apontou fragilidades estruturais na urgência obstétrica de Almada-Seixal, e a ULS da Arrábida foi alvo de inspeção com resultados semelhantes. A instabilidade de mandatos administrativos em hospitais, incluindo o de São José, e a suspensão de interrupções voluntárias da gravidez no Garcia de Orta, também foram notórios. O tema dominante foi a instabilidade e falhas nos serviços de saúde, incluindo a gestão de emergências, a disponibilidade de cuidados obstétricos e a segurança hospitalar.",
+   "n": 39,
+   "pct": 76,
+   "lado": "negativas"
+  },
+  "2026-08-22|Justiça": {
+   "texto": "No dia 22 de agosto de 2026, ocorreram múltiplos eventos no âmbito da Justiça. Em Vila Nova de Foz Côa, foi decretada a prisão preventiva de um suspeito de atear fogo, conforme noticiado por diversos órgãos de comunicação social. Paralelamente, a Polícia Judiciária apreendeu 150 kg de cocaína num contentor proveniente do Equador, evidenciando a atuação da investigação criminal. Adicionalmente, um tribunal federal dos EUA anulou a suspensão de vistos a 75 países, imposta por Donald Trump, considerando-a \"manifestamente ilegal\", conforme reportado por vários meios. Estes factos agrupam-se em torno de acontecimentos criminais e decisões judiciais, com um tema dominante de decisões judiciais e investigação criminal.",
+   "n": 14,
+   "pct": 78,
+   "lado": "negativas"
+  },
+  "2026-08-22|Educação, Ciência e Inovação|+": {
+   "texto": "O dia ficou marcado por um aumento significativo das colocações no Ensino Superior, com mais de 1.600 alunos carenciados beneficiando do contingente prioritário e 82,6% dos candidatos a ingressar, sobretudo na primeira opção. Destacou-se a Engenharia Aeroespacial na Universidade do Porto, com uma média de acesso de 19,5 valores, liderando também em outras instituições. Paralelamente, observou-se um crescimento do Ensino Politécnico e um aumento da procura por cursos de formação de professores, com quase 97% das vagas ocupadas na primeira fase. O preenchimento de vagas em cursos duplos e a colocação de 1.595 estudantes madeirenses na primeira fase evidenciam também o sucesso do sistema de acesso.",
+   "n": 39,
+   "pct": 51,
    "lado": "positivas"
   }
  }
