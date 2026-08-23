@@ -857,6 +857,7 @@ def principal():
     # instrução atual aplica-se ao passado. É a única forma de uma revisão do
     # classificador alcançar a série já publicada, em vez de valer só daí para
     # a frente e deixar um degrau no meio dos dados.
+    descartadas = {}
     if getattr(args, "refazer_desde", None):
         desde = args.refazer_desde
         # SÓ se descarta o que se consegue voltar a avaliar. Uma notícia cuja
@@ -879,14 +880,33 @@ def principal():
                     and lig in disponiveis
                     and v.get("v") != INSTRUCAO_VERSAO)
 
-        doPeriodo = [lig for lig, v in avaliacoes.items()
+        # As contas fazem-se sobre TUDO o que se sabe — janela de trabalho MAIS
+        # arquivo permanente. Era aqui que o relatório mentia: as avaliações
+        # antigas de dias já saídos da janela vivem SÓ no arquivo, e um
+        # contador feito apenas sobre o ficheiro de trabalho dizia «0 voltam à
+        # fila» com centenas por refazer. Quem seguisse esse número como
+        # critério de paragem — como foi recomendado — parava cedo demais, e a
+        # reavaliação nunca terminava.
+        sabido = dict(arquivadas)
+        sabido.update(avaliacoes)
+        doPeriodo = [lig for lig, v in sabido.items()
                      if (v.get("d") or "") >= desde]
         jaFeitas = sum(1 for lig in doPeriodo
-                       if avaliacoes[lig].get("v") == INSTRUCAO_VERSAO)
-        avaliacoes = {lig: v for lig, v in avaliacoes.items() if not refazer(lig, v)}
-        arquivadas = {lig: v for lig, v in arquivadas.items() if not refazer(lig, v)}
-        volta = sum(1 for lig in doPeriodo
-                    if lig in disponiveis and lig not in avaliacoes)
+                       if sabido[lig].get("v") == INSTRUCAO_VERSAO)
+        # As descartadas não desaparecem: guardam-se à parte para a SÉRIE e o
+        # ficheiro de trabalho continuarem a contá-las como avaliadas (com o
+        # tom antigo) até a nova avaliação as substituir. Uma avaliação por
+        # regras velhas continua a ser uma avaliação — descontá-la fazia as
+        # percentagens do painel CAIR a cada corrida interrompida, enquanto o
+        # reconstruir_series (que lê o arquivo em disco) as repunha a 100% na
+        # recolha seguinte: era esse o vaivém.
+        descartadas = {lig: sabido[lig] for lig in doPeriodo
+                       if refazer(lig, sabido[lig])}
+        avaliacoes = {lig: v for lig, v in avaliacoes.items()
+                      if lig not in descartadas}
+        arquivadas = {lig: v for lig, v in arquivadas.items()
+                      if lig not in descartadas}
+        volta = len(descartadas)
         print(f"refazer (regras v{INSTRUCAO_VERSAO}): {volta} avaliações voltam à "
               f"fila de {desde} em diante")
         if jaFeitas:
@@ -945,7 +965,11 @@ def principal():
                                    if lig not in arquivadas})
 
         if args.serie:
-            atualizar_serie(args.serie, noticias, conhecidas,
+            # As descartadas ainda por refazer contam com o tom antigo: a
+            # série nunca mostra menos avaliadas do que as que de facto
+            # existem. O que já foi refeito (está em «conhecidas» com a
+            # versão nova) prevalece sobre o valor antigo.
+            atualizar_serie(args.serie, noticias, {**descartadas, **conhecidas},
                             recolha.origem_da_fonte, args.dias, datas_extra)
 
     # Peças que chegaram depois de o acontecimento já ter sido avaliado herdam
@@ -977,9 +1001,11 @@ def principal():
     repostas = 0
     for n in noticias:
         lig = ligacao(n)
-        if lig and lig not in avaliacoes and lig in conhecidas:
-            avaliacoes[lig] = conhecidas[lig]
-            repostas += 1
+        if lig and lig not in avaliacoes:
+            valor = conhecidas.get(lig) or descartadas.get(lig)
+            if valor:
+                avaliacoes[lig] = valor
+                repostas += 1
     if repostas:
         print(f"  {repostas} avaliações repostas do arquivo permanente para o "
               f"ficheiro de trabalho (aguardam a sua vez de serem refeitas)")
@@ -1019,6 +1045,18 @@ def principal():
     gravar()
     print(f"sentimento: {novas} novas avaliações, {falhas} lotes falhados, "
           f"{len(avaliacoes)} no total em {args.saida}")
+    # O critério de paragem da reavaliação é ESTE número, medido no fim e
+    # sobre tudo o que se sabe — não o «voltam à fila» do arranque.
+    if descartadas:
+        restantes = sum(1 for lig in descartadas
+                        if conhecidas.get(lig, {}).get("v") != INSTRUCAO_VERSAO)
+        if restantes:
+            print(f"reavaliação: {len(descartadas) - restantes} refeitas nesta "
+                  f"corrida; FALTAM {restantes} — repetir o mesmo comando "
+                  f"(continua de onde ficou)")
+        else:
+            print(f"reavaliação: {len(descartadas)} refeitas nesta corrida — "
+                  f"TERMINADA, nada ficou por refazer")
 
 
 if __name__ == "__main__":
