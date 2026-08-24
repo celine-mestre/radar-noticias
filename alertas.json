@@ -1,16 +1,67 @@
 {
- "atualizado": "2026-08-23 23:31",
- "dia": "2026-08-23",
- "corte": "23:31",
+ "atualizado": "2026-08-24 08:17",
+ "dia": "2026-08-24",
+ "corte": "08:17",
  "dias_base": 19,
- "regra": "Tempestade quando a contagem do dia, até às 23:31, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 15 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 08:17, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 18 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
-  "publicacoes_de_referencia": 15
+  "publicacoes_de_referencia": 18
  },
  "tempestades": [],
- "momentum": [],
+ "momentum": [
+  {
+   "area": "Educação, Ciência e Inovação",
+   "hoje": 11,
+   "mediana": 5,
+   "limiar": 13.9,
+   "excesso": 6,
+   "variacao_pct": 120,
+   "dias_base": 19,
+   "tempestade": false
+  },
+  {
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 7,
+   "mediana": 4,
+   "limiar": 12,
+   "excesso": 3,
+   "variacao_pct": 75,
+   "dias_base": 19,
+   "tempestade": false
+  },
+  {
+   "area": "Infraestruturas e Habitação",
+   "hoje": 4,
+   "mediana": 2,
+   "limiar": 10,
+   "excesso": 2,
+   "variacao_pct": 100,
+   "dias_base": 19,
+   "tempestade": false
+  },
+  {
+   "area": "Defesa Nacional",
+   "hoje": 10,
+   "mediana": 9,
+   "limiar": 17.9,
+   "excesso": 1,
+   "variacao_pct": 11,
+   "dias_base": 19,
+   "tempestade": false
+  },
+  {
+   "area": "Economia e Coesão Territorial",
+   "hoje": 8,
+   "mediana": 7,
+   "limiar": 18.9,
+   "excesso": 1,
+   "variacao_pct": 14,
+   "dias_base": 19,
+   "tempestade": false
+  }
+ ],
  "historico": [
   {
    "data": "2026-08-11",
@@ -77,73 +128,59 @@
   },
   {
    "data": "2026-08-17",
-   "area": "Finanças",
-   "hoje": 19,
-   "mediana": 7,
-   "limiar": 15.9
-  },
-  {
-   "data": "2026-08-17",
    "area": "Infraestruturas e Habitação",
-   "hoje": 22,
-   "mediana": 12,
-   "limiar": 20
+   "hoje": 26,
+   "mediana": 14,
+   "limiar": 25.9
   },
   {
    "data": "2026-08-18",
    "area": "Finanças",
-   "hoje": 20,
-   "mediana": 7.5,
-   "limiar": 17.9
+   "hoje": 26,
+   "mediana": 11.0,
+   "limiar": 24.3
   },
   {
    "data": "2026-08-18",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 41,
-   "mediana": 12.0,
-   "limiar": 28.3
+   "hoje": 59,
+   "mediana": 18.5,
+   "limiar": 37.8
+  },
+  {
+   "data": "2026-08-19",
+   "area": "Justiça",
+   "hoje": 45,
+   "mediana": 30,
+   "limiar": 41.9
   },
   {
    "data": "2026-08-19",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 40,
-   "mediana": 12,
-   "limiar": 32.8
-  },
-  {
-   "data": "2026-08-20",
-   "area": "Economia e Coesão Territorial",
-   "hoje": 46,
-   "mediana": 29.0,
-   "limiar": 43.8
-  },
-  {
-   "data": "2026-08-20",
-   "area": "Infraestruturas e Habitação",
-   "hoje": 25,
-   "mediana": 12.0,
-   "limiar": 20.0
+   "hoje": 54,
+   "mediana": 19,
+   "limiar": 39.8
   },
   {
    "data": "2026-08-20",
    "area": "Presidência",
    "hoje": 28,
-   "mediana": 11.5,
-   "limiar": 20.4
+   "mediana": 13.0,
+   "limiar": 23.4
   },
   {
    "data": "2026-08-20",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 54,
-   "mediana": 13.0,
-   "limiar": 36.7
+   "hoje": 69,
+   "mediana": 21.0,
+   "limiar": 46.2
   },
   {
-   "data": "2026-08-22",
-   "area": "Educação, Ciência e Inovação",
-   "hoje": 42,
-   "mediana": 20.0,
-   "limiar": 37.8
+   "data": "2026-08-21",
+   "area": "Agricultura e Mar",
+   "hoje": 29,
+   "mediana": 18,
+   "limiar": 26.9
   }
  ]
 }
