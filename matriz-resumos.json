@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-24 18:17",
+ "gerado": "2026-08-24 20:13",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -214,16 +214,22 @@
    "pct": 88,
    "lado": "negativas"
   },
-  "2026-08-24|Presidência": {
-   "texto": "No dia 24 de agosto de 2026, a cobertura mediática focou-se predominantemente num caso judicial de relevância nacional: o julgamento de dois agentes da Polícia de Segurança Pública (PSP) de Olhão, acusados de homicídio qualificado de um imigrante. O início do processo está agendado para 8 de setembro. Paralelamente, a discussão pública centrou-se na imigração, com o partido Chega a exigir maior controlo e fiscalização no controlo de fluxos migratórios na Madeira, e com a justiça a receber um elevado número de ações movidas por imigrantes contra a Agência para a Gestão do Imigração (AIMA). Adicionalmente, a atenção mediática foi dividida por notícias de âmbito internacional, nomeadamente a recuperação de 11 corpos na sequência de um naufrágio de uma embarcação com migrantes na Tunísia.",
-   "n": 10,
-   "pct": 77,
-   "lado": "negativas"
-  },
   "2026-08-24|Saúde|+": {
    "texto": "No dia 24 de agosto de 2026, foi noticiado que o Hospital Lusíadas Amadora foi distinguido pela terceira vez consecutiva com o galardão de “Empresa Solidária”, reconhecendo o seu compromisso com a responsabilidade social na comunidade. Adicionalmente, foi reportado o desenvolvimento de um projeto moçambicano, liderado por um jovem, que visa a utilização de drones para a entrega de medicamentos até 200 km, visando melhorar o acesso a cuidados de saúde em áreas remotas. A cobertura mediática destacou também a atuação do Ministro da Saúde moçambicano em missões cirúrgicas complexas em Chimoio, demonstrando o apoio técnico e logístico do Ministério da Saúde de Portugal. O tema dominante da cobertura noticiosa foi o progresso em saúde, abrangendo inovação tecnológica, responsabilidade social e cooperação internacional.",
    "n": 9,
    "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-24|Presidência": {
+   "texto": "No dia 24 de agosto de 2026, a cobertura mediática focou-se predominantemente em questões relacionadas com a imigração e a atuação policial. Em Ceuta, foi detetada uma presença superior a 2.900 menores após a sua entrada em julho. Paralelamente, iniciou-se o julgamento de dois agentes da PSP de Olhão acusados de homicídio de um imigrante, previsto para 8 de setembro, com cobertura também noutros órgãos de comunicação social. Adicionalmente, o tema da imigração foi abordado através de um pedido do partido Chega para reforçar o controlo migratório na Madeira e de um aumento significativo de ações judiciais movidas por imigrantes contra a Agência para a Gestão do Imigração (AIMA), totalizando 40.632 processos até ao final do ano.",
+   "n": 11,
+   "pct": 79,
+   "lado": "negativas"
+  },
+  "2026-08-24|Economia e Coesão Territorial|+": {
+   "texto": "No dia 24 de agosto de 2026, registaram-se múltiplos desenvolvimentos económicos e de coesão territorial. O Brasil e Angola celebraram um acordo para acelerar o desenvolvimento do agronegócio, enquanto a área metropolitana de Braga foi encarada como uma oportunidade para reforçar a mobilidade e o turismo regional. Adicionalmente, a cidade de Ponta Delgada investiu mais de 200 mil euros no apoio à habitação degradada, e a Navigator expandiu as suas equipas de produção em Aveiro com um investimento de 115 milhões de euros. O tema dominante foi o reforço da cooperação internacional e o investimento em infraestruturas e setores estratégicos.",
+   "n": 18,
+   "pct": 51,
    "lado": "positivas"
   }
  }
