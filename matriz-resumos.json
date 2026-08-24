@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-24 12:09",
+ "gerado": "2026-08-24 14:31",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -208,16 +208,28 @@
    "pct": 88,
    "lado": "negativas"
   },
+  "2026-08-24|Presidência": {
+   "texto": "O dia foi marcado por um julgamento iminente de agentes da autoridade acusados de homicídio de um imigrante em Olhão, com início previsto para 8 de setembro. Paralelamente, a cobertura mediática focou-se em processos judiciais relacionados com a imigração, nomeadamente ações movidas por imigrantes contra a Agência para a Gestão do Imigração (AIMA), totalizando 40.632 processos recebidos pela justiça até ao momento. Adicionalmente, a questão da imigração no arquipélago da Madeira foi objeto de reivindicação do partido Chega, que solicitou o reforço do controlo migratório e fiscalização no Caniço. Por fim, registou-se uma recuperação de 11 corpos de migrantes por autoridades tunisinas após um naufrágio.",
+   "n": 8,
+   "pct": 89,
+   "lado": "negativas"
+  },
+  "2026-08-24|Justiça": {
+   "texto": "No dia 24 de agosto de 2026, foram noticiados diversos acontecimentos no âmbito da área da Justiça. Iniciou-se o julgamento de agentes da autoridade acusados de homicídio de um imigrante, com início previsto para 8 de setembro. A Lei das Burcas, que entrou em vigor a 23 de setembro, gerou cobertura mediática e foi acompanhada de informação sobre as respetivas coimas. Adicionalmente, registou-se a morte na prisão de um ex-polícia condenado pelo homicídio de Sonya Massey, e a condenação a prisão perpétua de um antigo mufti sírio próximo do regime de Al-Assad. A temática dominante foi a corrupção e a sua influência na política, nomeadamente no contexto da potencial integração europeia da Ucrânia e em processos judiciais relacionados com a imigração em Portugal.",
+   "n": 13,
+   "pct": 93,
+   "lado": "negativas"
+  },
   "2026-08-24|Defesa Nacional|+": {
-   "texto": "No âmbito da celebração do 35.º aniversário da independência da Ucrânia, verificou-se uma convergência de eventos diplomáticos e de apoio financeiro. Portugal, através do Ministro dos Negócios Estrangeiros, deslocou-se a Kiev para reafirmar o apoio à soberania e integridade territorial ucraniana, coincidindo com a presença de outros líderes europeus. A União Europeia aprovou um apoio financeiro de 6,1 mil milhões de euros para a defesa da Ucrânia, evidenciando um reforço do compromisso europeu. Adicionalmente, decorreu em Kiev uma reunião da Coligação da Boa Vontade, reunindo aliados para reafirmar o apoio político e militar à Ucrânia.",
-   "n": 36,
-   "pct": 61,
+   "texto": "No âmbito da celebração do 35.º aniversário da Independência da Ucrânia, decorreu em Kiev uma reunião da Coligação da Boa Vontade, reunindo líderes europeus, incluindo o Primeiro-Ministro português António Costa e a Presidente da Comissão Europeia Ursula von der Leyen, para assinalar a data. Simultaneamente, a União Europeia aprovou um apoio financeiro de 6,1 mil milhões de euros para reforçar a capacidade de defesa ucraniana, no contexto do conflito em curso. Adicionalmente, diversos deputados e o Ministro dos Negócios Estrangeiros reafirmaram publicamente o apoio político e militar à soberania e integridade territorial da Ucrânia, em múltiplas declarações e encontros bilaterais.",
+   "n": 44,
+   "pct": 57,
    "lado": "positivas"
   },
   "2026-08-24|Saúde|+": {
-   "texto": "No dia 24 de agosto de 2026, o Hospital Lusíadas Amadora foi novamente distinguido com o galardão de “Empresa Solidária”, marcando o seu terceiro ano consecutivo de reconhecimento. Paralelamente, foi noticiado o desenvolvimento de um projeto moçambicano de entrega de medicamentos por drone, liderado por um jovem que visa alcançar até 200 km de cobertura. Adicionalmente, o Ministro da Saúde de Moçambique liderou uma missão cirúrgica em Chimoio, no âmbito de uma colaboração em saúde. Estes acontecimentos refletem um tema dominante de inovação na saúde e de cooperação internacional.",
-   "n": 7,
-   "pct": 58,
+   "texto": "No dia 24 de agosto de 2026, o Hospital Lusíadas Amadora foi distinguido pela terceira vez consecutiva com o galardão de “Empresa Solidária”, reconhecendo a sua atuação na área social. Paralelamente, foi noticiada a iniciativa de um jovem moçambicano que desenvolve um sistema de entrega de medicamentos por drone, com capacidade para alcançar até 200 km, visando melhorar o acesso a cuidados de saúde em zonas remotas. Adicionalmente, o Ministro da Saúde de Moçambique liderou uma missão cirúrgica em Chimoio, no âmbito de um esforço para fortalecer a assistência médica complexa no país. Estes acontecimentos refletem um tema dominante de inovação e expansão da cobertura de saúde, tanto a nível nacional como internacional.",
+   "n": 8,
+   "pct": 57,
    "lado": "positivas"
   }
  }
