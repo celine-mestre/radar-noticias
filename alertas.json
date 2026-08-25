@@ -1,9 +1,9 @@
 {
- "atualizado": "2026-08-25 11:45",
+ "atualizado": "2026-08-25 14:07",
  "dia": "2026-08-25",
- "corte": "11:45",
+ "corte": "14:07",
  "dias_base": 21,
- "regra": "Tempestade quando a contagem do dia, até às 11:45, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 18 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 14:07, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 18 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
@@ -12,11 +12,11 @@
  "tempestades": [
   {
    "area": "Negócios Estrangeiros",
-   "hoje": 17,
-   "mediana": 6,
-   "limiar": 14.9,
-   "excesso": 11,
-   "variacao_pct": 183,
+   "hoje": 23,
+   "mediana": 8,
+   "limiar": 16.9,
+   "excesso": 15,
+   "variacao_pct": 188,
    "dias_base": 21,
    "tempestade": true
   }
@@ -24,51 +24,51 @@
  "momentum": [
   {
    "area": "Negócios Estrangeiros",
-   "hoje": 17,
-   "mediana": 6,
-   "limiar": 14.9,
-   "excesso": 11,
-   "variacao_pct": 183,
+   "hoje": 23,
+   "mediana": 8,
+   "limiar": 16.9,
+   "excesso": 15,
+   "variacao_pct": 188,
    "dias_base": 21,
    "tempestade": true
   },
   {
+   "area": "Economia e Coesão Territorial",
+   "hoje": 35,
+   "mediana": 22,
+   "limiar": 42.8,
+   "excesso": 13,
+   "variacao_pct": 59,
+   "dias_base": 21,
+   "tempestade": false
+  },
+  {
    "area": "Defesa Nacional",
-   "hoje": 24,
-   "mediana": 16,
-   "limiar": 30.8,
-   "excesso": 8,
-   "variacao_pct": 50,
+   "hoje": 32,
+   "mediana": 20,
+   "limiar": 34.8,
+   "excesso": 12,
+   "variacao_pct": 60,
    "dias_base": 21,
    "tempestade": false
   },
   {
    "area": "Educação, Ciência e Inovação",
-   "hoje": 19,
-   "mediana": 11,
-   "limiar": 22.9,
-   "excesso": 8,
-   "variacao_pct": 73,
+   "hoje": 25,
+   "mediana": 16,
+   "limiar": 30.8,
+   "excesso": 9,
+   "variacao_pct": 56,
    "dias_base": 21,
    "tempestade": false
   },
   {
-   "area": "Economia e Coesão Territorial",
-   "hoje": 22,
+   "area": "Administração Interna",
+   "hoje": 23,
    "mediana": 15,
-   "limiar": 32.8,
-   "excesso": 7,
-   "variacao_pct": 47,
-   "dias_base": 21,
-   "tempestade": false
-  },
-  {
-   "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 15,
-   "mediana": 8,
-   "limiar": 16.9,
-   "excesso": 7,
-   "variacao_pct": 88,
+   "limiar": 23.9,
+   "excesso": 8,
+   "variacao_pct": 53,
    "dias_base": 21,
    "tempestade": false
   }
@@ -210,9 +210,9 @@
   {
    "data": "2026-08-25",
    "area": "Negócios Estrangeiros",
-   "hoje": 17,
-   "mediana": 6,
-   "limiar": 14.9
+   "hoje": 23,
+   "mediana": 8,
+   "limiar": 16.9
   }
  ]
 }
