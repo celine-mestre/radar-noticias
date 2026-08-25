@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-25 18:10",
+ "gerado": "2026-08-25 20:21",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -202,28 +202,34 @@
    "pct": 78,
    "lado": "negativas"
   },
-  "2026-08-24|Justiça": {
-   "texto": "No dia 2026-08-24, a área da Justiça registou múltiplos acontecimentos de natureza judicial e administrativa. Destacaram-se decisões de prisão preventiva para indivíduos envolvidos em crimes diversos, como tráfico de haxixe no Algarve e em Lisboa, homicídio em Monção, pornografia infantil em escolas e abuso sexual de menores. Adicionalmente, verificou-se a entrada em vigor da \"Lei das burcas\" a 23 de setembro, condenações de figuras públicas por crimes graves e a acusação de agentes policiais por homicídio de um imigrante. O tema dominante foi a aplicação rigorosa de medidas cautelares e a resolução de processos criminais de elevada gravidade.",
-   "n": 24,
-   "pct": 81,
-   "lado": "negativas"
-  },
   "2026-08-24|Economia e Coesão Territorial|+": {
    "texto": "No âmbito da economia e coesão territorial, registaram-se vários desenvolvimentos concretos. O Alentejo 2030 apoiou a modernização digital de autarquias, com um investimento adicional de 1 milhão de euros para acelerar a digitalização da administração local. Paralelamente, a Navigator expandiu equipas de produção em Aveiro com um investimento de 115 milhões de euros, reforçando a capacidade produtiva. Adicionalmente, Portalegre acolherá um novo cluster ibérico para a indústria de defesa, visando atrair investimento estratégico. O tema dominante é o investimento e a modernização, tanto na indústria como na administração pública e infraestruturas.",
    "n": 23,
    "pct": 52,
    "lado": "positivas"
   },
+  "2026-08-24|Justiça": {
+   "texto": "No dia 2026-08-24, o Supremo Tribunal decidiu a favor de Donald Trump num litígio relativo ao voto por correspondência, enquanto sete homens foram detidos e colocados em prisão preventiva no Algarve por tráfico de haxixe, num caso que envolveu a apreensão de cinco toneladas da substância. Paralelamente, um suspeito de esfaqueamento em Monção e um jovem de 18 anos acusado de abuso sexual em Lisboa foram também sujeitos a prisão preventiva. Adicionalmente, um antigo mufti sírio foi condenado à prisão perpétua por incitamento ao ódio confessional, e iniciou-se o julgamento de polícias acusados de homicídio de um imigrante. A área da justiça registou ainda um aumento significativo de ações movidas por imigrantes contra a AIMA, e a discussão sobre a \"lei das burcas\" prosseguiu com a sua entrada em vigor prevista para 23 de setembro.",
+   "n": 26,
+   "pct": 82,
+   "lado": "negativas"
+  },
+  "2026-08-25|Justiça": {
+   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos acontecimentos judiciais, convergindo para um tema dominante de processos criminais e decisões judiciais com impacto mediático. Destacam-se a prisão preventiva de um ex-vice-presidente da Libéria, a anulação da eleição do reitor da Universidade Nova de Lisboa por três vezes, com recurso subsequente, e a notificação de um cidadão moçambicano para julgamento por desobediência e terrorismo. Adicionalmente, verificaram-se detenções por tráfico de droga, violência doméstica e crimes de incêndio, acompanhadas de medidas de coação, e a admissão de novos suspeitos numa investigação por alegada tortura numa esquadra policial. Paralelamente, a cobertura mediática focou-se em casos de corrupção envolvendo figuras políticas de outros países e em processos relacionados com o Holocausto, embora estes não tenham ocorrido em território nacional.",
+   "n": 35,
+   "pct": 78,
+   "lado": "negativas"
+  },
   "2026-08-25|Administração Interna": {
-   "texto": "No dia 25 de agosto de 2026, a Administração Interna registou múltiplos incidentes de segurança pública, predominantemente na área metropolitana de Albufeira e na Amadora. Destacam-se, em primeiro lugar, ocorrências de violência doméstica e agressão policial, nomeadamente um atropelamento com múltiplas vítimas, motivado pela desobediência de um condutor à autoridade da GNR, e um caso de detenção de um suspeito de violência contra a ex-companheira. Em segundo lugar, verificaram-se intervenções policiais face a comportamentos violentos, incluindo arremesso de objetos, ameaças e tráfico de estupefacientes, com detenções efetuadas pela PSP e GNR. Por fim, registou-se um incêndio florestal na Madeira e a detenção de indivíduos por suspeita de incêndio criminoso, complementando um panorama de ocorrências de segurança pública de elevada gravidade.",
-   "n": 42,
-   "pct": 88,
+   "texto": "No dia 25 de agosto de 2026, registou-se um aumento generalizado da criminalidade em Portugal, com um incremento de 10,9% na criminalidade geral na área do Comando Metropolitano do Porto, conforme reportado pela PSP. Destacam-se múltiplos incidentes violentos em Lisboa e na Amadora, incluindo atropelamentos com vítimas, agressões a agentes da autoridade e um caso de disparo de arma de fogo em contexto de legítima defesa. Paralelamente, verificaram-se detenções por tráfico de droga, apreensões de estupefacientes e um incidente de violência doméstica que culminou com um atropelamento e detenção do condutor, resultando em múltiplas vítimas.",
+   "n": 57,
+   "pct": 86,
    "lado": "negativas"
   },
   "2026-08-25|Economia e Coesão Territorial|+": {
-   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos acontecimentos de cariz económico e territorial. Em São Vicente, foram concretizados investimentos e apoios superiores a 28 milhões de euros, enquanto Matosinhos concluiu 512 habitações do PRR, representando um investimento de 122 milhões de euros. Adicionalmente, a Lusíadas Saúde inaugurou o Hospital Lusíadas Beloura, com um investimento de 40 milhões de euros, e a reprogramação das Agendas Mobilizadoras do PRR elevou o investimento total para 7.300 milhões de euros, reforçando a sua dotação em cerca de três mil milhões de euros. Paralelamente, o Governo dos Açores reforçou o abastecimento de água à lavoura na ilha de São Miguel e a Galp anunciou um investimento no Campo de Tupi, no pré-sal brasileiro, atingindo 4 mil milhões de barris. A nível internacional, a Alemanha registou um crescimento do PIB de 1% no segundo trimestre, impulsionado pelas exportações, e o Brasil voltou a integrar a estratégia da Galp, enquanto Timor-Leste preparou um inventário de locais de interesse geológico para o turismo.",
-   "n": 25,
-   "pct": 58,
+   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos acontecimentos concretos nas áreas da economia e coesão territorial. O Governo dos Açores reforçou o abastecimento de água à lavoura na ilha de São Miguel, enquanto Matosinhos concluiu a construção de 512 habitações no âmbito do PRR, com um investimento de 122 milhões de euros. Paralelamente, a reprogramação das Agendas Mobilizadoras elevou o investimento total para 7.300 milhões de euros, impulsionando projetos em diversas regiões. Adicionalmente, a Lusíadas Saúde inaugurou o Hospital Lusíadas Beloura, e a Estrela da Amadora oficializou a venda da sua SAD a um consórcio alemão.",
+   "n": 28,
+   "pct": 54,
    "lado": "positivas"
   }
  }
