@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-25 20:21",
+ "gerado": "2026-08-26 00:03",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -214,23 +214,23 @@
    "pct": 82,
    "lado": "negativas"
   },
-  "2026-08-25|Justiça": {
-   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos acontecimentos judiciais, convergindo para um tema dominante de processos criminais e decisões judiciais com impacto mediático. Destacam-se a prisão preventiva de um ex-vice-presidente da Libéria, a anulação da eleição do reitor da Universidade Nova de Lisboa por três vezes, com recurso subsequente, e a notificação de um cidadão moçambicano para julgamento por desobediência e terrorismo. Adicionalmente, verificaram-se detenções por tráfico de droga, violência doméstica e crimes de incêndio, acompanhadas de medidas de coação, e a admissão de novos suspeitos numa investigação por alegada tortura numa esquadra policial. Paralelamente, a cobertura mediática focou-se em casos de corrupção envolvendo figuras políticas de outros países e em processos relacionados com o Holocausto, embora estes não tenham ocorrido em território nacional.",
-   "n": 35,
-   "pct": 78,
-   "lado": "negativas"
-  },
-  "2026-08-25|Administração Interna": {
-   "texto": "No dia 25 de agosto de 2026, registou-se um aumento generalizado da criminalidade em Portugal, com um incremento de 10,9% na criminalidade geral na área do Comando Metropolitano do Porto, conforme reportado pela PSP. Destacam-se múltiplos incidentes violentos em Lisboa e na Amadora, incluindo atropelamentos com vítimas, agressões a agentes da autoridade e um caso de disparo de arma de fogo em contexto de legítima defesa. Paralelamente, verificaram-se detenções por tráfico de droga, apreensões de estupefacientes e um incidente de violência doméstica que culminou com um atropelamento e detenção do condutor, resultando em múltiplas vítimas.",
-   "n": 57,
-   "pct": 86,
-   "lado": "negativas"
-  },
   "2026-08-25|Economia e Coesão Territorial|+": {
    "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos acontecimentos concretos nas áreas da economia e coesão territorial. O Governo dos Açores reforçou o abastecimento de água à lavoura na ilha de São Miguel, enquanto Matosinhos concluiu a construção de 512 habitações no âmbito do PRR, com um investimento de 122 milhões de euros. Paralelamente, a reprogramação das Agendas Mobilizadoras elevou o investimento total para 7.300 milhões de euros, impulsionando projetos em diversas regiões. Adicionalmente, a Lusíadas Saúde inaugurou o Hospital Lusíadas Beloura, e a Estrela da Amadora oficializou a venda da sua SAD a um consórcio alemão.",
    "n": 28,
    "pct": 54,
    "lado": "positivas"
+  },
+  "2026-08-25|Administração Interna": {
+   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos acontecimentos na área da Administração Interna, predominantemente de natureza criminal e operacional. Destacam-se o aumento generalizado da criminalidade, com um crescimento de 10,9% na criminalidade geral no Comando Metropolitano do Porto, e uma série de incidentes violentos na Amadora, incluindo atropelamentos, agressões e disparos efetuados pela PSP em legítima defesa, resultando em feridos. Adicionalmente, verificou-se um atropelamento em Albufeira com múltiplas vítimas, envolvendo um condutor embriagado, e a detenção de indivíduos por diversos crimes, como tráfico de droga e violência doméstica. Um tema transversal é a instabilidade na PSP, com investigações a decorrer sobre alegada tortura e desvios disciplinares, bem como a polémica em torno de decisões operacionais e a demissão compulsiva de um chefe da PSP.",
+   "n": 67,
+   "pct": 87,
+   "lado": "negativas"
+  },
+  "2026-08-25|Justiça": {
+   "texto": "No dia 25 de agosto de 2026, a cobertura noticiosa da área da Justiça evidenciou um conjunto de acontecimentos diversos. Destacaram-se a instauração de um inquérito pelo Ministério Público ao atropelamento na Oura, a anulação da eleição do reitor da Universidade Nova de Lisboa e a subsequente recusa da universidade em aceitar essa decisão, bem como a continuação de investigações sobre alegados casos de tortura na esquadra do Rato. Adicionalmente, verificaram-se detenções por tráfico de droga, crimes de violência doméstica e suspeitas de corrupção envolvendo figuras públicas, incluindo um antigo presidente da Arménia e o filho, e dois suspeitos de incêndios florestais. Observou-se também a notificação de um cidadão moçambicano para julgamento por desobediência e terrorismo.",
+   "n": 40,
+   "pct": 77,
+   "lado": "negativas"
   }
  }
 }
