@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-26 00:03",
+ "gerado": "2026-08-26 08:33",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -32,12 +32,6 @@
    "texto": "No dia 14 de agosto de 2026, registaram-se múltiplos eventos na área da saúde que mereceram cobertura mediática negativa. Destacam-se a ocorrência de um acidente fatal envolvendo um ciclista na Volta a Portugal, a suspensão temporária de urgências de obstetrícia em Portalegre e no Faial devido a surtos de gastroenterite que motivaram mais de quatrocentas idas às urgências, e o encerramento de serviços de urgência em Lisboa devido a tempos de espera elevados. Adicionalmente, verificou-se assédio laboral em hospitais públicos no Norte e uma greve iminente dos técnicos de emergência médica (INEM) com impacto previsto para 14 e 28 de setembro.",
    "n": 25,
    "pct": 77,
-   "lado": "negativas"
-  },
-  "2026-08-18|Justiça": {
-   "texto": "No dia 18 de agosto de 2026, verificaram-se múltiplos acontecimentos no âmbito da área da justiça, predominantemente relacionados com detenções preventivas e mortes em contexto prisional. Destacam-se a prisão preventiva de suspeitos em diversos crimes, como homicídios, roubos e violência doméstica, bem como a ocorrência de mortes de reclusos por doenças contagiosas após assistência hospitalar. Adicionalmente, registaram-se sanções internacionais contra responsáveis do Tribunal Penal Internacional (TPI) e casos de corrupção envolvendo agentes da autoridade em Moçambique.",
-   "n": 28,
-   "pct": 81,
    "lado": "negativas"
   },
   "2026-08-10|Cultura, Juventude e Desporto|+": {
@@ -220,17 +214,29 @@
    "pct": 54,
    "lado": "positivas"
   },
-  "2026-08-25|Administração Interna": {
-   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos acontecimentos na área da Administração Interna, predominantemente de natureza criminal e operacional. Destacam-se o aumento generalizado da criminalidade, com um crescimento de 10,9% na criminalidade geral no Comando Metropolitano do Porto, e uma série de incidentes violentos na Amadora, incluindo atropelamentos, agressões e disparos efetuados pela PSP em legítima defesa, resultando em feridos. Adicionalmente, verificou-se um atropelamento em Albufeira com múltiplas vítimas, envolvendo um condutor embriagado, e a detenção de indivíduos por diversos crimes, como tráfico de droga e violência doméstica. Um tema transversal é a instabilidade na PSP, com investigações a decorrer sobre alegada tortura e desvios disciplinares, bem como a polémica em torno de decisões operacionais e a demissão compulsiva de um chefe da PSP.",
-   "n": 67,
-   "pct": 87,
-   "lado": "negativas"
-  },
   "2026-08-25|Justiça": {
    "texto": "No dia 25 de agosto de 2026, a cobertura noticiosa da área da Justiça evidenciou um conjunto de acontecimentos diversos. Destacaram-se a instauração de um inquérito pelo Ministério Público ao atropelamento na Oura, a anulação da eleição do reitor da Universidade Nova de Lisboa e a subsequente recusa da universidade em aceitar essa decisão, bem como a continuação de investigações sobre alegados casos de tortura na esquadra do Rato. Adicionalmente, verificaram-se detenções por tráfico de droga, crimes de violência doméstica e suspeitas de corrupção envolvendo figuras públicas, incluindo um antigo presidente da Arménia e o filho, e dois suspeitos de incêndios florestais. Observou-se também a notificação de um cidadão moçambicano para julgamento por desobediência e terrorismo.",
    "n": 40,
    "pct": 77,
    "lado": "negativas"
+  },
+  "2026-08-18|Justiça": {
+   "texto": "No dia 18 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza judicial e prisional em Portugal e noutros países, refletindo uma cobertura mediática predominantemente negativa. Destacam-se a prisão preventiva de indivíduos por diversos crimes, incluindo homicídio, roubo e violência doméstica, bem como a morte de reclusos em contexto carcerário, associada a doenças contagiosas. Adicionalmente, verifica-se a emissão de sanções internacionais contra entidades judiciais internacionais, nomeadamente o Tribunal Penal Internacional, por parte dos Estados Unidos, e a condenação de um cidadão ucraniano por atos de sabotagem. Observa-se um tema dominante de instabilidade prisional e de conflitos institucionais, com impacto na segurança e saúde dos reclusos.",
+   "n": 28,
+   "pct": 80,
+   "lado": "negativas"
+  },
+  "2026-08-25|Administração Interna": {
+   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos incidentes de criminalidade e ocorrências policiais nos comandos metropolitanos do Porto e de Lisboa, com um aumento generalizado da criminalidade geral de 10,9%. Destacam-se atropelamentos em Albufeira, envolvendo condutores embriagados e desobediência a ordens da GNR, resultando em múltiplos feridos, incluindo elementos das forças de segurança. Adicionalmente, verificaram-se disparos efetuados pela PSP em legítima defesa na Amadora, face a tentativas de agressão, e detenções por tráfico de droga e violência doméstica, com casos de indivíduos baleados em contexto de intervenção policial. Paralelamente, foi reportada uma investigação alargada a denúncias de tortura na PSP, com indícios de envolvimento de um número superior de agentes, e a condenação de um antigo chefe da PSP por desfalque em farmácia. A cobertura mediática focou-se também na potencial revogação de vistos de asilo por parte dos Estados Unidos, num contexto migratório.",
+   "n": 68,
+   "pct": 84,
+   "lado": "negativas"
+  },
+  "2026-08-26|Cultura, Juventude e Desporto|+": {
+   "texto": "No dia 26 de agosto de 2026, foi implementada uma medida que concedeu a isenção de Imposto Municipal sobre Transmissões Onerosas (IMT) e imposto de selo a 117 mil jovens na aquisição da primeira habitação, permitindo o acesso facilitado ao crédito habitação para este segmento. Adicionalmente, foi promovido um programa de serviço militar e cidadania, visando a integração de jovens no serviço público e na vida cívica. O tema dominante destes acontecimentos é a promoção da juventude, da cidadania e do acesso à habitação. A cobertura mediática, embora positiva, não revela detalhes adicionais sobre a iniciativa.",
+   "n": 4,
+   "pct": 50,
+   "lado": "positivas"
   }
  }
 }
