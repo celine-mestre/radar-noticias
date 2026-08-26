@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-26 12:08",
+ "gerado": "2026-08-26 14:33",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -232,23 +232,29 @@
    "pct": 84,
    "lado": "negativas"
   },
-  "2026-08-26|Presidência": {
-   "texto": "No dia 26 de agosto de 2026, a cobertura noticiosa focou-se em eventos relacionados com a política de imigração dos Estados Unidos. Destacaram-se a suspensão de pedidos de visto a imigrantes e um recorde de 50.000 detenções pela polícia de imigração em julho, conforme noticiado pela RTP, Expresso e Executive Digest. Adicionalmente, a ONU solicitou a retirada de projetos legislativos da direita sobre questões de género, conforme veiculado pelo Observador. O tema dominante foi, assim, a política de imigração e, secundariamente, a legislação de género.",
-   "n": 6,
-   "pct": 89,
-   "lado": "negativas"
-  },
-  "2026-08-26|Ambiente e Energia": {
-   "texto": "O fenómeno El Niño motivou a declaração de estado de emergência nacional no Panamá e no El Salvador, devido aos seus efeitos severos na disponibilidade de água e na seca associada. O Canal do Panamá, por sua vez, reduziu o tráfego marítimo como resposta à situação. Adicionalmente, foram registadas alterações climáticas e níveis elevados de poluição atmosférica mineral, embora não diretamente relacionados com o fenómeno El Niño.",
-   "n": 6,
-   "pct": 80,
+  "2026-08-26|Justiça": {
+   "texto": "No dia 26 de agosto de 2026, a área da justiça registou múltiplos acontecimentos de natureza criminal e processual. Em Albufeira, dois feridos graves permanecem internados após um atropelamento, tendo o Ministério Público instaurado inquérito; o suspeito do atropelamento compareceu em tribunal, declarando que o incidente foi \"assustador\". Paralelamente, em Évora, uma mulher foi detida e colocada em prisão preventiva por roubo e coacção sexual, enquanto em Lisboa, um homem foi condenado a prisão efetiva por pornografia e abuso sexual de menores. Adicionalmente, um alegado mentor de um roubo de três barras de ouro no valor de 342 mil euros foi colocado em prisão preventiva, e o principal suspeito do desaparecimento de Madeleine McCann foi sujeito a julgamento por violação. Regista-se, ainda, a reintegração de um agente da PSP que matou Odair Moniz no serviço ativo.",
+   "n": 15,
+   "pct": 75,
    "lado": "negativas"
   },
   "2026-08-26|Saúde": {
-   "texto": "No dia 26 de agosto de 2026, os meios de comunicação social noticiaram um incêndio num hospital na capital do Paquistão, que resultou na morte de, pelo menos, 14 recém-nascidos. O incidente motivou reações de solidariedade e preocupação por parte do Ministério da Saúde, do INEM e do sindicato dos profissionais de saúde em Portugal. Paralelamente, a agenda de reuniões destes organismos incluía uma greve de setembro, em contexto de negociações laborais. O tema dominante da cobertura mediática neste dia foi, portanto, a tragédia no Paquistão e a greve de profissionais de saúde em Portugal.",
-   "n": 16,
-   "pct": 78,
+   "texto": "No dia 26 de agosto de 2026, registaram-se dois eventos distintos. Em Albufeira, um atropelamento causou ferimentos graves em duas pessoas, com um dos feridos a ser transferido para o Porto. Paralelamente, ocorreu um incêndio num hospital no Paquistão, resultando na morte de pelo menos 14 recém-nascidos. O segundo evento foi uma reunião entre o Ministério da Saúde, o INEM e o sindicato, com a greve de setembro na agenda, indicando uma potencial escalada de conflitos laborais. O tema dominante foi a ocorrência de uma tragédia humanitária no Paquistão, com impacto na perceção de segurança e recursos.",
+   "n": 21,
+   "pct": 76,
    "lado": "negativas"
+  },
+  "2026-08-26|Presidência": {
+   "texto": "No dia 26 de agosto de 2026, a cobertura mediática focou-se predominantemente em três temas interligados. A crise migratória em Ceuta, com a chegada massiva de migrantes, gerou uma onda de desinformação na Europa, conforme sinalizado por fontes de informação. Paralelamente, os Estados Unidos registaram um recorde de 50.000 detenções de imigrantes pela sua polícia de imigração em julho, evidenciando uma escalada nas políticas de controlo fronteiriço. Adicionalmente, a ONU solicitou a retirada de projetos legislativos da direita sobre questões de género, num contexto de debate político. O tema dominante foi, portanto, a migração e a segurança fronteiriça, com impacto transversal na desinformação e na política de género.",
+   "n": 8,
+   "pct": 77,
+   "lado": "negativas"
+  },
+  "2026-08-26|Reforma do Estado|+": {
+   "texto": "No dia 26 de agosto de 2026, a área da Reforma do Estado acompanhou desenvolvimentos relevantes na área da inteligência artificial, com destaque para a entrada em bolsa da fabricante chinesa Enflame, especializada em chips para IA. Paralelamente, o Jornal de Negócios noticiou o mesmo evento, confirmando a preparação da empresa para a sua cotação no mercado. Adicionalmente, o Público divulgou informação sobre a guerra dos chips, nomeadamente a aposta da Apple nos novos chips M6 e M5 Ultra, reforçando a importância estratégica destes componentes no setor. A cobertura mediática evidenciou um tema dominante: a crescente relevância da inteligência artificial e a competição tecnológica no desenvolvimento de hardware especializado.",
+   "n": 6,
+   "pct": 55,
+   "lado": "positivas"
   }
  }
 }
