@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-26 08:33",
+ "gerado": "2026-08-26 10:17",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -232,8 +232,20 @@
    "pct": 84,
    "lado": "negativas"
   },
-  "2026-08-26|Cultura, Juventude e Desporto|+": {
-   "texto": "No dia 26 de agosto de 2026, foi implementada uma medida que concedeu a isenção de Imposto Municipal sobre Transmissões Onerosas (IMT) e imposto de selo a 117 mil jovens na aquisição da primeira habitação, permitindo o acesso facilitado ao crédito habitação para este segmento. Adicionalmente, foi promovido um programa de serviço militar e cidadania, visando a integração de jovens no serviço público e na vida cívica. O tema dominante destes acontecimentos é a promoção da juventude, da cidadania e do acesso à habitação. A cobertura mediática, embora positiva, não revela detalhes adicionais sobre a iniciativa.",
+  "2026-08-26|Saúde": {
+   "texto": "No dia 26 de agosto de 2026, a cobertura mediática focou-se num incêndio ocorrido num hospital na capital do Paquistão, resultando na morte de pelo menos 14 recém-nascidos. O incidente, ocorrido numa maternidade, motivou reações de solidariedade e preocupação por parte de Portugal, com a intervenção do Ministério da Saúde, do INEM e do sindicato dos técnicos de emergência médica (STEPH). Adicionalmente, o dia foi marcado por uma greve de setembro convocada por este sindicato, tema que também mereceu atenção na comunicação social portuguesa.",
+   "n": 14,
+   "pct": 76,
+   "lado": "negativas"
+  },
+  "2026-08-26|Ambiente e Energia": {
+   "texto": "O fenómeno El Niño motivou a declaração de estado de emergência nacional no Panamá e no El Salvador, devido aos seus efeitos severos na disponibilidade de água e na seca associada. O Canal do Panamá, por sua vez, reduziu o tráfego marítimo como resposta à situação. Adicionalmente, foram registadas alterações climáticas e níveis elevados de poluição atmosférica mineral, embora não diretamente relacionados com o fenómeno El Niño.",
+   "n": 6,
+   "pct": 88,
+   "lado": "negativas"
+  },
+  "2026-08-26|Educação, Ciência e Inovação|+": {
+   "texto": "A Nova School of Business and Economics (Nova SBE) acolheu 2050 alunos de mestrado, reforçando a sua capacidade formativa. O Ministério da Educação iniciou um programa de intervenções de verão em escolas, visando assegurar condições adequadas para o regresso dos alunos em setembro. A Universidade de Verão do PSD distinguiu Francisco Balsemão com uma homenagem, no âmbito de um evento académico. O Observador publicou um artigo defendendo o princípio de que o direito à educação não deve estar condicionado pela situação económica dos agregados familiares.",
    "n": 4,
    "pct": 50,
    "lado": "positivas"
