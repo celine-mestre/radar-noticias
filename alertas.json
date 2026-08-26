@@ -1,64 +1,64 @@
 {
- "atualizado": "2026-08-26 08:05",
+ "atualizado": "2026-08-26 09:58",
  "dia": "2026-08-26",
- "corte": "08:05",
- "dias_base": 19,
- "regra": "Tempestade quando a contagem do dia, até às 08:05, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 15 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "corte": "09:58",
+ "dias_base": 22,
+ "regra": "Tempestade quando a contagem do dia, até às 09:58, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 17 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
-  "publicacoes_de_referencia": 15
+  "publicacoes_de_referencia": 17
  },
  "tempestades": [],
  "momentum": [
   {
-   "area": "Cultura, Juventude e Desporto",
-   "hoje": 4,
-   "mediana": 1,
-   "limiar": 9,
-   "excesso": 3,
-   "variacao_pct": 300,
-   "dias_base": 19,
+   "area": "Justiça",
+   "hoje": 14,
+   "mediana": 6.5,
+   "limiar": 14.5,
+   "excesso": 7.5,
+   "variacao_pct": 115,
+   "dias_base": 22,
    "tempestade": false
   },
   {
    "area": "Saúde",
-   "hoje": 5,
-   "mediana": 3,
-   "limiar": 11,
-   "excesso": 2,
-   "variacao_pct": 67,
-   "dias_base": 19,
+   "hoje": 13,
+   "mediana": 7.0,
+   "limiar": 15.0,
+   "excesso": 6.0,
+   "variacao_pct": 86,
+   "dias_base": 22,
    "tempestade": false
   },
   {
-   "area": "Justiça",
-   "hoje": 3,
-   "mediana": 1,
-   "limiar": 9,
-   "excesso": 2,
-   "variacao_pct": 200,
-   "dias_base": 19,
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 11,
+   "mediana": 5.0,
+   "limiar": 13.0,
+   "excesso": 6.0,
+   "variacao_pct": 120,
+   "dias_base": 22,
    "tempestade": false
   },
   {
-   "area": "Defesa Nacional",
-   "hoje": 4,
-   "mediana": 3,
-   "limiar": 11,
-   "excesso": 1,
-   "variacao_pct": 33,
-   "dias_base": 19,
+   "area": "Cultura, Juventude e Desporto",
+   "hoje": 11,
+   "mediana": 6.0,
+   "limiar": 14.0,
+   "excesso": 5.0,
+   "variacao_pct": 83,
+   "dias_base": 22,
    "tempestade": false
   },
   {
-   "area": "Educação, Ciência e Inovação",
-   "hoje": 3,
-   "mediana": 2,
-   "limiar": 10,
-   "excesso": 1,
-   "variacao_pct": 50,
-   "dias_base": 19,
+   "area": "Ambiente e Energia",
+   "hoje": 10,
+   "mediana": 5.0,
+   "limiar": 13.0,
+   "excesso": 5.0,
+   "variacao_pct": 100,
+   "dias_base": 22,
    "tempestade": false
   }
  ],
@@ -128,59 +128,101 @@
   },
   {
    "data": "2026-08-17",
-   "area": "Finanças",
-   "hoje": 18,
-   "mediana": 8,
-   "limiar": 16.9
+   "area": "Infraestruturas e Habitação",
+   "hoje": 27,
+   "mediana": 15,
+   "limiar": 23.9
+  },
+  {
+   "data": "2026-08-18",
+   "area": "Cultura, Juventude e Desporto",
+   "hoje": 46,
+   "mediana": 26.0,
+   "limiar": 37.9
   },
   {
    "data": "2026-08-18",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 31,
-   "mediana": 9.5,
-   "limiar": 21.4
+   "hoje": 53,
+   "mediana": 17.0,
+   "limiar": 40.7
+  },
+  {
+   "data": "2026-08-19",
+   "area": "Justiça",
+   "hoje": 44,
+   "mediana": 27,
+   "limiar": 41.8
+  },
+  {
+   "data": "2026-08-19",
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 51,
+   "mediana": 18,
+   "limiar": 44.7
+  },
+  {
+   "data": "2026-08-20",
+   "area": "Infraestruturas e Habitação",
+   "hoje": 26,
+   "mediana": 15.0,
+   "limiar": 23.9
   },
   {
    "data": "2026-08-20",
    "area": "Presidência",
-   "hoje": 18,
-   "mediana": 8.0,
-   "limiar": 16.9
+   "hoje": 29,
+   "mediana": 11.0,
+   "limiar": 19.0
   },
   {
    "data": "2026-08-20",
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 31,
-   "mediana": 10.5,
-   "limiar": 28.3
+   "hoje": 67,
+   "mediana": 20.0,
+   "limiar": 49.7
   },
   {
    "data": "2026-08-21",
-   "area": "Agricultura e Mar",
-   "hoje": 19,
-   "mediana": 10,
-   "limiar": 18.9
-  },
-  {
-   "data": "2026-08-21",
-   "area": "Presidência",
-   "hoje": 17,
-   "mediana": 8,
-   "limiar": 16.9
-  },
-  {
-   "data": "2026-08-25",
    "area": "Administração Interna",
-   "hoje": 26,
-   "mediana": 13,
-   "limiar": 21.9
+   "hoje": 41,
+   "mediana": 27,
+   "limiar": 38.9
+  },
+  {
+   "data": "2026-08-22",
+   "area": "Educação, Ciência e Inovação",
+   "hoje": 51,
+   "mediana": 28.5,
+   "limiar": 46.3
+  },
+  {
+   "data": "2026-08-24",
+   "area": "Defesa Nacional",
+   "hoje": 76,
+   "mediana": 29.5,
+   "limiar": 54.7
+  },
+  {
+   "data": "2026-08-24",
+   "area": "Educação, Ciência e Inovação",
+   "hoje": 55,
+   "mediana": 28.5,
+   "limiar": 47.8
   },
   {
    "data": "2026-08-25",
    "area": "Negócios Estrangeiros",
-   "hoje": 20,
-   "mediana": 8,
-   "limiar": 16.9
+   "hoje": 38,
+   "mediana": 15,
+   "limiar": 32.8
+  },
+  {
+   "data": "2026-08-25",
+   "area": "Presidência",
+   "hoje": 21,
+   "mediana": 12,
+   "limiar": 20.9
   }
  ]
 }
