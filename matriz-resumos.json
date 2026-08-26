@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-26 16:22",
+ "gerado": "2026-08-26 18:17",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -226,29 +226,17 @@
    "pct": 84,
    "lado": "negativas"
   },
-  "2026-08-26|Reforma do Estado|+": {
-   "texto": "No dia 26 de agosto de 2026, a área da Reforma do Estado acompanhou desenvolvimentos relevantes na área da inteligência artificial, com destaque para a entrada em bolsa da fabricante chinesa Enflame, especializada em chips para IA. Paralelamente, o Jornal de Negócios noticiou o mesmo evento, confirmando a preparação da empresa para a sua cotação no mercado. Adicionalmente, o Público divulgou informação sobre a guerra dos chips, nomeadamente a aposta da Apple nos novos chips M6 e M5 Ultra, reforçando a importância estratégica destes componentes no setor. A cobertura mediática evidenciou um tema dominante: a crescente relevância da inteligência artificial e a competição tecnológica no desenvolvimento de hardware especializado.",
-   "n": 6,
-   "pct": 55,
-   "lado": "positivas"
-  },
-  "2026-08-26|Justiça": {
-   "texto": "No dia 26 de agosto de 2026, a área da justiça registou múltiplos acontecimentos de natureza diversa. Destacam-se, em primeiro lugar, os eventos relacionados com um atropelamento em Albufeira, com o suspeito a ser ouvido em tribunal e o Ministério Público a instaurar um inquérito. Paralelamente, verificou-se a detenção de indivíduos por crimes diversos, incluindo tráfico de estupefacientes, roubo e abuso sexual de menores, resultando em detenções em prisão preventiva. Adicionalmente, registou-se uma condenação efetiva por pornografia e abuso sexual de menores, bem como a declaração de falência da empresa brasileira Oi. Por fim, o caso Maddie McCann teve nova movimentação judicial com o regresso do principal suspeito ao julgamento por violação. O tema dominante foi a criminalidade, abrangendo desde crimes violentos a ilícitos contra a liberdade sexual e a economia.",
-   "n": 18,
-   "pct": 78,
-   "lado": "negativas"
-  },
-  "2026-08-26|Saúde": {
-   "texto": "No dia 26 de agosto de 2026, registaram-se múltiplos acontecimentos relevantes na área da saúde. Nos Açores, um surto de norovírus causou gastroenterite, levando centenas de pessoas às urgências. Em Albufeira, ocorreram dois acidentes graves, resultando em feridos graves que permanecem internados e um dos quais será transferido para o Porto. Adicionalmente, a área da saúde enfrentou uma greve agendada para setembro, com reuniões entre o Ministério da Saúde, o INEM e o sindicato. Por fim, um incêndio num hospital no Paquistão resultou na morte de pelo menos 14 recém-nascidos, evidenciando uma grave crise de segurança e infraestruturas.",
-   "n": 23,
-   "pct": 78,
-   "lado": "negativas"
-  },
   "2026-08-24|Economia e Coesão Territorial|+": {
    "texto": "No âmbito do património cultural, a Feira da Golegã candidatou-se a reconhecimento como Património Imaterial pela UNESCO. No plano da modernização administrativa, o programa Alentejo 2030 apoiou a digitalização de autarquias, com um investimento adicional de 1 ME para acelerar esse processo. Na cooperação internacional, Brasil e Angola celebraram acordos para acelerar o desenvolvimento do agronegócio e Angola inaugurou um Palácio de Convenções, visando o turismo de negócios e eventos. Adicionalmente, o cluster de defesa em Portalegre e a participação de sete empresas portuguesas na Saudi WoodShow 2026 evidenciam um reforço da presença económica portuguesa em mercados estratégicos.",
    "n": 23,
    "pct": 53,
    "lado": "positivas"
+  },
+  "2026-08-26|Justiça": {
+   "texto": "No dia 26 de agosto de 2026, a área da justiça registou múltiplos acontecimentos de natureza criminal e processual. Destacam-se, em primeiro lugar, um caso de homicídio no Brasil, com um suspeito a aguardar extradição, e um atropelamento em Albufeira, envolvendo múltiplas vítimas e um processo judicial em curso. Adicionalmente, verificaram-se detenções por crimes de pornografia e abuso sexual de menores, roubo qualificado e posse de droga, bem como decisões judiciais sobre medidas de proteção de menores e processos de falência de empresas. O tema dominante é, portanto, a ocorrência de crimes graves e a atuação da justiça em processos criminais e civis.",
+   "n": 23,
+   "pct": 82,
+   "lado": "negativas"
   }
  }
 }
