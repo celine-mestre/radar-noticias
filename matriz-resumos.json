@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-26 18:17",
+ "gerado": "2026-08-27 04:29",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -82,12 +82,6 @@
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-08-19|Saúde": {
-   "texto": "No dia 19 de agosto de 2026, ocorreram múltiplos incidentes e problemas no setor da saúde e áreas relacionadas. Um jovem de 21 anos foi baleado no abdómen em Queluz, resultando em estado instável e necessitando de internamento hospitalar. Um surto de norovírus provocou gastroenterite num lar no Faial, levando ao realojamento de 45 idosos após um incêndio que obrigou ao seu deslocamento. Adicionalmente, a urgência de obstetrícia em Setúbal enfrentou rotatividade problemática, com a IGAS a identificar falhas no planeamento e funcionamento. Paralelamente, a Inspeção-Geral da Administração da Saúde (IGAS) apontou fragilidades estruturais na urgência obstétrica de Almada-Seixal, e a ULS da Arrábida foi alvo de inspeção com resultados semelhantes. A instabilidade de mandatos administrativos em hospitais, incluindo o de São José, e a suspensão de interrupções voluntárias da gravidez no Garcia de Orta, também foram notórios. O tema dominante foi a instabilidade e falhas nos serviços de saúde, incluindo a gestão de emergências, a disponibilidade de cuidados obstétricos e a segurança hospitalar.",
-   "n": 39,
-   "pct": 76,
-   "lado": "negativas"
-  },
   "2026-08-22|Justiça": {
    "texto": "No dia 22 de agosto de 2026, ocorreram múltiplos eventos no âmbito da Justiça. Em Vila Nova de Foz Côa, foi decretada a prisão preventiva de um suspeito de atear fogo, conforme noticiado por diversos órgãos de comunicação social. Paralelamente, a Polícia Judiciária apreendeu 150 kg de cocaína num contentor proveniente do Equador, evidenciando a atuação da investigação criminal. Adicionalmente, um tribunal federal dos EUA anulou a suspensão de vistos a 75 países, imposta por Donald Trump, considerando-a \"manifestamente ilegal\", conforme reportado por vários meios. Estes factos agrupam-se em torno de acontecimentos criminais e decisões judiciais, com um tema dominante de decisões judiciais e investigação criminal.",
    "n": 14,
@@ -104,12 +98,6 @@
    "texto": "No dia 15 de agosto de 2026, verificou-se uma nova tentativa de entrada de migrantes em Ceuta, tendo as autoridades marroquinas interceptado centenas de indivíduos que se dirigiam ao território espanhol. A ação conjunta entre Marrocos e Espanha resultou na detenção e devolução dos migrantes ao país de origem, conforme reportado por diversos meios de comunicação social. Adicionalmente, as autoridades marroquinas ordenaram a expulsão de jornalistas espanhóis que estavam a cobrir a crise migratória, intensificando a pressão sobre a fronteira e as relações diplomáticas entre os dois países. O tema dominante foi a crise migratória na fronteira entre Marrocos e Espanha, com particular foco na gestão da pressão migratória e nas ações de controlo fronteiriço.",
    "n": 10,
    "pct": 83,
-   "lado": "negativas"
-  },
-  "2026-08-19|Administração Interna": {
-   "texto": "No dia 19 de agosto de 2026, registaram-se múltiplos incidentes de natureza diversa na área da Administração Interna. Destacam-se a ocorrência de dois acidentes laborais fatais, envolvendo a queda de uma grua em Belas, e a detenção de um líder de rede internacional de tráfico de droga pela GNR, após um período prolongado de fuga. Adicionalmente, verificaram-se detenções por infrações rodoviárias (circulação de trotinete em contramão na Ponte 25 de Abril), apreensões de artigos pirotécnicos e estupefacientes, e um incidente de abandono de criança em Braga. Observou-se, ainda, um aumento da atividade relacionada com incêndios florestais, com quase mil e 250 operacionais envolvidos nos fogos em Torre de Moncorvo, Arouca e Santo Tirso, e a deteção de condutores sob efeito de álcool.",
-   "n": 42,
-   "pct": 82,
    "lado": "negativas"
   },
   "2026-08-20|Administração Interna": {
@@ -220,22 +208,28 @@
    "pct": 80,
    "lado": "negativas"
   },
-  "2026-08-25|Administração Interna": {
-   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos incidentes de criminalidade e ocorrências policiais nos comandos metropolitanos do Porto e de Lisboa, com um aumento generalizado da criminalidade geral de 10,9%. Destacam-se atropelamentos em Albufeira, envolvendo condutores embriagados e desobediência a ordens da GNR, resultando em múltiplos feridos, incluindo elementos das forças de segurança. Adicionalmente, verificaram-se disparos efetuados pela PSP em legítima defesa na Amadora, face a tentativas de agressão, e detenções por tráfico de droga e violência doméstica, com casos de indivíduos baleados em contexto de intervenção policial. Paralelamente, foi reportada uma investigação alargada a denúncias de tortura na PSP, com indícios de envolvimento de um número superior de agentes, e a condenação de um antigo chefe da PSP por desfalque em farmácia. A cobertura mediática focou-se também na potencial revogação de vistos de asilo por parte dos Estados Unidos, num contexto migratório.",
-   "n": 68,
-   "pct": 84,
-   "lado": "negativas"
-  },
   "2026-08-24|Economia e Coesão Territorial|+": {
    "texto": "No âmbito do património cultural, a Feira da Golegã candidatou-se a reconhecimento como Património Imaterial pela UNESCO. No plano da modernização administrativa, o programa Alentejo 2030 apoiou a digitalização de autarquias, com um investimento adicional de 1 ME para acelerar esse processo. Na cooperação internacional, Brasil e Angola celebraram acordos para acelerar o desenvolvimento do agronegócio e Angola inaugurou um Palácio de Convenções, visando o turismo de negócios e eventos. Adicionalmente, o cluster de defesa em Portalegre e a participação de sete empresas portuguesas na Saudi WoodShow 2026 evidenciam um reforço da presença económica portuguesa em mercados estratégicos.",
    "n": 23,
    "pct": 53,
    "lado": "positivas"
   },
+  "2026-08-19|Administração Interna": {
+   "texto": "No dia 19 de agosto de 2026, registaram-se múltiplos incidentes de natureza diversa na área da Administração Interna. Destacam-se a ocorrência de dois acidentes laborais com vítimas mortais, resultantes da queda de uma grua em Belas, e a detenção de um líder de rede internacional de tráfico de droga pela GNR, após um período prolongado de fuga. Adicionalmente, verificaram-se ocorrências criminais como roubos, tráfico de estupefacientes, apreensões de artigos pirotécnicos e casos de violência doméstica, incluindo maus-tratos a pais e abandono de crianças. Observou-se ainda um aumento de infrações rodoviárias, nomeadamente a circulação perigosa de trotinete em contramão, e a deteção de condutores sob efeito de álcool.",
+   "n": 42,
+   "pct": 79,
+   "lado": "negativas"
+  },
+  "2026-08-25|Administração Interna": {
+   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos incidentes de criminalidade e ocorrências policiais nos territórios da Administração Interna, destacando-se um aumento generalizado da criminalidade geral, nomeadamente em Lisboa e no Porto, com um incremento de 10,9% no Comando Metropolitano do Porto. Adicionalmente, verificaram-se múltiplas intervenções da PSP e da GNR, incluindo detenções por tráfico de droga, violência doméstica e desobediência a ordens de autoridade, culminando em atropelamentos e disparos em legítima defesa na Amadora. O tema dominante é, portanto, o aumento da criminalidade e a resposta das forças de segurança.",
+   "n": 69,
+   "pct": 85,
+   "lado": "negativas"
+  },
   "2026-08-26|Justiça": {
-   "texto": "No dia 26 de agosto de 2026, a área da justiça registou múltiplos acontecimentos de natureza criminal e processual. Destacam-se, em primeiro lugar, um caso de homicídio no Brasil, com um suspeito a aguardar extradição, e um atropelamento em Albufeira, envolvendo múltiplas vítimas e um processo judicial em curso. Adicionalmente, verificaram-se detenções por crimes de pornografia e abuso sexual de menores, roubo qualificado e posse de droga, bem como decisões judiciais sobre medidas de proteção de menores e processos de falência de empresas. O tema dominante é, portanto, a ocorrência de crimes graves e a atuação da justiça em processos criminais e civis.",
-   "n": 23,
-   "pct": 82,
+   "texto": "No dia 26 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza judicial e criminal na área da justiça. Destacam-se a detenção de um ex-diplomata de Taiwan em Macau por corrupção, o atropelamento em Albufeira que motivou a detenção e interrogatório do condutor em tribunal, e o regresso ao serviço de um agente da PSP responsável pela morte de Odair Moniz. Adicionalmente, verificaram-se casos de extradição de um homem procurado no Brasil, condenações por crimes de pornografia e abuso sexual de menores, e a declaração de falência da empresa brasileira Oi.",
+   "n": 30,
+   "pct": 81,
    "lado": "negativas"
   }
  }
