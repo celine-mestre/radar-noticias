@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-27 19:05",
+ "gerado": "2026-08-27 22:17",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -232,11 +232,11 @@
    "pct": 81,
    "lado": "negativas"
   },
-  "2026-08-27|Justiça": {
-   "texto": "No dia 27 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza judicial e de segurança pública. Destacam-se a prisão preventiva de um condutor responsável por atropelamento com múltiplas vítimas em Albufeira, com consequências graves para algumas delas, e a detenção de um indivíduo por tentativa de passagem de estupefacientes a um recluso. Adicionalmente, verificou-se a prisão preventiva de um diretor nacional da Polícia Judiciária por alegada falsidade declarativa em tribunal e a condenação de um abusador sexual de menores. Observou-se ainda um caso de homicídio familiar com julgamento em curso, a detenção de um fugitivo da justiça albanesa e a acusação de um antigo primeiro-ministro da Malásia por não declaração de bens.",
-   "n": 37,
-   "pct": 78,
-   "lado": "negativas"
+  "2026-08-27|Reforma do Estado|+": {
+   "texto": "A informação disponível não permite identificar acontecimentos concretos na área da Reforma do Estado. Os títulos apresentados referem-se a eventos económicos e tecnológicos, nomeadamente a evolução de mercados financeiros, a desmistificação de alegações falsas sobre cheias no Nepal, o desenvolvimento de tecnologias como o Linux e os telemóveis Galaxy S26 FE, e a aquisição da Hugging Face pela Nvidia. Não consta qualquer medida, resultado, acordo ou reconhecimento relacionado com a Reforma do Estado.",
+   "n": 6,
+   "pct": 67,
+   "lado": "positivas"
   }
  }
 }
