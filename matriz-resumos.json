@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-27 22:17",
+ "gerado": "2026-08-28 03:23",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -98,18 +98,6 @@
    "texto": "No dia 15 de agosto de 2026, verificou-se uma nova tentativa de entrada de migrantes em Ceuta, tendo as autoridades marroquinas interceptado centenas de indivíduos que se dirigiam ao território espanhol. A ação conjunta entre Marrocos e Espanha resultou na detenção e devolução dos migrantes ao país de origem, conforme reportado por diversos meios de comunicação social. Adicionalmente, as autoridades marroquinas ordenaram a expulsão de jornalistas espanhóis que estavam a cobrir a crise migratória, intensificando a pressão sobre a fronteira e as relações diplomáticas entre os dois países. O tema dominante foi a crise migratória na fronteira entre Marrocos e Espanha, com particular foco na gestão da pressão migratória e nas ações de controlo fronteiriço.",
    "n": 10,
    "pct": 83,
-   "lado": "negativas"
-  },
-  "2026-08-20|Administração Interna": {
-   "texto": "No dia 20 de agosto de 2026, registaram-se múltiplos incidentes na ilha de São Miguel, em Rabo de Peixe, envolvendo agentes da PSP durante uma operação de cumprimento de mandados de busca por suspeitas de tráfico de droga. Os acontecimentos concretos incluem agressões a viaturas policiais, tentativas de agressão aos agentes e, como resposta, a emissão de disparos para o ar pela PSP. Adicionalmente, a PSP efetuou detenções em Lisboa relacionadas com um homicídio cometido no Brasil há 17 anos, e a GNR apreendeu grandes quantidades de combustível em Aljezur, no âmbito de operações contra o tráfico de droga.",
-   "n": 44,
-   "pct": 80,
-   "lado": "negativas"
-  },
-  "2026-08-20|Justiça": {
-   "texto": "No dia 2026-08-20, a área da Justiça registou múltiplos acontecimentos, destacando-se a resolução de processos de proteção de menores pelas Comissões de Proteção de Crianças e Jovens (CPCJ) quando transitavam para tribunal, a cobrança coerciva de impostos relativos à venda de barragens pela Autoridade Tributária, a detenção de um indivíduo em Lisboa por homicídio perpetrado no Brasil em 2009, a condenação a 17 anos de prisão de um homem belga por tentativa de homicídio de um alegado abusador de criança, a cobrança de impostos sobre o negócio das barragens pela mesma autoridade, a retirada de cartas de condução a condutores de trotineta alcoolizados e a queda de uma grua em Sintra, motivando um inquérito do Ministério Público. Adicionalmente, verificaram-se detenções preventivas por roubo em ourivesaria, uma providência cautelar que travou restrições ao TVDE, a libertação de um indivíduo detido por sequestro, violação e roubo, e a condenação do fundador da Evergrande a prisão perpétua por fraude financeira, reiterada por diversas fontes noticiosas.",
-   "n": 26,
-   "pct": 78,
    "lado": "negativas"
   },
   "2026-08-21|Defesa Nacional": {
@@ -237,6 +225,18 @@
    "n": 6,
    "pct": 67,
    "lado": "positivas"
+  },
+  "2026-08-20|Administração Interna": {
+   "texto": "No dia 20 de agosto de 2026, registaram-se múltiplos incidentes na ilha de São Miguel, em Rabo de Peixe, envolvendo agentes da PSP durante uma operação de cumprimento de mandados de busca por suspeitas de tráfico de droga. Estes eventos desencadearam desacatos por parte de moradores, resultando em agressões a viaturas policiais e na necessidade de os agentes efetuarem disparos para o ar, em legítima defesa. Adicionalmente, em Lisboa, a PSP deteve um indivíduo condenado por homicídio no Brasil há 17 anos, e a GNR apreendeu 6750 litros de gasolina suspeitos de apoiar atividades ilícitas em Aljezur, num contexto de aumento de apreensões de combustível. O tema dominante foi a segurança pública, com incidentes de violência contra forças de segurança, detenções por crimes graves e apreensões de estupefacientes e combustível.",
+   "n": 44,
+   "pct": 79,
+   "lado": "negativas"
+  },
+  "2026-08-20|Justiça": {
+   "texto": "No dia 20 de agosto de 2026, a área da Justiça registou múltiplos acontecimentos de natureza diversa. Vários casos de proteção de menores foram objeto de intervenção das Comissões de Proteção de Crianças e Jovens (CPCJ), que cessaram a sua ação quando os casos transitaram para o foro judicial. Paralelamente, o Ministério Público iniciou um inquérito à queda de uma grua em Sintra, após dois óbitos de trabalhadores, enquanto as Finanças procederam à cobrança coerciva de impostos relativos à venda de barragens, admitindo a possibilidade de medidas judiciais face à EDP. Adicionalmente, registaram-se detenções por crimes graves, como homicídio e abuso de menores, e decisões judiciais que penalizaram condutores de trotineta alcoolizados, bem como condenações de figuras públicas por fraudes financeiras, incluindo o fundador da Evergrande, a prisão perpétua.",
+   "n": 26,
+   "pct": 76,
+   "lado": "negativas"
   }
  }
 }
