@@ -1,9 +1,9 @@
 {
- "atualizado": "2026-08-28 19:37",
+ "atualizado": "2026-08-28 21:12",
  "dia": "2026-08-28",
- "corte": "19:37",
+ "corte": "21:12",
  "dias_base": 24,
- "regra": "Tempestade quando a contagem do dia, até às 19:37, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 19 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 21:12, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 19 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
@@ -12,11 +12,11 @@
  "tempestades": [
   {
    "area": "Assuntos Parlamentares",
-   "hoje": 13,
+   "hoje": 17,
    "mediana": 1.5,
    "limiar": 9.5,
-   "excesso": 11.5,
-   "variacao_pct": 767,
+   "excesso": 15.5,
+   "variacao_pct": 1033,
    "dias_base": 24,
    "tempestade": true
   }
@@ -24,51 +24,51 @@
  "momentum": [
   {
    "area": "Economia e Coesão Territorial",
-   "hoje": 54,
-   "mediana": 36.0,
-   "limiar": 64.2,
-   "excesso": 18.0,
-   "variacao_pct": 50,
+   "hoje": 56,
+   "mediana": 38.5,
+   "limiar": 65.2,
+   "excesso": 17.5,
+   "variacao_pct": 45,
    "dias_base": 24,
    "tempestade": false
   },
   {
    "area": "Assuntos Parlamentares",
-   "hoje": 13,
+   "hoje": 17,
    "mediana": 1.5,
    "limiar": 9.5,
-   "excesso": 11.5,
-   "variacao_pct": 767,
+   "excesso": 15.5,
+   "variacao_pct": 1033,
    "dias_base": 24,
    "tempestade": true
   },
   {
    "area": "Trabalho, Solidariedade e Segurança Social",
-   "hoje": 33,
-   "mediana": 22.0,
-   "limiar": 59.1,
-   "excesso": 11.0,
-   "variacao_pct": 50,
+   "hoje": 37,
+   "mediana": 22.5,
+   "limiar": 59.6,
+   "excesso": 14.5,
+   "variacao_pct": 64,
    "dias_base": 24,
    "tempestade": false
   },
   {
    "area": "Educação, Ciência e Inovação",
-   "hoje": 36,
-   "mediana": 27.5,
-   "limiar": 49.7,
-   "excesso": 8.5,
-   "variacao_pct": 31,
+   "hoje": 44,
+   "mediana": 30.0,
+   "limiar": 55.2,
+   "excesso": 14.0,
+   "variacao_pct": 47,
    "dias_base": 24,
    "tempestade": false
   },
   {
-   "area": "Cultura, Juventude e Desporto",
-   "hoje": 33,
-   "mediana": 26.0,
-   "limiar": 43.8,
-   "excesso": 7.0,
-   "variacao_pct": 27,
+   "area": "Administração Interna",
+   "hoje": 36,
+   "mediana": 28.5,
+   "limiar": 50.7,
+   "excesso": 7.5,
+   "variacao_pct": 26,
    "dias_base": 24,
    "tempestade": false
   }
@@ -266,7 +266,7 @@
   {
    "data": "2026-08-28",
    "area": "Assuntos Parlamentares",
-   "hoje": 13,
+   "hoje": 17,
    "mediana": 1.5,
    "limiar": 9.5
   }
