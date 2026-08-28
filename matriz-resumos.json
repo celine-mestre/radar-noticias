@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-28 03:23",
+ "gerado": "2026-08-28 07:18",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -220,12 +220,6 @@
    "pct": 81,
    "lado": "negativas"
   },
-  "2026-08-27|Reforma do Estado|+": {
-   "texto": "A informação disponível não permite identificar acontecimentos concretos na área da Reforma do Estado. Os títulos apresentados referem-se a eventos económicos e tecnológicos, nomeadamente a evolução de mercados financeiros, a desmistificação de alegações falsas sobre cheias no Nepal, o desenvolvimento de tecnologias como o Linux e os telemóveis Galaxy S26 FE, e a aquisição da Hugging Face pela Nvidia. Não consta qualquer medida, resultado, acordo ou reconhecimento relacionado com a Reforma do Estado.",
-   "n": 6,
-   "pct": 67,
-   "lado": "positivas"
-  },
   "2026-08-20|Administração Interna": {
    "texto": "No dia 20 de agosto de 2026, registaram-se múltiplos incidentes na ilha de São Miguel, em Rabo de Peixe, envolvendo agentes da PSP durante uma operação de cumprimento de mandados de busca por suspeitas de tráfico de droga. Estes eventos desencadearam desacatos por parte de moradores, resultando em agressões a viaturas policiais e na necessidade de os agentes efetuarem disparos para o ar, em legítima defesa. Adicionalmente, em Lisboa, a PSP deteve um indivíduo condenado por homicídio no Brasil há 17 anos, e a GNR apreendeu 6750 litros de gasolina suspeitos de apoiar atividades ilícitas em Aljezur, num contexto de aumento de apreensões de combustível. O tema dominante foi a segurança pública, com incidentes de violência contra forças de segurança, detenções por crimes graves e apreensões de estupefacientes e combustível.",
    "n": 44,
@@ -237,6 +231,12 @@
    "n": 26,
    "pct": 76,
    "lado": "negativas"
+  },
+  "2026-08-27|Reforma do Estado|+": {
+   "texto": "A informação disponível não permite identificar acontecimentos concretos na área da Reforma do Estado. Os títulos apresentados referem-se a eventos económicos e tecnológicos, nomeadamente a evolução de mercados financeiros, a desmistificação de alegações falsas sobre cheias no Nepal, o desenvolvimento de tecnologias como o Linux e os telemóveis Galaxy S26 FE, e a aquisição da Hugging Face pela Nvidia. Não consta qualquer medida, resultado, acordo ou reconhecimento relacionado com a Reforma do Estado.",
+   "n": 6,
+   "pct": 60,
+   "lado": "positivas"
   }
  }
 }
