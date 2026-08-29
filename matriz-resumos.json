@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-29 14:02",
+ "gerado": "2026-08-29 17:22",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -250,10 +250,16 @@
    "pct": 62,
    "lado": "positivas"
   },
+  "2026-08-29|Administração Interna": {
+   "texto": "No dia 29 de agosto de 2026, a Administração Interna registou múltiplos acontecimentos de natureza diversa. Destacam-se a detenção e possível deportação de um comentador de extrema-direita pelo Serviço de Controlo de Entradas e Fronteiras (ICE), a reabertura da Avenida Brasília, em Lisboa, após um acidente causado por fuga à Polícia de Segurança Pública, e a ocorrência de um incêndio florestal ativo em Tavira, combatido por quase 50 operacionais. Adicionalmente, verificaram-se detenções por contrabando pela GNR em Vila do Bispo, apreensão de alimentos e encerramento de estabelecimento em Sintra pela PSP, e a identificação de condições precárias de alojamento para trabalhadores estrangeiros no Bombarral. O tema dominante foi a ocorrência de incidentes de segurança pública e infrações criminais.",
+   "n": 18,
+   "pct": 75,
+   "lado": "negativas"
+  },
   "2026-08-29|Ambiente e Energia|+": {
-   "texto": "O Governo português formalizou um plano para duplicar a capacidade de armazenamento de energia até 2030, visando reforçar a resiliência do sistema energético. Foi entregue a Bruxelas um plano de restauração da natureza, dando início à fase de implementação de medidas de recuperação de ecossistemas degradados. A petrolífera angolana Etu Energias anunciou o aumento das suas participações em dois blocos de exploração, num investimento que reforça a colaboração internacional no setor energético. O tema dominante é a ação climática e a transição energética, evidenciada pela aposta no armazenamento de energia e na restauração ambiental.",
-   "n": 5,
-   "pct": 50,
+   "texto": "O Governo português anunciou a duplicação da capacidade de armazenamento de energia até 2030, conforme comunicado nos meios de comunicação social. Adicionalmente, foi submetido a Bruxelas um plano para a restauração da natureza, dando início à fase de implementação dos projetos propostos. No âmbito da cooperação internacional, Portugal participou na Feira Internacional de Maputo, com a presença de mais de 100 empresas nacionais. Por fim, verificou-se um início invulgarmente precoce da vindima, com perspetivas de produção de vinhos de qualidade excecional.",
+   "n": 6,
+   "pct": 54,
    "lado": "positivas"
   }
  }
