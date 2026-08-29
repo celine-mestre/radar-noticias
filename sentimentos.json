@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-28 23:21",
+ "gerado": "2026-08-29 04:48",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "estado": "em validação — avaliações automáticas, leitura humana em curso",
  "criterio": "Tom do acontecimento noticiado (positivo, neutro, negativo), comunicação social nacional apenas, uma avaliação por notícia.",
@@ -47569,6 +47569,276 @@
   "https://observador.pt/programas/gabinete-de-guerra/trump-esta-a-entregar-a-ucrania-e-a-europa-a-putin/": {
    "s": "negativo",
    "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMixwFBVV95cUxPTDJFNUtpVnRpMnBzZGFvTjd4T2cxRFpTOVgwVE00ZWNvRERtTVhueUFCRk5YTzYxaWduSi0zLTI4SUZjS1ZqSVdkckdXT1FoQlIwUkFCUGw3SGZvSDh0TkFCTWFMbGFwc0c1QmZLQ1JoOV9QZzhJSnVscml6bUd1dExNbFZMNFR2NWs4UkYxLVVSS2JVM1pIUk1XSE5EaWF6cVdFa0txTVlFYWJrR1Ixb3JuNnFRVFVsS19QVHZJa0lNcTRRN01V?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMipgFBVV95cUxPVndCMVUxSEUzYU5WbVFSQm9qWkxSa2lyVnUwRGpjc3NzZFZLdlRkb0g5cWZzY3RqSDNUSkFORVY2Nzl5aEdKb1hyTWxfSGg3VmF0NUtOeXQ4VWFkaG50Zi1PQnUzd1lNMFRfVjMyYWN0NUlrbTdweHRqa2RXMXUyaHplZ1ZBWjFuOGJWNmVfcDM2OXRMaHV2NG5hVWF5TWVZWkdVNnl30gGmAUFVX3lxTE9Wd0IxVTFIRTNhTlZtUVJCb2paTFJraXJWdTBEamNzc3NkVkt2VGRvSDlxZnNjdGpIM1RKQU5FVjY3OXloR0pvWHJNbF9IaDdWYXQ1S055dDhVYWRobnRmLU9CdTN3WU0wVF9WMzJhY3Q1SWttN3B4dGprZFcxdTJoemVnVkFaMW44YlY2ZV9wMzY5dExodXY0bmFVYXlNZVlaR1U2eXc?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitgFBVV95cUxON05YZE9oRGRpWHNMdzNISmQwRjc2VS00dDJjWkFJbTBhRmc4LXczNkRtLXYxdllHSFJTUUk4cG16X214bHBPb2JtYUVrNmcwMUFMX0xzVE91Uk00R21wTFNVQWRvaE5CQkRodTBzbU5lcnRoZFI2UVRmS3gxTEtacDB1elE1TEdyV25SUEg2OXZrQ2liTWRpTVE5c0ZPRTcwSHdkLUhJR0JRbG03QXpQd2VtOEI4UdIBtgFBVV95cUxON05YZE9oRGRpWHNMdzNISmQwRjc2VS00dDJjWkFJbTBhRmc4LXczNkRtLXYxdllHSFJTUUk4cG16X214bHBPb2JtYUVrNmcwMUFMX0xzVE91Uk00R21wTFNVQWRvaE5CQkRodTBzbU5lcnRoZFI2UVRmS3gxTEtacDB1elE1TEdyV25SUEg2OXZrQ2liTWRpTVE5c0ZPRTcwSHdkLUhJR0JRbG03QXpQd2VtOEI4UQ?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi5gFBVV95cUxONGs2cWNCYWxZMllCcWE0NHpJUWpIN2NkM09ZR2twMDlSRG90bzlqZ19OMURjRFhFRXNWTFhrOG1zM3ktQ3NqLUE0dUFfb2U2X05pdUJYVTJWYWVKSEFHZEltVHdFQ3BadkVrb2RMWEo1LW9OZ2JhN09FYUlOU3YxaDdQNmVHTTJCTmNhRFlzS0xIUnQxTmtQNEVWLXZoYV9LQlQ2cHIyVGdGOV93T2U0bmFKeVQ3Rm53M0M3enFNOThOTFRPUm1TQ3o0SHY4YmlSeWZ1bmk0YzhCUWtPR01oeHAtampmQQ?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMivAFBVV95cUxQYWNFS0hQNWh5RjlUZG1GOUF3ckx5U2gzYm1ZdElCLXpETXFncHVBdU81STBxVnJhS0JteWVRRUtId0JRdUU3YzRoZmZpUkJ2RlFXZVdZZGI5cXBqeFg5NFlheFprMW0xdXIwbHZPaEJKaV9McnhJVkJjY0Q1NzR4ZjhDUmt1dDB1aDVtMG5oV2lGc2dZZkVKaTg3VTJqaDRVMmk4bnZCR2dVY0k4WWU3Uk5NWDQyM18tN3J6dQ?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMirwFBVV95cUxPUjI3Z3BVc2Y5UG1SdlpWV05zYjlTNnNDd0Y0RExTWjN1NW90LXh6aEJ2cU9ydzQxWHpXTVhDanZCYVMzYzVMOXEtNGRrUlA1OTZfVDBmZWNYaWRRd2JRMUxGZVBnVnFWcnR6b3NGc250WmFUMFRoaFF4dkVwZjdvSk43YUZrMHJEc1RJY2tlM1FIY0tIR2gzUGJKdmNvcFFFdXJaTC00YlNwTFhRV2Q00gGvAUFVX3lxTE9SMjdncFVzZjlQbVJ2WlZXTnNiOVM2c0N3RjRETFNaM3U1b3QteHpoQnZxT3J3NDFYeldNWENqdkJhUzNjNUw5cS00ZGtSUDU5Nl9UMGZlY1hpZFF3YlExTEZlUGdWcVZydHpvc0ZzbnRaYVQwVGhoUXh2RXBmN29KTjdhRmswckRzVElja2UzUUhjS0hHaDNQYkp2Y29wUUV1clpMLTRiU3BMWFFXZDQ?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMilwFBVV95cUxOc0tKUDFPTmpvWXFjNTlHVDdET0M3c3FqMThmU0Nzc193dzBsNVhpdmpyeml5WDRyZURZYTRtSUJKZzdjUEtHV3gyNmx2WG9rT0VUTmNXU3BHOGZOUE1NM1FMX1laeFNmY1JYOE1zR3o2Nzc1NENNMFViQmxtMXFaOHNJc3hpWmhNZGlBWHdXM1pLZWM5RVpR0gGXAUFVX3lxTE5zS0pQMU9Oam9ZcWM1OUdUN0RPQzdzcWoxOGZTQ3NzX3d3MGw1WGl2anJ6aXlYNHJlRFlhNG1JQkpnN2NQS0dXeDI2bHZYb2tPRVROY1dTcEc4Zk5QTU0zUUxfWVp4U2ZjUlg4TXNHejY3NzU0Q00wVWJCbG0xcVo4c0lzeGlaaE1kaUFYd1czWktlYzlFWlE?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMirwFBVV95cUxQMVJsbE9nOVYtdGRkSWVsMkRNaFMwdVBMd2ZwNTVNVzZYUFRLN0xjV0tMelFrSXY3TGZDdVNaLTlGZzJ4T3phNXNtRFpsaF9mWUFBb0lIbUdRYS0wUUV4amJPNzE4NkZnSG9MX1BzbW5SbEpaeTVfZUMzR1RUZWc3WVlqTXl2UU1TXzJhajZ1QjFaTzFtZF85enBYaWlZdzNZYVROX01IUTRTbkUxZ2xv0gGvAUFVX3lxTFAxUmxsT2c5Vi10ZGRJZWwyRE1oUzB1UEx3ZnA1NU1XNlhQVEs3TGNXS0x6UWtJdjdMZkN1U1otOUZnMnhPemE1c21EWmxoX2ZZQUFvSUhtR1FhLTBRRXhqYk83MTg2RmdIb0xfUHNtblJsSlp5NV9lQzNHVFRlZzdZWWpNeXZRTVNfMmFqNnVCMVpPMW1kXzl6cFhpaVl3M1lhVE5fTUhRNFNuRTFnbG8?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiigFBVV95cUxPUVgtS3pLaFI4ODRwSlFVd2M1TkdqWHNQYXVCVGh6SnBWTW9UaVV4ZWJrOU9LOG5PN1NWdGpkdEhVM0E0RnBleVotdnU2U2ZGVVRFQ1lyWUpyaTZnSWRrOHYzNE1Tbm9XYXpuRFlFcXhpR2dqNmpfNU5IX1FkY2JJWXhOSVd6V2QteUE?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMinwFBVV95cUxPS0IwSklwejRBbEt0Z1V5N192cTFWYjY4d2RaQmEtNkhnQkJfRGJPY0tGMXhvdzZlVE1QLUZmT09McEozckJSeTJkT0VFNFVKWUhrbzlTRWhCTzQ3c1ZHeHN5dkl1TEtBNDlmVzZzSkh4RzJmdVlRWkVLdkswSXdMV2VjeG43eHdpa0c4bEJCTkZiZHZwRXpoOHMzNmdrcEk?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMimwFBVV95cUxPMmgtaWl2X3pBcml5aHFSNmZRR0kxV0NiS2JTUXZyOWRKdTJ3MmV5UTE4N0MwbE5SMDMxVnVCUDJJVnB3UTlWRkx3ZU9teHNpbmlHcWVoOE54SjJ5MEFJODFkWHN3b0J0eTVMMHhsbTFMb2JodG5sdktzdGdWUnlkWUtiYl9QNGtITHRZQ0wwQTg2Q0VWMlZCanpHMNIBmwFBVV95cUxPMmgtaWl2X3pBcml5aHFSNmZRR0kxV0NiS2JTUXZyOWRKdTJ3MmV5UTE4N0MwbE5SMDMxVnVCUDJJVnB3UTlWRkx3ZU9teHNpbmlHcWVoOE54SjJ5MEFJODFkWHN3b0J0eTVMMHhsbTFMb2JodG5sdktzdGdWUnlkWUtiYl9QNGtITHRZQ0wwQTg2Q0VWMlZCanpHMA?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi4ANBVV95cUxPVmROMEZ6VHFrem9zRENvaUFaaDl3WVQ5QlJEZzNkZ2I4b3dEYVFvQVpKX3V5R3pvT25PbnZ6azUzTUNBaGl1V2ZKQklPNjQtUnVXUEx5YWRQWGZ5ZE9BNlNyUTdNaG5VamJraFU5MGp2RjZxWXFBQVVhNVhHU3AxR2ZYTEdYcl83S2N0N2E0MjVFVkRDN3pSd0c4YzJnR1h3eHhPZkRBbzlYcHd6N2tYMW1IQml4YUlSbWpJWC1fTXoxcnlFYzY2cDA2RENrNm9oSV9ENFNPUkFUODJJYkttdDRlOHljbWowY1dtanpMeWZoVkFEWkR2UHNELTRjenM1bkRlRm9UcXJRclZiLTFxTGo0RkVRWE14d1dhcE43X1htLURFX1ViWElxVFUtTE1jdS1ocHJmU2lIM09reEw5TFc4ODI0YWozSHlQYVhHZXZ5ZzZvclFUb05IOE5WamhGNExQRG1NWnVsOFZadzF2c2pyajl6bGpfUmJkV0NybnFscUZZTGZEazB6bmo1Qk9UOU45X0xObEx4czdEM19icXRnRE8wcmdBZG5MeW1jejZoTkYtb2hYRjBkeXBSb1hOb2s1VHhQNENpS3U3eHU2WVAybk90dFJiSUdNS2hDSzc?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMipgFBVV95cUxPMGpuVTlXRXREMjVmOHFPYzN2aDZzLXN5NUdwMFFsR0puOFZOTGhaZkhoNF9PTU5LXzA5OHZpREZFc2oxVDJTYS1sYzB1aURfMl92WEFPMGR4TTJIZ0NwZ1J6NmptaUc1UDVpUHF6U3FILTd4c3l2Mi1HWTdfQmJPQlN0OG9pTEthel9uSDJ2TElBaFNzOUZld2dJcmFCTk5zWjVjc0lB?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi2gFBVV95cUxPN2hkaEdlS21lUTRsRzNHRnJ0WncxWDhyclRWMVplbU5MVnZBRnVJaU90MHI4WW1uaGNuQlkxREIwZDlKV25mRVAwcUh4MDVkZjl5dVV6ZjM0ZjJGVTNJWGgzRzY5LVRwZjVxcWk5ekdvcWVNSzQxam44MnRaZjJhcDR1WnNVcmtLUGlITWlBSm9JRjJSbENtaUNFdWZwQWd6T0hPVDdiQlNCSUFpWGxpWGpfRU9DUUxMcGE4UnRza2tuVFhObGlfNzVpSmRVLWRyMWE1bVBtY1JCZw?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMijwFBVV95cUxOaHZkX1R6dlVZY09zUjJGejIwWDVUOXVSeGoxbmZKbHc1MzJQR3cxNjBzbDhTRUZzWlJtX3A5X3FSWk44ZHB5a1kzbmJBNGgxNVJKbkNBb05WMTl3V0Mydm90RlBsOFBuVDJqZnp5Skpwa2IyUE90OWhiaEIxMi15R1BuTDA5UWJpcWJYTmdIRQ?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/noticiario-antena1/00h-odair-moniz-familia-pede-prisao-e-suspensao-do-agente-da-psp_a1_1762183": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/noticiario-antena1/00h-odair-moniz-familia-pede-prisao-e-suspensao-do-agente_a1_1762181": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-da-1h-2367/": {
+   "s": "positivo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "http://www.acorianooriental.pt/noticia/hospitais-tem-quase-14-mil-utentes-a-espera-de-cirurgia-379964": {
+   "s": "positivo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiwgNBVV95cUxOb3haalFYSGRGVTZEM1BSelQtQnFnYzRkcG5WYXpDLWVfa3Rrb1lZZjZXUVU2SmdBVVRibU5Da1ZsSVhpbEF3M2JUZW8xX3lfUTlIMTd3MmRBVE1pZVppekRiVzVwNVg3Z3dENlhiZXlVS215Tm1Tb2lKUnhZYkJMXy1QNU55T0FwbWx3ZDF5NHVGUHVZdnZfYVI1dUN2VFRhdzRUUTRBZkhsam1QVFZua2NoV2lrNzkwM29maDVWZnNHNG9SLWZieUgtVG9lMnFaUmliUzNudmlxaWRXeXB0bTUyLVBJaGZSWjdSMmIxZWtkdDFjazVHWTdXcWRFX1lQRFRscW1UR3hPSURPeEpodXZMdGM1Tll5NEFWV19WWUVXdzlKenY1NTU5WXd6Y0p5UWJlMmV3UGMzdThpaVlrNXp3RXhXNHRIcEcxN0FiVS11QUtmcWVGTVl1dURmSk5HZUQ5cmk1cmcycEEyejBaQWs1YlV4ZXozVTZaMklTYmd6Tzd6U2JfNU13dExiQnU1dm90TGFLWEIxRnZGN09DV2w4b3NlUUp5UE1QVHZPOVlCd2p1aWJ4dVdQaGVWWjhxY0E?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMinwFBVV95cUxOQXNOTTkzTFg4RHBiMTNEM2tLRVc3Q19vMXFjRUs3WWpDZVZWdmNEUVFzY2pFdFZoNV93WXZ6M2gwRnNFZURxLVRNQ0M2azBWRFlBUlRzU0VNZVVHNGIzQ1g1V1hVTmVnUUFPRWhkWjFYWnFzN3ZGV1dQM0paTjFsTUktUHJCUHgwZnhMQjBDS3g4dFpCUkV4RVRyOE91d1E?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMixwFBVV95cUxOcFpMcTJSS1NKakJrNzFMN1pBRm1BRjdISGJzOUhiSFQxbXZuaGtCT0NxWkxFMk83LTVydkZ2QnZXTUg4OWlLeVp6Y1N3ejRHb2owMjNGbkViY2pVVnpIQnMtbHZqTDRpOEVlTkRSU3VBNmFHVWpxTGNXLUoxdkdZeDl2ZmZYQmN6eUJpWHBaa0FlM0ZuXzJrRE5VSXUyQ3ZFOU5vRklRbVczc2NtVnYzdi0tNXBmMTFzVHFzYVdKUWxCTjhuQzZR0gHHAUFVX3lxTE5wWkxxMlJLU0pqQms3MUw3WkFGbUFGN0hIYnM5SGJIVDFtdm5oa0JPQ3FaTEUyTzctNXJ2RnZCdldNSDg5aUt5WnpjU3d6NEdvajAyM0ZuRWJjalVWekhCcy1sdmpMNGk4RWVORFJTdUE2YUdVanFMY1ctSjF2R1l4OXZmZlhCY3p5QmlYcFprQWUzRm5fMmtETlVJdTJDdkU5Tm9GSVFtVzNzY21WdjN2LS01cGYxMXNUcXNhV0pRbEJOOG5DNlE?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMirgFBVV95cUxNdVI1RVpWbXVfZzRwRnRfRk54OXVZdWxEWnNpam1leWp0WXpxajk3SzVVRkt5ZWJyUTEtTEhBeERWWGNKTHllSkRyeFhaMUJVSy02RUZPWDhqRkVHVjZHMWtMVkxVSVBvc295Y2ROeWFleGQ5dGdaeWtLQm9FUmE2TThZbGJKZ0ZfODYzczFPcm4xbEZqQVpVLVlJcll5amx3NUFLdzhzV0JUTVBzeUHSAa4BQVVfeXFMTXVSNUVaVm11X2c0cEZ0X0ZOeDl1WXVsRFpzaWptZXlqdFl6cWo5N0s1VUZLeWViclExLUxIQXhEVlhjSkx5ZUpEcnhYWjFCVUstNkVGT1g4akZFR1Y2RzFrTFZMVUlQb3NveWNkTnlhZXhkOXRnWnlrS0JvRVJhNk04WWxiSmdGXzg2M3MxT3JuMWxGakFaVS1ZSXJZeWpsdzVBS3c4c1dCVE1Qc3lB?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/29/mundo/noticia/belgica-mobiliza-militares-policias-resposta-onda-tiroteios-bruxelas-2186440": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/noticiario-antena1/23h-lei-do-retorno-tribunal-declara-que-nao-e-inconstitucional_a1_1762175": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/29/exportacoes-portuguesas-de-calcado-caem-21-para-813-milhoes-de-euros-no-1-o-semestre/": {
+   "s": "neutro",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOeV84MkFIckFhdGRNZ3pZQUVCeEZEb2FMMXpUUEM4d0lUdU5kT1Zjb3ozWEY5eU83VzFJTFZzbEhMMDZHYVZEYS1oVEtFdGhhYzBoSDNYWk5WUmJKUkptcnlIRjR5MWJWNEx2Zms3OHpGdFVJc2RNZ200M1JmMF9sdzk2NktmeWdPdUdXLUQwN3ZoYndQOTFsdXY5a09jeHdaMm03bWRYTV9oSWc?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://observador.pt/opiniao/quando-o-conflito-chega-a-escola-alienacao-parental-x/": {
+   "s": "neutro",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMifkFVX3lxTE1KUHhyZEgybVN3NllQNWxxRzI4RU1RbWwwQUYtZjBkSW1VWXFOYjZNVFBKUWlTVjdicFhjYVRERG1GaFdsTWhuQ1RHSml5MncxNFVZVUV2d01XMVE1eUdZdlVFLUo4cmtrYTlGWU9Sc19ULWhldkFtWkNoWmNtZw?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/videos/como-esta-mesmo-a-guerra-da-ucrania-os-mapas-que-ajudam-a-perceber-tudo/6a920b7c0cf2b42132dbf66a": {
+   "s": "neutro",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/videos/psicologia-economia-e-mais-os-sete-pontos-com-que-a-russia-esta-a-exaurir-a-ucrania/6a9207160cf2f6a1a1e75a6f": {
+   "s": "neutro",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://observador.pt/opiniao/quem-quer-vir-trabalhar-na-minha-trincheira/": {
+   "s": "neutro",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/videos/china-podia-terminar-com-o-conflito-entre-russia-e-ucrania-instantaneamente/6a920b3a0cf2f6a1a1e75a72": {
+   "s": "neutro",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/28/chega-acores-quer-saber-quanto-custou-ryanair-a-regiao-e-que-falhou-nas-negociacoes/": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/28/militares-nas-ruas-de-bruxelas-belgica-lanca-primeira-operacao-conjunta-entre-forcas-armadas-e-policia-para-combater-narcotrafico/": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/28/sindicato-bancario-quer-converter-abaixo-assinado-com-19-mil-assinaturas-em-iniciativa-legislativa-de-cidadaos/": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/28/governo-lanca-aviso-de-25-milhoes-para-reparar-regadios-afetados-pelo-comboio-de-tempestades-elevando-apoio-total-a-60-milhoes/": {
+   "s": "positivo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi_gNBVV95cUxPcFFoM0dtVkJISW0tQmFuNWNrZjRxczdGRjV0MFB4WFBId1J5WVBNS3hTQVhvSHAyR3hjMURGelpFOWhVUEZVeTZ5ZmFvVmo2SlJqcXZYbl9WdE5NR0Zfd2VSMEJFQi1Bd3ZTVXRsWm1uTmZLYmE3OUl1dkwzWVNfM3ZmSWZMeXVyTjdlUE1MWkZGWU5XemxQSjBHUHlIQ3FuYVNhLU8tektyMXg2Sm9JM1JrWjl3R0FlMzVhU2lwc015VUJraktnVDFhcjVZZk02MWJ5aUdIWTVHS1hsT0pVa09aVW9WcmJxWEttZkMxUlZlcmtROG9wNVpjYXFiU1B1NVY0TDVyMG16RGloR1p4el9hQVRQVmJVRDV4bzBqVHd3TkRUdWI2a2RGSzRwNUVRc3hYN3B5eEJ1Tnp4enlqdHFuRFZjem1FX1BsNXNKYmdPZmN6Znp2VHBOYmpScUVqMWo0UUJNMmtlWGVPdnQzNFlmSE5Yc3BRMWN0SU5EcWxnUWx6RS05X3J5ZlRoVTBTcTJ0dXFidU5MU2trWTV4NTYxVE1NTzVwNGVpQWptMm9yZkU1RHVyTXdHcDhwSnVvSThJeDVnVi1NRTVFcnRGWE9jUlVTaHRGTXk4cFhkNTlTVnZnY3BSd1V6Z3FReFlIMlo2UEJWUElLa1BaUGc?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/videos/nao-me-parece-que-montenegro-va-a-correr-por-causa-de-uma-mocao-de-censura-que-ainda-por-cima-sera-chumbada/6a9201ec0cf2f6a1a1e75a62": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMilwFBVV95cUxOZXc1X1p1UXRQSVBYVUZ1TTY4OXV0Zk13WWg0QnFmR3JNT3Z3SFZ2QWpFQnFSVHRIVGNDeUJtMU0weVVPYkpzajJoTjd2RUo0WXp4QWw1aUxYbXhWNWY1bmM0eEp1MnNfTWd6dlMtWFo1UTUyTnk4bFdtalJVd2hPSGl0c0RrNE9oaGV6YkRKaEQtNXk2WXRV?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/politica/3043175/mocao-de-censura-do-chega-da-ameaca-ao-silencio-o-que-foi-dito#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/28/publico-brasil/noticia/familia-brasileira-vence-governo-trump-processo-politica-imigracao-2186434": {
+   "s": "positivo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi8gFBVV95cUxPdy1kQWlOQ2lvTmoydlZoTzdOdE92VzhMVlFUdV8zZXJoa3Z2WUd4dEpRekpldzJLdlpiU05feHltaHJKSDlzT3BMejhpekI2aWVVaU9OVWxnODMzcE9tRE93WlNzRUpjRENTUjN2VlhObUlLeUh2RjNtYlpTVnA1SktsQmo1LTJKLVk4MGtWZENsaFhZU0d0QUw1QS00OGlUWVlTdmE4Y3ZKbDFhZlJiRjdTVDZpWW9ac0Fzb3prTUVNbXZfTUJ3SmVXdUZuUnlQdW9Fa2lneEttbnBZakktSjlPRjRpeFZqZHR4a2dhTFRzZw?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMivwFBVV95cUxNTXdBZ1YzMkU0cjdZb05pS3FMc3N2d21CQ2lrbWtPTlNMN3l2V1QzN2lpVGo0WkdZaEdrN09uTGNmWi1aczZHZFRYdE00VkpSSHdyc0UxVEJYRXIwWUZ6RllHa1JKU3ZWUXNGSzZHUXd6WGxaRUFnMS1jNVF4eG1ON19lZEhiZFpBQmh6WXc3bWJlYXVWNlF0bUxJcDkxb0RCSzQyZ2ctUDZwMG9DdmdsYlBFVzBKV0M5ZmxJcVkwQdIBvwFBVV95cUxNTXdBZ1YzMkU0cjdZb05pS3FMc3N2d21CQ2lrbWtPTlNMN3l2V1QzN2lpVGo0WkdZaEdrN09uTGNmWi1aczZHZFRYdE00VkpSSHdyc0UxVEJYRXIwWUZ6RllHa1JKU3ZWUXNGSzZHUXd6WGxaRUFnMS1jNVF4eG1ON19lZEhiZFpBQmh6WXc3bWJlYXVWNlF0bUxJcDkxb0RCSzQyZ2ctUDZwMG9DdmdsYlBFVzBKV0M5ZmxJcVkwQQ?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQZko0VG9JWFFQSktIWmFIdC1jT055NG5SQTF3VVlPaEFTdHgxSGtYdlJQa29JaUlHSUg3WW94Vk5xM09XY0t0T1h5ZWdFM2tacWxZUzUtU3cxaUNPbElrcGNSdEk5NVFMbXpEQ0xDREJYNkdzNzFLZ1FPVGk5YmgyYVZOYzVoNlhLekEzamJFMjVJdkttdXNOVmpIZzUzNGNqTDlFaWl2UUNoZXJrTmNyN2J0UUVSSGFNR004TkU3Z20?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMipAFBVV95cUxQQTBzZWNGZFd1anBoLUJSUGNudWNueUdhSUJvMWFMck5lWWdFVUJhOEpGWkY0cllYZi1wYnI2WmdzeFQxc3lpMGlGZTMtdWtwN01Qbk03eTlFa1VNaFFmYnJHZXdmZi1ydC1HWHl0cmo0MDBLejBTQzR6TXJlWmktMXhTM3JEdFRYRFFBbklhNjFUTV9ROGRETXZTNjltdFFQVlh2VNIBpAFBVV95cUxQQTBzZWNGZFd1anBoLUJSUGNudWNueUdhSUJvMWFMck5lWWdFVUJhOEpGWkY0cllYZi1wYnI2WmdzeFQxc3lpMGlGZTMtdWtwN01Qbk03eTlFa1VNaFFmYnJHZXdmZi1ydC1HWHl0cmo0MDBLejBTQzR6TXJlWmktMXhTM3JEdFRYRFFBbklhNjFUTV9ROGRETXZTNjltdFFQVlh2VA?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMizwFBVV95cUxNaDNUNVRNcjdlaF9FUDVUTUc3QTZHcmt0TVd2LXAwS1dJVEpkMlllTXhUUThkQWdERXdoRjVibEFaV0duNUtLcGZXYVZreEJfck0xUG5PNWlOZzgzTjlvc1lFdnljTHZHWXRSd0NDdFlEN0NYN0FVdzVqQjU2Y0t1Yl9zUEhPYWJtQk50ZUUwUzUyLWZ2UWt3a2RYdDAwT0lfSjRpXzdzc01JVnFyanRqcXJSQ21FRkhESXYzYVdlSG9oWGZ4QllvaFJmbDk0Qm_SAc8BQVVfeXFMTWgzVDVUTXI3ZWhfRVA1VE1HN0E2R3JrdE1Xdi1wMEtXSVRKZDJZZU14VFE4ZEFnREV3aEY1YmxBWldHbjVLS3BmV2FWa3hCX3JNMVBuTzVpTmc4M045b3NZRXZ5Y0x2R1l0UndDQ3RZRDdDWDdBVXc1akI1NmNLdWJfc1BIT2FibUJOdGVFMFM1Mi1mdlFrd2tkWHQwME9JX0o0aV83c3NNSVZxcmp0anFyUkNtRUZIREl2M2FXZUhvaFhmeEJZb2hSZmw5NEJv?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMixwFBVV95cUxQT0xWOVJfQmlCVVZCaFZvMlJCMlREcGxzOHVmV0lQYkxISnQyMnpPaTM3cEpaS1NXT3ZfSTIwOWVLdFBORndkTWlObmdwZFlLeEFiV2hSQzZTdkFaNDNsWGxFMkdpNHVhbWw2b0hNWjEyLUNBVXUwZzdJT1lSaXZKWlVFTTJ4czgtN3dPblFyN2Q4dGRIWm9KQ0g5cFppZ09aSTYyckdYS0ZJZnY0WlVhVnRwRUdsWW45UXpxem1NWVFaOW92VmVB?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMixAFBVV95cUxOSDZXSUpFdTZvUjZzdkpJYkRpWmk3aTRzankyY2xOck0tMlJocEZtekxoTVQ4M09CU0ZVc2VJM2hhVElQa1k4WE5idW9MVEktZURvc2ZMUm5xUnkzc2tpWkVIUkY5VTFxNExRc0ppQVp0NllOaWdBeFBFcmM3U3BYNlZTVnYyOHBxcWxpUEEwdzFNMTZhZGNfd3NnbUVfUk5PaXFzai1KRExmaGFkR0VPMHVIZ3ZkVVFFMWNLZlptQml0WHVB?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-28",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMisgFBVV95cUxOdHE1NnpSaXJHV3hwMGFaYzdiMzdjNTVwYkJpZ2w0RmVkVzFFVW9aTndXdnNwN3FHanpjZXhhUWVVTlFwVEs5ODhfV2FZWXM4RkJqaWNvQ1p3VEN5RGFFYW9DTDNSQUtTZGxFbGd0aHdsVHJ5SnpnaWMzblhPWjQxNXFWVGhzZERXbU5CYVF1bUtjc3RaRldLZGxhQWF3RDNOVnIxRGE0bFRjekI4aWIwQlRB?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-3h-2420/": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/mundo/portugues-detido-pelo-ice-vai-ser-deportado-dentro-de-dias_v1762173": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQSV8xYzJBWi05LVdZNHZMZnpvejhFWG1QWUQzcHhuZFlPVF9zZVpUeGtneWhfRTJMQk5zbzhHbUE3NGJCZHM5cVlUTFRIYkVSNFlVWTFCa1FlUVFGcDhXSGNzRERrblBaV3BVNDlZNmc5dGRuQ1BwR2tHcTNpNWtGRnRiQXIyc2Y2X1dNeTR0MUpXOWNhNFJkSXE1M2RyOWdwaU85N1h5U2M?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-29",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMirAFBVV95cUxNVEs4bWRJUlZIOExvOG9NRmh0Mk9DX3c4enFJbDdSLTUyTnR5UjBmVFJpYXJud0wxWFplMWJZcGR3aGRTdVEwWjhzWUxsVUM4UWJUeUh5YTVNbENWbDFPbHBfREx0c1pkZTl0a1NrYkx0bktadS0yZzZTVUJhR01oZmJyRHlIdGc2MU13TktlTlFoT09JX3l2ZHZzMUxNVnF0NllHYXYwSE5BUnFU?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-29",
    "v": 2
   }
  }
