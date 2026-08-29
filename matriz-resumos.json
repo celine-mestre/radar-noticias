@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-29 05:00",
+ "gerado": "2026-08-29 11:11",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -243,6 +243,18 @@
    "n": 73,
    "pct": 77,
    "lado": "negativas"
+  },
+  "2026-08-29|Justiça": {
+   "texto": "No dia 29 de agosto de 2026, foram noticiados múltiplos acontecimentos na área da Justiça. Destacam-se a condenação do ex-presidente equatoriano Lenin Moreno a cinco anos de prisão por corrupção, conforme reportado por diversas fontes; a condenação de um ex-conselheiro de Zelensky a 11 anos de prisão na Rússia, também noticiado por diferentes órgãos de comunicação; e a iminência de deportação de um cidadão português detido pelo ICE há um mês, conforme noticiado pelo Observador. Adicionalmente, a família do agente da PSP Odair Moniz solicitou a detenção e suspensão do mesmo, conforme noticiado pela RTP Notícias. Não se identificou um tema dominante unificador para além da cobertura de casos de corrupção e responsabilidade penal.",
+   "n": 9,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-28|Finanças|+": {
+   "texto": "Foram atribuídos 25 milhões de euros para a reabilitação de sistemas de regadio danificados pelas tempestades recentes, abrangendo áreas agrícolas afetadas. A agência de notação Standard & Poor’s manteve o rating de Portugal inalterado em A+, confirmando a sustentabilidade da dívida pública nacional. O Orçamento do Estado assegurou o financiamento de 2000 milhões de euros provenientes do Plano de Recuperação e Resiliência (PRR) para a execução de obras já aprovadas, sem recurso a aumentos de impostos, conforme garantido pelo Ministro da Economia. O tema dominante destes acontecimentos é o reforço da resiliência económica e a gestão eficiente de fundos públicos.",
+   "n": 4,
+   "pct": 62,
+   "lado": "positivas"
   }
  }
 }
