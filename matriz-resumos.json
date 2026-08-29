@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-28 19:28",
+ "gerado": "2026-08-29 05:00",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -98,12 +98,6 @@
    "texto": "No dia 15 de agosto de 2026, verificou-se uma nova tentativa de entrada de migrantes em Ceuta, tendo as autoridades marroquinas interceptado centenas de indivíduos que se dirigiam ao território espanhol. A ação conjunta entre Marrocos e Espanha resultou na detenção e devolução dos migrantes ao país de origem, conforme reportado por diversos meios de comunicação social. Adicionalmente, as autoridades marroquinas ordenaram a expulsão de jornalistas espanhóis que estavam a cobrir a crise migratória, intensificando a pressão sobre a fronteira e as relações diplomáticas entre os dois países. O tema dominante foi a crise migratória na fronteira entre Marrocos e Espanha, com particular foco na gestão da pressão migratória e nas ações de controlo fronteiriço.",
    "n": 10,
    "pct": 83,
-   "lado": "negativas"
-  },
-  "2026-08-21|Defesa Nacional": {
-   "texto": "No dia 21 de agosto de 2026, foram reportados múltiplos acontecimentos relacionados com a guerra na Ucrânia, envolvendo intervenções externas e ataques diretos. Destaca-se a acusação de envia de operadores de drones por parte da Coreia do Norte para apoiar as forças russas, conforme noticiado por diversos órgãos de comunicação social. Adicionalmente, ocorreram ataques russos contra infraestruturas ucranianas, incluindo um ataque a um posto fronteiriço com a Moldova e a intensificação de operações de drones contra centros comerciais na região de Odessa. Paralelamente, registaram-se incidentes trágicos envolvendo militares portugueses, nomeadamente o atropelamento de dois militares do Exército na autoestrada A1, enquanto prestavam auxílio a um camionista, resultando em múltiplas fatalidades.",
-   "n": 73,
-   "pct": 78,
    "lado": "negativas"
   },
   "2026-08-21|Presidência": {
@@ -238,10 +232,16 @@
    "pct": 60,
    "lado": "positivas"
   },
-  "2026-08-28|Presidência": {
-   "texto": "No dia 28 de agosto de 2026, registaram-se dois acontecimentos principais. Em Ceuta, a tensão persistiu devido a protestos da população local contra a presença de migrantes, com incidentes de derrube de tendas e fogueiras, e foram reportadas imagens de confrontos com a polícia. Paralelamente, em Lisboa, verificou-se um aumento de 50.000 utentes sem acesso a médico de família num período anual. Adicionalmente, foi noticiado o fracasso da implementação de um serviço de comunicação governamental via WhatsApp, que custou 600.000 euros sem alcançar a funcionalidade pretendida. O tema dominante foi a crise migratória em Ceuta e a gestão de serviços públicos.",
-   "n": 7,
-   "pct": 78,
+  "2026-08-21|Administração Interna": {
+   "texto": "No dia 21 de agosto de 2026, registaram-se múltiplos acontecimentos na área da Administração Interna, predominantemente relacionados com incidentes de segurança pública e questões de gestão governamental. Destacam-se a ocorrência de ataques a viaturas da PSP em Rabo de Peixe, com desacatos e danos materiais, e a detenção de um homem procurado no Brasil por violação de menor, conduzindo a uma condenação governamental e autárquica. Adicionalmente, verificou-se um conjunto de incidentes envolvendo a PSP, incluindo suspeitas de utilização indevida de viaturas e acusações de perseguição a imigrantes, com alertas de sindicatos e associações. Paralelamente, surgiram casos de incêndios florestais, com a identificação de um menor como suspeito em Seia, e questões de conduta de agentes da GNR e militares, nomeadamente o uso indevido de veículos da Guarda. Um tema dominante é a instabilidade na gestão da pasta da Administração Interna, evidenciada pela exoneração proposta pelo Chega e pela rejeição de queixas de quebra de protocolo de segurança.",
+   "n": 58,
+   "pct": 77,
+   "lado": "negativas"
+  },
+  "2026-08-21|Defesa Nacional": {
+   "texto": "No dia 21 de agosto de 2026, registaram-se múltiplos acontecimentos relacionados com a defesa nacional e a segurança, destacando-se a alegação de que a Coreia do Norte terá enviado operadores de drones para apoiar a Rússia no conflito na Ucrânia, e ataques russos a infraestruturas ucranianas, incluindo um ataque a um centro comercial que resultou em múltiplas vítimas mortais. Adicionalmente, dois militares do Exército morreram atropelados enquanto prestavam auxílio a um camionista na autoestrada A1, tendo ocorrido em Cantanhede e na Mealhada. A área temática dominante é a instabilidade geopolítica e os riscos de segurança associados ao conflito na Ucrânia e a atividades hostis transfronteiriças.",
+   "n": 73,
+   "pct": 77,
    "lado": "negativas"
   }
  }
