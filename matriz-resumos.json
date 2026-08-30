@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-30 13:10",
+ "gerado": "2026-08-30 17:07",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -202,52 +202,64 @@
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-08-30|Justiça": {
-   "texto": "O dia na área da Justiça foi marcado por três acontecimentos principais. Iniciou-se o julgamento de polícias acusados de tortura, no âmbito de processos judiciais pendentes. O Conselho de Estado moçambicano suspendeu a imunidade de Mondlane, permitindo a sua eventual responsabilização judicial. Simultaneamente, os tribunais portugueses antecipam um aumento exponencial de processos relacionados com a lei do retorno e asilo, solicitando reforços no quadro de juízes para fazer face à sobrecarga de trabalho. Adicionalmente, registou-se a morte de Bou Meng, sobrevivente do ataque ao mosteiro de Sambang, em 1975.",
-   "n": 6,
-   "pct": 88,
-   "lado": "negativas"
-  },
   "2026-08-23|Justiça": {
    "texto": "No dia 23 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza judicial e de segurança pública. Em Peniche, três indivíduos foram sujeitos a prisão preventiva no âmbito de um processo de tráfico de droga. Adicionalmente, três de oito pessoas detidas após ataques contra agentes da PSP em Rabo de Peixe, nos Açores, foram também colocadas em prisão preventiva. Paralelamente, a discussão sobre a responsabilização do Presidente ucraniano por alegada corrupção, nomeadamente através de declarações de um ex-ministro da Defesa, ganhou destaque na comunicação social. Por fim, a justiça peruana prorrogou o mandado de captura contra uma antiga primeira-ministra exilada no México, e o Presidente do Tribunal Penal Internacional solicitou apoio ao Japão face a sanções impostas pelos Estados Unidos.",
    "n": 15,
-   "pct": 83,
+   "pct": 88,
    "lado": "negativas"
   },
   "2026-08-24|Justiça": {
    "texto": "No dia 2026-08-24, o Supremo Tribunal decidiu a favor de Donald Trump numa ação relacionada com o voto por correspondência, determinando a validade de votos contestados. Paralelamente, sete homens foram sujeitos a prisão preventiva no Algarve por envolvimento no tráfico de haxixe, tendo sido apreendidas cinco toneladas da substância, e um jovem de 18 anos foi colocado em prisão preventiva por pornografia em escolas, num contexto de múltiplas detenções e processos judiciais. Adicionalmente, um ex-campeão mundial de snooker foi condenado por abuso sexual e um processo contra um antigo mufti sírio, próximo do regime de Assad, por incitamento ao ódio confessional, foi noticiado, culminando na sua condenação à prisão perpétua.",
    "n": 26,
-   "pct": 81,
+   "pct": 82,
    "lado": "negativas"
   },
   "2026-08-25|Administração Interna": {
    "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos incidentes de criminalidade e segurança pública em Portugal, com destaque para um aumento generalizado da criminalidade geral, nomeadamente nos comandos metropolitanos do Porto e Lisboa, onde se verificou um crescimento de 10,9%. Relatos de atropelamentos graves, incluindo um em Albufeira com 12 feridos e um em Lisboa com 16, evidenciam falhas na sinistralidade rodoviária e desobediência às autoridades. A PSP e a GNR detiveram indivíduos por crimes diversos, como tráfico de droga, violência doméstica e desobediência, e foram reportados casos de legítima defesa por agentes das forças de segurança. Adicionalmente, surgiram denúncias de tortura na PSP, investigações alargadas e pedidos de demissão do ministro da Administração Interna, num contexto de crescente preocupação pública com a segurança e a credibilidade das instituições.",
    "n": 69,
-   "pct": 83,
+   "pct": 85,
    "lado": "negativas"
   },
   "2026-08-25|Justiça": {
    "texto": "No dia 25 de agosto de 2026, a área da Justiça registou múltiplos acontecimentos, predominantemente de natureza investigatória e judicial. O Ministério Público instaurou inquéritos relacionados com atropelamentos e casos de alegada tortura na esquadra do Rato. Paralelamente, vários casos de corrupção, envolvendo figuras políticas e empresariais, foram noticiados, incluindo a detenção de um antigo presidente da Arménia e do filho, e a prisão preventiva de um ex-presidente da Arménia. Adicionalmente, foram noticiados casos de violência doméstica, com detenções efetuadas em Águeda e no Porto, e a anulação de eleições para reitor da Universidade Nova de Lisboa, com recurso subsequente. O tema dominante foi a investigação de potenciais irregularidades e a resolução de litígios judiciais.",
    "n": 40,
+   "pct": 77,
+   "lado": "negativas"
+  },
+  "2026-08-30|Justiça": {
+   "texto": "No dia 2026-08-30, a área da Justiça foi marcada por diversos acontecimentos, agrupados em torno da implementação da nova lei do retorno e as suas consequências. Os tribunais portugueses anteciparam um aumento exponencial de processos devido à alteração da lei de retorno e asilo, prevendo uma sobrecarga do sistema. Paralelamente, iniciou-se o julgamento de polícias acusados de tortura, enquanto o Conselho de Estado moçambicano suspendeu a imunidade de um antigo responsável, permitindo o seu julgamento. Adicionalmente, registou-se a morte do sobrevivente do ataque ao mosteiro de Sambang, Bou Meng, e a cobertura mediática da perda foi generalizada. Não se verificou um tema dominante específico para além da implementação da lei do retorno e o consequente impacto no sistema judicial.",
+   "n": 8,
+   "pct": 83,
+   "lado": "negativas"
+  },
+  "2026-08-30|Ambiente e Energia": {
+   "texto": "No dia 2026-08-30, foi noticiado que a Rússia comprometeu-se com novos ataques contra infraestruturas energéticas ucranianas, conforme divulgado por diversos meios de comunicação social. Adicionalmente, ocorreu um despiste de veículo em Mafra, resultando na morte de uma vítima, conforme reportado pelo Observador. Foram também previstas mais de 100 interrupções de energia para o dia em questão, também noticiado pelo Observador. O tema dominante dos acontecimentos noticiados é a instabilidade energética e a segurança rodoviária.",
+   "n": 6,
    "pct": 75,
    "lado": "negativas"
   },
   "2026-08-24|Economia e Coesão Territorial|+": {
-   "texto": "No âmbito do Alentejo 2030, foi aprovado um apoio de um milhão de euros para acelerar a digitalização da Administração Local, reforçando a eficiência dos serviços públicos e a interação com os cidadãos. Paralelamente, a Feira da Golegã recebeu reconhecimento formal para candidatura a Património Imaterial, evidenciando a valorização do património cultural e das tradições equestres. Adicionalmente, o Brasil e Angola consolidaram um acordo para o desenvolvimento do agronegócio, com impacto direto na produção e exportação de produtos agrícolas. O tema dominante é o investimento e a modernização, abrangendo a digitalização administrativa, o reforço da competitividade regional e a expansão de parcerias internacionais.",
+   "texto": "No âmbito da área da Economia e Coesão Territorial, registaram-se diversos acontecimentos relevantes. O Alentejo 2030 apoiou a modernização digital de autarquias, com um investimento adicional de 1 milhão de euros para acelerar a digitalização da Administração Local. O Observador divulgou a candidatura da Feira da Golegã a Património Imaterial, evidenciando o reconhecimento de tradições culturais. Adicionalmente, o Global Agri Forum 2026, com 38 dias de antecedência, e a participação de sete empresas portuguesas na Saudi WoodShow 2026, reforçam a aposta no setor agroindustrial e na internacionalização. Por fim, o Palácio de Convenções de Angola, inaugurado, e o cluster ibérico de defesa em Portalegre, sinalizam a expansão de parcerias económicas e o reforço da indústria de defesa.",
    "n": 23,
-   "pct": 51,
+   "pct": 53,
    "lado": "positivas"
   },
   "2026-08-25|Economia e Coesão Territorial|+": {
-   "texto": "No âmbito da Economia e Coesão Territorial, registaram-se múltiplos acontecimentos que evidenciam o reforço do investimento público e privado, a expansão de infraestruturas e o apoio a setores estratégicos. Destacam-se a reprogramação das Agendas Mobilizadoras do PRR, elevando o investimento total para 7.300 milhões de euros, e a conclusão de 512 habitações em Matosinhos, com um investimento de 122 milhões de euros. Adicionalmente, verificou-se a entrega das últimas 105 habitações do PRR, o reforço do abastecimento de água à lavoura nos Açores e a concretização de investimentos na saúde e no turismo, como a abertura do Hospital Lusíadas Beloura. Observou-se ainda um dinamismo no setor energético, com a Galp a anunciar um novo investimento no Campo de Tupi, e no comércio internacional, com a resposta do Canadá às tarifas de Trump e a internacionalização da economia portuguesa através da Startup Portugal e do Radar África.",
+   "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza económica e territorial. Em primeiro lugar, o Governo dos Açores reforçou o Hospital de Ponta Delgada com a aquisição de um robô médico por 2,9 milhões de euros, enquanto o Governo Regional reiterava a saúde como prioridade estratégica. Paralelamente, o Banco Angolano de Investimentos lançou a sua primeira oferta pública de obrigações, e a Lusíada Saúde inaugurou o Hospital Lusíada Beloura com um investimento de 40 milhões de euros. Adicionalmente, a reprogramação das Agendas Mobilizadoras do PRR elevou o investimento total para 7.300 milhões de euros, com destaque para a construção de 512 habitações em Matosinhos e a entrega das últimas 105 unidades. Por fim, o Governo dos Açores reforçou o abastecimento de água à lavoura em São Miguel, e o Canadá respondeu às tarifas de Trump com um investimento de \"dólar por dólar\" no comércio internacional.",
    "n": 33,
-   "pct": 51,
+   "pct": 54,
+   "lado": "positivas"
+  },
+  "2026-08-28|Finanças|+": {
+   "texto": "O Orçamento do Estado de 2026 assegura o financiamento de 25 milhões de euros para a reabilitação de infraestruturas de regadio danificadas por tempestades recentes, abrangendo medidas de apoio aos agricultores afetados. Paralelamente, a agência de notação S&P mantém inalterado o rating de Portugal em A+, com perspetiva positiva, reconhecendo a sustentabilidade da dívida pública nacional. Adicionalmente, o Governo confirma a transferência de 2 mil milhões de euros provenientes do Plano de Recuperação e Resiliência (PRR) para a execução de obras públicas, assegurando a sua concretização através do Orçamento do Estado, sem implicar alterações na carga fiscal. O conjunto destes eventos reflete um enfoque na resiliência económica e na concretização de projetos estratégicos, com impacto direto na recuperação e no reforço da capacidade produtiva do país.",
+   "n": 4,
+   "pct": 62,
    "lado": "positivas"
   },
   "2026-08-29|Ambiente e Energia|+": {
-   "texto": "No âmbito da política internacional, o Ministro do Nepal reiterou a vulnerabilidade do país face às alterações climáticas, enfatizando a necessidade de um esforço global para mitigar os seus impactos. Paralelamente, a União Europeia, através da Comissão Europeia, anunciou um reforço da competitividade económica, visando a redução da burocracia e o apoio à indústria e ao capital europeus. A nível interno, o Governo português comprometeu-se a duplicar a capacidade de armazenamento de energia até 2030, enquanto se inicia a implementação do plano de restauração da natureza, com a entrega formal do documento à Comissão Europeia. Adicionalmente, regista-se um evento de âmbito comercial com a participação de mais de 100 empresas portuguesas na Feira Internacional de Maputo, e, no setor agrícola, a vindima antecipada resultou em expectativas de produção de vinhos de qualidade excecional.",
+   "texto": "No âmbito da política internacional, o Ministro do Nepal reiterou a vulnerabilidade do país face às alterações climáticas, apelando a uma ação global coordenada após recentes desastres naturais. Paralelamente, a União Europeia, através da Comissão Europeia, anunciou um reforço do seu plano de ação para a transição energética, visando a redução da burocracia e o fomento da indústria e do capital europeu. A nível nacional, o Governo português comprometeu-se a duplicar a capacidade de armazenamento de energia até 2030, enquanto a restauração da natureza, através de um plano submetido à União Europeia, inicia uma fase de implementação complexa. Adicionalmente, a época de vindimas antecipada, embora atípica, resultou numa produção de vinhos de qualidade excecional.",
    "n": 12,
-   "pct": 50,
+   "pct": 52,
    "lado": "positivas"
   }
  }
