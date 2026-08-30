@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-30 10:56",
+ "gerado": "2026-08-30 12:32",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -249,6 +249,12 @@
    "n": 12,
    "pct": 52,
    "lado": "positivas"
+  },
+  "2026-08-30|Justiça": {
+   "texto": "O dia na área da Justiça foi marcado por três acontecimentos principais. Iniciou-se o julgamento de polícias acusados de tortura, no âmbito de processos judiciais pendentes. O Conselho de Estado moçambicano suspendeu a imunidade de Mondlane, permitindo a sua eventual responsabilização judicial. Simultaneamente, os tribunais portugueses antecipam um aumento exponencial de processos relacionados com a lei do retorno e asilo, solicitando reforços no quadro de juízes para fazer face à sobrecarga de trabalho. Adicionalmente, registou-se a morte de Bou Meng, sobrevivente do ataque ao mosteiro de Sambang, em 1975.",
+   "n": 6,
+   "pct": 88,
+   "lado": "negativas"
   }
  }
 }
