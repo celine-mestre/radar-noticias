@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-29 22:10",
+ "gerado": "2026-08-30 01:15",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -82,18 +82,6 @@
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-08-22|Justiça": {
-   "texto": "No dia 22 de agosto de 2026, ocorreram múltiplos eventos no âmbito da Justiça. Em Vila Nova de Foz Côa, foi decretada a prisão preventiva de um suspeito de atear fogo, conforme noticiado por diversos órgãos de comunicação social. Paralelamente, a Polícia Judiciária apreendeu 150 kg de cocaína num contentor proveniente do Equador, evidenciando a atuação da investigação criminal. Adicionalmente, um tribunal federal dos EUA anulou a suspensão de vistos a 75 países, imposta por Donald Trump, considerando-a \"manifestamente ilegal\", conforme reportado por vários meios. Estes factos agrupam-se em torno de acontecimentos criminais e decisões judiciais, com um tema dominante de decisões judiciais e investigação criminal.",
-   "n": 14,
-   "pct": 78,
-   "lado": "negativas"
-  },
-  "2026-08-22|Educação, Ciência e Inovação|+": {
-   "texto": "O dia ficou marcado por um aumento significativo das colocações no Ensino Superior, com mais de 1.600 alunos carenciados beneficiando do contingente prioritário e 82,6% dos candidatos a ingressar, sobretudo na primeira opção. Destacou-se a Engenharia Aeroespacial na Universidade do Porto, com uma média de acesso de 19,5 valores, liderando também em outras instituições. Paralelamente, observou-se um crescimento do Ensino Politécnico e um aumento da procura por cursos de formação de professores, com quase 97% das vagas ocupadas na primeira fase. O preenchimento de vagas em cursos duplos e a colocação de 1.595 estudantes madeirenses na primeira fase evidenciam também o sucesso do sistema de acesso.",
-   "n": 39,
-   "pct": 51,
-   "lado": "positivas"
-  },
   "2026-08-15|Presidência": {
    "texto": "No dia 15 de agosto de 2026, verificou-se uma nova tentativa de entrada de migrantes em Ceuta, tendo as autoridades marroquinas interceptado centenas de indivíduos que se dirigiam ao território espanhol. A ação conjunta entre Marrocos e Espanha resultou na detenção e devolução dos migrantes ao país de origem, conforme reportado por diversos meios de comunicação social. Adicionalmente, as autoridades marroquinas ordenaram a expulsão de jornalistas espanhóis que estavam a cobrir a crise migratória, intensificando a pressão sobre a fronteira e as relações diplomáticas entre os dois países. O tema dominante foi a crise migratória na fronteira entre Marrocos e Espanha, com particular foco na gestão da pressão migratória e nas ações de controlo fronteiriço.",
    "n": 10,
@@ -104,12 +92,6 @@
    "texto": "No dia 21 de agosto de 2026, os títulos noticiam uma crise migratória em Ceuta, Marrocos, com múltiplos acontecimentos relacionados com a gestão de fluxos irregulares de migrantes. Destacam-se a retomada da ocupação de praias por migrantes após operações de limpeza, a atuação de redes de tráfico humano que cobram quantias elevadas pela passagem para Espanha, e a desarticulação destas redes pelas autoridades espanholas. Paralelamente, regista-se a criação de uma nova unidade da PSP, alvo de críticas por alegadas práticas de perseguição a imigrantes, e a contestação de políticas governamentais relativas à AIMA e à proteção de menores. Observa-se um tema dominante centrado na gestão da imigração irregular e na resposta institucional a esta problemática.",
    "n": 22,
    "pct": 81,
-   "lado": "negativas"
-  },
-  "2026-08-22|Presidência": {
-   "texto": "No dia 22 de agosto de 2026, a cobertura mediática focou-se predominantemente em questões migratórias e administrativas relacionadas com o atendimento a imigrantes. A Ordem dos Advogados acusou a Agência para a Imigração e Asilo (AIMA) de dificultar a defesa dos direitos de imigrantes, nomeadamente através de problemas no atendimento e falta de transparência. Adicionalmente, casos concretos de concessão de residência e a situação de milhares de migrantes em Ceuta, com enterramentos e ausência de soluções, foram noticiados. Paralelamente, um tema transversal foi a crítica à gestão da imigração e ao atendimento aos requerentes de proteção internacional, evidenciando dificuldades no sistema português e espanhol.",
-   "n": 15,
-   "pct": 77,
    "lado": "negativas"
   },
   "2026-08-05|Economia e Coesão Territorial|+": {
@@ -250,10 +232,22 @@
    "pct": 62,
    "lado": "positivas"
   },
+  "2026-08-22|Presidência": {
+   "texto": "No dia 22 de agosto de 2026, a cobertura mediática focou-se predominantemente em questões migratórias e administrativas relacionadas com a AIMA (Agência para a Integração, Migrações e Asilo).  \n\nA Ordem dos Advogados acusou a AIMA de dificultar a defesa dos imigrantes, nomeadamente através de problemas no atendimento e de atrasos processuais, conforme reportado por diversos órgãos de comunicação social.  \n\nParalelamente, verificou-se o encerramento do controverso centro de detenção de migrantes “Alligator Alcatraz” na Florida, com a aproximação do fim da sua atividade, conforme noticiado pela RTP e CNN Portugal.  \n\nEm Ceuta, a situação de milhares de migrantes que permanecem nas ruas da cidade persistiu durante várias semanas, com relatos de falta de soluções e de condições precárias, conforme documentado pelo Observador, Notícias ao Minuto e Expresso.  \n\nUm tema dominante foi, assim, a crise migratória e a gestão administrativa e jurídica dos fluxos migratórios, com particular incidência em Espanha e na sua relação com Marrocos.",
+   "n": 15,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-08-22|Agricultura e Mar|+": {
+   "texto": "No dia 22 de agosto de 2026, foi noticiado o lançamento de uma aplicação móvel que permite a interpretação de rótulos alimentares, facilitando a identificação de aditivos para os consumidores, no âmbito de iniciativas de promoção da saúde e segurança alimentar. Em Abrantes, um incêndio florestal foi combatido com a mobilização de 500 bombeiros, evidenciando a capacidade de resposta do sistema de proteção civil. A nível agrícola, foi divulgado o desenvolvimento de projetos agrovoltaicos, que integram a produção de energia renovável com a preservação ambiental, contribuindo para a transição energética do setor. Adicionalmente, registou-se o reconhecimento de práticas de bem-estar e terapias de contacto com a natureza na região da Malcata, integrando o património natural e cultural na promoção do turismo sustentável.",
+   "n": 4,
+   "pct": 50,
+   "lado": "positivas"
+  },
   "2026-08-29|Ambiente e Energia|+": {
-   "texto": "Em 29 de agosto de 2026, o Governo português anunciou a duplicação da capacidade de armazenamento de energia até 2030, visando reforçar a resiliência do sistema energético face a desafios futuros. Paralelamente, o Ministro dos Negócios Estrangeiros do Nepal reiterou a vulnerabilidade do país perante as alterações climáticas, apelando a um esforço global de mitigação e adaptação. Adicionalmente, Portugal entregou à Comissão Europeia um plano de restauração da natureza, marcando o início de uma fase de implementação mais complexa. Por fim, registou-se um aumento significativo da participação de empresas portuguesas na Feira Internacional de Maputo, evidenciando a expansão da sua presença em mercados externos.",
-   "n": 11,
-   "pct": 55,
+   "texto": "No âmbito da área ambiental, o Governo português anunciou o objetivo de duplicar a capacidade de armazenamento de energia até 2030, conforme noticiado pelo Jornal Económico e pela Renascença. Adicionalmente, foi entregue à Comissão Europeia um plano para a restauração da natureza, marcando o início de uma fase mais complexa de implementação, conforme reportado pelo Jornal de Negócios e pela Renascença. No domínio internacional, Portugal participou na Feira Internacional de Maputo, com a expectativa de reforçar a presença de mais de 100 empresas portuguesas, conforme noticiado pelo JM Madeira e pelo Jornal Económico. Não se verificou qualquer título relacionado com o Nepal, que foi mencionado em notícias de âmbito internacional sobre alterações climáticas, mas não constitui um acontecimento específico do dia no âmbito da administração pública portuguesa.",
+   "n": 12,
+   "pct": 54,
    "lado": "positivas"
   }
  }
