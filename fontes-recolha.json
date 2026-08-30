@@ -1,6 +1,6 @@
 {
- "recolhido": "2026-08-30 12:16",
- "horas_desde_a_anterior": 1.6,
+ "recolhido": "2026-08-30 12:51",
+ "horas_desde_a_anterior": 1.0,
  "fontes": 66,
  "sem_artigos": 4,
  "por_recurso": 0,
@@ -56,7 +56,7 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 1,
+   "lidos": 2,
    "marcados": 1,
    "erro": ""
   },
@@ -94,6 +94,17 @@
    "erro": ""
   },
   {
+   "fonte": "Angop",
+   "dominio": "angop.ao",
+   "origem": "lusofonas",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 10,
+   "marcados": 0,
+   "erro": ""
+  },
+  {
    "fonte": "Carta de Moçambique",
    "dominio": "cartamz.com",
    "origem": "lusofonas",
@@ -112,7 +123,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 19,
+   "marcados": 22,
    "erro": ""
   },
   {
@@ -210,17 +221,6 @@
    "pt": true,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 13,
-   "marcados": 1,
-   "erro": ""
-  },
-  {
-   "fonte": "Angop",
-   "dominio": "angop.ao",
-   "origem": "lusofonas",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
    "lidos": 15,
    "marcados": 0,
    "erro": ""
@@ -243,7 +243,7 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 19,
+   "lidos": 18,
    "marcados": 0,
    "erro": ""
   },
@@ -343,7 +343,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 24,
-   "marcados": 3,
+   "marcados": 4,
    "erro": ""
   },
   {
@@ -365,29 +365,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 25,
-   "marcados": 19,
-   "erro": ""
-  },
-  {
-   "fonte": "Deutsche Welle (português)",
-   "dominio": "dw.com",
-   "origem": "internacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 26,
-   "marcados": 3,
-   "erro": ""
-  },
-  {
-   "fonte": "France Info",
-   "dominio": "francetvinfo.fr",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 26,
-   "marcados": 0,
+   "marcados": 18,
    "erro": ""
   },
   {
@@ -402,13 +380,35 @@
    "erro": ""
   },
   {
+   "fonte": "Deutsche Welle (português)",
+   "dominio": "dw.com",
+   "origem": "internacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 28,
+   "marcados": 3,
+   "erro": ""
+  },
+  {
+   "fonte": "France Info",
+   "dominio": "francetvinfo.fr",
+   "origem": "internacionais",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 28,
+   "marcados": 0,
+   "erro": ""
+  },
+  {
    "fonte": "ANSA",
    "dominio": "ansa.it",
    "origem": "internacionais",
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 28,
+   "lidos": 29,
    "marcados": 0,
    "erro": ""
   },
@@ -474,7 +474,7 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 38,
+   "lidos": 41,
    "marcados": 1,
    "erro": ""
   },
@@ -485,7 +485,7 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 44,
+   "lidos": 43,
    "marcados": 6,
    "erro": ""
   },
@@ -496,8 +496,8 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 44,
-   "marcados": 7,
+   "lidos": 43,
+   "marcados": 5,
    "erro": ""
   },
   {
@@ -507,7 +507,7 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 45,
+   "lidos": 44,
    "marcados": 3,
    "erro": ""
   },
@@ -552,7 +552,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 50,
-   "marcados": 8,
+   "marcados": 7,
    "erro": ""
   },
   {
@@ -574,7 +574,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 51,
-   "marcados": 24,
+   "marcados": 26,
    "erro": ""
   },
   {
@@ -606,19 +606,8 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 75,
+   "lidos": 72,
    "marcados": 10,
-   "erro": ""
-  },
-  {
-   "fonte": "JM Madeira",
-   "dominio": "jm-madeira.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 76,
-   "marcados": 7,
    "erro": ""
   },
   {
@@ -628,8 +617,19 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 79,
-   "marcados": 7,
+   "lidos": 73,
+   "marcados": 6,
+   "erro": ""
+  },
+  {
+   "fonte": "JM Madeira",
+   "dominio": "jm-madeira.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 75,
+   "marcados": 6,
    "erro": ""
   },
   {
@@ -695,7 +695,7 @@
    "via_config": "google",
    "via": "google",
    "lidos": 100,
-   "marcados": 9,
+   "marcados": 10,
    "erro": ""
   },
   {
@@ -705,7 +705,7 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 130,
+   "lidos": 131,
    "marcados": 0,
    "erro": ""
   },
@@ -728,7 +728,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 700,
-   "marcados": 111,
+   "marcados": 109,
    "erro": ""
   }
  ]

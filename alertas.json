@@ -1,9 +1,9 @@
 {
- "atualizado": "2026-08-30 12:17",
+ "atualizado": "2026-08-30 12:51",
  "dia": "2026-08-30",
- "corte": "12:17",
+ "corte": "12:51",
  "dias_base": 26,
- "regra": "Tempestade quando a contagem do dia, até às 12:17, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 19 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 12:51, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 19 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
@@ -13,41 +13,41 @@
  "momentum": [
   {
    "area": "Primeiro-Ministro",
-   "hoje": 8,
+   "hoje": 9,
    "mediana": 3,
    "limiar": 11,
-   "excesso": 5,
-   "variacao_pct": 167,
+   "excesso": 6,
+   "variacao_pct": 200,
    "dias_base": 25,
    "tempestade": false
   },
   {
    "area": "Assuntos Parlamentares",
-   "hoje": 3,
+   "hoje": 5,
    "mediana": 0.0,
    "limiar": 8.0,
-   "excesso": 3.0,
+   "excesso": 5.0,
    "variacao_pct": null,
    "dias_base": 26,
    "tempestade": false
   },
   {
    "area": "Negócios Estrangeiros",
-   "hoje": 10,
-   "mediana": 8.5,
-   "limiar": 20.4,
-   "excesso": 1.5,
-   "variacao_pct": 18,
+   "hoje": 12,
+   "mediana": 9.5,
+   "limiar": 22.8,
+   "excesso": 2.5,
+   "variacao_pct": 26,
    "dias_base": 26,
    "tempestade": false
   },
   {
    "area": "Educação, Ciência e Inovação",
-   "hoje": 13,
-   "mediana": 12.0,
-   "limiar": 20.9,
-   "excesso": 1.0,
-   "variacao_pct": 8,
+   "hoje": 14,
+   "mediana": 13.5,
+   "limiar": 23.9,
+   "excesso": 0.5,
+   "variacao_pct": 4,
    "dias_base": 26,
    "tempestade": false
   }
