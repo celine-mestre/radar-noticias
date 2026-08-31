@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-31 14:00",
+ "gerado": "2026-08-31 18:00",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -256,11 +256,17 @@
    "pct": 76,
    "lado": "negativas"
   },
-  "2026-08-31|Defesa Nacional": {
-   "texto": "No dia 2026-08-31, a área da Defesa Nacional registou uma escalada de hostilidades no contexto da guerra na Ucrânia e de tensões entre os Estados Unidos e o Irão. No primeiro caso, a Ucrânia manteve uma intensa atividade militar, com Kiev a enfrentar um quinto dia consecutivo de ataques russos, resultando em perdas de vidas e na necessidade de repensar a vida em contexto de conflito. Paralelamente, verificaram-se ataques recíprocos entre forças americanas e iranianas, nomeadamente com ataques a lançadores de foguetes iranianos em Ormuz e retaliações iranianas contra bases militares dos EUA na Jordânia, com consequências letais. O tema dominante foi, assim, a intensificação de conflitos militares em múltiplas frentes, com implicações para a segurança internacional.",
-   "n": 20,
-   "pct": 78,
+  "2026-08-31|Reforma do Estado": {
+   "texto": "No dia 2026-08-31, a cobertura mediática focou-se predominantemente em riscos associados à inteligência artificial. Relatos de especialistas e governantes alertaram para potenciais impactos negativos na estabilidade financeira global, com avisos sobre modelos de IA que poderiam desencadear crises financeiras e ameaçar empregos na indústria audiovisual chinesa. Adicionalmente, verificou-se um incidente de divulgação de informação incorreta, com um vídeo gerado por inteligência artificial a ilustrar eventos geopolíticos controversos. Paralelamente, a área da Reforma do Estado enfrentou um problema de tesouraria, com o Ministério da Educação a dever 38 milhões de euros aos politécnicos.",
+   "n": 6,
+   "pct": 75,
    "lado": "negativas"
+  },
+  "2026-08-31|Agricultura e Mar|+": {
+   "texto": "Até agosto de 2026, registou-se um aumento de 39% nos pagamentos destinados a agricultores e pescadores, no âmbito de apoios governamentais. Na ilha de Santa Maria, Açores, foi efetuado o resgate de um pescador lúdico em zona escarpada, evidenciando medidas de segurança e resposta de emergência. A região autónoma dos Açores aprovou um apoio financeiro de três milhões de euros para o setor agrícola. O Partido Socialista/Açores solicitou ao Governo Regional o cumprimento de uma promessa de pagamento de três milhões de euros aos pescadores.",
+   "n": 5,
+   "pct": 50,
+   "lado": "positivas"
   }
  }
 }
