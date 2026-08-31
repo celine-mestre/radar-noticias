@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-31 17:53",
+ "gerado": "2026-08-31 19:17",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "estado": "em validação — avaliações automáticas, leitura humana em curso",
  "criterio": "Tom do acontecimento noticiado (positivo, neutro, negativo), comunicação social nacional apenas, uma avaliação por notícia.",
@@ -52943,6 +52943,211 @@
   },
   "https://jornaleconomico.sapo.pt/noticias/guine-bissau-cidadaos-votaram-pela-entrada-em-vigor-da-nova-constituicao-diz-conselho-de-transicao/": {
    "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/31/seguranca-social-com-excedente-de-4-4158-milhoes-ate-julho-acima-dos-3-2149-milhoes-registados-no-mesmo-periodo-de-2025/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/pais/associacao-sindical-da-psp-decide-novos-protestos-a-10-de-setembro_n1762574": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/mundo/3044012/trabalhadores-da-airbus-espanha-continuam-greve-por-tempo-indeterminado#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiywFBVV95cUxPYjFwdFRrZnJNZ1JudU5NZGNxSF8yeGs0bU9kTDhhU2dBRWFzcjZKMVBGOHkwYjc1TENSWDU1ZWNhdkJZenJ0STJoUDBOaWFuNml5dUNDWWU3UGJUc0JYU1M1ajI2XzRBTFNzVi1xLXJ3cW9aaWlyclpNTXF5QkRaX0FrTDZkNFhzazdaaDB2VW9QSXhXaTJORUl2dTN2ZVlYcEZNTURDTk1DWjBEaGttNXY3TmVmMGxNeWRwX1p2U0JFUGVDMk80VkhHaw?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMipgFBVV95cUxPbGc0UzZvbXk3WmxKeTRPZXkxYmNLdnExRUtBWlpHVTRxTUdib2NJWlRtcFZqOF84V2sxUG1MYWdycUl2M05lbTh4d3ZpWDViYVlfZWh6Wmh4N0pIQ2dCb25lOGtnR3RsaWh2Zllkel81R1ZlYk14djdQS2tnMmhrZGdIWDVrOXRJT3M3UVoybk1UMEtGZnIxanBITlAyeXJTaFJydkh3?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/economia/ps-pede-audicao-com-urgencia-do-ministro-da-economia-sobre-execucao-do-prr_n1762605": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.jornaldenegocios.pt/economia/detalhe/ps-pede-audicao-com-urgencia-do-ministro-da-economia-sobre-execucao-do-prr": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/outras-modalidades/auriol-dongmo-campea-do-lancamento-do-peso-com-recorde-dos-jogos_d1762610": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/politica/chega-reune-orgaos-do-partido-para-decisao-final-sobre-mocao-de-censura_n1762603": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMixgFBVV95cUxPbDdJVUtkUEVmZUFTZVdNOFBvYXpjZURFVWdYUFkzTW5sZDBjSno0Z3V5cjd1YWFtX1FNaWs2djIyN0JGX3cwdVZSaXhyZ1Ftdkl6VHFfaTFoWDhmUEhJdEtmQ1AyVF95Z1Bab3NMQVlwUWhlenRUV05NZjNYWDFpSm1taUJVb2VDWjRhaWVwVDdoSlRaMEJoR3JOU2xoS21XQUxiSVZSMFdTbm5BYjVFVEYyQlN2UXRwdllSQ1B6UXFnWDJNaUE?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi4AFBVV95cUxON25Yak03RlRvSUo0djdLOWpQemNTNWpyandUZVpPaUFvU0pVdHo3eVc2d21HWUxBZXhCZFNWT29oTTRkX092SW5fbHprcnZ1dUVPWVFIa2FMaENEenFEdnRVOTA3M0UzWUVZVF9QdlhCdTZReXRhSml0ZzVOamNMNTcwWHRicjZ4cE9aU2pRdndHb1hRNDlKMjhOTFZXVTltTG9QcGgtWEpuTHhYX3dpVHhLZV9TdmlTZ0VRT2JOcGFMTnBubmdIWEJKZF9LY0l2QjVyWlM5SVdCZUY4WFFyVg?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitAFBVV95cUxQaFctYVJuRWVXLWNpUUhzWDcwdW00dmZZQWRVQlQ5NmVucGRoM3M2VllQOVpKS1ZCcmhhdEFmUEtBRXM3cldDdjM5aEVoc1hXNDBZVV95X1pIcmh1RldLaXpUOFc4YWpOMHFFWUlacnk5SmoyaUFuQ1FsS0F2QWkzam93T2ZiS2phUnYwaDlkMkJRUm1pelcxd21IY2FrN25RcWlsc3hhRGZjeFpqcGRJbWE1N2Q?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi1wFBVV95cUxORUhmbzlSemx6cTR5TUN4b2hJM0g5VW5XRE4tV2ZNOXVQbzQ3UFozaHhkM0toa2hTdzBmMmhLNFdZcWVxcDhyZkMySzB6Mmt5NGFueGhacHB3cVBDZkUwSnFTVkwzLVVzMWhsaWhtcWN1WWVOMkY4ZmpFWC1qMmdyUk1INkdrbjdVZjlTaDhxbXhmMDFYUXZqTm1ZMUo4OFFweDVGLWRieVBjQWZiU2kwanNZcks3cDZxeXB6OVhLcE1xcmlCT1hQOTdDNS1IS3B4TDJaa1FZOA?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/mundo/carneiro-diz-que-ps-vai-ser-um-baluarte-dos-mocambicanos-que-procuram-oportunidades-em-portugal_n1762600": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/pais/fogo-em-mato-corta-ic1-no-concelho-de-santiago-do-cacem_n1762601": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://jornaleconomico.sapo.pt/noticias/sunotec-avanca-com-maior-projeto-de-armazenamento-de-baterias-da-alemanha-em-stendal/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi7AFBVV95cUxNdzNCdUNpdGI0UW9tSWhJbWozX3FsOGFKZHJ2LWxINVBpYnJXRjFORkxOY0hfV3E0Z3BtM0FMakRndkVKSXY1TGhYd3RVNTN3V0lqanNtSmppVC1FblNzMGsteW5qeWlnSE05Wk02MmJqYXI2S2VYaXVHOGYyLXV5dHN6Ymd4YmpzbGZQMnl3V3pUZzhLSTdFQXhXQUMyWWozMjFJcnk2ZFZLWFRvU0JNS3VIUklTenRZVDZxODZENTNXblc0ZWV0MENwTTUySFpkZnJGOWhtbXQzNmplV3UxQ2dSa2N0cDRaNm1FQQ?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/pais/servicos-prisionais-proibem-entrada-nas-cadeias-de-suplementos-como-creatina_n1762602": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/economia/bolsa-de-lisboa-fecha-perto-da-linha-da-linha-de-agua-sustentada-pela-galp_n1762596": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/economia/pagamentos-em-atraso-sobem-para-7061-me-ate-julho_n1762586": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/economia/3044134/servicos-prisionais-proibem-entrada-nas-cadeias-de-suplementos-como-creatina#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/31/politica/noticia/espera-esclarecimentos-neves-chega-decide-mocao-censura-tercafeira-2186610": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.jornaldenegocios.pt/empresas/comercio/detalhe/dona-da-loja-online-de-cristina-ferreira-faliu-os-produtos-da-marca-vao-deixar-de-estar-disponiveis": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/deco-proteste-revela-melhores-seguradoras-em-transparencia/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.jornaldenegocios.pt/empresas/industria/detalhe/portugal-leva-projeto-textil-revolucionario-de-112-milhoes-a-onu-em-nova-iorque": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/suecia-compra-quatro-fragatas-ao-frances-naval-group-por-43-mil-milhoes-de-euros/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/politica/3044140/ventura-decide-mocao-de-censura-e-pede-conversa-a-seguro#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitAFBVV95cUxQNDdBRFR2NjBtRVcxRVpRaEFfR1BnZWg2aUJscjZLVkRSSk5IS2dkek5FV20wWWJiU3hRLXdLS2lYWE13ZmszNW9NNGpLa2ZuR2U4TGExQXlodmtaWkJIb2hxV1FzMVhGNDB3Z3hGWENXQk1iOXlGOFNzLVlodTgzMUQ0QzV1Qk9GbkxPMGpUU1JsbEZBd3k2cWZIZUFRdmQzUW8tQXo0MEFTaC1uVkhjNHpTazg?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/ucrania/russia/russia-quintuplicou-uso-de-drones-a-jato-contra-a-ucrania-so-nos-ultimos-quatro-dias-foram-lancados-800/20260831/6a95aa91d34ed0733ba82b54": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMirgFBVV95cUxOeFFvc0drak5Na3FOWkxrNlpocVQzQ0xnSXdmY19sUmwzNVNMaWRTQ28zWGV5ZFdubnNtNjRzMWVDMEdadDhWdEVEN2dPaW1pYjE4Z2FzTFB2LWRvbDNwWE1tOXl0R09XMDJuU29oU2FCQlBkVFRpZHlfVHE0Mm5nQ1hfa3BMa3BxUHZsNlpWV09fNEYxM19VSWVWaTdrVE5iVEtYNm96c01CMDFBeGc?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5vZkxMMnhYOW44bE9SdUYyVzV6WHJCbEFNWXhNakZPX0RueDNhMk1iS2oydDE2bFdyRUtmREVVNVZoa3R3aC1scmtvVm5DazlGY0E?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "http://www.acorianooriental.pt/noticia/cdu-quer-reforco-na-saude-e-bombeiros-do-topo-a-funcionar-24-horas-por-dia-380018": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/31/receita-fiscal-sobe-38-ate-julho-e-chega-aos-36-953-milhoes-irs-cresce-mas-irc-recua/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/31/portugal-e-um-dos-paises-mais-hostis-da-europa-contra-moscovo-diz-adido-de-imprensa-da-embaixada-russa-em-lisboa/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/17h-chega-anuncia-decisao-sobre-mocao-de-censura-amanha/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "http://www.acorianooriental.pt/noticia/prisao-preventiva-para-dois-homens-suspeitos-do-crime-de-trafico-de-estupefacientes-380016": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/31/economia/noticia/anacom-multa-meo-vodafone-milhao-publicidade-gravacoes-2186609": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiygFBVV95cUxPZ3pKTEdhTnh4MFhnazlOTWRPWmdBSUFSTDJzSHZrRy00Wi10NEdGZ09ia1U5YU05ZHQwaWxpczBpczUtS0E0SHNLY3dTSWNqUS05NVZNTFk3UFR3aWVvajQ1Zk5wUDJtNXBBeTREMEx0Q0VWQk9aN2JuWDBZcHB6RlFlUHJnZ3dWRmcyN1phbjc3ODBkM2IwNnZzeW5JSVFRLXZqbVRaQ1ppdGRqa0ZpYkVNODVBWWFzejhuMmhzNjVZS3p3ZFFJNFFR?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/31/politica/noticia/ren-pensoes-exames-habitacao-temas-reentres-2186552": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/modi-pede-fim-da-guerra-na-ucrania-durante-reuniao-com-putin/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/31/economia/noticia/morreu-ludgero-marques-empresario-antigo-presidente-aep-88-anos-2186614": {
+   "s": "negativo",
    "d": "2026-08-31",
    "v": 2
   }
