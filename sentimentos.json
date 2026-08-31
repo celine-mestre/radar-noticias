@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-31 01:30",
+ "gerado": "2026-08-31 09:54",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "estado": "em validação — avaliações automáticas, leitura humana em curso",
  "criterio": "Tom do acontecimento noticiado (positivo, neutro, negativo), comunicação social nacional apenas, uma avaliação por notícia.",
@@ -50963,6 +50963,631 @@
   },
   "https://observador.pt/opiniao/o-que-faria-se-entrasse-hoje-na-universidade/": {
    "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMikgFBVV95cUxPOXFPSEM5VjVySHRCeUZoalBRamtJN3NZMFlRTTRHNUJOdTdXNW1JZmowZjZGR2F4eFMtR2VaM3RELVRfcDdydmFmTXVOckdvdFpLUnBZOWJGZ1liUkt0N0RONXFBSDZKM2o5cWNZNnJ6TndfZWktR3RBTC1sX0dzWkstRHZjcDdfQVJoSmpPdnVKUQ?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiygFBVV95cUxNdUVsNi0zOWhYZnBiTlZabVRPbGxOcVFNZkQ4LWVid1p2N3VMc1NFTUZVU18zOTFERDZKMWFsR19aQ3Q2dVN4N0lLcjhEaUtMSlZfc2ZFdF9KNEtvWUhhbDhxazRBQ3cyUW1PQTJUeXdnR1doWjVEU2F3T2VMak5ZeHNrOFZzREJBd3hyOE42QWhDTHR1WVNPeXdtN0JZbHE2VjdCdzRNZnZxaEVfZDdoSWtMLVVNNHJUMUpJXzVHNldfS2lxREJoQk5n?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMid0FVX3lxTE0xX05rU2hQOGFkN0QwdVlwd3Y3VWFqS3JsNlN2dlljZHVtUFltMjNKVm9aU2V5cmZhZjRLRWFhamdEVG1TS0oxYzJtOXR4OXRjX0l4X3AzYkV0UnJrMFkyYkpzRGkwZVE2VFhlbnlUeWN6dnNfWVlj?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitAFBVV95cUxQdGxRNGJQZGVYdFB0VkY3LThsa0J5NXNBUklWOWMtSC0yNTdRdUJRQmhYMHU0UTR4dTcyWWwzXzc2NEt1a3p2SlNNUmV4c3d2QklROG1hTEs0S2NMUnZLLWZIOWJPMG16QXFkVVdsMDNGM24tUnRiWVNmSlgzUjdSY2JWcjhwcXBncEJpTmtPY3RFQndqR2FYbkRSVkZDdE1IRmtWZWlxYWJqbVREdEdIbWI3bmM?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMipgFBVV95cUxNOW9wZGRzaUF0bTVSX0dwSHAwQmVyY0tSdmJLelhyZFF2N1c5aVZEd2tjc1l2Slc5Zllpblo2ejQ5MzAtNFJWSTlBbTdlcHZCY0FJUzRZOUFhekZMamZla2RHNTJnTTltVHkyTVVvanJNcnpWdlhYUktaV0VMaDQ4YlVQcVlVd0MySDJEOER0QjZSb3JIbUdoS09EWF9Fa2tINTZRa2RB?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMivgFBVV95cUxOTWZqeXF4V0U5VkhIX25vS2ZnZk54TVROT2dyS0NUNlFudlZFY05nQ1d5Y0VSME10R3AyRE91SVROV3kzMEdkYVNqbDhDeUpHaWhHUFo5YUF1V2lndmpWbDRCM1FQU3Z1MUhVejFOaDNXX3UyYzViQ283TTBPNG9FMS1XTG9zYmxDZkhwc2ZxNms0WVdLa1U0WkRfaWlHNF9OWEgwRUREamw3bDJjTFVKV1B0N0xVUzcwS084ZlBn?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMid0FVX3lxTE90TklINmRhYnUxZHZtWERuQ2Q0OGVTS3VyNTl3bGJwNU41NDZScUx0VkJkczY5aTNnZDdRNmxTdWFrSC1wUW10WXlVcVVPdFA1cXZlM0ZBREJxMlZFdlMtSnBRa2x5ZnA0UW02RUZyellBazZPbXVj?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/economia/3043574/ministros-das-financas-do-g20-vao-discutir-situacao-economica-global-nos-eua#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "neutro",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiygFBVV95cUxQVFhua0p4V1BmazhiNkxmYlhnQlBYTk12V3BFRkpHS25qYU1DSEhIbmpoWTJxanhuZW53OXM5RkhRQVdiQjIwWDdJbWxpQ2hVaUNwaGtqRlFpR0hrV21pdW85by0zTS1VWEdrMl9lRERraDBzYS1Xam44TzZpTkpEUlN5aG5SOHY2MWtNYUw5dmJ4SkNSZ2hEMWtjTzE4Wk9kbHFKZWEyYnF1ZXBYZlVzVDF5bEY3Nk9zSEZOTFlndS1JbGFMOEV3eE1n?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi7wFBVV95cUxPSjhjMVpCMWtWaDN6YUtfT2pVV3psWkRVcnBkUHFCRlFoczZBMkxsbW5ialNaMElmeHZiWndZdWFFckdtcVdmSXQxZThnakY3MDI0dno2RHB5dWhLa2c5aVNBaGdRLXhDWG9GVmh3djEyUGdlcGs1VXlPSVRlcmUxbldKelZNOGVTbHFUZHBLclhQVmV6eFd5ald4SVA5T2hOdjdBRUJCQUQ3V09ISmJYSWFPM1dUY2JIVkduNDZ4SGJ1WGpLOHo5Tl9hQmpDMGgwVUdtcmtETWdTX2NheGIxSWhzcGt4MFBSNzRnM3MtOA?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMid0FVX3lxTFA3NVQ0bE1SSnJTVUpEUFZnU3BET0h5VjhNWVp6RnJ2TVNlSC16UUNrV2lqMjRFTUo0X19ESEFwZkFTMWcxeVVxVEwxVTl2a1RYblNCa0htenNLOUxSQklQaVVZVDRScGR4c3RUZEN4dTAwaElnNVVV?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMirAFBVV95cUxQX3NxekJDMW5BSEs5OUZVRnFuQ2VqdUlpeFJtUG5oX2c3eklvX3ZtWVBtWXVHRWpaem1VTkgxOTFlRFROYkxzYnF1cFRCTWduOFNpNEh6UmFfN01GVE9SZGd5X0JwSzdtdGdxYkxrV3FKNU1IMjFPYXY5Z251dm1zX1BhbVAtOUo0ZDJkS1MyaXg1UzNZRlVtNlpqdE9RY2UwZVR4ci1mNC1RWmg0?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQbG5HOEVycFBEZ0ExZXlRRUVRdHZMRGdXUDhJaHZqbDBONDNUZ21zNkFRSzFyUnA4Y2FXZjhpbkdfRXBNYldqaml4NFdlMXR5OXYxcFRXRnRVNVdJRTUyWGtSa0ZTM3h6MWRrVFE5dXc5N1lMOURHcEZ4RGdEMkZZblQwd294RHFIRWlzRTh1a084TnNxVVV6bVdkQU9ILWhvcUpFcUl1ZEdDRnNNa0k3d1QtTWhzNWJ4a0F5N3VGOG5ORnZpM3BtUjVnWmJ2QUR6alEyeQ?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOTmR1a3U4MzFsTlFRVEpId3dUN0JfcndKLWEtRm96QldlcE5iYlA2M3B3SjF5dkZFUURVZUFVbkxVcGhyT0dqZTdMemNJVEQ0RVBuNGNDLUFFQ0hDam5teWZqYmd3TnRMUTNFRWFNSnFwaVVyekF3c256MGZnMmJSa2Z4eG1tM1VHWHhB?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMid0FVX3lxTE1iaGJ1U2lkV05iYlpNNUlaekJvdVB1aWRESzVmTXVBT2Utc1BZUVVfblFCR3RocWJ0aHlHNDNGODR4Y2hSZV9mc29KanlXclJubmhhaWp3cmxHN3h1VTBTbTJiTFlsejNwVnliSjl6S2lwUktVS1JJ?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMid0FVX3lxTE1MMHp3WGNPOS01TURCYXA0NFZTNmdscTRuQklyZmdfZnh3b3Z3QTJZMWtLcDVZX21FQS0xcTVDVHkxbHFmT1ZyLVlvUl93R25VWk5BejdLX3o0V0hZQWNuWk1vM2s1d09WOVoxYlJnSS12dUhObHlr?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-30",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/mundo/eua-e-irao-retomam-hostilidades_n1762502": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/noticiario-antena1/9h-ministro-castro-almeida-fala-sobre-o-fim-do-prr_a1_1762505": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNUHFJUzRtTmpFMEtMR1U1LU1DRjVMbkdrUjZJYWt5bVhBMGlWN0NpeUo3bTh5T3FhUmlsb1ZwNHhWRVY1bUNiZUhxaTliQ0thZUp6Zl9HS1U5Szh0RklGVzdYZnR3RnI3RWdfNm02b3c1ZHJFVUF2Q2h5VE9iY2JxcGxfcUZEcEY4bUVGdG43R1Fhay1ZZWxsN1dYTUtEOVQwbGJrSDFPVmlUbTJYU0NXQTA2NVlmTVhIaF82aUlDck9JMDA?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://jornaleconomico.sapo.pt/noticias/irao-teerao-diz-que-superpetroleiro-sofreu-danos-apos-colidir-com-minas-em-ormuz/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/ha-tres-mil-novos-enfermeiros-que-sns-nao-consegue-contratar/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiswFBVV95cUxQRzNQM0JoS2tIN0Fjenp3NkNwb01sMlV1VlpDRzlrUGZpclBQNmloUm95cE9XU0xqWW1PaFQ1X1p0WUN3cGNsd0JJdnFPOEZXRFRwM2Zaa0hJbktESDlmaGVuZG9WYWZvbkQwSm1ZZ1JCdnZybGZWbHk5dEFZLThQbHI2WGRDbnUxUEJjMzFCYVAwTDJvSk5Qck9hanEtbjVfXzZ5eXM1eE5vRXF2NExVZkQzbw?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMivwFBVV95cUxQYnNqVmlWY1BzN0RBSzBYVVNYRVhGRklXVUFSZ3BfdGE0Z3FZZDc3V2s1cFBWZGxJWFRCbjJ6VEp5ZGp0eVYtcWVOYnNCczdMdzlsWU1NYkphV29FaGowLVBOdVM1WlIxcmJqb0tWZjdtTGZNQm9hT1lPOGczVWRxdGlBWGx6VnA3bGRfOVIySWtZTWpJX1diQXNjZ3hBTFQtQkR2RlRDdXd0OTVnYk5uUnlRcG1WMEhhYk9tVGFtTQ?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/economia/3043779/prazo-para-cumprir-prr-termina-com-governo-a-garantir-100-de-execucao#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMivAFBVV95cUxPTTVIYUxRNC13ZldYbUNSWW51bHdJVDhKSnd1U3phWEdsRnNPOVVETExQSXo0SkdqSnplQk9LTm1VaUxpbVhsblAyb3ZfM051NTdzUG02SUp6aDBqNTljbWZKSXdoRjZBSFpSQU9Xc2hUZzYyYUhVdkJsMDVQalMybGlRcHNRTS1pOExZeVY1dkRnMkh2VnowM3pvUEFLWlc0bkhoZTZWMUR3bkJaQ0JIQlRYMU9zQlM3bkZnStIBvAFBVV95cUxPTTVIYUxRNC13ZldYbUNSWW51bHdJVDhKSnd1U3phWEdsRnNPOVVETExQSXo0SkdqSnplQk9LTm1VaUxpbVhsblAyb3ZfM051NTdzUG02SUp6aDBqNTljbWZKSXdoRjZBSFpSQU9Xc2hUZzYyYUhVdkJsMDVQalMybGlRcHNRTS1pOExZeVY1dkRnMkh2VnowM3pvUEFLWlc0bkhoZTZWMUR3bkJaQ0JIQlRYMU9zQlM3bkZnSg?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://jornaleconomico.sapo.pt/noticias/proprietarios-com-imi-acima-de-500-euros-tem-ate-hoje-para-pagar-2-a-prestacao/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOWG5xckhka3ZvSENQMmY1b3pWQXcwdjRfTW1HbTZRXzY3RTNPSWRldGFUQW54YjE5RmVUd3NBemtWMXdnVjRqNkpNbXIyLVhGTVZORkRSRGU0bGUxU0pwWDJBM3lwV3hNZlFwUjlRN3RpejdtbGhuQTQ1NVlaV3o0REo0Y3p0SFR5Y1hLcTczU0UwQ3NpUnEtMlo2c3pkemFpaDQ5V2xKR2Y?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.jornaldenegocios.pt/economia/detalhe/contribuintes-tem-ate-hoje-para-pagar-o-irs-de-2025-as-financas": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1XVm5HOVBXNVNWc24yR1E1cVdnQzhXTlY0b2FrdHdqaEFHTTFUMFFEU1RJQWVncEFOMnY0bEswN0tvY1V1Z1RzdnlqRUJjRjdDbWo4?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9pSy05M2pXM1g2Nk95cUk4STFLNTZWd29ZUmhmOE83c3Ixa19VaG5wVUlibkt3bU9IRXdpZGxPcnZhcUZUYjBIMkRGbkF6bnZ0Tm5xRmpfTm5fLVhqMnA4bXUxZnU2VENG?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://visao.pt/atualidade/cultura/2026-08-31-chuva-de-estreias-outono-2026-se-isto-e-a-decadencia-do-cinema-venha-ela/?utm_source=rss&utm_medium=rss&utm_campaign=chuva-de-estreias-outono-2026-se-isto-e-a-decadencia-do-cinema-venha-ela": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://jornaleconomico.sapo.pt/noticias/bolsa-de-lisboa-abre-no-verde-e-brent-dispara-mais-de-4-com-novos-ataques-entre-eua-e-irao/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi9wFBVV95cUxQNUc3amF4S05GT2pvQlB5bzNpcm12U0RTLWpZU0k1RHlfOGxLblNzOWE1dFdOQUd2Y2thRjd6ZHdHRXl1MkM5S2NwNDZTT0oyQmNjY2tSaW82SFdDd3FEaGdveEJiX0JaX09LakVJcEd0Z3N5R0R0VDBjdC1Gd0gzZUxZeTJqVWpQMjR6U3dHMmtvalA1UjlJVGtId3o4dXFSYkFDRXpWTmRPOElzSWd6dk9uMG5SQWdnQzI0X3lfQVg2cHZ5bm94T0Z0TmJsUXR2SHFVc2VySTBnVmlfREV4NHVyRWs5QUNDRVZSVkN0dHBUMW1UNEU0?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitAFBVV95cUxQM1FsMDBlZllvR0lWa0xyVGVyMVhBYjBjMlhkSXFBZ2JYa0ZBYm96dTk3MUxHV25HUlRWOFVjY1h4UGNubTVLRlR3dEFYOFpfSnlJLXdLamp3SnB2MVdyQXZpMGJhUGRjVFpWRWhpMEtkeElwTzBJaTNJWmtMV3ltV3dtYmJ0RzE5cjlwazdIb0RMNUFlZEZPbm1RTW9HUjhGSjF1enlxXzVqRUxjbFBGTVEtelQ?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/o-bom-o-mau-e-o-vilao/derrota-no-tc-seguro-anda-a-ser-muito-mal-aconselhado/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMisgFBVV95cUxQTEtpMUF3NjVZRjR4VGg5RkFVWFF1RTJta0RvdkZOX19kLWJYbUFOQUNiNDBUMnZpVUF3TUJCcjFuNF8zeFg0bG1xVjhrU3hyaEdYMDVmMl9yYWpKRG9hNkh6dzYyUkg3d0RMUG9URmRvNk1ETWZlNnV3R0ExUFJ3VGdTUUJEX080QXQ0LU9mVjRrVGlIRzlnbVVDV28zQnlLY1BKYXZxWkJoS2hIbHRJa3Jn?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/momentos-de-glria/entre-javalis-e-politicos-sobram-promessas-e-secam-adegas/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi7ANBVV95cUxPTWlIZTU5MVBTNlhZemV4ZUptamNWeEIteWRCajhQZXhaNE9PX3Q4MGExMEdGaEpCWm5ZZ2ZLWklRVy1vOUpvOVNsaElId1JROExRaF9wVHBmbTBmUlc2TlNqVkQ0T29vUnFac3hiMmhaekVJYjJ5ZWJ0OXhMRko2UVBVWGFUN0tWZnlydjNFM042MmtjNGhNUzVreFhqSExQRENOaUFLa090OUdnZG1nSEQtcmxnbVcyTjlwTEZuaVlFYVdKMmtnSV84LVVGRk5tSmtCcjQzdDJTZmZTRndPOF94Ym5kaWk4c2dyN20zaXB3Ukt2RC1JbEJYRWtGTldjdVRBRkhBTzNjajZlRU9yWFBZa1k2TXI3LTAwcnlSZXpUWlVQZUVHN21Nc29pLXl1dTFGSS1vb1pVRFprOFhZdHRXZXo5WVlES2pLZHZzVGFnMklmT0FLMi1NTVR2eTc3eVRCbTJqWDBHYVg2R1FCN3gxbVprb2FZR1FMZlRwZzl4Z0x1OGd3alJRd3RPZngxcDV1c2gyNWtMV2F2YThqY3ZWZlpaVElRTjBGc0V5RnRoNDVBNTNZR29zWW9wemJPcXFCenpVNU55UUlCRTNoNTVMN1kzM0kyaDdMN2VtVlF5OEU4ZkhUWWxzME4?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/jaime-de-la-rica-oraa-o-salario-e-um-componente-importante-mas-a-aprendizagem-e-mais/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/hoje-nas-noticias-lucros-no-psi-habitacao-e-enfermeiros/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/31/culturaipsilon/noticia/reuniao-email-homem-sussurros-ido-cinema-2186362": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi9gFBVV95cUxQLW96X3IyWkdQTzBpck1XUnJPOUhvckgyYXNMM3ZKZ2dLdGg4LWZDZ1B3bHZvTkJuRGdqS3BDSnFxTW9yMDZWai1KWEUxLUdMSHlBNTNQMnY1QWFUYTJBV25sclZyNkMxeEtVWGUyMm1JVmdPUjdkLWhQcWUxY3NDdkRJc0xjc2xBdS1hczM3Z19RbnJHU1FCSExNTnBSSkhYRFA4cWhEVVBfR3dzSVVaeWxKRFBwS094UTRnaUlCUTRsSV9FT3R5V2FvR1pXZ2kzalFqVHYtVlN0UTVOZU82WC10Vy0xZ2dwWjNXVzM0VkFTVjdGMkE?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiiAJBVV95cUxPX3ZuSG9rVjNSdEZzV3NGRUs1RU9SVnQwX2xLblRrQXd5NHhVS3pVS2E1LXFoNy0yQkRJRklzbl9wQ2pMbTAxSzJ0RW51U1NXWHJqUDhyTFFFYlRudk5qZGl5aHBzeURMQUZvUGtpU3FwS2VwYnZvYjctWlFsdjFpbjBzNzk3UzJjdXJIbmdiNHdDem8wYmtzUi15NUxCTXg0S0dJQWhreUoyblhDUnl3V24xMDFxMVI2anN5N0JZS1pMaDdCTlFhVzRPcnU4RjVNdF91ZkxkdHQ0dFFrNTdTVEI5OWJRNXNCeF9Ia1lUdW1IblVUR01pbXNNTXdiTTZzV2ZxTEotN1E?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiakFVX3lxTE0zM3lqcHNXaWdRUS1tcFpQeGF2cXJ3UnhHS2NjTVQ4NC1xbkxzeGZBLWM2TDJETnlqUFhVZU1DT2tWby04Q0RjdE8xMHU5QkJkWTZWZkRRSy1FMHVUeTRfRERRcmV2SnRKV3c?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/mundo/kiev-e-washington-voltam-a-mesa-de-negociacoes_v1762488": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/newsletters/360/as-moscas-do-prr-o-caso-de-jose-monsieur-afrique-veiga-os-que-trabalham-por-dois-e-o-avo-que-veio-para-ficar/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi4AFBVV95cUxNMHV3LWltNS1NQ093Z0RiZjFzQnl6NmhnU3NCRDhrWTY1YzQyb0VteVJ5N3M0dlhwR0RZYlMzU2FzRkNsZGFHMnlOdm8tTnJmdFpsWHUwSlcxV25UU2dSN0w5M0psYWpxQTA0OEdBZ21nWmFXYXh5aTMxV2ttdENNblROX296UEhRcmZHcWJleW5VbXJ5SlV3QVBweTFFZ0Y2dzFRTzEwakhsZUZRRktTWHFnb0JxWUhkS3NIb28welFHNExULUdrTm1Fb292OGxNYmVNaEFfaVBsMW1vR1c0SQ?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/politecnicos/ministerio-da-educacao/ministerio-da-educacao-deve-38-milhoes-de-euros-aos-politecnicos-instituicoes-deixam-um-alerta/20260831/6a9525d2d34e511da0b36192": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/ainda-bem-que-faz-essa-pergunta/chega-e-seguro-de-vida-para-luis-neves/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/gabinete-de-guerra/estara-a-china-a-criar-uma-alternativa-ao-poder-dos-eua/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/31/prazo-para-cumprir-prr-termina-esta-segunda-feira-com-governo-a-garantir-100-de-execucao/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/eua-atingem-lancadores-de-rockets-iranianos-na-ilha-de-larak/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiY0FVX3lxTFAyNHZHNk85eV9LVlFGdUN6RExkcDFOWWMwcHd0Nk81V0JDcUt0ZXhGZllvMU1IclFDanN3NGc2d01QNlZjZ0xqd2JyNE9aeHVFWS1tVURPNDNqVndOWWVvQVpyVQ?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiigFBVV95cUxPdFBzcVFLTWpBOGdSWG5sRl95R1J4OWhVNlZSMmpmUVBKcVdDT180cmg5OW9mS0hDWlFtLS1LSDVBQWpuaEJWT0xyTkhtV3B2WHN2cDQ0MjZ4NG9WTkJwb2V2UzdoTGFiMlgwVTMxMThvS2FxWklESjM3TThUZ1F2bGQ5S0dMX001Rmc?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/enfermeiros/sns/tres-mil-novos-enfermeiros-procuram-trabalho-mas-hospitais-publicos-nao-podem-contratar/20260831/6a951fc8d34e511da0b3618d": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/pais/3043776/revista-de-imprensa-atualizada#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiugFBVV95cUxQV3dDaVRhVnloSXk0RjkzUWl0YVdNZzJvU2VZMDBHU3FRSW5EWXRUSFo5MWo5X0x2NnppSWR1aGd4RUM2ZkU3Q244VE5pUDd4WGc0Q1dqRFNIc1haQmRUcUxWdVVWQzlYdFlvVHYtWUx3RXpHcVVPbmtZSEFSY1c5UllJNkpEVHkxdlhjNnpJZ29zMkkwZ0FrYkllbVlsem9PbDczMDByOTY5cHEyd1FfRHpOZ1FRUEpXNHc?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-7h-2491/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi_gFBVV95cUxQSVd2VWFiMW5Ddmp5Q1hzRnpicFkwN1dlcW1JREdDN1ExR3NocVprMDdXZ3h0ZnU3c2FMeWxIRVUxMUEzUU0tanRPSnRKcm9MdzEyMmpJZ3NtTWxDVjljVDg0UGlENWF0d0FReGFiUUlReEkyYzU2WFhia1JEN3F0TFZSVEY2emtlOVZsdlktQ3AzVVFYTnRjMkFJTUpDanVibmFIWkVyUTNOcl9CNDBkakdGYWw5NE9pUkhxNFUyX2pDR0dJcllRdUJZa3JPVENJc3VBbXppelZFcVN2Ri1WYzBTZi1Nbk5IUWVfbUxMeS1MWkJSRkh5SkxGMTVhZw?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQU2pKUDdWTm42WHgyX3ZpS0ZsSHc3R1BjVG1WU3ctUlpBSDFpVGJJUTBLeEVNR2txQjNaajJKYXNyc0ZFdWJaZG9CLTBiRDFTeFZVRzlidVluakRvNVQ4c2M5V2tJancwcGt1ZmVkS2cwX19MT09SNmF6ZVF5MFI0LXdvR21ZVWVnVHZXcGhrc3gxU1ZNMmQ1TV9YM0t2aUxPd2RYUVpWLWlrMW5Zc2JFdzk5YlZ3NEFEZFJ6c2d1d2VXNUU?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/31/contribuintes-tem-ate-esta-segunda-feira-para-pagar-o-irs-de-2025-as-financas/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMisAFBVV95cUxNc0FBdlowZ1lYYm5TR3FLYzE4dkNVUDg0UFB2Mm1ncExBdEZLaHBQc1JuOE1UaXdvTUxBanViY01yWTZPOFZVbUl4MVFWbDdQVXdmWXYyUC01R00tTEE5MUtaR1FPN2xCT0F2blBmZFhCTnAyMmhHZHRTcFExQ1FFeThzSGxzamxUTUw0VmRqRXY4ZkRwMWlFaV9pRFNOYlh2UkpYU3RaNko0UUR1cVRRMw?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/tem-irs-para-pagar-prazo-termina-esta-segunda-feira/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/especiais/dionisio-pestana-o-paciente-hoteleiro-portugues-que-esta-em-17-paises/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/martifer-encaixa-20-milhoes-com-obras-no-aeroporto-da-portela/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/ip-e-a-maior-beneficiaria-do-prr-em-portugal-mas-esta-em-14-o-lugar-a-nivel-europeu/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMixAFBVV95cUxNTWUxRjJzZktWVG9WWVdnUUJFbm1UT1dZVW5vVDJ5aHBGOThFaFRsTFMxZzEtN3lzeDFUOUtlYnFNeDNKVWZyZUJGNW8xUEtSNzJIZllIRjJVQ09CVnd2Q2NQRENhRlFLOEd5ZzlwYlRTZXRaSzR4Sld5bTU4ZGRrcVh4TllfdHB6bWNkX3pMVTJmT01mZU9vRy1SYzBoWGZUOEMwb1pPU1hDVnFDZW1qQlVIZTBJUlozNTFCcWxGLXFnQ1JR?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/31/publico-brasil/opiniao/fado-pop-art-confirmacao-autoimagem-2186519": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/agendas-do-prr-deixam-legado-para-competitividade-da-economia-nacional/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/portugal-e-dos-paises-com-maior-impacto-do-prr-no-pib/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/2026/08/31/empreiteiros-burocracia-orcamentos-e-o-ihru-autarquias-pedem-alteracoes-no-pos-prr/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/especiais/prr-transformou-portugal-mas-nao-de-forma-estrutural/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://eco.sapo.pt/entrevista/seria-muito-imprudente-nao-retirar-licoes-do-prr/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/conferencia-de-imprensa/o-estado-deve-38-milhoes-de-euros-aos-politecnicos/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/liveblogs/prazo-para-cumprir-prr-termina-nesta-segunda-feira-com-governo-a-garantir-100-de-execucao/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/guerra-no-medio-oriente/trump-publica-video-gerado-por-ia-que-mostra-destruicao-da-ilha-iraniana-de-kharg_n1762475": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi4gFBVV95cUxPajRlMVFJRzZxNEktbDdOZV9kcjFTOHRGVWI3Y3FTeE5xM05JYUNZQ2RsTHlhZURzZkpjMEl5bmZ6emp4QUtxUEdMTmNPb3RmSUdYSVBxeHRrRm9aSTItQldGTy1mUkRLMjRWYl9QNUJkd0lCU2dQNzNfT1BwVURiUENya0lZNGY2cGJDSklNQWp0V0J5U3VWVHY2bVBRaHpkX3FweFdQWmM1WkFhM3ZfWXlkb0Q5cEd3VU54LVFSaHA0ODhxQTI0UjBYaFg3OFF0MV9tbm5mazM1TmdKa29rS3RB?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/economia/timor-leste-e-australia-realizam-forum-empresarial-para-reforco-de-relacoes-comerciais_n1762474": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/economia/chinesa-byd-aumenta-lucros-pela-primeira-vez-em-cinco-trimestres-gracas-as-exportacoes_n1762472": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/mundo/3043765/chinesa-byd-aumenta-lucros-pela-primeira-vez-em-cinco-trimestres-gracas-as-exportacoes#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/economia/ia-ameaca-centenas-de-milhares-de-empregos-na-industria-audiovisual-chinesa_n1762471": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/economia/3043762/ia-ameaca-centenas-de-milhares-de-empregos-do-audiovisual-na-china#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/mundo/nepal-enterra-mortos-apos-devastadoras-inundacoes_n1762468": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/31/economia/noticia/ren-vendida-instrumento-soberania-2186201": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/08/31/opiniao/opiniao/prr-termina-juros-sobem-2186517": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/guerra-no-medio-oriente/eua-atingem-lancadores-de-rockets-iranianos-em-ormuz-primeiro-ataque-em-um-mes_n1762446": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiigFBVV95cUxQMEwyUmxyRnJhRDhIb0lsOXBUbE1KMUlLRTIwR3hTdzNNVV9LZmh0TmVoOGpRdDkza0dULUI2RUxsUTRhZ0xWRXZrV0l3SUVGbmNnZE5SRUJtdWxFMG54akc1Y1R3MlUtMGtTSVpUNlZvdXBaODVlSkZqOXdVdW44RGRFRFhxRmZrb0E?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/byd/crise/exportacoes-salvam-byd-lucros-crescem-30-apesar-da-crise-no-mercado-chines/20260831/6a950b92d34e511da0b36184": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/tratar-da-saude/esta-doente-precisa-mesmo-de-ir-as-urgencias/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQcExfS3VwaW1IRHNtM01xUXJqUVF6c2FsZVdqSjlqaWNrcnNFdVFvb1lpVW1YNTdhaUlIUS1ZU0NVcFhhdnB4VENaTWc5VWdtNXMtVVd3OUlqQllObVNQaDRwSFlDUUFXZlZTTWRuamoyQUJKcGNPaEdBN1Rzc3RMWEhQbkUwenRyMjUwcGpzT0h5RF9sRFRwZFhPVE5DVEpuVVZaXy1STHA?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiugFBVV95cUxQSzNENmJTUEJ0bENZdk42YnNYLVE0S2VrZC1CYjRLY3ZVYWlwY2FtSEw1aVFQUlh1YzZvVFJHUUZaRWw3a2VwUmRITE52cXpHZWxrUzI2RXNfNkN3dGRhYVlPR0NHRjRUSXVYMDJVQld1eTdCQnhSWk1xSkZlNjBwZWVqSXJ6blZ2Qk1MWk9OR243djdNT0JEMkxKZnQ2YkxHckc3Q2kzaGNaLVpKRXBtNEU5aERCSXR6cHc?oc=5": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-5h-1561/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/a-hist-ria-do-dia/monsieur-afrique-a-historia-incrivel-da-acusacao-a-veiga/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-4h-2387/": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-3h-2422/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMidkFVX3lxTE1pZkt2YWpVVmZIQUZDd1NFYnE0enpoUzFfdDAtRXFOZnZWRTN3VFRodGpZWmEyc3lFSEVCdTM4cS04NzBxM19QcUcxN2t1eHE0cFBPY2dvckdIcVRQM3NGMVNtT25UMGNhYWJsWF9hRXhhdFBkY0E?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitAFBVV95cUxQWHJUdFluM1hIb0IyRmFqLWpnUmxQRHFfUWlZWUZFaHh4VHQ1R04yS1B4RjhUQTB6RU1lWjFabHFLaGQxUHJzN3UyQmJDMWlvTi1Qd3JVT1h3ODI1NkF0ZGtpOXVhVXlhblpZZDJzMWZqRjEyMmVmTGdVOUhsY2R6Z25CZi0xZEpXRUxEc0x5emtEREpJd2lpamc0SDlFVGVYdDZRUDRHcWRyQ28yaXV3UWlZUmLSAbQBQVVfeXFMUFhyVHRZbjNYSG9CMkZhai1qZ1JsUERxX1FpWVlGRWh4eFR0NUdOMktQeEY4VEEwekVNZVoxWmxxS2hkMVByczd1MkJiQzFpb04tUHdyVU9YdzgyNTZBdGRraTl1YVV5YW5aWWQyczFmakYxMjJlZkxnVTlIbGNkemduQmYtMWRKV0VMRHNMeXprRERKSXdpaWpnNEg5RVRlWHQ2UVA0R3FkckNvMml1d1FpWVJi?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMijgFBVV95cUxPOTZwZnNRXzMyVzhsRmRJS3J3S0F2VzI2RlRSRmp1LWotbGo5V3gyMmRyYmFuLThXTWotczZEQ2lqa3FoUzBaeXlPbkNFeWoybS0yem1yZXRFZTRIdGg4QUpMeEZJcWlHRjVDRUM1TmU0RFk4Umg3U3dVbGtEdDN3MzdIRHJvMXVVUzBvYW1n?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/mundo/3043741/eua-destacam-papel-da-islandia-como-aliado-da-nato-apos-referendo-sobre-a-ue#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://jornaleconomico.sapo.pt/noticias/migracoes-sanchez-diz-que-espanha-e-ue-foram-atacadas-em-ceuta-e-iliba-marrocos/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/2026/08/31/pedro-sanchez-culpa-redes-de-desinformacao-russas-e-israelitas-por-crise-em-ceuta-e-admite-recandidatura-em-2027/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMizwFBVV95cUxPR0FiZkpYd1AzTHoxei16WXEyNGdxVnBjaWZvVWFmOGNTVl96Wk4wa1p0dE9mVXNtTlU1anFyRjRkS2ZtSkp5X1ZTZ2I3aG85eXBpY0s4ZzJnelZBR0RtbHRuOEFVUmZkNWpGcEVqVGlwTDRYQlE5NlVaMFFldDhtY0pjV3NhS1lXOVBDV0I5S3Y2UFJIUUF1OTQ2OXRiVHlJbjU5MW4wUGJQMXBZdENoMXc4UVhrc05Ib3lyTGl5cmFicXYycms4OVh5ajE0UUE?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/espanha/migrantes/pedro-sanchez-culpa-russia-israel-e-movimento-de-extrema-direita-pela-crise-migratoria-em-ceuta/20260831/6a953841d34ed0733ba829b1": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMipgFBVV95cUxPamVmMDhfQmxiRjdSNDF4QVQ0MWp2ejNheHdYQnMzRlBMd1M1U1FjQS1TWGFfUzlXVWlDMWQ3S09TMjdUU3U3QXJDcV9sRjRnay1IT1hfLWxGaEI1LTh1cy1MTEJhMnZTSThubTFfbGJiYmdtZDNzcXNiTU55T28yWE9xMVRjMzBJWmdmZTgxZ1lMYjBpc0R3YXZ0UUpORkVXVVdoNjB3?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiswFBVV95cUxNaDAxa3ZRR2ZXTzFESjdpZTEzNHNwV2lET3NYYUFqdXJDbkc4YWh2bjlteUV5MXp5a2cyNWxPX3RQdFVOR2M0OHJsaGl0LTI5R3hMZG9ucUU4MDdIM0c1QlNfX2UwMHBoRUF4X21UdFN4MkhRZ05oQlpPYVhhYUVRUjFwODlwLTExQWlHUVZaNV9DVkFoRXNpQ2hpM2Q2Zms0Z09hMTFhU2VfOVRTT3Nmb3hqWQ?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQZDVybUI1U1dLaVJsUS1Dbk03YjhTblRrVFh1Z2lFRDM3WWFUQ0JPZTc3Z2NrelMzb2FLT1c1RlJFd0JSYnJvcDZkY3FqaTU3Qkx6eTNHNUttR3VpOEt4S0lKNW9WTUNudmdEamZBaGk3MTRNUXczNTZNaERFUnA5a2lJT2hTajhCNTQ2VzlTTl9aUzBra2xQM1pvMG5sTFd4enFhd0VLc0VQUlprc1p0bUZCdnk3WnpacmlqUzUyekhNNlE?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://visao.pt/opiniao/pensar/2026-08-31-a-educacao-do-sentimento-poetico-e-a-formacao-dos-professores-hoje/?utm_source=rss&utm_medium=rss&utm_campaign=a-educacao-do-sentimento-poetico-e-a-formacao-dos-professores-hoje": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/pais/longe-da-meta-inicial-portugal-tera-171-vagas-em-setembro-em-centros-para-migrantes_n1762450": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.jornaldenegocios.pt/economia/fundos-comunitarios/detalhe/empresas-absorvem-40-da-bazuca-petrogal-cimpor-e-bondalti-lideram": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://jornaleconomico.sapo.pt/noticias/irao-eua-confirmam-ataque-de-precisao-contra-alvos-iranianos-no-estreito-de-ormuz/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://jornaleconomico.sapo.pt/noticias/irao-teerao-ataca-alvos-militares-dos-eua-na-jordania-em-retaliacao-ao-ataque-a-ilha-de-larak/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/guerra-no-medio-oriente/teerao-ataca-alvos-militares-dos-eua-na-jordania-em-retaliacao-ao-ataque-a-ilha-de-larak_n1762460": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/mundo/3043746/irao-teerao-ataca-alvos-militares-dos-eua-na-jordania-em-retaliacao-ao-ataque-a-ilha-de-larak#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi4AFBVV95cUxQR0N5WnJsSzFCR0JtU3JOYnBweGxkODFXekNQbkt4d0JIYXUzaFg0aXVjcHV0YnhZV2JocUg4c2VqcVdlaWpSZnVNZXh5aWcwU3BqaTZ1OUxYMjFHNmZsZ19CWWV6ZGJMblBXUmNpdWRBNDFsUzAxWUpWUzk4MjRqR0FRY3VQMTgyWXdwRGpPLXhSZVh3UmFHRWtJT0tFVmJPMXVuMk04ZWJoN2dzM1FHS0pFUWFyRXctZ05NazhJTXBuTkRfVDVwS29maXd4el9wSjdTOXQ5MmU5YmRTOEpzeQ?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/liveblogs/presidente-do-irao-diz-que-nao-ficara-de-bracos-cruzados-apos-eua-confirmarem-ataque-de-precisao-contra-ilha-de-larak/": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi0AFBVV95cUxQY08tbG8ybmwxdHZzSU9WbjhvZzZEdFRCOEl4b3ZBWURReHNOMFJkclByWmF0VFpNcXhFamtoYUtVZEdMU0d4M2J0YU1GaW1fN0didjFnT2ZvZmVkcTdCNjFQWGVXNy0zOHp6TktVUG1KSzNQenM2X3ZNcEt1VTRhZWlkcHZSd0RmdUprOVU5TnVzeDF5a3ljLVNud0oyUXdoaC1CMTF6NTBqX19Id1ROUHRyZHBXTmNtMlFUU3pfeGVtOFI3Tk1va21kUzZib1cw?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiywFBVV95cUxNSXdkNU5YXzN0bFdiYXFyMk1NZVRtcVhDS1hBeTFkTFRIT05uZ01GZ2stYk5fTFJFdDFDaWlSNHlKUm5YbDEwMW1wUjV3VC1rTlFTaHBOeENBWGxuMGYzeGU5clJHMnBJMnJaRVZBejlkUG8waDBNVjBaczNsd3Z0Q3czSGhwbVZTaV9saHQ4dHQ1VXlTTWlmVmpyMUxHbkttQW1IWm5sTFE2empEWXVoLU5IMWpIcGNTOGpnQW51b1BWdlN1ckZsZlN2RQ?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/irao/eua/um-erro-estrategico-e-mortal-o-que-se-sabe-sobre-os-novos-ataques-entre-eua-e-irao-na-primeira-grande-escalada-militar-em-um-mes/20260831/6a951281d34ed0733ba8298f": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi3gFBVV95cUxQRWlsbTZEdmZUaVpuYUlLQ2h6ZkNxZGt6RUlEM2FGNUVVX0hyekZDRFhXXzRsNTBzcWhveUhDV0tJXzVxbjRMbnFGQTA0bmNfaEpCVmk1ZkZmWTlpd3J2UkE0NTJWelhYNFdjbG5oS2pqblhEcjdzcUN5WkRJc1dwNnZDaHRRYm04TUpOdkZqOE9FS0xqaHJXdXQwTlRBNHZRMkRxb1RNMWxWTnBmbGlGYlFfVExxcE9ZTXg1bEZ4VnZiTHFOU2JodlFSM1VVdVZVNHVWbVlfS0Q3WXFUWHc?oc=5": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://www.jornaldenegocios.pt/economia/fundos-comunitarios/detalhe/prr-chega-ao-fim-com-menos-betao-e-mais-amigo-das-empresas": {
+   "s": "negativo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://healthnews.pt/2026/08/31/mais-de-141-mil-criancas-receberam-cuidados-de-saude-com-apoio-da-unicef-em-cabo-delgado/#utm_source=rss&utm_medium=rss&utm_campaign=mais-de-141-mil-criancas-receberam-cuidados-de-saude-com-apoio-da-unicef-em-cabo-delgado": {
+   "s": "positivo",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi9wJBVV95cUxQY1FWcFd1cUJNdUJ5b2ZFM0JBVl9IM0EwTFlGVENEZXhGZUVHX3hvYjBkUjU2R2hnSmQ3a25tMUkyUC14QmEwbzd0aXZiYzMyN0FOVXdOdmJIY1J5WWJMczlrc3hQU3d6bTIwdUJqQVZRbHdfblgwR1dxWWtxRkp4V1FQd05xaWlKRHlueFNfdGM1LV82XzFKeVM3TUU1dFoxT1pYa19Ja3VyOEQwUWV2bjRsWlFPaFlxSUl0em5YZE5wTXEybDNWNzFYYzVaeHYtN3pSYUhORFdYeXhZdjRVQnZ2el9JZ3FXQVo4Yl8xWS03YjBtOTR4aHp1TVFzUERzN1hOeU9zOFRLVmM1NGJNcm5NMG5KSHU3WmxMLUFHT0R0TVY2VEhta0ZwcGxaRV9ZN2lvRWp3QzhWaUYzbklIR0FXRUFmZ09qejF3Y1FkdFAwUUNKT2E4bEwyZUFUSE95YW5INlZIa1dNNm1mWXNjT0tqaTFjR2c?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitAFBVV95cUxNRGd2MDFVQ2JNemRjcGRjdW1fQjFGS2lmVG90elU4TlFLU1ZwU1pNNzZGLV8wb3Z0LWhpVU1zU3RlcEVwZlV3eS1tSWxwNWtMYVhuUzhwVXRtQXpWNi1IMngtaUl4RFRkMmZqMVludGdSd3Q4aU03eFhyUnM1RWxEcTduQjRkSWwyekNQQVVBWVJzMDN5VU4wRnJwT3VpZmdRQlZyd0o2bE1HWG0wckNpRS1fcjY?oc=5": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-6h-2480/": {
+   "s": "neutro",
+   "d": "2026-08-31",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-2h-2396/": {
+   "s": "negativo",
    "d": "2026-08-31",
    "v": 2
   }
