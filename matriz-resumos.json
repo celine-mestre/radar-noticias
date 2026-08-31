@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-31 01:37",
+ "gerado": "2026-08-31 10:00",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -254,6 +254,12 @@
    "texto": "No dia 2026-08-30, a área da Justiça registou múltiplos acontecimentos. Nicolás Maduro divulgou fotografias da sua detenção na prisão federal de Nova Iorque, afirmando estar \"a resistir\", num contexto de processo judicial pendente. Simultaneamente, iniciou-se o julgamento de polícias acusados de tortura, marcando o regresso da Justiça neste domínio. Adicionalmente, a nova lei do retorno e as alterações na legislação de asilo previram um aumento exponencial de processos judiciais, gerando preocupação entre os tribunais quanto à capacidade de resposta. Por fim, o falecimento de Bou Meng, sobrevivente do ataque ao mosteiro de Angkor Wat em 1975, e a declaração de Domingos Simões Pereira sobre a \"gestão do vazio\" durante a prisão, complementam o quadro de acontecimentos relevantes.",
    "n": 14,
    "pct": 76,
+   "lado": "negativas"
+  },
+  "2026-08-31|Defesa Nacional": {
+   "texto": "No dia 31 de agosto de 2026, registou-se uma escalada militar entre os Estados Unidos e o Irão, com ataques recíprocos no estreito de Ormuz e na Jordânia. O Irão reivindicou danos num superpetroleiro devido a colisão com minas, enquanto os EUA confirmaram um ataque de precisão contra alvos iranianos. Em resposta, o Irão atacou alvos militares dos EUA na Jordânia, tendo estes ataques sido intercetados pelas forças de defesa jordanas. Este ciclo de ataques e contra-ataques constitui a primeira grande escalada militar em cerca de um mês.",
+   "n": 15,
+   "pct": 75,
    "lado": "negativas"
   }
  }
