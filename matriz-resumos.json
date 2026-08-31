@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-30 19:50",
+ "gerado": "2026-08-31 01:37",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -202,12 +202,6 @@
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-08-23|Justiça": {
-   "texto": "No dia 23 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza judicial. Em primeiro lugar, três dos oito indivíduos detidos após ataques a agentes da PSP em Rabo de Peixe ficaram em prisão preventiva. Paralelamente, três suspeitos de tráfico de droga foram também sujeitos a prisão preventiva na mesma localidade. Adicionalmente, um ex-ministro da Defesa ucraniano afirmou que o Presidente Zelensky deveria responder por casos de corrupção, um tema que se repetiu em diversos meios de comunicação social. Por fim, a justiça peruana prorrogou o mandado de captura contra uma antiga primeira-ministra exilada no México.",
-   "n": 15,
-   "pct": 88,
-   "lado": "negativas"
-  },
   "2026-08-24|Justiça": {
    "texto": "No dia 2026-08-24, a área da justiça registou múltiplos acontecimentos. Destacam-se a prisão preventiva de sete indivíduos em Castro Marim, por apreensão de cinco toneladas de haxixe, e a detenção de um jovem de 18 anos, em Lisboa e na Madeira, por alegado abuso sexual de menores. Adicionalmente, verificou-se a prisão preventiva de um suspeito de homicídio em Monção e a entrada em vigor da \"Lei das burcas\" a 23 de setembro. O tema dominante foi a criminalidade, abrangendo tráfico de estupefacientes, violência e crimes sexuais.",
    "n": 26,
@@ -224,12 +218,6 @@
    "texto": "No dia 25 de agosto de 2026, a área da Justiça registou múltiplos acontecimentos, predominantemente de natureza investigatória e judicial. O Ministério Público instaurou inquéritos relacionados com atropelamentos e casos de alegada tortura na esquadra do Rato, tendo sido concedido um prazo adicional de seis meses para a investigação. Paralelamente, foram efetuadas detenções por diversos crimes, incluindo tráfico de droga, desobediência e terrorismo, e foram anuladas eleições para reitor da Universidade Nova de Lisboa, com subsequentes recursos. Adicionalmente, foram notificados e julgados casos de corrupção envolvendo figuras públicas, violência doméstica e incêndios florestais, resultando em detenções preventivas e processos judiciais.",
    "n": 40,
    "pct": 77,
-   "lado": "negativas"
-  },
-  "2026-08-30|Ambiente e Energia": {
-   "texto": "No dia 2026-08-30, foram registados dois acontecimentos distintos na área da Energia. A cobertura mediática evidenciou, em primeiro lugar, a ameaça de ataques russos contra infraestruturas energéticas ucranianas, com múltiplos títulos a reportar a promessa de novos ataques. Em segundo lugar, ocorreu um despiste de veículo em Mafra, resultando na morte de uma vítima. Adicionalmente, foi prevista a ocorrência de mais de 100 interrupções de energia em território nacional. O tema dominante da cobertura diária foi, portanto, a ameaça à segurança energética, com a Rússia no centro das notícias.",
-   "n": 6,
-   "pct": 78,
    "lado": "negativas"
   },
   "2026-08-24|Economia e Coesão Territorial|+": {
@@ -255,6 +243,18 @@
    "n": 12,
    "pct": 52,
    "lado": "positivas"
+  },
+  "2026-08-23|Justiça": {
+   "texto": "No dia 23 de agosto de 2026, registaram-se múltiplos acontecimentos de natureza judicial e de segurança pública. Em Peniche, três indivíduos foram sujeitos a prisão preventiva no âmbito de um processo de tráfico de droga. Adicionalmente, três de oito pessoas detidas após ataques contra agentes da PSP em Rabo de Peixe, nos Açores, foram também colocadas em prisão preventiva. Paralelamente, a discussão sobre a responsabilização do Presidente ucraniano por alegada corrupção, nomeadamente através de declarações de um ex-ministro da Defesa, ganhou destaque na comunicação social. Por fim, a justiça peruana prorrogou o mandado de captura contra uma antiga primeira-ministra exilada no México, e o Presidente do Tribunal Penal Internacional solicitou apoio ao Japão face a sanções impostas pelos Estados Unidos.",
+   "n": 15,
+   "pct": 83,
+   "lado": "negativas"
+  },
+  "2026-08-30|Justiça": {
+   "texto": "No dia 2026-08-30, a área da Justiça registou múltiplos acontecimentos. Nicolás Maduro divulgou fotografias da sua detenção na prisão federal de Nova Iorque, afirmando estar \"a resistir\", num contexto de processo judicial pendente. Simultaneamente, iniciou-se o julgamento de polícias acusados de tortura, marcando o regresso da Justiça neste domínio. Adicionalmente, a nova lei do retorno e as alterações na legislação de asilo previram um aumento exponencial de processos judiciais, gerando preocupação entre os tribunais quanto à capacidade de resposta. Por fim, o falecimento de Bou Meng, sobrevivente do ataque ao mosteiro de Angkor Wat em 1975, e a declaração de Domingos Simões Pereira sobre a \"gestão do vazio\" durante a prisão, complementam o quadro de acontecimentos relevantes.",
+   "n": 14,
+   "pct": 76,
+   "lado": "negativas"
   }
  }
 }
