@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-01 02:22",
+ "gerado": "2026-09-01 11:38",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -229,25 +229,43 @@
   "2026-08-25|Administração Interna": {
    "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos incidentes de criminalidade e ocorrências policiais nos comandos metropolitanos do Porto e de Lisboa, com um aumento generalizado da criminalidade geral de 10,9%. Destacam-se atropelamentos com vítimas graves, incluindo dois militares da GNR, associados a condução sob efeito de álcool e desobediência a ordens policiais, nomeadamente na área de Albufeira. Adicionalmente, verificaram-se disparos efetuados pela PSP em legítima defesa, detenções por tráfico de droga e violência doméstica, e uma investigação alargada a alegada tortura na PSP, com indícios de envolvimento de um número superior de agentes.",
    "n": 69,
-   "pct": 83,
+   "pct": 85,
    "lado": "negativas"
   },
   "2026-08-25|Justiça": {
    "texto": "No dia 25 de agosto de 2026, a cobertura noticiosa da área da Justiça evidenciou uma multiplicidade de acontecimentos, com destaque para processos judiciais complexos e investigações criminais. Observou-se um conjunto de casos de corrupção envolvendo figuras públicas, nomeadamente o antigo presidente da Arménia e o seu filho, detidos por suspeitas de enriquecimento ilícito, e a instauração de inquéritos ao atropelamento na Oura, com o Ministério Público a investigar potenciais responsabilidades. Paralelamente, a Universidade Nova de Lisboa enfrentou a anulação da eleição do seu reitor, motivando recursos judiciais e reações sindicais à transferência de guardas prisionais. Adicionalmente, o Ministério Público prolongou a investigação sobre alegados casos de tortura na esquadra do Rato, enquanto Mondlane foi notificado para julgamento por incitamento ao terrorismo e desobediência em Moçambique.",
    "n": 40,
-   "pct": 75,
+   "pct": 77,
+   "lado": "negativas"
+  },
+  "2026-08-30|Justiça": {
+   "texto": "No dia 2026-08-30, a área da Justiça registou múltiplos acontecimentos, predominantemente relacionados com a cobertura mediática da situação de Nicolás Maduro em prisão nos Estados Unidos e com a implementação da nova lei do retorno. Destacam-se a divulgação de fotografias de Maduro na prisão federal em Nova Iorque, a sua declaração de resistência e a previsão de aumento exponencial de processos judiciais decorrente de alterações legislativas. Adicionalmente, verificou-se o início do julgamento de polícias acusados de tortura e a suspensão da imunidade de um membro do Conselho de Estado moçambicano, permitindo o seu julgamento.",
+   "n": 14,
+   "pct": 76,
+   "lado": "negativas"
+  },
+  "2026-09-01|Justiça": {
+   "texto": "No dia 2026-09-01, o Ministério Público iniciou vários inquéritos relativos a irregularidades na correção digital dos exames nacionais, motivados por queixas da FENPROF. As investigações focam-se em alegadas falhas no processo de classificação, incluindo a perda de folhas de provas e potenciais erros na avaliação. O tema dominante é, portanto, a instabilidade e a contestação do processo de classificação dos exames nacionais.",
+   "n": 13,
+   "pct": 76,
    "lado": "negativas"
   },
   "2026-08-25|Economia e Coesão Territorial|+": {
-   "texto": "No domínio da economia e coesão territorial, registaram-se múltiplos acontecimentos. Em Ponta Delgada, o hospital foi reforçado com a aquisição de um robô médico por 2,9 milhões de euros. O Banco Angolano de Investimentos lançou a sua primeira oferta pública de obrigações. O Governo dos Açores reforçou o abastecimento de água à lavoura em São Miguel, enquanto o Governo Regional dos Açores reiterou que a saúde é uma prioridade estratégica. Em São Vicente, foram concretizados mais de 28 milhões de euros em investimentos e apoios, e a autarquia destacou o trabalho realizado em dez meses. Matosinhos concluiu 512 habitações do PRR, com um investimento de 122 milhões de euros, e entregou as últimas 105 unidades habitacionais. A reprogramação das Agendas Mobilizadoras elevou o investimento total para 7.300 milhões de euros, abrangendo também o reforço do investimento no Campo de Tupi da Galp, com um aumento para 4 mil milhões de barris. Adicionalmente, a Estrela da Amadora vendeu a sua SAD a um consórcio alemão, e Timor-Leste anunciou a criação de um inventário de locais de interesse geológico para o turismo.",
+   "texto": "No dia 25 de agosto de 2026, foram registados múltiplos acontecimentos relevantes nas áreas da economia e coesão territorial. Em Ponta Delgada, foi inaugurado um hospital reforçado com um robô no valor de 2,9 milhões de euros, enquanto em Matosinhos, a conclusão de 512 habitações do Plano de Recuperação e Resiliência (PRR) foi formalizada, totalizando um investimento de 122 milhões de euros. Paralelamente, a reprogramação das Agendas Mobilizadoras elevou o investimento total para 7.300 milhões de euros, impulsionando projetos de infraestruturas, saúde e apoio à internacionalização, nomeadamente através da promoção da atividade do Terinov nos Açores e da atração de investimento em São Vicente, na Madeira. Adicionalmente, a Galp anunciou um novo investimento no campo de Tupi, no pré-sal brasileiro, e a Alemanha registou um crescimento do PIB de 1%, sustentado por um aumento das exportações.",
    "n": 33,
-   "pct": 51,
+   "pct": 54,
+   "lado": "positivas"
+  },
+  "2026-08-28|Finanças|+": {
+   "texto": "No dia 28 de agosto de 2026, foi aprovado um apoio financeiro de 25 milhões de euros para a recuperação de infraestruturas de regadio danificadas por tempestades recentes. Paralelamente, a agência de notação Standard & Poor’s manteve o rating de Portugal inalterado em A+, com perspetiva positiva, confirmando a solidez da dívida pública. Adicionalmente, o Orçamento do Estado assegurou o financiamento de dois mil milhões de euros provenientes do Plano de Recuperação e Resiliência (PRR) para projetos já em execução, sem previsão de aumento de impostos, conforme garantido pelo ministro da Economia. O tema dominante destes acontecimentos é a resiliência económica e a continuidade de políticas de investimento público.",
+   "n": 4,
+   "pct": 62,
    "lado": "positivas"
   },
   "2026-08-29|Ambiente e Energia|+": {
-   "texto": "No âmbito da política externa, o Ministro dos Negócios Estrangeiros do Nepal apelou a um esforço global contra as alterações climáticas, enfatizando a vulnerabilidade do país face aos seus impactos, após desastres recentes. No plano interno, o Governo português comprometeu-se a duplicar a capacidade de armazenamento de energia até 2030, visando reforçar a segurança e sustentabilidade do sistema energético. Adicionalmente, Portugal submeteu à Comissão Europeia um plano de restauração da natureza, dando início à fase de implementação de medidas complexas. Por fim, a vindima antecipada em 2026, embora precoce, promete vinhos de qualidade excecional, marcando um fenómeno excecional no setor agrícola.",
+   "texto": "A área do Ambiente e Energia registou, no dia 29 de agosto de 2026, vários desenvolvimentos concretos. O Governo português anunciou um plano para duplicar a capacidade de armazenamento de energia até 2030, visando reforçar a resiliência do sistema energético. Adicionalmente, foi entregue à Comissão Europeia um plano de restauração da natureza, marcando o início de uma fase mais complexa de implementação. Paralelamente, Portugal participou na Feira Internacional de Maputo, com a presença prevista de mais de 100 empresas nacionais, evidenciando o dinamismo do setor. Estes eventos refletem um esforço contínuo no reforço da transição energética e na valorização dos recursos naturais.",
    "n": 12,
-   "pct": 50,
+   "pct": 52,
    "lado": "positivas"
   }
  }
