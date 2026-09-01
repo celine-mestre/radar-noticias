@@ -1,5 +1,5 @@
 {
- "gerado": "2026-08-31 18:00",
+ "gerado": "2026-09-01 01:30",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -202,12 +202,6 @@
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-08-24|Justiça": {
-   "texto": "No dia 2026-08-24, a área da justiça registou múltiplos acontecimentos. Destacam-se a prisão preventiva de sete indivíduos em Castro Marim, por apreensão de cinco toneladas de haxixe, e a detenção de um jovem de 18 anos, em Lisboa e na Madeira, por alegado abuso sexual de menores. Adicionalmente, verificou-se a prisão preventiva de um suspeito de homicídio em Monção e a entrada em vigor da \"Lei das burcas\" a 23 de setembro. O tema dominante foi a criminalidade, abrangendo tráfico de estupefacientes, violência e crimes sexuais.",
-   "n": 26,
-   "pct": 82,
-   "lado": "negativas"
-  },
   "2026-08-25|Administração Interna": {
    "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos incidentes de criminalidade e segurança pública em Portugal, com destaque para um aumento generalizado da criminalidade geral, nomeadamente em Lisboa e no Porto, onde a criminalidade violenta diminuiu ligeiramente. A PSP enfrentou episódios de resistência por parte de suspeitos, resultando em disparos em legítima defesa, e registaram-se atropelamentos graves, incluindo um com 16 feridos em Albufeira, frequentemente associados a condução sob efeito de álcool e desobediência a ordens da GNR. Adicionalmente, verificou-se um caso de detenção de um chefe da PSP por desfalque em farmácia, a ampliação de uma investigação sobre alegada tortura na PSP e a detenção de indivíduos por crimes diversos, como tráfico de droga e violência doméstica. O tema dominante foi, portanto, a criminalidade e a segurança pública, com particular relevância para a atuação policial e a investigação de potenciais irregularidades.",
    "n": 69,
@@ -219,12 +213,6 @@
    "n": 40,
    "pct": 77,
    "lado": "negativas"
-  },
-  "2026-08-24|Economia e Coesão Territorial|+": {
-   "texto": "No âmbito da área da Economia e Coesão Territorial, registam-se diversos acontecimentos concretos. O Alentejo 2030 financia a modernização digital de autarquias, reforçando a digitalização da Administração Local, e disponibiliza 1 milhão de euros para acelerar esse processo. O Observador anuncia a candidatura da Feira da Golegã a Património Imaterial, enquanto o Global Agri Forum 2026 confirma a sua realização em Portugal, atraindo 38 dias de debate e cooperação no setor agroalimentar. Adicionalmente, o Palácio de Convenções de Angola é inaugurado, evidenciando a cooperação internacional no turismo de negócios e eventos, e Portalegre recebe um novo cluster ibérico para a indústria de defesa, com o objetivo de atrair investimento e reforçar a capacidade industrial.",
-   "n": 23,
-   "pct": 53,
-   "lado": "positivas"
   },
   "2026-08-25|Economia e Coesão Territorial|+": {
    "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos acontecimentos relevantes nas áreas da economia e coesão territorial. Destaca-se a conclusão de 512 habitações no âmbito do Plano de Recuperação e Resiliência (PRR) em Matosinhos, com um investimento de 122 milhões de euros, e a entrega das últimas 105 unidades habitacionais. Paralelamente, o Governo dos Açores reforçou o abastecimento de água à lavoura na ilha de São Miguel, enquanto a reprogramação das Agendas Mobilizadoras elevou o investimento total para 7.300 milhões de euros, impulsionando projetos de infraestruturas e saúde. Adicionalmente, observou-se um crescimento do PIB alemão de 1% no segundo trimestre, associado ao aumento das exportações, e a concretização de iniciativas de cooperação internacional, como a resposta comercial do Canadá às tarifas dos EUA e a entrada de Angola na estratégia da Galp.",
@@ -256,16 +244,22 @@
    "pct": 76,
    "lado": "negativas"
   },
-  "2026-08-31|Reforma do Estado": {
-   "texto": "No dia 2026-08-31, a cobertura mediática focou-se predominantemente em riscos associados à inteligência artificial. Relatos de especialistas e governantes alertaram para potenciais impactos negativos na estabilidade financeira global, com avisos sobre modelos de IA que poderiam desencadear crises financeiras e ameaçar empregos na indústria audiovisual chinesa. Adicionalmente, verificou-se um incidente de divulgação de informação incorreta, com um vídeo gerado por inteligência artificial a ilustrar eventos geopolíticos controversos. Paralelamente, a área da Reforma do Estado enfrentou um problema de tesouraria, com o Ministério da Educação a dever 38 milhões de euros aos politécnicos.",
-   "n": 6,
-   "pct": 75,
+  "2026-08-24|Justiça": {
+   "texto": "No dia 2026-08-24, o Supremo Tribunal decidiu a favor de Donald Trump num litígio relativo ao voto por correspondência, enquanto sete homens foram detidos e colocados em prisão preventiva no Algarve por tráfico de haxixe, num caso que envolveu a apreensão de cinco toneladas da substância. Paralelamente, um suspeito de esfaqueamento em Monção e um jovem de 18 anos acusado de abuso sexual em Lisboa foram também sujeitos a prisão preventiva. Adicionalmente, um antigo mufti sírio foi condenado à prisão perpétua por incitamento ao ódio confessional, e iniciou-se o julgamento de polícias acusados de homicídio de um imigrante. A área da justiça registou ainda um aumento significativo de ações movidas por imigrantes contra a AIMA, e a discussão sobre a \"lei das burcas\" prosseguiu com a sua entrada em vigor prevista para 23 de setembro.",
+   "n": 26,
+   "pct": 81,
    "lado": "negativas"
   },
+  "2026-08-24|Economia e Coesão Territorial|+": {
+   "texto": "No âmbito do Alentejo 2030, foi aprovado um apoio de um milhão de euros para acelerar a digitalização da Administração Local, reforçando a eficiência e a transparência dos serviços públicos regionais. Paralelamente, a Feira da Golegã recebeu reconhecimento oficial como candidata a Património Imaterial, evidenciando a valorização do património cultural e das tradições equestres. Adicionalmente, foram celebrados acordos bilaterais com o Brasil e Angola, impulsionando o desenvolvimento do agronegócio e a cooperação económica, com particular enfoque no investimento e na modernização do setor agrícola. O investimento saudita na construção de parques temáticos em França e o reforço das relações económicas com a Arábia Saudita, através da visita de uma comitiva, demonstram uma dinâmica crescente de atração de capital estrangeiro e de expansão de parcerias estratégicas.",
+   "n": 23,
+   "pct": 51,
+   "lado": "positivas"
+  },
   "2026-08-31|Agricultura e Mar|+": {
-   "texto": "Até agosto de 2026, registou-se um aumento de 39% nos pagamentos destinados a agricultores e pescadores, no âmbito de apoios governamentais. Na ilha de Santa Maria, Açores, foi efetuado o resgate de um pescador lúdico em zona escarpada, evidenciando medidas de segurança e resposta de emergência. A região autónoma dos Açores aprovou um apoio financeiro de três milhões de euros para o setor agrícola. O Partido Socialista/Açores solicitou ao Governo Regional o cumprimento de uma promessa de pagamento de três milhões de euros aos pescadores.",
-   "n": 5,
-   "pct": 50,
+   "texto": "No dia 31 de agosto de 2026, foram registados múltiplos acontecimentos na área da Agricultura e Mar. Em termos de pesca, o Irão localizou dez dos treze pescadores desaparecidos nos Emirados Árabes Unidos, tendo um pescador lúdico sido resgatado após se encontrar numa zona escarpada na ilha de Santa Maria, nos Açores. Financeiramente, os pagamentos a agricultores e pescadores aumentaram 39% até agosto, refletindo uma melhoria nos apoios. Politicamente, o Partido Socialista/Açores exigiu ao Governo Regional o pagamento de três milhões de euros prometidos aos pescadores, enquanto a Região Autónoma dos Açores aprovou um apoio de três milhões de euros aos agricultores. O tema dominante foi o apoio financeiro e a resposta a situações de emergência na pesca.",
+   "n": 7,
+   "pct": 58,
    "lado": "positivas"
   }
  }
