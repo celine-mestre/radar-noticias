@@ -46,6 +46,14 @@ jobs:
       - name: Ha picos por resumir?
         id: v
         run: |
+          if [ "${{ inputs.encadeado }}" != "true" ]; then
+            # Execucao manual: segue sempre. Sem esta porta, um pedido de
+            # refazer nunca chegava a correr enquanto todos os picos tivessem
+            # resumo — mesmo que o resumo guardado estivesse errado. E o
+            # mesmo remendo que o resumo-matriz.yml ja leva.
+            echo "Execucao manual: segue sempre."
+            echo "seguir=sim" >> "$GITHUB_OUTPUT"; exit 0
+          fi
           python3 - <<'PY'
           import json, os
 
