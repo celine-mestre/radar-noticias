@@ -40,7 +40,17 @@ INSTRUCAO = (
     "diz qual e porquê; nomeia os factos concretos, não generalidades. "
     "Escreve em português europeu, de forma sóbria e informativa, sem "
     "opinião. Não inventes nada que não esteja nos títulos: se os títulos "
-    "não bastam para perceber a causa, di-lo com franqueza."
+    "não bastam para perceber a causa, di-lo com franqueza. "
+    # As duas regras seguintes nasceram de erros reais: o modelo atribuiu a
+    # uma pessoa um ministério que não é o dela e deu o cargo de ministro a
+    # outra pessoa, factos que não estavam em título nenhum — vieram da
+    # memória do modelo, que é anterior a este Governo. Num produto do
+    # Estado, um cargo errado é o erro mais caro que há.
+    "NÃO atribuas cargos, funções, ministérios ou partidos a pessoas: "
+    "escreve apenas o nome, tal como aparece nos títulos. Só podes indicar "
+    "o cargo de alguém se esse cargo estiver escrito num dos títulos que "
+    "recebeste, e nesse caso usa exatamente a formulação do título. "
+    "Usa exclusivamente a data que te for indicada; nunca escrevas outra."
 )
 
 
@@ -132,6 +142,12 @@ def principal():
     ap.add_argument("--repo", default=None)
     ap.add_argument("--ficheiro", default=None)
     ap.add_argument("--endereco", default=os.environ.get("AMALIA_ENDERECO", ""))
+    ap.add_argument(
+        "--refazer", default="",
+        help=("Chaves de picos a refazer, separadas por vírgula, no formato "
+              "AAAA-MM-DD|Área (ex.: 2026-09-01|Assuntos Parlamentares). "
+              "Sem isto, só se escrevem os picos que ainda não têm resumo, "
+              "pelo que um resumo com um erro ficaria lá para sempre."))
     args = ap.parse_args()
 
     sintese = modulos()
@@ -160,6 +176,12 @@ def principal():
             anteriores = {}
 
     resumos = dict(anteriores)
+    for alvo in [x.strip() for x in args.refazer.split(",") if x.strip()]:
+        if resumos.pop(alvo, None) is not None:
+            print(f"  a refazer: {alvo}")
+        else:
+            print(f"  aviso: «{alvo}» não tem resumo guardado — nada a refazer")
+
     feitos = 0
     for pico in picos:
         dia, area = pico.get("data"), pico.get("area")
