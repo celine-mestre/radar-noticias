@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-02 12:11",
+ "gerado": "2026-09-02 12:20",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -226,24 +226,6 @@
    "pct": 58,
    "lado": "positivas"
   },
-  "2026-08-30|Justiça": {
-   "texto": "No dia 2026-08-30, a área da Justiça registou múltiplos acontecimentos, predominantemente relacionados com a cobertura mediática da situação de Nicolás Maduro em prisão nos Estados Unidos e com a implementação da nova lei do retorno. Destacam-se a divulgação de fotografias de Maduro na prisão federal em Nova Iorque, a sua declaração de resistência e a previsão de aumento exponencial de processos judiciais decorrente de alterações legislativas. Adicionalmente, verificou-se o início do julgamento de polícias acusados de tortura e a suspensão da imunidade de um membro do Conselho de Estado moçambicano, permitindo o seu julgamento.",
-   "n": 14,
-   "pct": 76,
-   "lado": "negativas"
-  },
-  "2026-08-28|Finanças|+": {
-   "texto": "No dia 28 de agosto de 2026, foi aprovado um apoio financeiro de 25 milhões de euros para a recuperação de infraestruturas de regadio danificadas por tempestades recentes. Paralelamente, a agência de notação Standard & Poor’s manteve o rating de Portugal inalterado em A+, com perspetiva positiva, confirmando a solidez da dívida pública. Adicionalmente, o Orçamento do Estado assegurou o financiamento de dois mil milhões de euros provenientes do Plano de Recuperação e Resiliência (PRR) para projetos já em execução, sem previsão de aumento de impostos, conforme garantido pelo ministro da Economia. O tema dominante destes acontecimentos é a resiliência económica e a continuidade de políticas de investimento público.",
-   "n": 4,
-   "pct": 62,
-   "lado": "positivas"
-  },
-  "2026-08-29|Ambiente e Energia|+": {
-   "texto": "A área do Ambiente e Energia registou, no dia 29 de agosto de 2026, vários desenvolvimentos concretos. O Governo português anunciou um plano para duplicar a capacidade de armazenamento de energia até 2030, visando reforçar a resiliência do sistema energético. Adicionalmente, foi entregue à Comissão Europeia um plano de restauração da natureza, marcando o início de uma fase mais complexa de implementação. Paralelamente, Portugal participou na Feira Internacional de Maputo, com a presença prevista de mais de 100 empresas nacionais, evidenciando o dinamismo do setor. Estes eventos refletem um esforço contínuo no reforço da transição energética e na valorização dos recursos naturais.",
-   "n": 12,
-   "pct": 52,
-   "lado": "positivas"
-  },
   "2026-08-25|Administração Interna": {
    "texto": "No dia 25 de agosto de 2026, registaram-se múltiplos incidentes de criminalidade e ocorrências policiais nos comandos metropolitanos do Porto e de Lisboa, com um aumento generalizado da criminalidade geral de 10,9%. A PSP reportou disparos em legítima defesa na Amadora, tendo baleado um agressor, e detetou um aumento de crimes violentos, embora com uma diminuição da violência física. Paralelamente, ocorreu um atropelamento na Albufeira que resultou em 16 feridos, incluindo dois militares da GNR, motivado por condução sob efeito de álcool e desobediência a ordens. Adicionalmente, verificou-se um caso de tortura na PSP, levando a uma investigação alargada e à demissão compulsiva de uma chefe da PSP por desfalque numa farmácia. O tema dominante foi a criminalidade e a segurança pública, com foco em ocorrências violentas e questões relacionadas com a atuação policial.",
    "n": 69,
@@ -267,6 +249,12 @@
    "n": 21,
    "pct": 75,
    "lado": "negativas"
+  },
+  "2026-08-29|Ambiente e Energia|+": {
+   "texto": "A área do Ambiente e Energia registou, no dia 29 de agosto de 2026, dois desenvolvimentos principais. O primeiro, de natureza internacional, refere-se à declaração do Ministro dos Negócios Estrangeiros do Nepal perante a comunidade internacional, apelando a um esforço global para mitigar os efeitos das alterações climáticas, após eventos climáticos extremos que afetaram o país. Paralelamente, a nível nacional, foi anunciado o compromisso do Governo português em duplicar a capacidade de armazenamento de energia até 2030, visando reforçar a segurança energética e a transição para fontes renováveis. Adicionalmente, o Governo entregou à Comissão Europeia um plano detalhado para a restauração da natureza em Portugal, marcando o início de uma fase de implementação complexa. Por fim, registou-se uma atividade económica notável com a presença de mais de 100 empresas portuguesas na Feira Internacional de Maputo, evidenciando a projeção internacional do setor.",
+   "n": 12,
+   "pct": 50,
+   "lado": "positivas"
   }
  }
 }
