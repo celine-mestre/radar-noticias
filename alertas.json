@@ -1,9 +1,9 @@
 {
- "atualizado": "2026-09-02 11:55",
+ "atualizado": "2026-09-02 12:13",
  "dia": "2026-09-02",
- "corte": "11:55",
+ "corte": "12:13",
  "dias_base": 28,
- "regra": "Tempestade quando a contagem do dia, até às 11:55, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 19 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 12:13, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 19 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
@@ -13,20 +13,20 @@
   {
    "area": "Ambiente e Energia",
    "hoje": 23,
-   "mediana": 9.5,
-   "limiar": 19.9,
-   "excesso": 13.5,
-   "variacao_pct": 142,
+   "mediana": 11.0,
+   "limiar": 22.9,
+   "excesso": 12.0,
+   "variacao_pct": 109,
    "dias_base": 28,
    "tempestade": true
   },
   {
    "area": "Saúde",
    "hoje": 22,
-   "mediana": 11.0,
-   "limiar": 19.0,
-   "excesso": 11.0,
-   "variacao_pct": 100,
+   "mediana": 12.0,
+   "limiar": 20.9,
+   "excesso": 10.0,
+   "variacao_pct": 83,
    "dias_base": 28,
    "tempestade": true
   }
@@ -35,20 +35,20 @@
   {
    "area": "Ambiente e Energia",
    "hoje": 23,
-   "mediana": 9.5,
-   "limiar": 19.9,
-   "excesso": 13.5,
-   "variacao_pct": 142,
+   "mediana": 11.0,
+   "limiar": 22.9,
+   "excesso": 12.0,
+   "variacao_pct": 109,
    "dias_base": 28,
    "tempestade": true
   },
   {
    "area": "Saúde",
    "hoje": 22,
-   "mediana": 11.0,
-   "limiar": 19.0,
-   "excesso": 11.0,
-   "variacao_pct": 100,
+   "mediana": 12.0,
+   "limiar": 20.9,
+   "excesso": 10.0,
+   "variacao_pct": 83,
    "dias_base": 28,
    "tempestade": true
   },
@@ -64,21 +64,21 @@
   },
   {
    "area": "Defesa Nacional",
-   "hoje": 28,
+   "hoje": 29,
    "mediana": 21.5,
-   "limiar": 42.3,
-   "excesso": 6.5,
-   "variacao_pct": 30,
+   "limiar": 39.3,
+   "excesso": 7.5,
+   "variacao_pct": 35,
    "dias_base": 28,
    "tempestade": false
   },
   {
    "area": "Negócios Estrangeiros",
-   "hoje": 14,
-   "mediana": 8.0,
-   "limiar": 18.4,
-   "excesso": 6.0,
-   "variacao_pct": 75,
+   "hoje": 16,
+   "mediana": 9.0,
+   "limiar": 20.9,
+   "excesso": 7.0,
+   "variacao_pct": 78,
    "dias_base": 28,
    "tempestade": false
   }
@@ -326,15 +326,15 @@
    "data": "2026-09-02",
    "area": "Ambiente e Energia",
    "hoje": 23,
-   "mediana": 9.5,
-   "limiar": 19.9
+   "mediana": 11.0,
+   "limiar": 22.9
   },
   {
    "data": "2026-09-02",
    "area": "Saúde",
    "hoje": 22,
-   "mediana": 11.0,
-   "limiar": 19.0
+   "mediana": 12.0,
+   "limiar": 20.9
   }
  ]
 }
