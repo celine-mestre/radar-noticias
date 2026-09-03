@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-03 11:08",
+ "gerado": "2026-09-03 12:24",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -262,10 +262,16 @@
    "pct": 62,
    "lado": "positivas"
   },
+  "2026-09-03|Presidência": {
+   "texto": "No dia 2026-09-03, a cobertura mediática focou-se em dois acontecimentos distintos. O primeiro, e mais grave, refere-se à morte de mais de 80 migrantes num naufrágio ao largo das Canárias, incluindo um bebé, o que gerou forte atenção mediática. Paralelamente, o Presidente Trump intensificou a pressão sobre os estados americanos para denunciarem imigrantes ilegais, ameaçando com cortes de fundos para aqueles que não o fizessem. Um tema dominante transversal a estes eventos é a crise migratória e as tensões políticas associadas à imigração.",
+   "n": 6,
+   "pct": 75,
+   "lado": "negativas"
+  },
   "2026-09-03|Infraestruturas e Habitação|+": {
-   "texto": "1. Na Região Autónoma dos Açores, procedeu-se à remoção da bagacina da Mata das Feiticeiras, destinada à sua reutilização em obras públicas, no âmbito de intervenções de melhoria de infraestruturas.  \n2. A edição integral da obra do mestre Vicente Lusitano foi publicada pela Arte Minima, constituindo um reconhecimento da importância cultural e artística deste artista.  \n3. Na Área Metropolitana de Lisboa, observou-se um aumento da mobilidade urbana, com melhorias nas redes de transportes públicos e na gestão do tráfego, evidenciando a consolidação de resultados positivos alcançados em anos anteriores.  \n\nTema dominante: melhoria de infraestruturas e mobilidade urbana.",
-   "n": 4,
-   "pct": 50,
+   "texto": "No âmbito da área governativa das Infraestruturas e Habitação, verificaram-se, em 2026, os seguintes acontecimentos concretos: a subida mais acentuada dos preços das habitações no concelho de São Vicente, refletindo uma dinâmica de mercado positiva; a continuidade de projetos de habitação em Alcanena, após o término do programa PRR; e a reutilização de entulho de construção, nomeadamente a bagacina da Mata das Feiticeiras, em obras públicas regionais. Adicionalmente, a publicação integral da obra do mestre Vicente Lusitano pela Arte Minima constitui um reconhecimento cultural. Por fim, os sistemas de mobilidade na Área Metropolitana de Lisboa registaram melhorias consistentes, com a consolidação dos resultados positivos já alcançados. O tema dominante é a melhoria e expansão da habitação e da mobilidade urbana.",
+   "n": 6,
+   "pct": 60,
    "lado": "positivas"
   }
  }
