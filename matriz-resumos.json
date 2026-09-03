@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-03 17:48",
+ "gerado": "2026-09-03 21:28",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -262,16 +262,16 @@
    "pct": 62,
    "lado": "positivas"
   },
-  "2026-09-03|Presidência": {
-   "texto": "No dia 2026-09-03, a cobertura mediática focou-se predominantemente na crise migratória no Estreito de Gibraltar, com particular ênfase na situação em Ceuta e nas travessias marítimas para as Canárias. Mais de 70 migrantes, incluindo um bebé, perderam a vida em travessias marítimas perigosas, sendo que alguns títulos indicam um número superior de vítimas (80). Paralelamente, regista-se a permanência de milhares de migrantes nas ruas e praias de Ceuta, evidenciando uma crise humanitária. Adicionalmente, a pressão política internacional, nomeadamente por Donald Trump, sobre os estados para denunciarem a imigração ilegal, surge como um tema transversal a estas notícias.",
-   "n": 13,
-   "pct": 76,
-   "lado": "negativas"
-  },
   "2026-09-03|Infraestruturas e Habitação|+": {
-   "texto": "O dia foi marcado por um conjunto de investimentos e reconhecimentos na área das infraestruturas e habitação. O Instituto de Planeamento e Gestão (IP) anunciou um investimento de 700 milhões de euros no Alentejo até ao final de 2028, abrangendo a reabilitação e expansão da rede rodoviária e ferroviária. Adicionalmente, foi formalizada a abertura de uma escola industrial e digital do dstgroup, oferecendo 124 vagas de formação profissional. No âmbito da habitação, o concelho de Alcanena foi destacado pela manutenção de uma estratégia de apoio à construção, mesmo após o término do programa PRR, e São Vicente registou a maior subida anual dos preços das casas a nível nacional.",
+   "texto": "A área de Infraestruturas e Habitação registou, no dia 03 de setembro de 2026, um conjunto de desenvolvimentos notáveis. O Instituto de Planeamento e Gestão (IP) anunciou um investimento de 700 milhões de euros no Alentejo até ao final de 2028, abrangendo a construção e reabilitação de infraestruturas rodoviárias e ferroviárias. Adicionalmente, o dstgroup iniciou a operação de uma escola industrial e digital com a oferta de 124 vagas de formação profissional. Paralelamente, a Área Metropolitana de Lisboa evidenciou progressos na mobilidade urbana, com a consolidação de resultados positivos já alcançados. O tema dominante destes acontecimentos é o investimento em infraestruturas de transporte e a promoção da habitação, incluindo a reutilização de materiais em obras públicas e a continuidade de políticas habitacionais pós-PRR.",
    "n": 11,
-   "pct": 63,
+   "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-09-03|Finanças|+": {
+   "texto": "A Autoridade Tributária e Aduaneira procedeu ao pagamento de 2.660 milhões de euros em reembolsos de IRS aos contribuintes no dia 3 de setembro de 2026. O valor médio devolvido por reembolso situou-se nos 980 euros. Este montante representa a concretização de um processo de reembolso de impostos sobre o rendimento das pessoas singulares, no âmbito da gestão fiscal anual. O tema dominante é a devolução de impostos aos contribuintes, com particular destaque para a quantificação e distribuição dos montantes reembolsados.",
+   "n": 7,
+   "pct": 50,
    "lado": "positivas"
   }
  }
