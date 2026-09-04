@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-04 21:17",
+ "gerado": "2026-09-04 21:52",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -238,40 +238,22 @@
    "pct": 51,
    "lado": "positivas"
   },
-  "2026-08-30|Justiça": {
-   "texto": "No dia 2026-08-30, a área da Justiça registou múltiplos acontecimentos, com destaque para o início do julgamento de polícias acusados de tortura e a divulgação de fotografias de Nicolás Maduro em prisão nos Estados Unidos, acompanhada de declarações de resistência. Adicionalmente, a aprovação de uma nova lei do retorno gerou preocupações no seio da magistratura, que antecipa um aumento exponencial de processos e solicita reforço de recursos humanos. Relativamente a um caso de corrupção, o antigo responsável da administração pública José Veiga foi objeto de cobertura mediática, associando-o ao fenómeno do tráfico de influência em África, designado \"Monsieur Afrique\". Por fim, a cobertura noticiosa incluiu a divulgação da morte do sobrevivente do massacre de Angkor Wat, Bou Meng (1941-2026), e a preocupação com a gestão de processos judiciais em Moçambique, face à suspensão da imunidade de um antigo governante.",
-   "n": 14,
-   "pct": 76,
-   "lado": "negativas"
-  },
-  "2026-08-28|Finanças|+": {
-   "texto": "Foram atribuídos 25 milhões de euros para a reabilitação de sistemas de regadio danificados pelas tempestades recentes, abrangendo áreas agrícolas afetadas. A agência de notação Standard & Poor’s manteve o rating de Portugal inalterado em A+, confirmando a sustentabilidade da dívida pública nacional. O Orçamento do Estado assegurou o financiamento de 2000 milhões de euros provenientes do Plano de Recuperação e Resiliência (PRR) para a execução de obras já aprovadas, sem recurso a aumentos de impostos, conforme garantido pelo Ministro da Economia. O tema dominante destes acontecimentos é o reforço da resiliência económica e a gestão eficiente de fundos públicos.",
-   "n": 4,
-   "pct": 62,
-   "lado": "positivas"
-  },
-  "2026-08-29|Ambiente e Energia|+": {
-   "texto": "No âmbito da área ambiental, o Governo português anunciou o objetivo de duplicar a capacidade de armazenamento de energia até 2030, conforme noticiado pelo Jornal Económico e pela Renascença. Adicionalmente, foi entregue à Comissão Europeia um plano para a restauração da natureza, marcando o início de uma fase mais complexa de implementação, conforme reportado pelo Jornal de Negócios e pela Renascença. No domínio internacional, Portugal participou na Feira Internacional de Maputo, com a expectativa de reforçar a presença de mais de 100 empresas portuguesas, conforme noticiado pelo JM Madeira e pelo Jornal Económico. Não se verificou qualquer título relacionado com o Nepal, que foi mencionado em notícias de âmbito internacional sobre alterações climáticas, mas não constitui um acontecimento específico do dia no âmbito da administração pública portuguesa.",
-   "n": 12,
-   "pct": 52,
-   "lado": "positivas"
-  },
-  "2026-08-31|Agricultura e Mar|+": {
-   "texto": "No dia 31 de agosto de 2026, registaram-se múltiplos acontecimentos na área da Agricultura e Mar. O Irão localizou dez dos treze pescadores desaparecidos nos Emirados Árabes Unidos, tendo ocorrido um resgate subsequente de um pescador lúdico em zona escarpada na ilha de Santa Maria, nos Açores. Simultaneamente, os pagamentos a agricultores e pescadores registaram um crescimento de 39% até agosto, refletindo um reforço do apoio financeiro. Adicionalmente, a Região Autónoma dos Açores aprovou um apoio de três milhões de euros aos agricultores, conforme noticiado pelo Açoriano Oriental. O tema dominante destes eventos é o apoio e a assistência a pescadores e agricultores, abrangendo tanto operações de resgate como medidas de compensação financeira.",
-   "n": 7,
-   "pct": 62,
-   "lado": "positivas"
-  },
-  "2026-09-03|Finanças|+": {
-   "texto": "Nos dias 27 e 28 de setembro de 2026, a Autoridade Tributária e Aduaneira (AT) efetuou o pagamento de reembolsos de Imposto sobre o Rendimento das Pessoas Singulares (IRS) no montante total de 2.660 milhões de euros. Este montante, que representa um valor médio de 980 euros por contribuinte, resulta da devolução de impostos pagos por rendimentos auferidos em 2025, após liquidação de declarações de IRS. O evento caracteriza-se como um cumprimento de obrigações fiscais e um reembolso de impostos, sem qualquer menção a medidas legislativas ou acordos específicos.",
-   "n": 9,
-   "pct": 57,
-   "lado": "positivas"
-  },
   "2026-09-04|Finanças|+": {
    "texto": "Nos dias 4 e 5 de setembro de 2026, o Ministério das Finanças aprovou a contratação de enfermeiros para o Serviço Nacional de Saúde, após a resolução de questões contratuais e a formalização de um documento que permite a sua admissão. Paralelamente, o Governo reforçou o desconto nos combustíveis, aumentando-o em três cêntimos no gasóleo e na gasolina, e anunciou um benefício global de cerca de 700 milhões de euros para os consumidores. Adicionalmente, a cobrança de impostos em Moçambique registou um crescimento de quase 12% no primeiro semestre, atingindo 2.260 milhões de euros, e a França disponibilizou mais de mil milhões de euros para apoiar a agricultura. O tema dominante foi o reforço de medidas de apoio aos cidadãos e o aumento da eficiência na gestão fiscal.",
    "n": 21,
    "pct": 55,
+   "lado": "positivas"
+  },
+  "2026-08-29|Ambiente e Energia|+": {
+   "texto": "A área do Ambiente e Energia registou, no dia 29 de agosto de 2026, dois desenvolvimentos principais. O primeiro, de natureza internacional, refere-se à declaração do Ministro dos Negócios Estrangeiros do Nepal perante a comunidade internacional, apelando a um esforço global para mitigar os efeitos das alterações climáticas, após eventos climáticos extremos que afetaram o país. Paralelamente, a nível nacional, foi anunciado o compromisso do Governo português em duplicar a capacidade de armazenamento de energia até 2030, visando reforçar a segurança energética e a transição para fontes renováveis. Adicionalmente, o Governo entregou à Comissão Europeia um plano detalhado para a restauração da natureza em Portugal, marcando o início de uma fase de implementação complexa. Por fim, registou-se uma atividade económica notável com a presença de mais de 100 empresas portuguesas na Feira Internacional de Maputo, evidenciando a projeção internacional do setor.",
+   "n": 12,
+   "pct": 50,
+   "lado": "positivas"
+  },
+  "2026-08-31|Agricultura e Mar|+": {
+   "texto": "No dia 31 de agosto de 2026, registaram-se múltiplos acontecimentos na área da agricultura e do mar. O Irão localizou dez dos treze pescadores desaparecidos nos Emirados Árabes Unidos, num resgate que envolveu esforços internacionais. Paralelamente, o Governo da República Portuguesa anunciou um crescimento de 39% nos pagamentos a agricultores e pescadores até agosto, reforçando o apoio financeiro a estes setores. Adicionalmente, um pescador lúdico foi resgatado em zona escarpada na ilha de Santa Maria, nos Açores, por equipas de emergência. Um tema dominante foi o apoio estatal e a resposta a situações de emergência, nomeadamente no que concerne à pesca e à segurança dos trabalhadores.",
+   "n": 7,
+   "pct": 58,
    "lado": "positivas"
   }
  }
