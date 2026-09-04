@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-04 01:09",
+ "gerado": "2026-09-04 10:51",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -262,16 +262,34 @@
    "pct": 62,
    "lado": "positivas"
   },
-  "2026-09-03|Infraestruturas e Habitação|+": {
-   "texto": "A área de Infraestruturas e Habitação registou, no dia 03 de setembro de 2026, um conjunto de desenvolvimentos notáveis. O Instituto de Planeamento e Gestão (IP) anunciou um investimento de 700 milhões de euros no Alentejo até ao final de 2028, abrangendo a construção e reabilitação de infraestruturas rodoviárias e ferroviárias. Adicionalmente, o dstgroup iniciou a operação de uma escola industrial e digital com a oferta de 124 vagas de formação profissional. Paralelamente, a Área Metropolitana de Lisboa evidenciou progressos na mobilidade urbana, com a consolidação de resultados positivos já alcançados. O tema dominante destes acontecimentos é o investimento em infraestruturas de transporte e a promoção da habitação, incluindo a reutilização de materiais em obras públicas e a continuidade de políticas habitacionais pós-PRR.",
-   "n": 11,
-   "pct": 50,
-   "lado": "positivas"
+  "2026-09-04|Assuntos Parlamentares": {
+   "texto": "No dia 2026-09-04, a Assembleia da República debateu e rejeitou uma moção de censura apresentada pelo partido Chega ao Governo, conforme confirmado por Eurico Brilhante Dias. Paralelamente, a cobertura mediática destacou casos de assédio laboral envolvendo um adjunto da Secretária-Geral da Assembleia da República e a complexa situação de Luís Neves, antigo Secretário de Estado, envolvido em inquéritos criminais e objeto de uma moção de censura. Estes eventos, embora distintos, convergiram para um contexto de instabilidade política e escrutínio público. O tema dominante foi a instabilidade governamental e as implicações políticas de processos judiciais e ações parlamentares.",
+   "n": 9,
+   "pct": 77,
+   "lado": "negativas"
+  },
+  "2026-09-04|Administração Interna": {
+   "texto": "No dia 2026-09-04, a Administração Interna registou múltiplos acontecimentos de natureza diversa. Um procurador, já nomeado coordenador do Ministério Público nos Açores, foi alvo de investigação por ter baleado um assaltante. Paralelamente, o Ministro da Administração Interna (MAI) viu três inquéritos-crime a seu respeito serem divulgados. Adicionalmente, a Casa Branca lançou um videojogo com temática de deportações de imigrantes, suscitando críticas pela sua representação. Ocorreu ainda um incidente rodoviário com um condutor que abasteceu sem pagar e fugiu à PSP, apresentando uma taxa de álcool de 3,12 g/l, e um conflito entre a justiça e declarações do Ministro Luís Neves sobre o custo da destruição de bidões.",
+   "n": 9,
+   "pct": 91,
+   "lado": "negativas"
   },
   "2026-09-03|Finanças|+": {
-   "texto": "No dia 2026-09-03, a Autoridade Tributária e Aduaneira (AT) efetuou o pagamento de reembolsos de IRS no valor total de 2.660 milhões de euros. Este montante representa a devolução de impostos a 980 euros por contribuinte, conforme o valor médio de reembolso registado. O evento caracteriza-se como um cumprimento de obrigações fiscais e um reforço da confiança dos contribuintes no sistema. O tema dominante é, portanto, o reembolso de IRS e a satisfação fiscal dos contribuintes.",
+   "texto": "Nos dias 27 e 28 de setembro de 2026, a Autoridade Tributária e Aduaneira (AT) efetuou o pagamento de reembolsos de Imposto sobre o Rendimento das Pessoas Singulares (IRS) no montante total de 2.660 milhões de euros. Este montante, que representa um valor médio de 980 euros por contribuinte, resulta da devolução de impostos pagos por rendimentos auferidos em 2025, após liquidação de declarações de IRS. O evento caracteriza-se como um cumprimento de obrigações fiscais e um reembolso de impostos, sem qualquer menção a medidas legislativas ou acordos específicos.",
    "n": 9,
-   "pct": 55,
+   "pct": 57,
+   "lado": "positivas"
+  },
+  "2026-09-04|Saúde|+": {
+   "texto": "O Ministério das Finanças aprovou um documento que possibilita a contratação de enfermeiros para o Serviço Nacional de Saúde (SNS), permitindo a concretização de processos de recrutamento. Esta medida, reiterada em múltiplos títulos, visa reforçar os quadros de pessoal dos hospitais e unidades de saúde, respondendo a necessidades de pessoal identificadas. Adicionalmente, foi noticiado o desenvolvimento de iniciativas de saúde pública, como a realização de rastreios e a instalação de um hospital pediátrico temporário em São Pedro do Sul, e a expansão da responsabilidade dos enfermeiros para a triagem de chamadas do INEM. Não se identificou um tema dominante além da contratação de pessoal de saúde e da melhoria da resposta aos serviços de emergência.",
+   "n": 10,
+   "pct": 71,
+   "lado": "positivas"
+  },
+  "2026-09-04|Finanças|+": {
+   "texto": "Nos dias 4 de setembro de 2026, o Ministério das Finanças aprovou a contratação de enfermeiros para o Serviço Nacional de Saúde (SNS), conforme documentado por múltiplas fontes noticiosas. Esta medida concretiza-se através da aprovação de documentos que autorizam a contratação, permitindo a admissão de pessoal de enfermagem nos hospitais. O tema dominante é, portanto, a melhoria da capacidade de resposta do SNS através do reforço do seu quadro de pessoal. Adicionalmente, registou-se um crescimento de 11,9% na cobrança de impostos em Moçambique até junho, atingindo 2.260 milhões de euros, e no Brasil foi aprovada legislação que isenta de imposto compras internacionais até 50 dólares.",
+   "n": 11,
+   "pct": 52,
    "lado": "positivas"
   }
  }
