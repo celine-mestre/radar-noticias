@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-04 12:34",
+ "gerado": "2026-09-04 16:36",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -269,21 +269,15 @@
    "lado": "positivas"
   },
   "2026-09-04|Administração Interna": {
-   "texto": "No dia 2026-09-04, a Administração Interna registou múltiplos acontecimentos de natureza diversa. A PSP deteve dois indivíduos suspeitos de carjacking, após uma perseguição policial até às Caldas da Rainha. Paralelamente, empresários na região dos Açores expressaram receios de assédio por parte da GNR, motivando investigação. Adicionalmente, a polémica em torno do caso Luís Neves, envolvendo alegado branqueamento de capitais e a sua moção de censura, intensificou-se com contradições nas declarações do antigo responsável e na avaliação dos custos associados à destruição de resíduos. O tema dominante foi a crise de confiança na atuação de figuras governamentais e nas instituições de segurança.",
-   "n": 13,
-   "pct": 88,
+   "texto": "No dia 2026-09-04, a cobertura mediática da área da Administração Interna foi predominantemente negativa, centrando-se em incidentes de segurança pública e investigações criminais. A Proteção Civil emitiu alertas de risco de incêndio na Madeira, com um aumento previsto para o fim de semana. A PSP realizou múltiplas operações de fiscalização rodoviária em Lisboa e Matosinhos, detendo mais de 250 condutores, incluindo casos de furto e apreensão de artigos ilícitos. Adicionalmente, dois suspeitos de carjacking foram detidos após uma perseguição policial. Paralelamente, registaram-se detenções por violência doméstica e casos de condução sob efeito de álcool, evidenciando a atuação das forças de segurança. A investigação a membros do Governo e a figuras públicas, como Luís Neves, e a nomeação de um procurador em investigação para coordenar o Ministério Público nos Açores, constituíram também temas relevantes.",
+   "n": 23,
+   "pct": 75,
    "lado": "negativas"
   },
   "2026-09-04|Finanças|+": {
-   "texto": "No domínio das finanças, o Ministério das Finanças aprovou, em 4 de setembro de 2026, um documento que permite a contratação de enfermeiros para os hospitais públicos, após um alerta da Ordem dos Enfermeiros. Adicionalmente, a cobrança de impostos em Moçambique registou um crescimento de 11,9% até junho, atingindo 2.260 milhões de euros, e o país beneficiou de apoio francês superior a mil milhões de euros para a agricultura. A Região Autónoma da Madeira avança com 5 milhões de euros para o IVA do PRR, e o Governo Regional criou um apoio de 5 milhões de euros para o IVA dos projetos sociais do mesmo programa.",
-   "n": 16,
-   "pct": 62,
-   "lado": "positivas"
-  },
-  "2026-09-04|Saúde|+": {
-   "texto": "O Ministério das Finanças aprovou, em 4 de setembro de 2026, um documento que desbloqueia a contratação de enfermeiros no Serviço Nacional de Saúde (SNS), respondendo a um alerta da Ordem dos Enfermeiros e a um conjunto de solicitações da comunicação social. Este ato administrativo permite a contratação de pessoal de enfermagem, visando colmatar carências de recursos humanos em diversas unidades hospitalares. O evento, embora repetidamente noticiado, constitui um avanço concreto na resolução de problemas estruturais de pessoal no setor da saúde, com impacto direto na capacidade de resposta e qualidade dos cuidados prestados.",
-   "n": 11,
-   "pct": 65,
+   "texto": "O Ministério das Finanças aprovou medidas de alívio para os combustíveis, aumentando em três cêntimos o desconto no gasóleo e na gasolina, com efeito imediato. Simultaneamente, foi dada luz verde à contratação de enfermeiros para o Serviço Nacional de Saúde, após a aprovação de um documento que desbloqueia os procedimentos de contratação. Adicionalmente, a cobrança de impostos em Moçambique registou um crescimento de quase 12% no primeiro semestre, atingindo 2.260 milhões de euros, evidenciando a melhoria na gestão fiscal do país. O tema dominante é, portanto, a combinação de medidas de apoio aos cidadãos e a modernização da administração pública.",
+   "n": 20,
+   "pct": 66,
    "lado": "positivas"
   }
  }
