@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-05 16:31",
+ "gerado": "2026-09-05 19:33",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -244,12 +244,6 @@
    "pct": 76,
    "lado": "negativas"
   },
-  "2026-09-05|Administração Interna": {
-   "texto": "No dia 2026-09-05, a Administração Interna registou múltiplos acontecimentos de natureza distinta. A SNPC solicitou a intervenção governamental face a um conflito laboral com a ANA/VINCI, enquanto a GNR efetuou detenções por excesso de álcool ao volante, num total de 8.400 indivíduos. Adicionalmente, um incêndio florestal ameaçou habitações na Póvoa de Lanhoso, e a PSP condenou indivíduos por tráfico de droga, detidos desde 2023, em Famalicão. Não se identificou um tema dominante unificador entre os factos noticiados.",
-   "n": 6,
-   "pct": 78,
-   "lado": "negativas"
-  },
   "2026-08-29|Ambiente e Energia|+": {
    "texto": "No âmbito da área ambiental, o Governo português anunciou o objetivo de duplicar a capacidade de armazenamento de energia até 2030, conforme noticiado pelo Jornal Económico e pela Renascença. Adicionalmente, foi entregue à Comissão Europeia um plano para a restauração da natureza, marcando o início de uma fase mais complexa de implementação, conforme reportado pelo Jornal de Negócios e pela Renascença. No domínio internacional, Portugal participou na Feira Internacional de Maputo, com a expectativa de reforçar a presença de mais de 100 empresas portuguesas, conforme noticiado pelo JM Madeira e pelo Jornal Económico. Não se verificou qualquer título relacionado com o Nepal, que foi mencionado em notícias de âmbito internacional sobre alterações climáticas, mas não constitui um acontecimento específico do dia no âmbito da administração pública portuguesa.",
    "n": 12,
@@ -269,15 +263,27 @@
    "lado": "positivas"
   },
   "2026-09-04|Finanças|+": {
-   "texto": "No dia 2026-09-04, a agência de notação Fitch elevou a classificação de risco de Portugal para “A+” com perspetiva estável, reconhecendo a robustez das finanças públicas e a sustentabilidade da dívida. Paralelamente, o Governo reforçou o desconto nos combustíveis, aumentando-o em três cêntimos no gasóleo e na gasolina, e indicou que o benefício acumulado ascende a cerca de 700 milhões de euros. Adicionalmente, o Ministério das Finanças aprovou o documento que permite a contratação de enfermeiros no Serviço Nacional de Saúde, respondendo a um alerta da Ordem dos Enfermeiros e facilitando a resposta à pressão sobre o SNS. Por fim, a cobrança de impostos em Moçambique registou um crescimento de 11,9% no primeiro semestre do ano, atingindo 2.260 milhões de euros.",
+   "texto": "Em 04 de setembro de 2026, a agência de notação Fitch elevou a classificação de risco de Portugal para “A+” com perspetiva estável, reconhecendo a robustez das finanças públicas e a gestão fiscal prudente. Simultaneamente, o Governo reforçou o desconto nos combustíveis, aumentando-o em três cêntimos no gasóleo e na gasolina, e indicou que o benefício acumulado atingia cerca de 700 milhões de euros. Adicionalmente, o Ministério das Finanças deu luz verde à contratação de enfermeiros para o Serviço Nacional de Saúde, após a aprovação de um documento que desbloqueia os procedimentos de recrutamento. Estes acontecimentos refletem um tema dominante de melhoria da confiança externa, estabilidade orçamental e reforço da capacidade do Serviço Nacional de Saúde.",
    "n": 27,
-   "pct": 53,
+   "pct": 52,
    "lado": "positivas"
   },
   "2026-09-05|Economia e Coesão Territorial|+": {
-   "texto": "No dia 2026-09-05, o Governo confirmou o cumprimento integral das metas do Plano de Recuperação e Resiliência (PRR) para a Cultura, conforme declarado pelo Ministério da Cultura e corroborado por diversas fontes governamentais e mediáticas. Adicionalmente, o Ministério do Ambiente e Energia reportou a conclusão de investimentos do PRR no valor de mais de 1.800 milhões de euros, abrangendo projetos ambientais e energéticos. Estes dois temas dominantes refletem o progresso alcançado na execução de fundos europeus e na transição ecológica. Paralelamente, sete empresas portuguesas do setor da madeira e mobiliário reforçaram a sua presença na Saudi WoodShow, evidenciando a internacionalização do setor industrial nacional.",
-   "n": 12,
-   "pct": 67,
+   "texto": "No âmbito do Plano de Recuperação e Resiliência (PRR), o Ministério do Ambiente e Energia concluiu investimentos superiores a 1,8 mil milhões de euros, cumprindo integralmente as metas estabelecidas para a área de Ambiente e Energia. Adicionalmente, foram registadas iniciativas de cooperação internacional, nomeadamente a concretização de parcerias com a Feira de Maputo, com potencial conversão em investimento direto. O Governo confirmou o cumprimento de todas as metas do PRR nas áreas da Cultura e da Coesão Territorial, evidenciando progressos em infraestruturas e apoio a projetos culturais. Por fim, sete empresas portuguesas do setor da madeira e mobiliário reforçaram a sua presença em feiras internacionais, como a Saudi WoodShow, promovendo a internacionalização do setor.",
+   "n": 16,
+   "pct": 71,
+   "lado": "positivas"
+  },
+  "2026-09-05|Ambiente e Energia|+": {
+   "texto": "No dia 2026-09-05, o Ministério do Ambiente e Energia anunciou a conclusão integral dos investimentos do Plano de Recuperação e Resiliência (PRR) no montante de mais de 1,8 mil milhões de euros. Esta execução, que abrange medidas de eficiência energética, energias renováveis e gestão de recursos hídricos, permitiu o cumprimento de todas as metas estabelecidas para o setor. Adicionalmente, foi confirmada a reestruturação da Agência Portuguesa do Ambiente (APA) e do Instituto da Conservação da Natureza e das Florestas (ICNF), processo que se encontrava “praticamente pronto”, segundo a ministra do Ambiente. O tema dominante é o sucesso na implementação de fundos europeus e a modernização da administração ambiental.",
+   "n": 5,
+   "pct": 56,
+   "lado": "positivas"
+  },
+  "2026-09-05|Trabalho, Solidariedade e Segurança Social|+": {
+   "texto": "Em 2026, registou-se um aumento significativo no emprego de profissionais de Tecnologias de Informação e Comunicação em Portugal, mantendo-se este fenómeno como um destaque desde 2023. Paralelamente, o Presidente da República de Moçambique lançou um programa de apoio ao emprego e ao tecido empresarial, dotado de 110 milhões de euros, como resposta à necessidade de geração de postos de trabalho. Adicionalmente, verificou-se a manutenção de médicos reformados ao serviço do Serviço Nacional de Saúde, evidenciando a continuidade de quadros especializados. Não foram reportados eventos de greve ou de contestação laboral na área governativa em análise.",
+   "n": 7,
+   "pct": 54,
    "lado": "positivas"
   }
  }
