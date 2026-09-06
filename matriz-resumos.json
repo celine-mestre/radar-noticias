@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-06 16:46",
+ "gerado": "2026-09-06 19:33",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -298,10 +298,16 @@
    "pct": 75,
    "lado": "positivas"
   },
+  "2026-09-06|Trabalho, Solidariedade e Segurança Social": {
+   "texto": "No dia 2026-09-06, a área da Segurança Social foi palco de múltiplos acontecimentos noticiados com predominância negativa. O antigo responsável da Segurança Social, Raimundo, acusou o Governo de um \"assalto em curso\" ao sistema, propondo uma rutura. Paralelamente, a justiça autorizou a alimentação forçada de imigrantes detidos em greve de fome, tanto nos Estados Unidos como em Portugal, no âmbito de um processo judicial. Adicionalmente, constatou-se que o incentivo ao trabalho para jovens não atingiu os objetivos propostos, e a Segurança Social anunciou a necessidade de recrutar 27 chefias de topo.",
+   "n": 8,
+   "pct": 75,
+   "lado": "negativas"
+  },
   "2026-09-06|Economia e Coesão Territorial|+": {
-   "texto": "1. **Continuação da aposta na habitação pós-PRR:** Os municípios manifestaram o desejo de prosseguir com investimentos em habitação, após a conclusão do Plano de Recuperação e Resiliência (PRR), procurando assegurar a continuidade de projetos habitacionais em curso e o desenvolvimento de novas iniciativas de acesso à habitação.\n\n2. **Avistamento de baleias tropicais na costa algarvia:** O avistamento de baleias tropicais na costa algarvia gerou um aumento do fluxo turístico e atraiu a atenção da comunidade científica, impulsionando estudos sobre a presença destas espécies no Atlântico Norte e a sua adaptação às águas portuguesas.\n\n3. **Plano de mobilidade do Porto com investimento de 1,2 mil milhões de euros:** O Porto estabeleceu um plano de mobilidade urbana com um investimento previsto de 1,2 mil milhões de euros ao longo de uma década, visando melhorar a eficiência do transporte público, promover a mobilidade sustentável e reduzir os constrangimentos de tráfego na cidade.\n\n4. **Fundos europeus e produção cinematográfica na Madeira:** A região da Madeira beneficiou de fundos europeus para apoiar a produção de um filme, reforçando a sua capacidade de atração de investimento no setor audiovisual e promovendo a divulgação da cultura e do património madeirense.",
-   "n": 5,
-   "pct": 62,
+   "texto": "1. O chefe do Executivo de Macau concluiu uma visita ao Sudeste Asiático, resultando na assinatura de 189 acordos bilaterais, visando reforçar parcerias económicas e comerciais.\n\n2. Os municípios portugueses, após a execução do Plano de Recuperação e Resiliência (PRR), mantiveram o foco na construção de habitação, procurando assegurar o cumprimento dos objetivos de coesão territorial e acesso à habitação.\n\n3. A presença de baleias tropicais na costa algarvia motivou a colaboração entre entidades turísticas e científicas, com o intuito de estudar e proteger a espécie, impulsionando simultaneamente o turismo na região.\n\n4. O Porto recebeu um financiamento de 1,2 mil milhões de euros, com um horizonte temporal de 10 anos, destinado a um plano de mobilidade urbana, procurando melhorar a eficiência e sustentabilidade dos transportes na cidade.\n\n5. A Madeira beneficiou de fundos europeus para a produção de um filme, contribuindo para o reforço da indústria cinematográfica regional e a promoção do património cultural.",
+   "n": 6,
+   "pct": 67,
    "lado": "positivas"
   }
  }
