@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-06 12:18",
+ "gerado": "2026-09-06 16:46",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -286,10 +286,22 @@
    "pct": 56,
    "lado": "positivas"
   },
+  "2026-09-06|Justiça": {
+   "texto": "No dia 2026-09-06, foram noticiados diversos acontecimentos na área da Justiça. Um ex-presidente do supervisor dos seguros instaurou um processo contra as seguradoras Fidelidade e Generali. O Juízo de Instrução Criminal foi provisoriamente colocado junto ao tribunal de Menores, suscitando críticas quanto à sua localização. Paralelamente, o Peru decretou estado de emergência em cinco prisões de alta segurança, motivado por instabilidade interna. Adicionalmente, um tribunal determinou o encerramento de uma pedreira devido a queixas de excesso de ruído e poeiras, e o Supremo Tribunal Federal do Brasil enfrenta uma crise que tem gerado diversas notícias.",
+   "n": 8,
+   "pct": 89,
+   "lado": "negativas"
+  },
   "2026-09-05|Economia e Coesão Territorial|+": {
-   "texto": "No dia 2026-09-05, o Governo português comunicou o cumprimento integral das metas do Plano de Recuperação e Resiliência (PRR) nas áreas da Cultura e do Ambiente e Energia. Em particular, o Ministério do Ambiente e Energia concluiu investimentos superiores a 1.800 milhões de euros, com destaque para projetos de eficiência energética e energias renováveis. Adicionalmente, foi registada a presença de sete empresas portuguesas do setor da madeira e mobiliário na Saudi WoodShow, evidenciando a internacionalização do setor.",
+   "texto": "No dia 2026-09-05, o Governo português anunciou o cumprimento integral das metas do Plano de Recuperação e Resiliência (PRR) nas áreas da Cultura e Ambiente e Energia. No âmbito da Cultura, foram alcançados todos os objetivos definidos, com destaque para a conclusão de projetos de reabilitação e valorização do património cultural. Relativamente ao Ambiente e Energia, foram executados investimentos superiores a 1,8 mil milhões de euros, resultando na concretização de metas setoriais e na conclusão de projetos estratégicos de eficiência energética e sustentabilidade. O tema dominante dos títulos foi o sucesso na implementação do PRR, evidenciando a execução de medidas de coesão territorial e desenvolvimento económico.",
    "n": 17,
-   "pct": 74,
+   "pct": 75,
+   "lado": "positivas"
+  },
+  "2026-09-06|Economia e Coesão Territorial|+": {
+   "texto": "1. **Continuação da aposta na habitação pós-PRR:** Os municípios manifestaram o desejo de prosseguir com investimentos em habitação, após a conclusão do Plano de Recuperação e Resiliência (PRR), procurando assegurar a continuidade de projetos habitacionais em curso e o desenvolvimento de novas iniciativas de acesso à habitação.\n\n2. **Avistamento de baleias tropicais na costa algarvia:** O avistamento de baleias tropicais na costa algarvia gerou um aumento do fluxo turístico e atraiu a atenção da comunidade científica, impulsionando estudos sobre a presença destas espécies no Atlântico Norte e a sua adaptação às águas portuguesas.\n\n3. **Plano de mobilidade do Porto com investimento de 1,2 mil milhões de euros:** O Porto estabeleceu um plano de mobilidade urbana com um investimento previsto de 1,2 mil milhões de euros ao longo de uma década, visando melhorar a eficiência do transporte público, promover a mobilidade sustentável e reduzir os constrangimentos de tráfego na cidade.\n\n4. **Fundos europeus e produção cinematográfica na Madeira:** A região da Madeira beneficiou de fundos europeus para apoiar a produção de um filme, reforçando a sua capacidade de atração de investimento no setor audiovisual e promovendo a divulgação da cultura e do património madeirense.",
+   "n": 5,
+   "pct": 62,
    "lado": "positivas"
   }
  }
