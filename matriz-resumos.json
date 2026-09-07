@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-07 01:00",
+ "gerado": "2026-09-07 13:47",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -296,6 +296,24 @@
    "texto": "1. O chefe do Executivo de Macau concluiu uma viagem ao Sudeste Asiático, resultando na assinatura de 189 acordos bilaterais, visando reforçar parcerias económicas e comerciais.\n\n2. Os municípios portugueses, após a execução do Plano de Recuperação e Resiliência (PRR), manifestaram a intenção de prosseguir com investimentos em habitação, com o objetivo de colmatar défices habitacionais e promover a coesão territorial.\n\n3. O avistamento de baleias tropicais na costa algarvia gerou um aumento do fluxo turístico e suscitou a atenção da comunidade científica, evidenciando a importância da conservação marinha e do património natural.\n\n4. A cidade do Porto estabeleceu um plano de mobilidade urbana com um investimento de 1,2 mil milhões de euros, com um horizonte temporal de 10 anos, para melhorar a eficiência e sustentabilidade dos transportes.",
    "n": 6,
    "pct": 60,
+   "lado": "positivas"
+  },
+  "2026-09-07|Defesa Nacional": {
+   "texto": "No dia 2026-09-07, a área da Defesa Nacional registou múltiplos acontecimentos de natureza distinta. Uma avalanche no contexto de atividades de montanha causou a morte de onze alpinistas, com seis ainda desaparecidos. Paralelamente, a declaração de um ministro da Defesa israelita sobre uma \"guerra total\" contra a Autoridade Palestiniana gerou preocupação internacional. Adicionalmente, as famílias de cinco GNR que faleceram numa ocorrência anterior no Douro foram objeto de indemnização. Por fim, a ONU expressou inquietação face à utilização de drones totalmente autónomos em conflitos armados, solicitando a sua proibição na guerra da Ucrânia. O tema dominante, embora não explicitamente unificador, foi a crescente preocupação com a utilização de tecnologias militares autónomas e a instabilidade geopolítica em zonas de conflito.",
+   "n": 12,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-09-07|Justiça": {
+   "texto": "No dia 2026-09-07, a área da Justiça registou múltiplos acontecimentos de natureza judicial e administrativa. Destacam-se a apresentação de queixas contra magistrados e procuradores, nomeadamente por parte de José Sócrates, relacionadas com a Operação Marquês e alegações de falsas declarações em tribunal, bem como ações judiciais de indivíduos que invadiram o Capitólio, reivindicando indemnizações. Adicionalmente, verificou-se a preocupação expressa pelo Sindicato da Guarda relativamente à segurança nas prisões, e um caso criminal envolvendo violação de uma menor de 13 anos, com o suspeito em prisão preventiva. Um tema dominante, transversal a alguns destes factos, é a litigiosidade judicial entre figuras públicas e o Ministério Público.",
+   "n": 10,
+   "pct": 91,
+   "lado": "negativas"
+  },
+  "2026-09-07|Trabalho, Solidariedade e Segurança Social|+": {
+   "texto": "No dia 2026-09-07, registou-se uma terceira maior subida da taxa de emprego em Portugal no segundo trimestre, conforme noticiado pela SIC Notícias e Diário de Notícias, evidenciando uma melhoria no mercado de trabalho. Paralelamente, a discussão sobre a reforma da Segurança Social mereceu reiterados apelos a um “pacto de regime” por parte da ministra do Trabalho, conforme divulgado pelo Jornal Económico, SIC Notícias, Jornal de Negócios, Executive Digest e Notícias ao Minuto. Adicionalmente, a Marsh lançou a Inclusive Academy, uma iniciativa focada na promoção do emprego de pessoas com deficiência, conforme reportado pela Executive Digest. Por fim, o ECO noticiou uma diminuição de quatro milhões de pessoas a recorrer aos balcões da Segurança Social no último ano e meio, indicando uma redução na procura de benefícios. O tema dominante é o emprego e a reforma da Segurança Social.",
+   "n": 10,
+   "pct": 50,
    "lado": "positivas"
   }
  }
