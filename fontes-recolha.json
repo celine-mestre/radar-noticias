@@ -1,6 +1,6 @@
 {
- "recolhido": "2026-09-07 13:21",
- "horas_desde_a_anterior": 3.5,
+ "recolhido": "2026-09-07 16:43",
+ "horas_desde_a_anterior": 3.3,
  "fontes": 66,
  "sem_artigos": 4,
  "por_recurso": 1,
@@ -56,8 +56,19 @@
    "pt": true,
    "via_config": "feed",
    "via": "google (recurso)",
-   "lidos": 4,
+   "lidos": 3,
    "marcados": 1,
+   "erro": ""
+  },
+  {
+   "fonte": "The Washington Post · Mundo",
+   "dominio": "washingtonpost.com",
+   "origem": "internacionais",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 9,
+   "marcados": 0,
    "erro": ""
   },
   {
@@ -68,7 +79,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 15,
+   "marcados": 20,
    "erro": ""
   },
   {
@@ -94,6 +105,17 @@
    "erro": ""
   },
   {
+   "fonte": "Expresso das Ilhas (Cabo Verde)",
+   "dominio": "expressodasilhas.cv",
+   "origem": "lusofonas",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 10,
+   "marcados": 14,
+   "erro": ""
+  },
+  {
    "fonte": "Healthnews",
    "dominio": "healthnews.pt",
    "origem": "nacionais",
@@ -101,7 +123,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 4,
+   "marcados": 5,
    "erro": ""
   },
   {
@@ -112,7 +134,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 7,
+   "marcados": 6,
    "erro": ""
   },
   {
@@ -127,17 +149,6 @@
    "erro": ""
   },
   {
-   "fonte": "Público",
-   "dominio": "publico.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 10,
-   "marcados": 2,
-   "erro": ""
-  },
-  {
    "fonte": "STP-Press (São Tomé)",
    "dominio": "stp-press.st",
    "origem": "lusofonas",
@@ -145,7 +156,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 3,
+   "marcados": 2,
    "erro": ""
   },
   {
@@ -167,18 +178,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 4,
-   "erro": ""
-  },
-  {
-   "fonte": "The Washington Post · Mundo",
-   "dominio": "washingtonpost.com",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 11,
-   "marcados": 0,
+   "marcados": 5,
    "erro": ""
   },
   {
@@ -190,17 +190,6 @@
    "via": "google",
    "lidos": 12,
    "marcados": 0,
-   "erro": ""
-  },
-  {
-   "fonte": "Expresso das Ilhas (Cabo Verde)",
-   "dominio": "expressodasilhas.cv",
-   "origem": "lusofonas",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta + Google",
-   "lidos": 13,
-   "marcados": 19,
    "erro": ""
   },
   {
@@ -221,18 +210,18 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 16,
+   "lidos": 19,
    "marcados": 3,
    "erro": ""
   },
   {
-   "fonte": "Le Figaro",
-   "dominio": "lefigaro.fr",
+   "fonte": "The Guardian · Europe",
+   "dominio": "theguardian.com",
    "origem": "internacionais",
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 18,
+   "lidos": 19,
    "marcados": 0,
    "erro": ""
   },
@@ -255,7 +244,18 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 20,
-   "marcados": 12,
+   "marcados": 9,
+   "erro": ""
+  },
+  {
+   "fonte": "Le Figaro",
+   "dominio": "lefigaro.fr",
+   "origem": "internacionais",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 20,
+   "marcados": 0,
    "erro": ""
   },
   {
@@ -270,17 +270,6 @@
    "erro": ""
   },
   {
-   "fonte": "The Guardian · Europe",
-   "dominio": "theguardian.com",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 20,
-   "marcados": 0,
-   "erro": ""
-  },
-  {
    "fonte": "ECO",
    "dominio": "eco.sapo.pt",
    "origem": "nacionais",
@@ -288,7 +277,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 22,
-   "marcados": 17,
+   "marcados": 15,
    "erro": ""
   },
   {
@@ -299,18 +288,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 22,
-   "marcados": 11,
-   "erro": ""
-  },
-  {
-   "fonte": "Deutsche Welle (português)",
-   "dominio": "dw.com",
-   "origem": "internacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 23,
-   "marcados": 2,
+   "marcados": 12,
    "erro": ""
   },
   {
@@ -332,7 +310,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 24,
-   "marcados": 5,
+   "marcados": 6,
    "erro": ""
   },
   {
@@ -354,7 +332,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 25,
-   "marcados": 6,
+   "marcados": 9,
    "erro": ""
   },
   {
@@ -369,6 +347,17 @@
    "erro": ""
   },
   {
+   "fonte": "Dinheiro Vivo",
+   "dominio": "dinheirovivo.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 27,
+   "marcados": 4,
+   "erro": ""
+  },
+  {
    "fonte": "ANSA",
    "dominio": "ansa.it",
    "origem": "internacionais",
@@ -380,24 +369,13 @@
    "erro": ""
   },
   {
-   "fonte": "Dinheiro Vivo",
-   "dominio": "dinheirovivo.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 29,
-   "marcados": 2,
-   "erro": ""
-  },
-  {
    "fonte": "El Mundo",
    "dominio": "elmundo.es",
    "origem": "internacionais",
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 29,
+   "lidos": 30,
    "marcados": 0,
    "erro": ""
   },
@@ -443,6 +421,17 @@
    "via": "direta",
    "lidos": 31,
    "marcados": 0,
+   "erro": ""
+  },
+  {
+   "fonte": "Deutsche Welle (português)",
+   "dominio": "dw.com",
+   "origem": "internacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 33,
+   "marcados": 3,
    "erro": ""
   },
   {
@@ -512,17 +501,6 @@
    "erro": ""
   },
   {
-   "fonte": "Observador",
-   "dominio": "observador.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 51,
-   "marcados": 27,
-   "erro": ""
-  },
-  {
    "fonte": "The New York Times · Mundo",
    "dominio": "nytimes.com",
    "origem": "internacionais",
@@ -531,17 +509,6 @@
    "via": "direta",
    "lidos": 53,
    "marcados": 0,
-   "erro": ""
-  },
-  {
-   "fonte": "Inforpress (Cabo Verde)",
-   "dominio": "inforpress.cv",
-   "origem": "lusofonas",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 63,
-   "marcados": 1,
    "erro": ""
   },
   {
@@ -556,14 +523,25 @@
    "erro": ""
   },
   {
+   "fonte": "Inforpress (Cabo Verde)",
+   "dominio": "inforpress.cv",
+   "origem": "lusofonas",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 72,
+   "marcados": 1,
+   "erro": ""
+  },
+  {
    "fonte": "JM Madeira",
    "dominio": "jm-madeira.pt",
    "origem": "nacionais",
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 70,
-   "marcados": 7,
+   "lidos": 73,
+   "marcados": 6,
    "erro": ""
   },
   {
@@ -573,8 +551,8 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 74,
-   "marcados": 16,
+   "lidos": 83,
+   "marcados": 18,
    "erro": ""
   },
   {
@@ -584,8 +562,8 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 93,
-   "marcados": 7,
+   "lidos": 94,
+   "marcados": 9,
    "erro": ""
   },
   {
@@ -607,7 +585,7 @@
    "via_config": "google",
    "via": "google",
    "lidos": 100,
-   "marcados": 8,
+   "marcados": 13,
    "erro": ""
   },
   {
@@ -618,7 +596,7 @@
    "via_config": "google",
    "via": "google",
    "lidos": 100,
-   "marcados": 15,
+   "marcados": 14,
    "erro": ""
   },
   {
@@ -629,7 +607,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 100,
-   "marcados": 36,
+   "marcados": 37,
    "erro": ""
   },
   {
@@ -640,7 +618,7 @@
    "via_config": "google",
    "via": "google",
    "lidos": 100,
-   "marcados": 8,
+   "marcados": 10,
    "erro": ""
   },
   {
@@ -673,7 +651,7 @@
    "via_config": "google",
    "via": "google",
    "lidos": 100,
-   "marcados": 6,
+   "marcados": 7,
    "erro": ""
   },
   {
@@ -684,7 +662,18 @@
    "via_config": "google",
    "via": "google",
    "lidos": 100,
-   "marcados": 26,
+   "marcados": 23,
+   "erro": ""
+  },
+  {
+   "fonte": "Público",
+   "dominio": "publico.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta + Google",
+   "lidos": 108,
+   "marcados": 18,
    "erro": ""
   },
   {
@@ -695,7 +684,7 @@
    "via_config": "feed",
    "via": "direta + Google",
    "lidos": 120,
-   "marcados": 12,
+   "marcados": 10,
    "erro": ""
   },
   {
@@ -705,7 +694,7 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 139,
+   "lidos": 145,
    "marcados": 0,
    "erro": ""
   },
@@ -716,8 +705,19 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 145,
+   "lidos": 147,
    "marcados": 0,
+   "erro": ""
+  },
+  {
+   "fonte": "Observador",
+   "dominio": "observador.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta + Google",
+   "lidos": 147,
+   "marcados": 63,
    "erro": ""
   },
   {
@@ -727,8 +727,8 @@
    "pt": true,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 700,
-   "marcados": 84,
+   "lidos": 490,
+   "marcados": 59,
    "erro": ""
   }
  ]
