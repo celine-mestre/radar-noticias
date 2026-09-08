@@ -1,9 +1,9 @@
 {
- "atualizado": "2026-09-08 01:07",
+ "atualizado": "2026-09-08 09:12",
  "dia": "2026-09-08",
- "corte": "01:07",
- "dias_base": 25,
- "regra": "Tempestade quando a contagem do dia, até às 01:07, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 16 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "corte": "09:12",
+ "dias_base": 26,
+ "regra": "Tempestade quando a contagem do dia, até às 09:12, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 16 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
@@ -12,53 +12,53 @@
  "tempestades": [],
  "momentum": [
   {
+   "area": "Assuntos Parlamentares",
+   "hoje": 10,
+   "mediana": 0.0,
+   "limiar": 8.0,
+   "excesso": 10.0,
+   "variacao_pct": null,
+   "dias_base": 26,
+   "tempestade": false
+  },
+  {
+   "area": "Educação, Ciência e Inovação",
+   "hoje": 8,
+   "mediana": 5.0,
+   "limiar": 13.0,
+   "excesso": 3.0,
+   "variacao_pct": 60,
+   "dias_base": 26,
+   "tempestade": false
+  },
+  {
    "area": "Justiça",
-   "hoje": 4,
-   "mediana": 1,
-   "limiar": 9,
-   "excesso": 3,
-   "variacao_pct": 300,
-   "dias_base": 25,
+   "hoje": 7,
+   "mediana": 4.0,
+   "limiar": 12.0,
+   "excesso": 3.0,
+   "variacao_pct": 75,
+   "dias_base": 26,
    "tempestade": false
   },
   {
-   "area": "Defesa Nacional",
-   "hoje": 3,
-   "mediana": 1,
-   "limiar": 9,
-   "excesso": 2,
-   "variacao_pct": 200,
-   "dias_base": 25,
-   "tempestade": false
-  },
-  {
-   "area": "Economia e Coesão Territorial",
+   "area": "Primeiro-Ministro",
    "hoje": 3,
    "mediana": 1.0,
    "limiar": 9.0,
    "excesso": 2.0,
    "variacao_pct": 200,
-   "dias_base": 24,
+   "dias_base": 26,
    "tempestade": false
   },
   {
-   "area": "Cultura, Juventude e Desporto",
-   "hoje": 2,
-   "mediana": 1.0,
-   "limiar": 9.0,
-   "excesso": 1.0,
-   "variacao_pct": 100,
-   "dias_base": 24,
-   "tempestade": false
-  },
-  {
-   "area": "Educação, Ciência e Inovação",
-   "hoje": 2,
-   "mediana": 1.0,
-   "limiar": 9.0,
-   "excesso": 1.0,
-   "variacao_pct": 100,
-   "dias_base": 24,
+   "area": "Defesa Nacional",
+   "hoje": 9,
+   "mediana": 7.5,
+   "limiar": 15.5,
+   "excesso": 1.5,
+   "variacao_pct": 20,
+   "dias_base": 26,
    "tempestade": false
   }
  ],
