@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-08 09:40",
+ "gerado": "2026-09-08 18:10",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -304,16 +304,22 @@
    "pct": 58,
    "lado": "positivas"
   },
-  "2026-09-07|Justiça": {
-   "texto": "No dia 2026-09-07, a área da Justiça registou múltiplos acontecimentos, predominantemente de natureza processual e disciplinar. Destacam-se a demissão do procurador-geral ucraniano face a acusações de corrupção, a instauração de ações do Ministério Público contra autarcas, nomeadamente em Albufeira, e a aplicação de medidas de coação, incluindo prisão preventiva, a indivíduos suspeitos de diversos crimes, como tráfico de droga e violência doméstica. Adicionalmente, verificaram-se decisões judiciais sobre prescrição, condenações por crimes de ódio e a recusa de declarar a prescrição em casos de corrupção relacionados com Vale do Lobo.",
-   "n": 35,
-   "pct": 81,
-   "lado": "negativas"
-  },
   "2026-09-07|Economia e Coesão Territorial|+": {
    "texto": "No dia 07 de setembro de 2026, o Governo e o Banco Europeu de Investimento (BEI) aprovaram uma linha de crédito de 1,5 mil milhões de euros para a reabilitação de habitação, abrangendo cerca de 50.000 casas que ficaram excluídas do Programa de Recuperação e Resiliência (PRR). Paralelamente, foi anunciada a disponibilização de 200 milhões de euros para investimento na Gronelândia, reforçando a cooperação e a presença da União Europeia na região do Ártico. Adicionalmente, foi formalizada uma linha de crédito para a Carris, com a aquisição de 29 novos autocarros elétricos, e foi aprovado um programa de apoio ao setor agrícola, através de uma bonificação do gasóleo, com o objetivo de mitigar o impacto nos preços dos alimentos. O investimento em equipamentos informáticos para a Justiça, num montante superior a 17 milhões de euros, e o reforço dos cuidados de saúde em áreas rurais, através de Vinhais, constituem medidas complementares de apoio a setores estratégicos.",
    "n": 29,
    "pct": 53,
+   "lado": "positivas"
+  },
+  "2026-09-07|Justiça": {
+   "texto": "No dia 2026-09-07, a área da Justiça registou múltiplos acontecimentos, predominantemente de natureza processual e disciplinar. Destacam-se a demissão do procurador-geral ucraniano face a acusações de corrupção, a instauração de ações do Ministério Público contra autarcas, nomeadamente em Albufeira, e a manutenção ou agravamento de medidas de coação contra indivíduos suspeitos de diversos crimes, incluindo tráfico de droga, violação e tentativa de homicídio. Adicionalmente, verificaram-se decisões judiciais sobre prescrição, condenações por incitamento ao ódio e a resolução de casos de burlas e crimes de guerra.",
+   "n": 35,
+   "pct": 80,
+   "lado": "negativas"
+  },
+  "2026-09-08|Finanças|+": {
+   "texto": "No dia 8 de setembro de 2026, o Governo anunciou medidas de alívio fiscal para pensionistas e contribuintes com IRS, concretizando um conjunto de anúncios sobre cortes no IRS e suplementos extraordinários para pensões. O Primeiro-Ministro, Luís Montenegro, comprometeu-se com a implementação de uma redução das taxas de IRS até ao sexto escalão, com efeitos a partir de novembro, e com um suplemento para pensionistas, com pagamento previsto para dezembro. O tema dominante foi o alívio fiscal, abrangendo tanto o reforço do rendimento dos reformados como a diminuição da carga fiscal sobre os contribuintes do IRS, com impacto direto nos salários e pensões de novembro. Paralelamente, a OCDE destacou a liderança de Portugal na redução da dívida pública, evidenciando a consolidação das finanças públicas.",
+   "n": 17,
+   "pct": 61,
    "lado": "positivas"
   }
  }
