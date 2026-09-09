@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-08 22:21",
+ "gerado": "2026-09-09 12:33",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -316,10 +316,28 @@
    "pct": 78,
    "lado": "negativas"
   },
-  "2026-09-08|Finanças|+": {
-   "texto": "Em 8 de setembro de 2026, o Governo anunciou uma redução do IRS com efeitos retroativos a janeiro, abrangendo cerca de dois milhões de famílias e representando um alívio de 400 milhões de euros. Adicionalmente, foi divulgado um suplemento extraordinário para pensionistas, com efeitos a partir de dezembro, e uma quinta descida do IRS desde a tomada de posse do Primeiro-Ministro, estendendo o benefício até ao sexto escalão. No plano internacional, a OCDE destacou que Portugal se encontra entre os países que privilegiam a tributação sobre a banca e outros setores de elevada rentabilidade para compensar o aumento da despesa pública.",
-   "n": 24,
-   "pct": 56,
+  "2026-09-09|Justiça": {
+   "texto": "No dia 2026-09-09, a área da Justiça registou múltiplos acontecimentos, predominantemente relacionados com a gestão de informação e a situação das cadeias prisionais. A Ministra da Justiça reconheceu dificuldades acrescidas nas cadeias devido ao aumento do número de presos, tendo sido questionada sobre a destruição de substâncias químicas pela Polícia Judiciária (PJ). Esta questão gerou uma polémica, com a ministra a negar acusações de desinformação sobre os custos associados a esse processo, embora a informação inicial da PJ tenha sido questionada. Adicionalmente, foram reportados alertas de pressão sobre os tribunais administrativos face a novas regras de deportação e a lotação excecional de estabelecimentos prisionais, nomeadamente Caxias, com problemas de saúde mental e recursos insuficientes.",
+   "n": 19,
+   "pct": 79,
+   "lado": "negativas"
+  },
+  "2026-09-09|Administração Interna": {
+   "texto": "No dia 2026-09-09, registaram-se múltiplos acontecimentos de natureza diversa na área da Administração Interna. Pelo menos dois civis perderam a vida num ataque perpetrado por forças russas perto da fronteira com a República da Moldava. Em Águeda, um homem foi detido por suspeita de ter ateado vários incêndios florestais, motivando investigação pelas autoridades judiciais. Paralelamente, os tribunais administrativos emitiram alertas sobre a pressão acrescida resultante de novas regulamentações relativas a processos de deportação. Adicionalmente, a crise humanitária no Sudão, agravada por cortes na assistência médica, motivou denúncias da organização Médicos Sem Fronteiras. A reunião entre a PSP e a GNR, combinada com protestos de ambas as forças, gerou um debate público sobre as condições de trabalho e a gestão interna das forças de segurança.",
+   "n": 6,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-09-09|Saúde": {
+   "texto": "No dia 2026-09-09, a cobertura mediática da área da saúde focou-se em múltiplos problemas e solicitações. O Sindepor manifestou a necessidade de maior investimento na área da enfermagem, enquanto o Hospital de Almada informou não ter recebido notificação da IGAS relativamente a um processo de IVG. Adicionalmente, a possibilidade de cancelamento de uma greve de técnicos do INEM foi colocada em cima da mesa, mediante a concretização de um acordo com o Ministério da Saúde. Paralelamente, o PCP solicitou explicações sobre a reorganização da oncologia em Portalegre, e a situação da saúde mental nas prisões, com a lotação das Caxias a atingir 160 reclusos e a falta de um psiquiatra para 400, foi também noticiada. Não se identificou um tema dominante, mas sim uma convergência de questões relacionadas com a organização, financiamento e recursos humanos no setor da saúde.",
+   "n": 6,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-09-09|Agricultura e Mar|+": {
+   "texto": "O Governo aprovou hoje o prolongamento dos apoios ao gasóleo agrícola e aos combustíveis para a pesca. A medida, de caráter extraordinário, visa mitigar os impactos dos aumentos dos preços dos combustíveis, assegurando a continuidade das atividades no setor primário. O montante global dos apoios ascende a 28 milhões de euros, distribuídos por ambas as áreas setoriais, conforme anunciado pelo Gabinete do Governo.",
+   "n": 5,
+   "pct": 54,
    "lado": "positivas"
   }
  }
