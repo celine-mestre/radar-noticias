@@ -1,306 +1,281 @@
 {
- "gerado": "2026-09-09 09:10",
+ "gerado": "2026-09-10 11:48",
  "periodo": "24h",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "modo": "local",
  "areas": {
   "Administração Interna": {
-   "noticias": 60,
+   "noticias": 24,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou diversos desenvolvimentos na área da administração interna. Tribunais administrativos alertaram para a pressão decorrente de novas regras de deportação. A PSP e a GNR reuniram-se para discutir novas formas de protesto. A Assembleia Municipal de Lisboa defendeu o reforço da segurança. A PJ recusou investigar a morte de um imigrante em Olhão, apesar de a GNR ter indicado ato doloso. Agentes da PSP são acusados de homicídio nesse mesmo caso. Começou o julgamento dos agentes da PSP de Olhão. O Governo encomendou a apuramento de eventuais excessos da polícia na deportação de um jovem brasileiro. O Ministro da Administração Interna declarou que está a ser avaliada a atuação policial.",
-     "noticias": 50
-    },
-    "lusofonas": {
-     "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou um encontro de negociação sobre a fronteira marítima em Singapura. A comunicação social angolana divulgou informação sobre tráfico ilícito de migrantes e criminalidade organizada. A comunicação social moçambicana reportou cortes na ajuda que estão a afetar o sistema de saúde no Sudão. A comunicação social brasileira informou sobre um estudo que identifica mais de duas mil e setecentas espécies de peixes na Amazónia.",
-     "noticias": 5
-    },
-    "internacionais": {
-     "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou que o comércio global representou 35% da pegada de carbono da União Europeia em 2023, suscitando debate sobre políticas ambientais. Adicionalmente, foi reportado um ataque aéreo russo em Kiev, resultando na morte de pelo menos cinco pessoas. A União Europeia enfrenta pressão da indústria de viagens devido a receios de caos fronteiriço no arranque do Sistema de Entrada, Saída e Vigilância. O governante português Luís Neves indicou que cessaria funções quando o Governo ou o primeiro-ministro assim o entendessem.",
-     "noticias": 5
+     "texto": "A comunicação social portuguesa noticiou apreensões de canábis em São Jorge, a detenção de um imigrante ilegal após confronto com agentes da PSP, a recusa da Proteção Civil em reduzir o investimento na formação de bombeiros, a absolvição de suspeitos de maus-tratos a animais em Santo Tirso, a condenação de três agentes da PSP no Porto, a mobilização para um incêndio florestal na Ribeira Brava, um aumento de pessoal na AIMA, a aprovação de ajuda urgente para a fronteira de Ceuta e Bruxelas, e a ocorrência de um ataque híbrido em Ceuta.",
+     "noticias": 20
     }
    }
   },
   "Agricultura e Mar": {
-   "noticias": 19,
+   "noticias": 22,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou a aprovação pelo Governo de um prolongamento dos apoios ao gasóleo agrícola e aos pescadores. O Conselho de Ministros reuniu-se com foco na agricultura e pescas, tendo sido debatidas medidas de apoio ao setor face à crise energética e de fertilizantes. Agricultores solicitaram auxílio financeiro adicional para mitigar os impactos dos preços elevados da energia e dos insumos.",
-     "noticias": 10
+     "texto": "A comunicação social portuguesa noticiou a exigência de apoios nacionais para o setor vitivinícola por parte de agricultores, bem como a criação de um regime excecional para viticultores afetados por intempéries no início de 2026. A Confederação dos Agricultores de Portugal e outros agentes do setor reiteraram a necessidade de apoios abrangentes a todas as regiões vinícolas, face à crise que afeta o vinho. A CAP alertou para a situação de crise no setor e solicitou a extensão dos apoios a todo o país. Entretanto, o Governo aprovou o prolongamento dos apoios ao gasóleo agrícola e reforçou o apoio às pescas com 13 milhões de euros. A comunicação social portuguesa também noticiou incidentes relacionados com incêndios florestais, incluindo a mobilização de meios na Ribeira Brava, e a garantia de que os EUA não têm intenção de matar pescadores.",
+     "noticias": 18
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social brasileira noticiou que o Amazonas obteve quatro novas reservas de desenvolvimento sustentável, que um estudo aponta para a existência de mais de 2.700 espécies de peixes na Amazónia e que a investigação divulgou a prática de trituração de pintinhos na indústria de ovos. Adicionalmente, foi referida a assinatura de um acordo para a exploração de resina na floresta de Kovalima em Timor-Leste e a celebração do Dia do Município da Ilha do Maio em Cabo Verde, acompanhada de desafios estruturais e potencialidades turísticas. Paralelamente, a comunicação social moçambicana informou que veteranos da luta de libertação passam a beneficiar de uma percentagem dos projetos agrícolas.",
-     "noticias": 7
+     "texto": "A comunicação social de Cabo Verde noticiou que Agosto foi o mês mais quente já registado no mundo. A comunicação social angolana divulgou uma campanha para ampliar o consumo de peixes no âmbito da Semana do Pescado. A comunicação social brasileira informou sobre a ampliação de subsídios à gasolina e ao diesel face à alta do petróleo, bem como sobre a atribuição de quase 7 mil milhões de reais em créditos para combustíveis e agricultura familiar.",
+     "noticias": 4
     }
    }
   },
   "Ambiente e Energia": {
-   "noticias": 31,
-   "origens": {
-    "nacionais": {
-     "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa divulgou informação relativa a alterações no mercado energético e industrial. A Bolsa de Lisboa registou um desempenho positivo em relação ao panorama europeu, com um impulso nas empresas do setor energético, nomeadamente Galp e EDPR. Agricultores solicitaram apoio estatal no valor de 200 milhões de euros para mitigar os efeitos da crise energética e de fertilizantes. As emissões atmosféricas em Portugal deverão registar um aumento de 1,6% em 2025, segundo as estimativas divulgadas. A Parpública confirmou a entrada do Estado na REN, reforçando a participação estatal nesta empresa do setor energético. O Governo assegurou que não beneficia da subida dos preços dos combustíveis, face à garantia pública transmitida pela ministra do Ambiente. O gasóleo agrícola registou um incremento de 40%, em termos de preços, afetando o abastecimento ao setor primário.",
-     "noticias": 21
-    },
-    "lusofonas": {
-     "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou a celebração do Dia do Município na Ilha do Maio, destacando desafios estruturais e potencialidades turísticas. A comunicação social angolana divulgou informação sobre a colaboração entre Angola e Botsuana no setor de Energia e Diamantes. A comunicação social brasileira informou sobre a agenda dos candidatos à presidência e sobre a queda do dólar para 5,08 reais, bem como sobre um estudo que aponta para mais de 2.700 espécies de peixes na Amazónia e sobre a evolução das temperaturas após uma frente fria.",
-     "noticias": 7
-    },
-    "internacionais": {
-     "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou a quase confirmação de subida de juros pelo Banco Central Europeu, com justificação ainda incerta, e a celebração de uma parceria estratégica entre a Sérvia e o Uzbequistão durante a visita de Mirziyoyev a Belgrado. Adicionalmente, foram divulgadas iniciativas europeias orientadas para a mitigação da poluição resultante de incêndios florestais, cuja toxicidade excede a dos escapes veiculares.",
-     "noticias": 3
-    }
-   }
-  },
-  "Assuntos Parlamentares": {
-   "noticias": 99,
-   "origens": {
-    "nacionais": {
-     "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou a rejeição da moção de censura ao Governo, com o Chega a votar a favor e o restante da oposição a não apoiar a iniciativa. O debate parlamentar, marcado por divergências sobre o Orçamento do Estado para 2027, evidenciou quatro condições impostas pelo PS para a viabilização das contas. O Conselho de Ministros reuniu-se com foco na agricultura e pescas, enquanto Miranda Sarmento indicou a perspetiva de contas equilibradas. O primeiro-ministro defendeu o ministro Luís Neves, após a rejeição da moção, e anunciou medidas fiscais como a redução do IRS com retroativos. A comunicação social portuguesa acompanhou a análise política do debate, com destaque para a distribuição de ganhos e perdas entre os partidos.",
-     "noticias": 97
-    }
-   }
-  },
-  "Cultura, Juventude e Desporto": {
    "noticias": 72,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou a estreia em salas de cinema do filme \"Santo António – Casqueteiro de Lisboa\", com distribuição em 53 salas, e a realização de um festival com palcos em Santo Tirso, Famalicão e Trofa, envolvendo 50 artistas. Adicionalmente, registou-se a revalidação do título europeu de patinagem livre por Madalena Costa, a integração do Teatro Viriato na rede de teatros acessíveis, e a organização de eventos culturais como o Porto Wine Day, a 30.ª edição do Festival de magia de Coimbra, e a inauguração de espaços como o Museu das Convergências e o Centro de Arte Urbana no Matadouro. Foram ainda noticiados eventos desportivos, incluindo a participação de clubes portugueses em competições internacionais, e a realização de uma cimeira Lumière no sul de França.",
-     "noticias": 56
+     "texto": "A comunicação social portuguesa noticiou que os custos da energia suscitam preocupação em cerca de 80% dos inquiridos, motivando cortes nas despesas familiares. O aumento do preço do gás natural impulsiona a potencial procura de carvão a nível mundial, segundo fontes da Agência de Energia. Cidades europeias são identificadas como zonas de maior vulnerabilidade face aos riscos das alterações climáticas. A escalada dos preços da energia influencia a política monetária, com perspetivas de novas subidas das taxas de juro por parte do Banco Central Europeu. A integração da saúde e do ambiente nas políticas urbanas é considerada urgente. A Agência Atómica da ONU reporta o Irão ao Conselho de Segurança, após duas décadas.",
+     "noticias": 61
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou a assinalada celebração do Dia do Município na Ilha do Maio, enquanto a comunicação social angolana e a brasileira informaram sobre a superação da Venezuela pelo Brasil no Sul-Americano de vôlei feminino, a vantagem obtida pelo Fluminense perante o Platense nas quartas de final da Libertadores, a abertura de inscrições para o prémio Mulheres e Ciência e a leitura entre adolescentes no Brasil. Adicionalmente, a comunicação social brasileira divulgou o relatório do Pisa indicando uma redução da diferença de desempenho escolar do Brasil face aos países ricos, e a comunicação social moçambicana reportou a investigação de casos de falsificação de idades nos Jogos Escolares 2026.",
-     "noticias": 11
+     "texto": "A comunicação social de Cabo Verde noticiou que agosto foi o mês mais quente já registado no mundo. A comunicação social angolana informou sobre a instalação de uma base da Força Nacional do SUS no Rio para enfrentar o El Niño. A comunicação social brasileira divulgou a ampliação de subsídios à gasolina e ao diesel face à alta do petróleo. A comunicação social brasileira reportou a denúncia da agência nuclear da ONU ao Conselho de Segurança relativamente ao Irão. A comunicação social brasileira informou sobre o reconhecimento judicial de falhas da Enel num apagão ocorrido em dezembro de 2025 em São Paulo. A comunicação social brasileira noticiou a implementação de um novo computador quântico educacional no Senai.",
+     "noticias": 6
     },
     "internacionais": {
      "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou, no último sábado (5), a iniciativa “Criar com Histórias” promovida pela APER Marketing em Maputo, Moçambique, com o apoio da Fundação Fernando Leite Couto, que teve como objectivo sensibilizar famílias para o uso equilibrado de tecnologias e a importância da leitura e das brincadeiras tradicionais no desenvolvimento infantil. Adicionalmente, foi noticiado um roubo de obras de Renoir num museu no sul da França pela Deutsche Welle, e a União Europeia divulgou um alerta sobre uma nova ameaça terrorista ligada a jovens na Internet pela Euronews. Por outro lado, a Rádio França Internacional (RFI) informou sobre a criação de um sistema nacional de transporte escolar por Cabo Verde. O IX Congresso Internacional de Educação Ambiental dos Países e Comunidades de Língua Portuguesa, organizado pela Ambiente Magazine, foi anunciado como evento futuro em Timor-Leste em 2027.",
+     "texto": "A comunicação social internacional noticiou que a União Europeia, através de responsáveis da ONU, defendeu a liderança europeia na transição energética, considerando a energia limpa como caminho seguro. Adicionalmente, foi divulgada informação sobre um novo desenho de baterias zinco-ar desenvolvido em Espanha, com um aumento de 80% na capacidade e potência. Paralelamente, auditores alertaram para o fracasso do plano da UE para a independência energética face à Rússia, enquanto a Agência Internacional de Energia indicou a subida contínua dos preços do gás e a necessidade de reforçar as reservas de emergência. A fiscalização da limpeza urbana, noticiada por um título nacional, sublinhou a insuficiência da sensibilização pública para alterar comportamentos.",
      "noticias": 5
     }
    }
   },
-  "Defesa Nacional": {
-   "noticias": 64,
+  "Assuntos Parlamentares": {
+   "noticias": 15,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou a ocorrência de ataques ucranianos com recurso a drones que resultaram na morte de quatro pessoas na Rússia, incluindo uma criança, e a detenção de um indivíduo na Roménia por suspeita de sabotagem encomendada por Moscovo. Relatos indicam que a Alemanha reforçou o envio de mísseis Patriot para a Ucrânia, em resposta ao pedido de apoio para a defesa antiaérea, e que a União Europeia autorizou Kiev a adquirir sistemas Patriot mediante um empréstimo de 90 mil milhões de euros. Adicionalmente, foram registadas conversações entre os líderes da Rússia e dos Estados Unidos, com Trump a solicitar a Putin um fim rápido da guerra na Ucrânia, e a Roménia a impedir uma operação de sabotagem russa no seu território. Zelensky manifestou o desejo de retomar negociações envolvendo a Ucrânia, a Rússia e os Estados Unidos ainda em setembro, enquanto a comunicação social portuguesa acompanhou a nomeação de Sérgio Estrela para liderar uma missão de assistência militar da UE em Moçambique.",
-     "noticias": 47
-    },
-    "lusofonas": {
-     "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou a avaliação de remoção de um autocarro para garantir a segurança e perícias após um incêndio/acidente, enquanto a comunicação social angolana reportou a retomada de ataques contra Kiev por parte da Rússia após uma breve trégua, e a comunicação social brasileira divulgou informações sobre a detenção de um suspeito de homicídio após audiência de custódia, a reativação de tensões entre os Estados Unidos e a Rússia e a contestação da Islândia por uma representação geográfica em mapas divulgados por Donald Trump.",
-     "noticias": 8
-    },
-    "internacionais": {
-     "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou, em vários países, desenvolvimentos relacionados com a defesa nacional e a segurança. Foram reportados ataques aéreos em Kiev, com consequências em vidas humanas, e a aquisição de sistemas de defesa aérea por diversos Estados-membros da União Europeia, incluindo lançadores HIMARS. A resposta de potências mundiais a eventos bélicos e a cooperação militar refletem a dinâmica geopolítica atual. Adicionalmente, registaram-se demissões de cargos públicos e ações judiciais em contextos de investigação por corrupção, bem como discussões sobre apoio militar e a gestão de conflitos internacionais.",
-     "noticias": 9
+     "texto": "A comunicação social de Portugal noticiou a realização de debates parlamentares sobre moção de censura ao Governo, com críticas à atuação da Polícia Judiciária e pedidos de audição parlamentar do seu diretor nacional, bem como a emissão de mensagens governamentais qualificadas como vergonhosas e a apresentação de um acidente em Cabo Verde com expressões de condolências ao país irmão.",
+     "noticias": 14
     }
    }
   },
-  "Economia e Coesão Territorial": {
-   "noticias": 60,
+  "Cultura, Juventude e Desporto": {
+   "noticias": 61,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou diversos desenvolvimentos em matéria económica e territorial. Foram registados pagamentos de 15 mil milhões de euros no âmbito do Plano de Recuperação e Resiliência, com a execução a aproximar-se desse montante. O Governo aprovou um concurso público para a videovigilância em Matosinhos e a Câmara da Amadora declarou ter cumprido integralmente o PRR com um investimento de 50 milhões de euros. A União Europeia e o Canadá negoceiam uma aliança que abrange áreas como o comércio e a segurança. A China respondeu a críticas sobre investimentos no Peru, defendendo a transparência. A exploração mineira em Peniche suscitou preocupações na população e na autarquia. O Governo atribuiu dois milhões de euros a 56 municípios para a mobilidade sustentável e empresas espaciais europeias captaram mais de 20% do investimento de capital de risco.",
+     "texto": "A comunicação social de Portugal noticiou o arranque do festival de Música de Paços de Brandão, a atividade da linha de prevenção do suicídio da RTP Notícias com mais de 25 mil chamadas no primeiro ano, a realização de jogos de futebol internacional da Liga dos Campeões, o início do festival de jazz que convoca artistas de oito países, a edição digital de desporto do JM Madeira, a Grande Entrevista na TSF com Rita Blanco e Ruben Alves, a manifestação de pesar do Parlamento pelo falecimento de dois jovens militares na A1, a proposta de fundo para financiamento do desporto universitário pela Federação Académica, a manifestação de pesar do Correio da Manhã e do Parlamento, a IL a acusar o Governo de populismo com pensões e a apresentação de propostas para a Segurança Social dos jovens, a Federação Académica do Desporto Universitário, a visita do Museu do Azeite de Bobadela ao Diário de Notícias, o encontro entre o Museu Nacional de Arte Antiga e o Museu Nacional de Arte Contemporânea, a polémica com a Comedia a La Carte, o recuo nos resultados do PISA e a revisão da lei aplicada a jovens que cometem crimes.",
      "noticias": 40
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social brasileira noticiou a análise da terça-feira (8) dos candidatos a presidência, a multa da CVM a Vorcaro em 20 milhões de reais por fraude num fundo imobiliário, a queda do dólar para 5,08 reais, atingindo o valor mínimo num mês, e a criação de quatro reservas de desenvolvimento sustentável no Amazonas. A comunicação social moçambicana divulgou a redução das reservas internacionais para 3,44 mil milhões de dólares e a procura de novas oportunidades de investimento turístico por parte da ANDITUR e da Urbanova. A comunicação social angolana registou a consideração da alfabetização como investimento futuro pelo Governo do Cuanza-Sul e a defesa da eliminação de barreiras ao comércio por Duma Boko. A comunicação social cabo-verdiana reportou a celebração do Dia do Município na Ilha do Maio, com desafios estruturais e potencialidades turísticas, e a análise do desafio de exportar talento sem exportar pessoas a partir de Cabo Verde.",
-     "noticias": 13
+     "texto": "A comunicação social de Cabo Verde noticiou a apresentação do livro “Nhelas Spencer – Trajetória & Dimensão Poética do Compositor” na Ilha do Sal. Em Angola, a seleção nacional encarou a Costa Rica na fase de semifinalização da Copa América de futebol de cegos. O Governo de Cabo Verde anunciou alterações no modelo de avaliação para professores e alunos. No Brasil, seis filmes permanecem na disputa para representar o país no Óscar e o Sesc celebra 80 anos com programação gratuita em diversas cidades.",
+     "noticias": 10
     },
     "internacionais": {
      "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou que o Parlamento Europeu endureceu as regras de investimento da UE em negociações com a China, a Sérvia e o Uzbequistão estabeleceram uma parceria estratégica na sua primeira visita de Mirziyoyev a Belgrado, e o Qatar e os EAU testam formas de manter o fluxo de GNL após o bloqueio de Hormuz. Adicionalmente, o comércio global foi identificado como responsável por 35% da pegada de carbono da UE em 2023, e o governo moçambicano desafiou o sector privado a transformar compromissos da FACIM em investimentos concretos. A comunicação social internacional também noticiou que as exportações da Alemanha caíram pela primeira vez em cinco meses, agravando receios sobre a evolução económica.",
+     "texto": "A comunicação social internacional noticiou a inauguração de um novo museu em Nashville, dedicado a Dolly Parton, e a restauração do museu das Termas de Trajano em Itália, incluindo a recuperação do Grande Mosaico e da Cidade Pintada. Adicionalmente, foi registado um recorde do Guinness por fãs de Star Trek num museu de Londres, e a inteligência artificial tem impacto no trabalho de tatuadores. A nível governamental, foi reportada a celebração da afrodescendência em Braga e a investigação de alegada falsificação de idades de atletas nos Jogos Escolares de Gaza.",
+     "noticias": 11
+    }
+   }
+  },
+  "Defesa Nacional": {
+   "noticias": 55,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A comunicação social portuguesa noticiou diversos desenvolvimentos relacionados com a defesa nacional, incluindo ataques de drones na Rússia e na Ucrânia, com consequências em ambos os países. A NATO intercetou submarinos russos que preparavam um teste de “arma secreta” contra cabos submarinos no Ártico. Houthis do Iémen avançaram para o controlo do estratégico Estreito de Bab el-Mandeb. Houve deteções de atividades de espionagem de cidadãos estrangeiros para a Ucrânia, incluindo detenções de segurança de embaixadas em Moscovo e em Kiev. A Ucrânia recebeu informações sobre potenciais melhorias tecnológicas para a defesa, com um plano apresentado por um responsável após uma visita aos Estados Unidos. A Polónia e os EUA acordaram financiamento para a compra de material militar, e a Ucrânia beneficia de apoio internacional em vários domínios.",
+     "noticias": 42
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A comunicação social de Cabo Verde noticiou, entre outros, que uma mulher próxima do Presidente venezuelano solicitou prisão domiciliária alegando problemas de saúde, que Espanha foi alertada para um evento nas redes sociais relacionado com Ceuta, que a Sérvia dissolveu o parlamento e antecipou eleições, que vários navios arderam na região do Golfo e que uma equipa técnica estuda alternativas para a remoção de um autocarro acidentado.",
+     "noticias": 6
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "A comunicação social internacional noticiou que eurodeputados defenderam a utilização dos ativos russos congelados para apoiar a Ucrânia, enquanto a Comissão Europeia procura acompanhar o ritmo da campanha de adesão da Moldova. Adicionalmente, foi reportado que um drone russo quase atingiu o avião do Presidente Zelenskyy na Moldova e que ataques russos causaram a morte de três pessoas na Ucrânia. O Tribunal da UE rejeitou a ação da Hungria contra a ajuda à Ucrânia proveniente de ativos russos.",
      "noticias": 7
     }
    }
   },
-  "Educação, Ciência e Inovação": {
-   "noticias": 125,
+  "Economia e Coesão Territorial": {
+   "noticias": 67,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou a regressão dos resultados de leitura dos alunos portugueses no último relatório PISA, indicando um retrocesso de vinte anos. O Diário de Notícias da Madeira informou sobre a contratação de 245 docentes na Região Autónoma da Madeira, com uma taxa de manutenção de serviço docente de 90,4%. O Público divulgou dois focos de legionella confirmados em Valongo, afetando instalações desportivas e escolares, e a SIC Notícias confirmou a deteção adicional de um foco num estádio. O Observador noticiou a rejeição parlamentar de moções de censura ao Governo em duas ocasiões, reiterando a instabilidade política. A comunicação social portuguesa reportou também sobre a reapreciação das provas do 9.º ano e a cooperação entre Portugal e Cabo Verde na formação de professores de EMRC.",
+     "texto": "A comunicação social portuguesa divulgou informação sobre a conjuntura económica e a coesão territorial, referindo-se a preocupações com o tecido empresarial, a gestão de fundos europeus e a resposta a desafios setoriais. Vários títulos destacam a necessidade de maior apoio ao setor privado e investimentos estratégicos, nomeadamente em infraestruturas, segurança e habitação, com referências a regiões específicas e a utilização de recursos do PRR. Foram mencionados pedidos de responsabilidade orçamental, a reavaliação de apoios a combustíveis, a necessidade de normalização de verbas públicas e a resposta a riscos inflacionistas.",
+     "noticias": 56
+    },
+    "lusofonas": {
+     "rotulo": "Lusofonia",
+     "texto": "A comunicação social de Cabo Verde noticiou a reabertura do armazém da FICASE em São Vicente após obras de 29 mil contos. A comunicação social angolana divulgou a homologação de uma delação sobre financiamento de um filme sobre Bolsonaro. A comunicação social de Angola e de Moçambique informou sobre a suspensão de todo o comércio com Israel proposta por uma relatora da ONU.",
+     "noticias": 8
+    },
+    "internacionais": {
+     "rotulo": "Internacional",
+     "texto": "A comunicação social internacional noticiou, em Moçambique, o lançamento de uma linha de financiamento de 10 milhões de euros por parte do Moza Banco e do Banco Europeu de Investimento destinada a mulheres empreendedoras. Em paralelo, a comunicação social internacional registou a imposição de sanções por parte de doze países a colonatos na Cisjordânia, o que acentua o isolamento internacional de Israel. Adicionalmente, a comunicação social internacional reportou um aumento significativo do défice orçamental no Qatar, ultrapassando os 5 mil milhões de euros devido à perturbação das exportações de GNL.",
+     "noticias": 3
+    }
+   }
+  },
+  "Educação, Ciência e Inovação": {
+   "noticias": 124,
+   "origens": {
+    "nacionais": {
+     "rotulo": "Portugal",
+     "texto": "A comunicação social portuguesa noticiou diversos desenvolvimentos na área da educação e ciência. Foram divulgados dados do PISA que evidenciam preocupações com o desempenho dos alunos e potenciais impactos da inteligência artificial no ensino. A nível institucional, o Governo procedeu à fusão do 1.º e 2.º ciclos do ensino básico, implicando alterações na carga horária dos docentes. A Universidade Politécnica de Bragança anunciou a construção de novas residências para estudantes, visando aumentar a capacidade de alojamento. Foram reportadas dificuldades de recrutamento de professores em estabelecimentos de ensino da Grande Lisboa, suscitando alertas sobre a sustentabilidade do sistema. Adicionalmente, verificou-se a implementação de projetos de modernização de infraestruturas escolares e a disponibilização de serviços digitais para auxiliar a gestão académica.",
      "noticias": 102
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Angola e de Moçambique noticiou iniciativas no âmbito da educação. Angola divulgou a previsão de distribuição de 20 mil pacotes de pensos higiénicos nas escolas da Ingombota, enquanto Moçambique reportou a investigação de casos de falsificação de idades nos Jogos Escolares 2026. No Brasil, a Agência Brasil informou sobre a análise de resultados do Ideb por escolas de todo o país até sexta-feira e sobre a abertura de inscrições para o prémio Mulheres e Ciência. A mesma fonte noticiou a leitura entre adolescentes atingir o pior nível deste século, bem como o impacto do ataque da Rússia a Kiev após uma breve pausa para a visita de enviados dos EUA. Em Cabo Verde, a comunicação social noticiou a evolução favorável de doentes internados no hospital regional, com dois a serem transferidos para a Praia, e a consideração da continuidade do ARES para garantir a qualidade do ensino superior.",
+     "texto": "A comunicação social de Cabo Verde noticiou a realização da Cidade da Praia do primeiro Fórum Nacional de Literacia em Saúde Masculina, bem como alterações no modelo de avaliação governamentais com o objetivo de aliviar professores e alunos. A comunicação social angolana divulgou a entrega de material escolar por parte do governador. No Brasil, a Rádio Nacional lançou um clipe para celebrar os 90 anos e a celebração dos 80 anos do Sesc com programação gratuita em várias cidades. Adicionalmente, entidades científicas brasileiras solicitaram a apuração rigorosa de uma crise no Supremo Tribunal Federal.",
      "noticias": 17
     },
     "internacionais": {
      "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou diversas iniciativas e desenvolvimentos no âmbito da educação e inovação. Em Moçambique, a Fundação Fernando Leite Couto promoveu a iniciativa “Criar com Histórias”, com o apoio da APER Marketing, visando o equilíbrio entre o uso de tecnologias, a leitura e as brincadeiras tradicionais, com a participação de cerca de 60 pessoas. Paralelamente, o Banco Cabo-Verde (BCI) e António Niquice promoveram a transferência de conhecimento sobre caju e reindustrialização para a Universidade de Maputo. Adicionalmente, a Deutsche Welle e a Euronews divulgaram análises sobre o desempenho dos estudantes portugueses no PISA, com retrocessos nas competências de leitura e matemática, e sobre a divisão de géneros escolares na Síria pós-guerra, bem como a criação de um sistema nacional de transporte escolar em Cabo Verde.",
-     "noticias": 6
+     "texto": "A comunicação social internacional noticiou que a União Europeia apresenta uma relação de 13,3 alunos por professor no ensino básico, bem como a promessa de medidas após a divulgação de resultados do PISA que indicam uma quebra nas competências de leitura e matemática das crianças. Adicionalmente, foram registadas notícias sobre uma investigação em Moçambique relativa à alegada falsificação de idades de atletas de Gaza nos Jogos Escolares, e sobre a situação na Ilha do Fogo, Cabo Verde, após uma tragédia de autocarro escolar.",
+     "noticias": 5
     }
    }
   },
   "Finanças": {
-   "noticias": 79,
+   "noticias": 66,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou, no âmbito das finanças, a apresentação do Orçamento do Estado para 2027 e as condições impostas pelo PS para a sua viabilização. Foram referidos cortes no IRS, complementos para pensões e um horizonte de saldo zero para 2026, com o Governo a assegurar a robustez orçamental. O Ministro das Finanças declarou que as medidas de alívio no IRS e o bónus para as pensões serão implementados em novembro. Foram mencionados custos estimados em 800 milhões de euros para estas medidas e a negociação com o Chega para o Orçamento de 2027.",
-     "noticias": 73
+     "texto": "A comunicação social portuguesa noticiou a discussão sobre a redução do IRC na Madeira, com o CDS a defender a diminuição para 12,6%. Adicionalmente, foi reportada a pressão do BCE sobre Angola e a consideração de apoios estatais para mitigar o aumento do custo de vida, sem que Portugal tenha seguido a redução de impostos nos combustíveis aplicada em Espanha. O Governo anunciou medidas de alívio fiscal através de cortes no IRS e bónus para pensionistas, enquanto a nova lei do Tribunal de Contas procura eliminar incentivos à legalidade dos gastos na administração pública. O Jornal de Negócios divulgou a nomeação de Ana Casaca como presidente da AICEP, e o Jornal Económico registou a concentração de impostos e contribuições num único mês, em setembro, como fator de pressão sobre as empresas.",
+     "noticias": 62
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Angola e de Moçambique noticiou alterações em matéria fiscal nos respetivos países. Em Angola, o Secretário de Estado apelou ao comprometimento dos novos funcionários públicos. No Brasil, um tribunal manteve o veto ao compartilhamento de dados fiscais com o ICE e o inventário extrajudicial deixou de exigir pagamento prévio de ITCMD.",
-     "noticias": 3
-    },
-    "internacionais": {
-     "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou que o Governo português enfrentou uma moção de censura e anunciou cortes nos impostos, enquanto a Itália registava um crescimento próximo de 1% do PIB com implicações para o Orçamento do Estado para 2027, e que os países da União Europeia debatiam um volume “realista e aceitável” para impostos europeus.",
+     "texto": "A comunicação social de Cabo Verde noticiou uma abrandamento da emigração de trabalhadores no setor da construção civil em São Vicente, com impacto no ritmo e custo da mão de obra. A comunicação social angolana divulgou medidas de redução de impostos e apoio para mitigar a subida do preço dos combustíveis. A comunicação social brasileira reportou que um quinto dos estudantes efetuou apostas online, conforme indica uma pesquisa.",
      "noticias": 3
     }
    }
   },
   "Infraestruturas e Habitação": {
-   "noticias": 31,
+   "noticias": 50,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social de Portugal noticiou a adesão de mais de 100 mil utilizadores ao passe gratuito no Porto, a divulgação por Bruxelas de regras para o alojamento local em zonas de pressão habitacional e a notificação do fisco a senhorios para cessarem contratos de arrendamento terminados há vários anos. O governo dos Açores lançou um concurso para a construção de 24 moradias em São Miguel e o governo atribuiu dois milhões de euros a 56 municípios para mobilidade sustentável. A Câmara de Lobos apresentou propostas para mobilidade urbana sustentável e a Câmara da Amadora informou o cumprimento integral do PRR. O custo de construção de casa nova aumentou 6,8%, com uma diminuição do peso da mão-de-obra, e os preços da habitação crescem ao triplo da velocidade da média da UE.",
-     "noticias": 26
+     "texto": "A comunicação social portuguesa noticiou a expansão da operação do Metrobus em Lisboa e Coimbra, com implicações para o trânsito e a rede de autocarros, e a aprovação de medidas de mobilidade elétrica. Foram igualmente abordadas iniciativas de habitação pública, nomeadamente a apresentação da Carta Municipal de Habitação em Santa Cruz e a discussão de propostas europeias de habitação acessível, com destaque para a Lei da Habitação Acessível e a necessidade de maior integração da saúde e do ambiente nas cidades. A comunicação social referiu ainda a preocupação com o alojamento local, com declarações que o situam como um fator na crise habitacional, e a necessidade de reforçar o investimento em infraestruturas e transportes sustentáveis, incluindo a mobilidade elétrica e a reabertura de vias rodoviárias.",
+     "noticias": 44
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou celebrações municipais na Ilha do Maio, no âmbito do Dia do Município, destacando desafios estruturais e potencialidades turísticas. Adicionalmente, a imprensa de Cabo Verde reportou a felicitação do Presidente da República a Maienses por ocasião do Dia do Município. Não foram registadas notícias de âmbito nacional relativas a infraestruturas e habitação na comunicação social lusófona.",
-     "noticias": 3
+     "texto": "A comunicação social de Angola noticiou as primeiras chuvas em Luanda, que causaram transtornos na mobilidade e na produtividade. Em Cabo Verde, São Vicente registou uma abrandação na construção civil devido à emigração de trabalhadores, com encarecimento da mão de obra. A comunicação social de Cabo Verde informou também sobre a dissolução do parlamento da Sérvia e a antecipação de eleições naquele país.",
+     "noticias": 4
     }
    }
   },
   "Justiça": {
-   "noticias": 72,
+   "noticias": 106,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou, em diversos contextos, desenvolvimentos no âmbito da justiça. Foram propostas alterações legislativas que visam tipificar como crime a prática de chantagem, com previsão de pena de prisão até três anos. Tribunais administrativos alertaram para a pressão exercida por novas regras de deportação. A Parpública confirmou a entrada do Estado no capital da REN, após aprovação do Tribunal de Contas. Um antigo presidente da Câmara Municipal do Nordeste foi condenado a dez anos de prisão por crimes de corrupção. Ocorreram condenações em processos de homicídio, incluindo casos de dupla condenação a 22 anos de prisão por morte de um casal alemão. Um tribunal de Tavira deu razão a moradores e condenou uma empresa a encerrar uma pedreira. O Tribunal de Contas confirmou a luz verde à aquisição de 13,7% da REN pelo Estado, reiterando a aprovação em diferentes órgãos de comunicação.",
-     "noticias": 43
+     "texto": "A comunicação social portuguesa noticiou o regresso de José Sócrates ao tribunal no âmbito da Operação Marquês, sem assistência de advogado, e a condenação da Câmara Municipal de Lisboa por 463 mil euros no caso Russiagate. Adicionalmente, foi divulgado o diploma da carreira de funcionário judicial e registado um pedido de prisão domiciliária para a esposa de Nicolás Maduro, acompanhado de menção a problemas de saúde.",
+     "noticias": 80
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou a felicitação do Presidente da República aos maienses pelo Dia do Município. A comunicação social angolana reportou que o Tribunal Supremo definira três candidatos à Vice-Presidência. A comunicação social brasileira divulgou que a Segunda Turma do STF formou maioria para afastar o diretor-geral da Polícia Federal, tendo Mendonça afastado Andrei Rodrigues da direção-geral. A comunicação social brasileira informou que a AGU requereu a suspensão imediata do afastamento do diretor-geral da Polícia Federal. A comunicação social angolana noticiou que o Juiz Domingos Mesquita foi o mais votado e poderá ser o novo vice-presidente do Tribunal Supremo. A comunicação social brasileira reportou que a Polícia indiciou 13 pessoas no caso da morte de um homem espancado em Copacabana.",
-     "noticias": 26
+     "texto": "A comunicação social de Cabo Verde noticiou o término do prazo de recenseamento eleitoral. A comunicação social angolana divulgou a decisão do Tribunal da Cidade de Pemba relativa à devolução de equipamentos apreendidos ao jornalista Estácio Valoi. A comunicação social moçambicana reportou a suspensão de decisões de André Mendonça e do Ministério da Justiça, bem como a homologação de uma delação sobre financiamento de um filme sobre o Presidente Bolsonaro. A comunicação social brasileira informou sobre a crise no Supremo Tribunal Federal, com a AGU e o Ministério da Justiça a comentarem decisões de Fachin e a Associação de procuradores a solicitar moderação. A comunicação social brasileira reportou a identificação de 97 médicos falsos de IA no Youtube e a ação do Governo contra o Google, bem como a condenação de um oficial do SIC a 18 meses de prisão por violação de direitos humanos. A comunicação social brasileira noticiou ainda a atuação da Polícia Federal contra um grupo suspeito de desvio de encomendas postais.",
+     "noticias": 21
     },
     "internacionais": {
      "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou, no âmbito da área governativa da Justiça, a crítica de Jair Bolsonaro à corrupção num comício no Brasil, a dedução de acusação definitiva contra uma filha de Pio Matos por desvio de fundos na Zambézia e a demissão do procurador-geral da Ucrânia face a uma investigação por corrupção.",
-     "noticias": 3
+     "texto": "A comunicação social de Moçambique noticiou a resistência ao autoritarismo digital, com decisões judiciais que ordenam a devolução de equipamentos e material de trabalho ao jornalista Estácio Valoi. A comunicação social internacional divulgou que o Tribunal da União Europeia rejeitou a ação da Hungria contra a ajuda à Ucrânia com ativos russos, enquanto a Deutsche Welle e a Euronews reportaram uma falha no plano de independência energética da UE face à Rússia, conforme alertado por auditores.",
+     "noticias": 5
     }
    }
   },
   "Negócios Estrangeiros": {
-   "noticias": 23,
+   "noticias": 22,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa divulgou informação sobre diversas iniciativas e declarações no âmbito da política externa. A União Europeia condenou uma homenagem a Ratko Mladic. A União Europeia autorizou a Ucrânia a adquirir mísseis Patriot através de um empréstimo de 90 mil milhões de euros. Portugal subscreveu uma declaração que proíbe o comércio com colonatos israelitas nos territórios ocupados da Palestina, juntamente com outros onze países. A Islândia expressou protesto por ter sido representada com as cores dos Estados Unidos num mapa publicado por Donald Trump e convocou o embaixador dos Estados Unidos. A União Europeia e o Canadá iniciaram negociações que abrangem áreas de comércio e segurança. A Assembleia-Geral das Nações Unidas iniciou a sua última sessão anual.",
-     "noticias": 15
+     "texto": "A comunicação social portuguesa noticiou a disponibilização do Anthropic Mythos à União Europeia, a discussão de prioridades orçamentais no Conselho Europeu em Berlim, a posição da União Europeia face a ameaças russas, a proposta de regras comuns para limitar o alojamento local na União Europeia e a consideração de Bruxelas sobre o impacto do alojamento local em cidades como Lisboa.",
+     "noticias": 13
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou a Islândia ter expressado protesto pela inclusão do seu território sob as cores dos Estados Unidos num mapa difundido por Donald Trump. Simultaneamente, a comunicação social de Angola e de Moçambique informou sobre a Rússia ter realizado ataques a Kiev após uma breve interrupção de contactos com enviados dos Estados Unidos. No Brasil, a Agência Brasil divulgou uma investigação que revela a trituração de pintinhos na indústria de ovos.",
-     "noticias": 3
+     "texto": "A comunicação social de Cabo Verde noticiou a assinatura de um Acordo de Financiamento entre Angola e a União Europeia, no montante de 50 milhões de euros. A comunicação social angolana divulgou a adoção por Israel de uma postura de confronto com a ONU, gerando desgaste político. A imprensa brasileira registou um apelo da Comissão Global sobre Drogas para a cessação de medidas punitivas contra crianças. O Presidente da Sérvia dissolveu o parlamento e antecipou eleições, conforme noticiado pela comunicação social sérvia.",
+     "noticias": 4
     },
     "internacionais": {
      "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou que a União Europeia enfrenta críticas relativamente à tecnologia de captura de carbono, enquanto onze países europeus e o Canadá anunciaram sanções comerciais contra colonatos israelitas na Cisjordânia. Adicionalmente, a União Europeia debate o volume “realista e aceitável” para impostos europeus, e a comunicação social portuguesa divulgou que a cidade de Ceuta solicita medidas firmes da União Europeia face a Marrocos, alegando que se encontra “à beira do colapso”.",
+     "texto": "A comunicação social internacional noticiou que a União Europeia enfrenta um défice de 13,3 alunos por professor no ensino básico, registou quase 50 mil mortes por suicídio anualmente no seu território e impôs limites aos alojamentos tipo Airbnb para reforçar o arrendamento de longa duração. Adicionalmente, o Tribunal da UE rejeitou a ação da Hungria contra a ajuda à Ucrânia com ativos russos, enquanto a União Europeia e o Banco Europeu de Investimento lançaram uma linha de financiamento de 10 milhões de euros para apoiar mulheres empreendedoras através do Moza Banco.",
      "noticias": 5
     }
    }
   },
   "Presidência": {
-   "noticias": 39,
+   "noticias": 43,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou a remoção, por parte da Casa Branca, de um jogo polémico do seu site, inspirado no Tetris, e a aprovação, pelo Governo, de um prolongamento dos apoios ao gasóleo agrícola até ao final do ano, com um custo estimado de 15 milhões de euros. O Conselho de Ministros reuniu-se com foco na agricultura e pescas, tendo sido anunciado um suplemento para pensionistas e um alívio no IRS até ao sexto escalão. A comunicação social portuguesa deu igualmente conta de desenvolvimentos no julgamento em Faro de agentes da PSP acusados de homicídio de um imigrante marroquino, da acusação de auxílio à imigração ilegal em Elvas e de declarações de responsáveis políticos sobre a participação em eventos relacionados com a imigração.",
-     "noticias": 32
+     "texto": "A comunicação social portuguesa noticiou a detenção de um imigrante ilegal após confronto físico com agentes da PSP, a nomeação de Ana Casaca para a presidência da AICEP, a aprovação de um novo modelo de colocação de professores, o reforço de apoios ao gasóleo agrícola e aos pescadores, o aumento do quadro da AIMA e a atribuição de fundos europeus a Espanha para o regresso de migrantes. Foram ainda registados resgates de migrantes na Grécia, queixas contra a AIMA e a declaração de um concurso para colocação de docentes.",
+     "noticias": 38
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou a incerteza para os burundeses no Quénia após Ruto ordenar o encerramento de empresas estrangeiras, enquanto a comunicação social angolana divulgou informação sobre o tráfico ilícito de migrantes, a vulnerabilidade e a criminalidade organizada, e a comunicação social brasileira divulgou dados sobre a biodiversidade da Amazónia e decisões judiciais nos Estados Unidos. Em paralelo, a comunicação social moçambicana abordou a situação de burundeses no Quénia e a comunicação social espanhola informou sobre a discussão da crise migratória com responsáveis da UE.",
-     "noticias": 6
+     "texto": "A comunicação social moçambicana noticiou a defesa por parte de Sánchez da gestão da crise migratória em Ceuta, reiterada pela comunicação social brasileira, que divulgou um alerta de inteligência espanhola a Marrocos e Madrid sobre a chegada de imigrantes a Ceuta.",
+     "noticias": 3
     }
    }
   },
   "Primeiro-Ministro": {
-   "noticias": 68,
+   "noticias": 34,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social de Portugal noticiou que o Partido Socialista impôs quatro condições para a viabilização do Orçamento do Estado para 2027, tendo o Governo avançado para um corte de IRS de 400 milhões de euros em novembro, abrangendo a redução de taxas até ao sexto escalão. O debate da moção de censura resultou na sua chumbada, com o Chega a votar a favor da própria iniciativa, enquanto o primeiro-ministro, Luís Montenegro, manteve a confiança plena no ministro da Administração Interna, Luís Neves. O Governo anunciou uma nova descida do IRS, a quinta desde a sua entrada em funções, e um suplemento para pensionistas, medidas que visam responder às preocupações com o custo de vida. A comunicação social portuguesa registou ainda a utilização de benefícios fiscais para recuperar iniciativa política no contexto da moção de censura, com Montenegro a destacar a importância do ministro da Administração Interna.",
-     "noticias": 67
+     "texto": "A comunicação social portuguesa noticiou encontros entre o Primeiro-Ministro e Luís Montenegro em Lisboa para abordar o orçamento da União Europeia, bem como declarações de Montenegro sobre a oposição a cortes orçamentais e a reimplantação de uma cultura de exigência na Educação. Relatos indicam que Montenegro atribui responsabilidades por maus resultados escolares a Governos anteriores e anunciou um apoio extraordinário ao gasóleo agrícola até ao fim do ano. Foram noticiados anúncios governamentais sobre contas públicas equilibradas e potenciais alterações fiscais, incluindo medidas ad hoc e críticas sobre a sua adequação orçamental. O debate parlamentar sobre o Orçamento do Estado para 2027 ocorreu perto do prazo de entrega, com Montenegro a confirmar o apoio ao gasóleo agrícola e a preparar-se para discussões orçamentais.",
+     "noticias": 33
     }
    }
   },
   "Reforma do Estado": {
-   "noticias": 14,
+   "noticias": 22,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa divulgou desenvolvimentos relacionados com inteligência artificial e o seu impacto em diversos setores. O Portugal Digital Summit 2026 reuniu mais de 150 especialistas para debater a era dos agentes de IA. A Google alertou para a crescente utilização de inteligência artificial por cibercriminosos. A Universidade da Madeira promoveu um debate sobre o uso da inteligência artificial no ensino da Matemática.",
-     "noticias": 8
+     "texto": "A comunicação social portuguesa divulgou desenvolvimentos relacionados com a inteligência artificial, abrangendo investigação e alertas sobre os seus riscos e aplicações. Um investigador da Anthropic cessou funções e expressou preocupações sobre o desenvolvimento da inteligência artificial, alertando para potenciais consequências para a humanidade. A Anthropic disponibilizou o Mythos à União Europeia, enquanto a Meta lançou o Muse, um novo agente pessoal de IA, e a DeepNeuronic foi adquirida pela Motorola Solutions. Paralelamente, foram noticiadas aplicações da inteligência artificial na saúde, nomeadamente na deteção e prevenção do glaucoma, e na automação industrial. A comunicação social portuguesa também abordou questões de ética e direitos de autor no desenvolvimento da inteligência artificial, e o investimento da Google em infraestruturas de IA na Finlândia.",
+     "noticias": 18
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou a contestação da Islândia por ter sido representada com as cores dos Estados Unidos num mapa publicado por Donald Trump, enquanto a comunicação social brasileira divulgou medidas de apoio ao cuidado multiprofissional e à utilização de inteligência artificial para a reabilitação visual, e também a diminuição da leitura entre adolescentes a níveis não registados anteriormente.",
-     "noticias": 3
-    },
-    "internacionais": {
-     "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou, no âmbito da União Europeia, um alerta para uma nova ameaça terrorista que associa jovens à Internet, emitido após vinte e cinco anos dos atentados de 11 de setembro. Adicionalmente, foi divulgada a utilização de inteligência artificial e cães por uma start-up indiana para a deteção de cancro, e a angariação de três mil milhões de euros numa ronda liderada pela Samsung para a Mistral AI.",
+     "texto": "A comunicação social brasileira noticiou, no contexto da reforma do Estado, a identificação por parte do Governo de 97 perfis de médicos falsos de inteligência artificial no Youtube, tendo sido acionado o Google para a sua remoção. Adicionalmente, foram divulgadas informações sobre a atividade de candidatos presidenciais durante a quarta-feira, bem como previsões meteorológicas para o centro-sul do país.",
      "noticias": 3
     }
    }
   },
   "Saúde": {
-   "noticias": 33,
+   "noticias": 36,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa divulgou informação relativa a diversas matérias de saúde. Foi noticiado um possível cancelamento da greve dos técnicos do INEM, dependente de acordo com o Ministério da Saúde. Destaca-se a apresentação de um programa de saúde mental para enfermeiros, com consultas e linha SOS, promovido pela Ordem dos Enfermeiros. Foi reportada uma inspeção da IGAS ao Hospital Garcia de Orta, com o objetivo de verificar a correta aplicação da IVG, embora o Hospital de Almada tenha indicado não ter sido notificado. Adicionalmente, a comunicação social portuguesa registou questões relativas ao veto da ULS Algarve a trabalhadores-estudantes e a necessidade de garantias sobre a resposta de emergência no INEM.",
-     "noticias": 18
+     "texto": "A comunicação social portuguesa divulgou informação relativa à saúde. A Região da Madeira manifestou confiança na contribuição de 50% da República para a construção de um novo hospital. A Ordem dos Enfermeiros iniciou um programa de saúde mental com consultas gratuitas e uma linha de apoio. Foram reportadas dificuldades na aplicação de legislação que visa corrigir carreiras de enfermeiros. O número de doentes em espera para além do tempo máximo registou um aumento. Foram noticiados resíduos de medicamentos e a liderança do FMI foi objeto de análise. A saúde oral foi mencionada no contexto de acesso gratuito na Suécia e limitações em Portugal. O sistema de saúde pública enfrentou desafios na gestão de recursos e na adesão de tarefeiros a contratos de trabalho.",
+     "noticias": 15
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou acções de formação em Primeiros Socorros e a avaliação de remoção de um autocarro para garantir segurança e perícias após um acidente. No Brasil, a Anvisa aprovou genéricos de medicamentos contra diabetes e obesidade, um novo fármaco para enxaqueca e caminhos de saúde mental no SUS, além de se referir a um prazo de lista de espera e à evolução de doentes.",
-     "noticias": 14
+     "texto": "A comunicação social de Cabo Verde noticiou o acolhimento, na Cidade da Praia, do primeiro Fórum Nacional de Literacia em Saúde Masculina, bem como a declaração de tolerância zero contra mau atendimento e roubo de medicamento pelo Ministro da Saúde de Moçambique e a abertura de 4.800 vagas para curso de especialização de enfermeiros pelo MINSA angolano. Em Angola, foi noticiado que uma equipa técnica estuda alternativas para a remoção de um autocarro acidentado, enquanto no Brasil, a Polícia Federal mira um grupo suspeito de desviar encomendas postais e a Anvisa amplia a indicação da vacina contra meningite. Adicionalmente, foi confirmada a ocorrência de dois novos casos de sarampo em São Paulo, atingindo um total de 30, e a Agência Brasil reporta a identificação de 97 médicos falsos de IA no Youtube, com a subsequente ação contra o Google.",
+     "noticias": 19
     }
    }
   },
   "Trabalho, Solidariedade e Segurança Social": {
-   "noticias": 61,
+   "noticias": 53,
    "origens": {
     "nacionais": {
      "rotulo": "Portugal",
-     "texto": "A comunicação social portuguesa noticiou alterações fiscais e medidas de proteção social. O Governo anunciou um corte no IRS e um bónus para as pensões, com um impacto global estimado em 800 milhões de euros. Adicionalmente, foi previsto um alívio do IRS a partir de novembro, abrangendo os primeiros escalões de rendimento. A comunicação social portuguesa reportou ainda sobre a possibilidade de acumulação de subsídios de desemprego com outras prestações sociais. Foram comunicadas medidas de reforço da rede do INEM, com o objetivo de evitar a greve dos técnicos. O Governo reiterou o compromisso com a estabilidade orçamental até ao final de 2025.",
-     "noticias": 50
+     "texto": "A comunicação social portuguesa noticiou, no âmbito da área governativa do Trabalho, Solidariedade e Segurança Social, a apresentação de medidas de apoio às pensões e de alívio fiscal, nomeadamente através de um suplemento para os pensionistas e de um ajuste do IRS, com impacto previsto nos salários de novembro e dezembro. Foram igualmente abordadas as implicações orçamentais destas medidas, com a garantia governamental de que não desequilibram as contas públicas, e a sustentabilidade do sistema de Segurança Social, com alertas sobre desafios futuros. Foram ainda comentados os anúncios de medidas fiscais e de pensões no âmbito do Orçamento do Estado, com referências a críticas do Partido Socialista e da Iniciativa Liberal, e a necessidade de enquadramento orçamental.",
+     "noticias": 46
     },
     "lusofonas": {
      "rotulo": "Lusofonia",
-     "texto": "A comunicação social de Cabo Verde noticiou a felicitação do Presidente da República aos maienses por ocasião do Dia do Município, a reabertura da Torre Eiffel após um protesto e a assinalada importância turística da Ilha do Maio. Em paralelo, a comunicação social brasileira divulgou o aumento do salário anual do primeiro-ministro de Singapura em R$ 5,6 milhões e a indicação de 13 pessoas num caso de morte por espancamento em Copacabana. A comunicação social brasileira informa ainda sobre a vitória da extrema direita na Alemanha e a reabertura da Torre Eiffel após um protesto.",
-     "noticias": 8
-    },
-    "internacionais": {
-     "rotulo": "Internacional",
-     "texto": "A comunicação social internacional noticiou que o Governo português sobreviveu a uma moção de censura e anunciou cortes nos impostos, enquanto a Jaguar Land Rover procedeu ao corte de quatro mil postos de trabalho a nível global para reduzir custos e a Polónia promoveu um protesto de robots face a regulamentações de inteligência artificial mais rigorosas.",
-     "noticias": 3
+     "texto": "A comunicação social de Cabo Verde noticiou a reabertura do armazém da FICASE em São Vicente após obras de 29 mil contos, enquanto a imprensa brasileira divulgou a prioridade da educação para moradores de favelas do Rio nas eleições e a soltura de um indivíduo associado ao INSS, bem como o reconhecimento de falhas da Enel num apagão ocorrido em São Paulo. Adicionalmente, a imprensa brasileira informou sobre a decisão judicial relativa a um processo envolvendo um filho do denominado \"Careca do INSS\".",
+     "noticias": 5
     }
    }
   }
