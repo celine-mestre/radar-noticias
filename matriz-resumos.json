@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-10 12:14",
+ "gerado": "2026-09-10 15:18",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -316,17 +316,11 @@
    "pct": 78,
    "lado": "negativas"
   },
-  "2026-09-10|Administração Interna": {
-   "texto": "No dia 2026-09-10, a Administração Interna registou múltiplos acontecimentos de natureza diversa. Em São Jorge, a GNR apreendeu 69 plantas de canábis, num contexto de combate ao crime de tráfico de estupefacientes. Adicionalmente, a GNR deteve um suspeito na Ericeira, após ser apanhado em flagrante com uma plantação de canábis em sua residência, após denúncia. Por fim, registou-se um incêndio florestal em Famalicão, motivado por ação humana, resultando na detenção de um homem por suspeita de atear fogo à vegetação. Observou-se também um recuo nos pedidos de asilo na União Europeia para níveis de 2021, embora este fenómeno não esteja diretamente relacionado com a área da Administração Interna.",
-   "n": 6,
-   "pct": 75,
+  "2026-09-10|Justiça": {
+   "texto": "No dia 2026-09-10, a área da Justiça registou múltiplos acontecimentos, predominantemente relacionados com processos judiciais de figuras públicas e infrações criminais. Destacam-se a reapresentação de José Sócrates perante o tribunal na Operação Marquês, sem assistência de advogado, e a sua crítica à condução processual; a condenação da Câmara Municipal de Lisboa por violação do RGPD no âmbito do caso \"Russiagate\", com uma multa de 463.700 euros; e a prisão preventiva de um suspeito de 11 assaltos, maioritariamente em escolas de Almada. Adicionalmente, verificou-se a detenção de um suspeito de agressão e ameaça a familiares, e a condenação da Câmara Municipal de Lisboa por incumprimento de prazos de proteção de dados.",
+   "n": 33,
+   "pct": 77,
    "lado": "negativas"
-  },
-  "2026-09-10|Saúde|+": {
-   "texto": "No dia 2026-09-10, registaram-se os seguintes acontecimentos na área da Saúde:\n\n1. Portugal alcançou a primazia internacional na gestão de resíduos de medicamentos, com a implementação de um sistema de recolha e tratamento inovador.\n2. A Ordem dos Enfermeiros lançou um programa de saúde mental que disponibiliza consultas gratuitas e uma linha de apoio telefónico, visando a prevenção e o acompanhamento de perturbações psicológicas.\n3. Uma iniciativa de caminhada e corrida, promovida pela Healthnews, mobilizou milhares de participantes no Seixal em defesa do hospital local, evidenciando a importância da preservação de serviços de saúde regionais.\n4. Embora não seja um evento interno da área da Saúde, a cobertura mediática destacou a situação da saúde oral em Portugal, nomeadamente a ausência de cobertura universal até aos 23 anos, comparativamente com a Suécia, o que motivou a discussão sobre a necessidade de melhorias no acesso a cuidados dentários.",
-   "n": 5,
-   "pct": 56,
-   "lado": "positivas"
   }
  }
 }
