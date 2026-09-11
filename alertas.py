@@ -380,8 +380,18 @@ def principal():
                       f"suficientes (total {total_dia}, base {base_dia} dias) "
                       f"— registo desse dia mantido como está")
             continue
-        historico = [r for r in historico if r.get("data") != dia_passado]
+        # Um pico registado é um facto datado: naquele dia, aquela área esteve
+        # mesmo acima do seu padrão de então. Se a reavaliação o apagar porque
+        # a linha de base subiu entretanto — uma área que passa a ter cobertura
+        # intensa todos os dias faz subir a própria mediana —, o histórico
+        # deixa de contar o que aconteceu e passa a contar apenas o que ainda
+        # hoje seria raro. Perde-se precisamente a memória que justifica ter
+        # uma série. Por isso a reavaliação ACRESCENTA picos em falta e nunca
+        # apaga os que já lá estão.
+        ja_registados = {(r.get("data"), r.get("area")) for r in historico}
         for t in t_dia:
+            if (dia_passado, t["area"]) in ja_registados:
+                continue
             historico.append({"data": dia_passado, "area": t["area"],
                               "hoje": t["hoje"], "mediana": t["mediana"],
                               "limiar": t["limiar"]})
