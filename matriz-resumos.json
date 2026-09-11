@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-11 10:32",
+ "gerado": "2026-09-11 12:21",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -311,10 +311,16 @@
    "lado": "negativas"
   },
   "2026-09-10|Justiça": {
-   "texto": "No dia 10 de setembro de 2026, a cobertura noticiosa da área da Justiça centrou-se em múltiplos acontecimentos. Destacaram-se a acusação do Ministério Público (MP) por homicídio qualificado e negligência grosseira num naufrágio em Troia, com pedidos de pena de prisão de cinco anos, e a prisão preventiva de indivíduos envolvidos em roubos e tráfico de estupefacientes, incluindo em Espinho e na Ribeira Grande. Adicionalmente, registaram-se detenções preventivas de suspeitos de agressões e críticas públicas de José Sócrates à atuação judicial no âmbito da Operação Marquês, reiterando a falta de advogado. Observou-se ainda uma condenação da Câmara Municipal de Lisboa por violação do RGPD no caso \"Russiagate\", com uma multa de 463.700 euros.",
-   "n": 50,
-   "pct": 76,
+   "texto": "No dia 10 de setembro de 2026, a cobertura noticiosa da área da Justiça centrou-se em múltiplos acontecimentos. Destacaram-se a acusação do Ministério Público contra o arguido do naufrágio ocorrido em Troia, com pedido de pena de prisão de cinco anos, e a insistência na responsabilização por negligência grosseira. Paralelamente, registou-se a persistência de processos envolvendo o antigo primeiro-ministro José Sócrates, nomeadamente na Operação Marquês, com múltiplas audiências judiciais sem a presença de advogado. Adicionalmente, verificaram-se detenções preventivas de suspeitos de diversos crimes, incluindo tráfico de estupefacientes, roubo e agressão, e a condenação da Câmara Municipal de Lisboa por violação do RGPD no âmbito do caso \"Russiagate\".",
+   "n": 51,
+   "pct": 77,
    "lado": "negativas"
+  },
+  "2026-09-11|Ambiente e Energia|+": {
+   "texto": "No âmbito da área da Energia, a EDP e a Paper Prime iniciaram um projeto de eletrificação do calor industrial em Vila Velha de Ródão, visando a redução do consumo de combustíveis fósseis. Adicionalmente, a EDP promoveu a substituição de gás por eletricidade numa fábrica portuguesa, evitando a emissão de 830 toneladas de dióxido de carbono. Paralelamente, o Governo prorrogou a isenção da Taxa de Gestão de Resíduos, medida que contribui para a sustentabilidade económica e ambiental. O abastecimento de água em Setúbal, proveniente do sistema do Castelo de Bode, beneficiou os consumidores com melhorias na distribuição e eficiência hídrica.",
+   "n": 6,
+   "pct": 50,
+   "lado": "positivas"
   }
  }
 }
