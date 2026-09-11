@@ -1,94 +1,63 @@
 {
- "atualizado": "2026-09-11 13:57",
+ "atualizado": "2026-09-11 17:24",
  "dia": "2026-09-11",
- "corte": "13:57",
+ "corte": "17:24",
  "dias_base": 28,
- "regra": "Tempestade quando a contagem do dia, até às 13:57, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 19 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 17:24, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 15 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
-  "publicacoes_de_referencia": 19
+  "publicacoes_de_referencia": 15
  },
- "tempestades": [
-  {
-   "area": "Educação, Ciência e Inovação",
-   "hoje": 42,
-   "mediana": 19.0,
-   "limiar": 39.8,
-   "excesso": 23.0,
-   "variacao_pct": 121,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
-   "area": "Primeiro-Ministro",
-   "hoje": 16,
-   "mediana": 4.0,
-   "limiar": 12.0,
-   "excesso": 12.0,
-   "variacao_pct": 300,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
-   "area": "Presidência",
-   "hoje": 18,
-   "mediana": 8.0,
-   "limiar": 16.9,
-   "excesso": 10.0,
-   "variacao_pct": 125,
-   "dias_base": 28,
-   "tempestade": true
-  }
- ],
+ "tempestades": [],
  "momentum": [
   {
    "area": "Educação, Ciência e Inovação",
-   "hoje": 42,
-   "mediana": 19.0,
-   "limiar": 39.8,
-   "excesso": 23.0,
-   "variacao_pct": 121,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
-   "area": "Primeiro-Ministro",
-   "hoje": 16,
-   "mediana": 4.0,
-   "limiar": 12.0,
-   "excesso": 12.0,
-   "variacao_pct": 300,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
-   "area": "Presidência",
-   "hoje": 18,
-   "mediana": 8.0,
-   "limiar": 16.9,
-   "excesso": 10.0,
-   "variacao_pct": 125,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
-   "area": "Economia e Coesão Territorial",
-   "hoje": 29,
-   "mediana": 22.0,
-   "limiar": 35.3,
-   "excesso": 7.0,
-   "variacao_pct": 32,
+   "hoje": 22,
+   "mediana": 11.5,
+   "limiar": 30.8,
+   "excesso": 10.5,
+   "variacao_pct": 91,
    "dias_base": 28,
    "tempestade": false
   },
   {
-   "area": "Negócios Estrangeiros",
-   "hoje": 18,
-   "mediana": 11.0,
-   "limiar": 19.9,
-   "excesso": 7.0,
-   "variacao_pct": 64,
+   "area": "Justiça",
+   "hoje": 20,
+   "mediana": 10.0,
+   "limiar": 20.4,
+   "excesso": 10.0,
+   "variacao_pct": 100,
+   "dias_base": 28,
+   "tempestade": false
+  },
+  {
+   "area": "Primeiro-Ministro",
+   "hoje": 11,
+   "mediana": 3.0,
+   "limiar": 11.0,
+   "excesso": 8.0,
+   "variacao_pct": 267,
+   "dias_base": 28,
+   "tempestade": false
+  },
+  {
+   "area": "Ambiente e Energia",
+   "hoje": 20,
+   "mediana": 12.5,
+   "limiar": 25.8,
+   "excesso": 7.5,
+   "variacao_pct": 60,
+   "dias_base": 28,
+   "tempestade": false
+  },
+  {
+   "area": "Presidência",
+   "hoje": 12,
+   "mediana": 6.0,
+   "limiar": 14.9,
+   "excesso": 6.0,
+   "variacao_pct": 100,
    "dias_base": 28,
    "tempestade": false
   }
@@ -313,6 +282,13 @@
   },
   {
    "data": "2026-08-27",
+   "area": "Primeiro-Ministro",
+   "hoje": 13,
+   "mediana": 4,
+   "limiar": 12.9
+  },
+  {
+   "data": "2026-08-27",
    "area": "Trabalho, Solidariedade e Segurança Social",
    "hoje": 34,
    "mediana": 15,
@@ -495,10 +471,24 @@
   },
   {
    "data": "2026-09-08",
+   "area": "Cultura, Juventude e Desporto",
+   "hoje": 29,
+   "mediana": 15.0,
+   "limiar": 26.9
+  },
+  {
+   "data": "2026-09-08",
    "area": "Finanças",
    "hoje": 36,
    "mediana": 15.0,
    "limiar": 34.3
+  },
+  {
+   "data": "2026-09-08",
+   "area": "Justiça",
+   "hoje": 30,
+   "mediana": 13.0,
+   "limiar": 27.8
   },
   {
    "data": "2026-09-08",
@@ -536,25 +526,18 @@
    "limiar": 28.4
   },
   {
-   "data": "2026-09-11",
-   "area": "Educação, Ciência e Inovação",
-   "hoje": 42,
-   "mediana": 19.0,
-   "limiar": 39.8
+   "data": "2026-09-10",
+   "area": "Ambiente e Energia",
+   "hoje": 31,
+   "mediana": 14.5,
+   "limiar": 30.8
   },
   {
-   "data": "2026-09-11",
-   "area": "Presidência",
-   "hoje": 18,
-   "mediana": 8.0,
-   "limiar": 16.9
-  },
-  {
-   "data": "2026-09-11",
-   "area": "Primeiro-Ministro",
-   "hoje": 16,
-   "mediana": 4.0,
-   "limiar": 12.0
+   "data": "2026-09-10",
+   "area": "Justiça",
+   "hoje": 26,
+   "mediana": 13.5,
+   "limiar": 25.4
   }
  ]
 }
