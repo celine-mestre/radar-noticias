@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-12 01:17",
+ "gerado": "2026-09-12 11:58",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -315,6 +315,12 @@
    "n": 15,
    "pct": 50,
    "lado": "positivas"
+  },
+  "2026-09-12|Infraestruturas e Habitação": {
+   "texto": "No dia 12 de setembro de 2026, ocorreu um descarrilamento ferroviário no norte de França, resultando em 44 feridos. A investigação policial privilegiou a hipótese de ato malicioso, embora não se tenha confirmado a existência de crime. Paralelamente, a Comissão Europeia manifestou preocupações relativamente à legislação nacional em matéria de habitação, indicando insuficiências em comparação com as diretrizes comunitárias. Adicionalmente, foram divulgados dados que evidenciam uma maior procura de crédito hipotecário por parte de estrangeiros para aquisição de habitação, face à sua participação na transferência de propriedade.",
+   "n": 7,
+   "pct": 78,
+   "lado": "negativas"
   }
  }
 }
