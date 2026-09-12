@@ -1,33 +1,23 @@
 {
- "atualizado": "2026-09-12 11:41",
+ "atualizado": "2026-09-12 16:29",
  "dia": "2026-09-12",
- "corte": "11:41",
+ "corte": "16:29",
  "dias_base": 28,
- "regra": "Tempestade quando a contagem do dia, até às 11:41, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 14 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 16:29, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 16 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
-  "publicacoes_de_referencia": 14
+  "publicacoes_de_referencia": 16
  },
  "tempestades": [],
  "momentum": [
   {
    "area": "Infraestruturas e Habitação",
-   "hoje": 8,
-   "mediana": 4.0,
-   "limiar": 12.0,
-   "excesso": 4.0,
-   "variacao_pct": 100,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Reforma do Estado",
-   "hoje": 3,
-   "mediana": 2.0,
-   "limiar": 10.0,
-   "excesso": 1.0,
-   "variacao_pct": 50,
+   "hoje": 15,
+   "mediana": 11.5,
+   "limiar": 20.4,
+   "excesso": 3.5,
+   "variacao_pct": 30,
    "dias_base": 28,
    "tempestade": false
   }
@@ -242,6 +232,13 @@
    "hoje": 27,
    "mediana": 14,
    "limiar": 22.9
+  },
+  {
+   "data": "2026-08-25",
+   "area": "Finanças",
+   "hoje": 27,
+   "mediana": 12,
+   "limiar": 26.8
   },
   {
    "data": "2026-08-25",
