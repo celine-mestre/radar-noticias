@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-12 19:34",
+ "gerado": "2026-09-13 01:15",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -250,24 +250,6 @@
    "pct": 50,
    "lado": "positivas"
   },
-  "2026-09-05|Ambiente e Energia|+": {
-   "texto": "O Ministério do Ambiente e Energia concluiu investimentos no âmbito do Plano de Recuperação e Resiliência (PRR) que ascendem a mais de 1,8 mil milhões de euros, alcançando a execução integral das metas estabelecidas. Paralelamente, foi anunciada a reestruturação da Agência Portuguesa do Ambiente (APA) e do Instituto da Conservação da Natureza e das Florestas (ICNF), processo este que se encontra “praticamente pronto”, conforme declarado pela ministra do setor. Estes eventos refletem o cumprimento de objetivos setoriais e a otimização da gestão dos recursos públicos na área ambiental e energética. Não se detetou um tema dominante específico para além do progresso financeiro e da reorganização institucional.",
-   "n": 6,
-   "pct": 58,
-   "lado": "positivas"
-  },
-  "2026-09-05|Trabalho, Solidariedade e Segurança Social|+": {
-   "texto": "No âmbito da área governamental do Trabalho, Solidariedade e Segurança Social, registam-se dois acontecimentos principais. Em primeiro lugar, Portugal lidera a subida no emprego de profissionais com formação em Tecnologias de Informação e Comunicação (TIC) desde 2023, evidenciando um reforço da qualificação profissional e da empregabilidade neste setor. Em segundo lugar, o Presidente da República de Moçambique lançou um programa de apoio ao emprego e ao empreendedorismo, com um investimento de 110 milhões de euros, visando a criação de postos de trabalho e o desenvolvimento de iniciativas empresariais. Adicionalmente, verifica-se a manutenção de médicos reformados ao serviço do Serviço Nacional de Saúde, confirmando a valorização do capital humano na área da saúde. Não se identifica, contudo, qualquer medida ou reconhecimento direto da área governativa portuguesa reportado nos títulos.",
-   "n": 8,
-   "pct": 56,
-   "lado": "positivas"
-  },
-  "2026-09-05|Economia e Coesão Territorial|+": {
-   "texto": "No dia 2026-09-05, o Governo português anunciou o cumprimento integral das metas do Plano de Recuperação e Resiliência (PRR) nas áreas da Cultura e Ambiente e Energia. No âmbito da Cultura, foram alcançados todos os objetivos definidos, com destaque para a conclusão de projetos de reabilitação e valorização do património cultural. Relativamente ao Ambiente e Energia, foram executados investimentos superiores a 1,8 mil milhões de euros, resultando na concretização de metas setoriais e na conclusão de projetos estratégicos de eficiência energética e sustentabilidade. O tema dominante dos títulos foi o sucesso na implementação do PRR, evidenciando a execução de medidas de coesão territorial e desenvolvimento económico.",
-   "n": 17,
-   "pct": 75,
-   "lado": "positivas"
-  },
   "2026-09-06|Justiça": {
    "texto": "No dia 2026-09-06, registaram-se múltiplos acontecimentos na área da Justiça. O Governo Trump renovou um apelo junto do Supremo Tribunal para restringir o voto por correspondência, enquanto, no Brasil, o Supremo Tribunal Federal enfrenta uma crise. Em Portugal, verificou-se a colocação da Instrução Criminal junto ao tribunal de Menores, suscitando críticas, e um tribunal determinou o encerramento de uma pedreira devido a incumprimento de normas ambientais. Adicionalmente, um educador foi levado a tribunal por agressão e insultos racistas. O tema dominante parece ser a contestação de decisões judiciais e a resolução de litígios.",
    "n": 9,
@@ -317,10 +299,28 @@
    "lado": "positivas"
   },
   "2026-09-12|Justiça": {
-   "texto": "No dia 12 de setembro de 2026, registaram-se múltiplos acontecimentos na área da Justiça. Dezenas de pessoas manifestaram-se contra a desvalorização de casos de abuso sexual no sistema judicial. O antigo dirigente do MPLA, Higino Carneiro, aceitou uma decisão judicial, mas expressou dúvidas sobre a mesma. A Polícia Marítima instaurou um processo contra o Estado e a Armada devido a alegadas falhas de coordenação. Paralelamente, verificou-se um caso de violência doméstica grave, com a condenação de um padrasto por abusos sexuais reiterados contra uma menor. Adicionalmente, advogados denunciaram a falta de informação sobre o paradeiro de um antigo ministro do petróleo venezuelano detido, e um tribunal rejeitou um pedido para manter aberta uma central a carvão.",
-   "n": 10,
-   "pct": 91,
+   "texto": "No dia 12 de setembro de 2026, a área da Justiça registou múltiplos acontecimentos de natureza judicial e administrativa. Destacaram-se a prisão preventiva de um caseiro em Lagos, suspeito de duplo homicídio de patrões, e a condenação de um pai a seis meses de prisão por ameaça de decapitação a uma professora. Adicionalmente, verificou-se a rejeição de insinuações do Chega pelo Livre e a admissão de um processo judicial associado. Observou-se ainda uma manifestação contra a desvalorização de casos de abuso na Justiça e a contestação de decisões judiciais por parte de figuras políticas, incluindo a aceitação de uma decisão judicial por Higino Carneiro com questionamentos subsequentes.",
+   "n": 19,
+   "pct": 95,
    "lado": "negativas"
+  },
+  "2026-09-05|Ambiente e Energia|+": {
+   "texto": "O Ministério do Ambiente e Energia concluiu investimentos de mais de 1,8 mil milhões de euros provenientes do Plano de Recuperação e Resiliência, cumprindo integralmente as metas estabelecidas. Adicionalmente, foi anunciada a reestruturação da Agência Portuguesa do Ambiente (APA) e do Instituto da Conservação da Natureza e das Florestas (ICNF), processo este “praticamente concluído”, segundo a ministra do setor. O tema dominante é o cumprimento de objetivos financeiros e organizacionais do PRR na área ambiental e energética.",
+   "n": 6,
+   "pct": 55,
+   "lado": "positivas"
+  },
+  "2026-09-05|Economia e Coesão Territorial|+": {
+   "texto": "No dia 2026-09-05, o Governo português divulgou o cumprimento integral das metas do Plano de Recuperação e Resiliência (PRR) nas áreas da Cultura e Ambiente e Energia. A informação foi reiterada por diversas fontes governamentais e da imprensa, confirmando que foram investidos mais de 1,8 mil milhões de euros nestas áreas, com projetos concluídos e resultados alcançados. O tema dominante dos acontecimentos noticiados é o sucesso da execução do PRR, evidenciando a concretização de objetivos de investimento e a superação de metas predefinidas. Adicionalmente, registou-se a participação de empresas portuguesas na Saudi WoodShow, no âmbito de iniciativas de promoção internacional do setor da madeira e mobiliário.",
+   "n": 17,
+   "pct": 71,
+   "lado": "positivas"
+  },
+  "2026-09-05|Trabalho, Solidariedade e Segurança Social|+": {
+   "texto": "No dia 05 de setembro de 2026, registou-se um destaque noticioso relativo à liderança de Portugal na subida do emprego de profissionais formados em Tecnologias de Informação e Comunicação (TIC) desde 2023, evidenciando um crescimento sustentado do capital humano qualificado. Paralelamente, o Presidente da República de Moçambique lançou um programa de apoio ao emprego e ao empreendedorismo, com um investimento de 110 milhões de euros, visando a criação de postos de trabalho e o fomento da atividade empresarial no país africano. Adicionalmente, verificou-se a manutenção da presença de médicos reformados no Serviço Nacional de Saúde (SNS), assegurando a continuidade de cuidados essenciais. A análise económica nacional focou-se, ainda, na necessidade de alinhar a credibilidade das agências de rating com objetivos de maior produtividade económica.",
+   "n": 8,
+   "pct": 53,
+   "lado": "positivas"
   }
  }
 }
