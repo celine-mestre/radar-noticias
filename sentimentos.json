@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-12 19:28",
+ "gerado": "2026-09-13 01:06",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "estado": "em validação — avaliações automáticas, leitura humana em curso",
  "criterio": "Tom do acontecimento noticiado (positivo, neutro, negativo), comunicação social nacional apenas, uma avaliação por notícia.",
@@ -87,11 +87,6 @@
   "https://jornaleconomico.sapo.pt/noticias/pentagono-pressiona-industria-de-defesa-a-acelerar-producao-perante-escassez-de-municoes/": {
    "s": "negativo",
    "d": "2026-08-09",
-   "v": 2
-  },
-  "https://www.jornaldenegocios.pt/economia/detalhe/prr-financia-767-habitacoes-nos-acores-com-investimento-de-65-milhoes": {
-   "s": "positivo",
-   "d": "2026-08-08",
    "v": 2
   },
   "https://news.google.com/rss/articles/CBMi3AFBVV95cUxOX1hXbUNzaVFYa1VzMjBNZEZsMmNFeUZsMlFkYjBVUWRuTGV4bGVRRmlzX19tV0JXSEtfM29FT2wzaHRaVXh6MnZLd0VYZVcwdUtHZHRPR3BCU1FrXzlzRTVHQ3ZmOXloSUplTjNfWlNlSXFuWGFWUmhsMGprdHNLM0JWSUV4SllvNFVDM21wYzdCaXh3Z0w4NlcwZU1sT1JxMDN6TmZhSnJZT0hXZ2xIUlR0ZkN1Z21sR1NYVk10QzRLM3ZzbTNFb3ZUeWo0QlFKM1dUUEwyVWpLYUVT?oc=5": {
@@ -6911,471 +6906,6 @@
    "d": "2026-08-20",
    "v": 2
   },
-  "https://www.rtp.pt/noticias/mundo/maiorca-na-rua-contra-excessos-do-turismo_v1758451": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/hugo-soares-usa-texto-de-socialista-para-responder-a-carneiro-chafurdar-na-merda/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/ucrania_v1758450": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/ucrania/guerra/a-ucrania-levou-a-guerra-aos-armazens-de-tatyana-a-mulher-mais-rica-da-russia/20260808/6a779a79d34e511da0b325b7": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/politica/carneiro-admirado-com-peripecia-de-um-primeiro-ministro-que-foi-banhos_v1758447": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/politica/auditoria-a-judiciaria-vai-recuar-oito-anos_v1758446": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/videos/ha-uma-premeditacao-e-um-trabalho-continuo-a-ia-esta-a-ser-usada-pelos-jovens-para-manipular-imagens-com-nudez-de-colegas/6a7798cf0cf2b42132dbd311": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/drone-despenhou-se-no-nordeste-da-bulgaria_v1758444": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/videos/jovens-usam-ia-para-criar-imagens-de-colegas-nuas-nao-tem-nocao-da-humilhacao-que-causam/6a7797ff0cf2b42132dbd310": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/politica/ficou-por-cumprir-promessa-do-ministro-fernando-alexandre_v1758441": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/opiniao/editorial/dois-ministros-pj-auditoria-2184502": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/cuba/energias-renovaveis/cuba-aprova-novas-regras-para-utilizacao-de-energias-renovaveis-em-plena-crise/20260808/6a7790c7d34ed0733ba7ee55": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/governo-anuncia-unidade-de-valorizacao-energetica-de-residuos-no-algarve/": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/homem-de-40-anos-morre-em-praia-fluvial-de-abrantes/": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/morreu-bebe-que-caiu-de-4o-andar-nas-caldas-da-rainha_v1758433": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-18h-2115/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/programa-da-coligacao-de-lula-da-silva-para-a-reeleicao-com-foco-na-soberania-e-seguranca/": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/ceuta/migracoes/bruxelas-diz-que-espanha-e-italia-garantem-que-controlos-nas-fronteiras-internas-sao-temporarios/20260808/6a7773e3d34e511da0b32572": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/noticiario-antena1/18h-ministra-do-ambiente-ainda-sem-resposta-sobre-precos-dos-combustiveis_a1_1758421": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-19h-2144/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/economia/noticia/cp-falhou-escoamento-milhares-pessoas-concerto-david-guetta-2184508": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/especiais/o-chanceler-mais-impopular-de-sempre-perante-uma-afd-que-nao-para-de-crescer-merz-esta-perto-do-fim/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://healthnews.pt/2026/08/08/bebe-de-22-meses-morre-apos-queda-de-quarto-andar-nas-caldas-da-rainha/#utm_source=rss&utm_medium=rss&utm_campaign=bebe-de-22-meses-morre-apos-queda-de-quarto-andar-nas-caldas-da-rainha": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/bebe-de-22-meses-que-caiu-de-um-4o-andar-nas-caldas-da-rainha-morre-no-hospital_n1758417": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/sociedade/noticia/bebe-22-meses-gravemente-ferido-apos-cair-quarto-andar-caldas-rainha-2184498": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://healthnews.pt/2026/08/08/usc-recebe-75-milhoes-para-centro-inedito-sobre-diferencas-de-genero-no-envelhecimento-2/#utm_source=rss&utm_medium=rss&utm_campaign=usc-recebe-75-milhoes-para-centro-inedito-sobre-diferencas-de-genero-no-envelhecimento-2": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/em-encontro-com-zelensky-presidente-servio-nega-exportacao-de-armamento-para-kiev_n1758410": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/ucrania-presidente-servio-nega-exportacao-de-armamento-para-kiev/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/bebe-de-22-meses-gravemente-ferido-apos-cair-de-quarto-andar-nas-caldas-da-rainha_n1758408": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/sociedade/noticia/eficacia-politica-migratoria-nao-conseguida-custa-direitos-fundamentais-2184497": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/mundo/noticia/comandante-forcas-armadas-eua-quer-evitar-escalada-guerra-irao-2184505": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/videos/a-relacao-entre-a-servia-e-a-russia-estao-a-esfriar-e-ha-uma-aproximacao-a-ucrania/6a7758910cf2b42132dbd2e0": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/mundo/noticia/multiplicamse-apelos-nova-entrada-massa-ceuta-15-agosto-2184504": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/multiplicam-se-em-marrocos-os-apelos-nas-redes-sociais-a-uma-entrada-em-massa-em-ceuta-e-mellila/": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/noticiario-antena1/16h-pr-defende-mais-protecao-para-criancas-e-menores-imigrantes_a1_1758407": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://eco.sapo.pt/entrevista/ja-todos-interagimos-com-bots-maus-e-bons-mais-maus-do-que-bons/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/gnr-encontra-droga-e-arma-em-acidente-na-zona-do-seixal-que-provocou-dois-mortos_n1758397": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/cultura/ministra-da-cultura-destaca-grande-significado-das-festas-do-povo-de-campo-maior_n1758400": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://sol.iol.pt/sociedade/noticias/psp-recupera-parte-do-ouro-roubado-a-idosa-de-96-anos-em-matosinhos/20260808/6a7750d40cf2b42132dbd2db": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/politica/noticia/presidente-defende-combater-ferozmente-imigracao-ilegal-2184500": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/politica/pr-defende-que-e-preciso-combater-ferozmente-a-imigracao-ilegal_n1758388": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/pr-defende-que-e-preciso-combater-ferozmente-a-imigracao-ilegal_n1758388": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/seguro-defende-que-se-deve-combater-ferozmente-imigracao-ilegal/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/presidente-defende-que-se-deve-combater-ferozmente-imigracao-ilegal/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.jornaldenegocios.pt/economia/detalhe/seguro-defende-que-se-deve-combater-ferozmente-imigracao-ilegal": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/culturaipsilon/noticia/primeira-trienal-arte-vaticano-conta-104-artistas-oito-cidades-mundo-2184491": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/fogo-em-carrazeda-de-ansiaes-mobiliza-mais-de-160-bombeiros-e-oito-meios-aereos/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/psd-acores-e-ps-trocam-acusacoes-sobre-evolucao-turistica-das-ilhas-apos-saida-da-raynair/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/politica/lei-do-retorno-comunidades-estrangeiras-em-portugal-apoiam-decisao-de-seguro_v1758375": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/relatorio-sobre-vigilancia-da-gravidez-de-baixo-risco-concluido_v1758379": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/sp-global-confirma-rating-de-cabo-verde-em-b-com-perspetiva-positiva/": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.jornaldenegocios.pt/empresas/industria/detalhe/farmaceuticas-podem-perder-mais-de-500-mil-milhoes-ate-2032-com-expiracao-de-patentes": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://healthnews.pt/2026/08/08/do-episodio-ao-percurso-a-nova-unidade-de-governacao-em-saude/#utm_source=rss&utm_medium=rss&utm_campaign=do-episodio-ao-percurso-a-nova-unidade-de-governacao-em-saude": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/videos/nao-ha-memoria-de-haver-um-ministro-em-funcoes-ser-alvo-de-um-julgamento-nem-que-seja-no-tribunal-de-contas/6a77190b0cf2f6a1a1e73650": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/encontrados-os-corpos-de-cinco-alpinistas-desaparecidos-desde-novembro-no-nepal/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/reapreciacoes-centenas-de-alunos-aguardam-resultados_v1758363": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/chega-considera-enorme-gravidade-decisao-do-presidente-sobre-retorno-de-estrangeiros/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/carlos-rabadao-e-o-primeiro-reitor-da-universidade-de-leiria-e-oeste/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/aeronave-despenha-se-no-aerodromo-de-portimao-e-causa-morte-do-piloto/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/aeronave-cai-no-aerodromo-de-portimao-e-provoca-a-morte-do-piloto_n1758358": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/ciencia/noticia/fiocruz-concede-titulo-postumo-dez-cientistas-alvos-ditadura-militar-brasil-2184479": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.agroportal.pt/portugal-nunca-importou-tantos-produtos-agricolas/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://visao.pt/opiniao/ponto-de-vista/2026-08-08-abdominais-tradicionais-ou-prancha-a-explicacao-de-um-professor-de-educacao-fisica/?utm_source=rss&utm_medium=rss&utm_campaign=abdominais-tradicionais-ou-prancha-a-explicacao-de-um-professor-de-educacao-fisica": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/local/noticia/impactos-ambientais-levam-azambuja-votar-data-center-dois-mil-milhoes-2184239": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/avioneta-cai-no-aerodromo-de-portimao-e-provoca-a-morte-do-piloto_n1758358": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://eco.sapo.pt/2026/08/08/prr-financia-767-habitacoes-nos-acores-com-investimento-de-65-milhoes/": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/psp-detem-homem-procurado-pela-interpol-no-aeroporto-de-lisboa/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/interpol/detencao/psp-detem-homem-procurado-pela-interpol-no-aeroporto-de-lisboa/20260808/6a76f92cd34ed0733ba7ed79": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-11h-1308/": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/ministerio-recebeu-relatorio-sobre-vigilancia-da-gravidez-de-baixo-risco-e-prepara-regulamentacao_n1758349": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/tres-mortos-em-novo-ataque-russo-a-kiev_n1758333": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-9h-2434/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/china-eleva-nivel-de-alerta-perante-aproximacao-do-tufao-dolphin_n1758336": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/lusa/china-eleva-nivel-de-alerta-perante-aproximacao-do-tufao-dolphin_n1758336": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/agendodromo-a-operacao-urgente-da-pj-no-brasil-que-leva-luis-neves-a-ser-julgado-no-tribunal-de-contas/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-8h-2481/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.agroportal.pt/e-assustador-mas-temos-de-o-fazer-agricultores-ucranianos-colhem-o-trigo-sob-fogo-inimigo/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/politica/opiniao/autoconfianca-fernando-alexandre-expectativa-processo-falhado-2184397": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-7h-2468/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/publico-brasil/noticia/aima-nega-renovacao-residencia-manda-empresarias-brasileiras-embora-portugal-2184385": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/sociedade/noticia/suspeita-vandalizar-padrao-descobrimentos-acusada-quatro-anos-2184108": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/sociedade/noticia/candidatos-superior-sao-sinal-positivo-universidades-temem-aumento-abandono-1-ano-2184417": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-2h-2373/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/ue-pede-a-meta-e-tiktok-que-reforcem-vigilancia-sobre-informacao-apos-ceuta_n1758318": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/23h-ja-esta-em-vigor-o-controlo-nas-fronteiras-espanholas_a1758315": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/ceuta-conclui-autopsias-de-82-pessoas-e-identifica-6-mortos_n1758312": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/morreu-crianca-de-dois-anos-que-estava-entubada-ha-70-dias-pais-processaram-hospital-para-evitar-diagnostico-de-morte-cerebral/": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.agroportal.pt/prr-portugal-recebe-23-mil-milhoes-de-euros-do-9-o-pedido-de-pagamento/": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/opiniao/a-lei-da-rolha-na-criminalidade-associada-a-imigracao/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/festas-do-povo-de-campo-maior-arrancam-no-sabado-e-esperam-mais-de-400-mil-visitantes/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/opiniao/morrer-no-sitio-errado/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/opiniao/o-caminho-de-volta-ja-nao-garante-o-regresso/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/observatorio-denuncia-morte-de-51-presos-na-venezuela-por-falta-de-atencao-medica_n1758302": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
   "https://www.jornaldenegocios.pt/opiniao/editorial/celso-filipe/detalhe/a-avaliacao-de-montenegro": {
    "s": "negativo",
    "d": "2026-08-09",
@@ -8614,281 +8144,6 @@
    "d": "2026-08-21",
    "v": 2
   },
-  "https://eco.sapo.pt/2026/08/08/carneiro-concorda-com-pr-sobre-envio-de-diploma-para-tribunal-constitucional/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/exames-nacionais/escolas/apenas-numero-residual-de-reapreciacoes-dos-exames-nacionais-continua-por-enviar-as-escolas/20260808/6a77abf8d34ed0733ba7ee88": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/exames-apenas-numero-residual-de-reapreciacoes-continua-por-enviar-as-escolas/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/videos/jovens-se-estavam-no-onze-e-porque-tem-demonstrado-qualidade/6a77aa610cf2b42132dbd321": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/jamaica-membro-dos-super-dragoes-encontrado-morto-em-casa/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/unam/mexico/esta-universidade-fez-o-exame-de-acesso-em-formato-digital-e-usou-ia-para-impedir-fraude-correu-mal-e-agora-milhares-de-admissoes-estao-em-duvida/20260808/6a731ce0d34e511da0b31b77": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-17h-2262/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.jornaldenegocios.pt/opiniao/detalhe/a-cerveja-tambem-tem-odisseia": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/pai-e-agente-de-lionel-messi-morre-aos-68-anos/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-16h-2323/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/espanha/italia/italia-reforca-assistencia-a-cidadaos-que-viajem-para-espanha-apos-controlos-nas-fronteiras/20260808/6a7740fdd34e511da0b3251c": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://sol.iol.pt/internacional/noticias/israel-queria-crocodilos-nos-fossos-das-prisoes-onde-estao-detidos-palestinianos-tribunal-suspende-plano/20260808/6a773d4e0cf2f6a1a1e7366e": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/moledo-e-o-lugar-de-verao-de-milhares-de-pessoas_v1758387": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/entre-8000-e-11000-migrantes-continuam-em-ceuta_n1758380": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/ceuta/migrantes/entre-8-000-e-11-000-migrantes-continuam-em-ceuta/20260808/6a772ae7d34e511da0b324ff": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://eco.sapo.pt/2026/08/08/policia-espanhola-ja-pede-passaporte-a-viajantes-provenientes-de-italia/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/russia-atacou-diversas-cidades-ucranianas-e-fez-quase-uma-centena-de-mortos-e-feridos_v1758382": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.jornaldenegocios.pt/mercados/bolsa/detalhe/o-que-e-o-short-selling-e-como-funciona": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/culturaipsilon/noticia/parque-arqueologico-coa-recebeu-400-mil-visitantes-30-anos-2184483": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://sol.iol.pt/sociedade/noticias/tou-xim-e-p-ra-pj-nao-e-para-a-psp-e-gnr-pj-controla-sistema-de-escutas-e-levanta-duvidas-sobre-independencia/20260808/6a7736400cf2f6a1a1e7366a": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/dois-mortos-e-dois-feridos-graves-em-despiste-autmovel-na-a33-em-fernao-ferro/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/exportacoes-de-petroleo-do-iraque-caem-mais-de-50-desde-o-inicio-da-guerra/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/politica/mai-rejeita-favorecimento-a-empresa-dst_v1758371": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/ucrania/guerra-na-ucrania/ucrania-reforca-a-fronteira-com-a-bielorrussia-por-receio-de-um-possivel-ataque/20260808/6a773ffbd34ed0733ba7edd9": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/foi-interrompida-a-livre-circulacao-de-pessoas-entre-italia-e-espanha_v1758373": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/reapreciacao-de-exames-ha-escolas-que-ainda-nao-as-receberam_v1758374": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.agroportal.pt/misterio-com-8-mil-anos-arqueologos-procuram-origem-das-primeiras-comunidades-de-agricultores-em-muge/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/videos/zelensky-quer-que-a-ucrania-ocupe-o-espaco-da-russia-mas-em-muitos-paises-isso-nao-vai-acontecer/6a7712890cf2f6a1a1e73647": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/todos-os-alunos-receberam-as-classificacoes-dos-exames-e-ha-algumas-dezenas-de-reapreciacoes-por-concluir/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/carteirista-que-roubava-turistas-nos-eletricos-de-lisboa-condenado-a-dez-anos-de-prisao/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/gravidez/gravidas/gravidez-de-baixo-risco-podera-ser-acompanhada-por-enfermeiros-especialistas-saude-prepara-novo-modelo/20260808/6a76fa63d34e511da0b324b0": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://healthnews.pt/2026/08/08/governo-prepara-acompanhamento-da-gravidez-de-baixo-risco-por-enfermeiros-especialistas/#utm_source=rss&utm_medium=rss&utm_campaign=governo-prepara-acompanhamento-da-gravidez-de-baixo-risco-por-enfermeiros-especialistas": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/trafico-de-droga/violencia-domestica/era-investigado-por-violencia-domestica-gnr-encontra-tres-tipos-de-droga-durante-busca-a-casa/20260808/6a76f7b2d34e511da0b324a8": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-10h-2431/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/azul/noticia/epoca-incendios-florestais-europa-expoe-lacunas-seguros-climaticos-2183965": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.agroportal.pt/epoca-de-incendios-florestais-na-europa-expoe-lacunas-dos-seguros-climaticos/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/montante-medio-do-credito-da-casa-sobe-13-mil-euros-num-mes-e-o-prazo-nao-acompanha/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.jornaldenegocios.pt/mercados/detalhe/wall-street-preve-subida-de-bonus-dos-banqueiros-impulsionada-pela-volatilidade": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://visao.pt/opiniao/ponto-de-vista/incerto-mundo-novo/2026-08-08-a-mesa-opiniao-de-sofia-santos-machado/?utm_source=rss&utm_medium=rss&utm_campaign=a-mesa-opiniao-de-sofia-santos-machado": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/fogo-rural-em-fornos-de-algodres-dominado_n1758346": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/guerra-na-ucrania/kiev-ataca-sul-e-sudoeste-da-russia-com-400-drones-e-danifica-duas-refinarias_n1758345": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.jornaldenegocios.pt/economia/detalhe/ps-quer-que-governo-esclareca-se-ha-risco-de-impostos-da-venda-de-barragens-da-edp-caducarem": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://eco.sapo.pt/2026/08/08/ps-quer-que-governo-esclareca-se-ha-risco-de-impostos-da-venda-barragens-da-edp-caducarem/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/economia/ps-quer-que-governo-esclareca-se-ha-risco-de-impostos-da-venda-barragens-da-edp-caducarem_n1758337": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/apenas-seis-dos-82-migrantes-que-morreram-na-travessia-para-ceuta-foram-identificados_n1758347": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/ps-quer-que-governo-esclareca-se-ha-risco-de-impostos-da-venda-de-barragens-da-edp-caducarem/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/zelensky-agradece-ao-senado-dos-eua-aprovacao-de-sancoes-contra-russia-e-irao_n1758328": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/lusa/zelensky-agradece-ao-senado-dos-eua-aprovacao-de-sancoes-contra-russia-e-irao_n1758328": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/openai-pausa-novo-modelo-de-ia-por-risco-critico-de-ciberseguranca_n1758323": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/vitimas-de-nudes-criadas-com-ia-mudam-de-escola-para-escapar-ao-bullying_n1758332": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/sociedade/noticia/vitimas-nudes-ia-mudam-escola-escapar-bullying-2184469": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/inteligencia-artificial/manipulacao-de-imagens/vitimas-de-nudes-criadas-com-ia-mudam-de-escola-para-escapar-ao-bullying/20260808/6a76d9ecd34e511da0b32482": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/adolescentes-criam-imagens-de-colegas-nuas-com-ia-como-se-fosse-brincadeira-mas-e-crime_n1758331": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/regresso-as-aulas/evitamento-escolar/o-seu-filho-nao-quer-voltar-a-escola-e-agora/20260808/6a70ba1ed34e511da0b3162c": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://healthnews.pt/2026/08/08/presidente-da-republica-promulga-clarificacao-dos-incentivos-aos-medicos-do-sns/#utm_source=rss&utm_medium=rss&utm_campaign=presidente-da-republica-promulga-clarificacao-dos-incentivos-aos-medicos-do-sns": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
   "https://www.jornaldenegocios.pt/economia/emprego/mercado-de-trabalho/detalhe/jovens-que-nao-estudam-nem-trabalham-em-minimos": {
    "s": "positivo",
    "d": "2026-08-09",
@@ -9827,66 +9082,6 @@
   "https://observador.pt/opiniao/este-artigo-vai-chocar-muita-gente-e-sobre-giorgia-meloni/": {
    "s": "neutro",
    "d": "2026-08-10",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/quatro-mortos-em-queda-de-helicoptero-no-rio-de-janeiro_n1758456": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/quatro-mortos-em-queda-de-helicoptero-no-rio-de-janeiro-familia-colombiana-entre-as-vitimas/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/p3/reportagem/mae-nao-telefones-tiroteio-escola-tailandia-terminou-nove-mortos-2184493": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/sociedade/noticia/dois-mortos-dois-feridos-graves-despiste-automovel-a33-2184489": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/benfica-lanca-peticao-pela-suspensao-do-modelo-de-centralizacao-dos-direitos-de-tv/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://eco.sapo.pt/2026/08/08/benfica-lanca-peticao-pela-suspensao-do-modelo-de-centralizacao-dos-direitos-de-tv/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/pais/campo-maior-onze-anos-depois-as-flores-voltam-a-subir-ao-ceu_es1758225": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/nao-usar-curar-a-vertigem-dos-dias-nao-e-utopia-e-prazer/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/mundo/noticia/drone-explosivos-despenhase-nordeste-bulgaria-causar-danos-vitimas-2184481": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/guerra-na-ucrania/drone-com-explosivos-despenha-se-no-nordeste-da-bulgaria-sem-causar-danos-ou-vitimas_n1758359": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/mundo/noticia/funcionario-agencia-nacoes-unidas-acusado-espiar-israel-2184480": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://observador.pt/programas/resposta-pronta/rodrigo-taxa-o-envio-deste-diploma-ao-constitucional-e-irresponsavel/": {
-   "s": "negativo",
-   "d": "2026-08-08",
    "v": 2
   },
   "https://cnnportugal.iol.pt/venezuela/terramoto/venezuelanos-limpam-ruas-de-la-guaira-apos-sismos-para-ajudar-a-reduzir-a-poluicao/20260809/6a78e9cad34e511da0b32719": {
@@ -13052,21 +12247,6 @@
   "https://www.noticiasaominuto.com/pais/3039502/tempos-de-espera-nas-urgencias-voltam-a-subir-na-grande-lisboa#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
    "s": "negativo",
    "d": "2026-08-21",
-   "v": 2
-  },
-  "https://observador.pt/programas/noticiario/as-noticias-das-12h-2410/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/politica/lei-do-retorno-chega-considera-envio-para-tc-do-diploma-tipo-de-atos-politicos-irresponsaveis_n1758352": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://visao.pt/atualidade/economia/financas-com-cabeca/2026-08-08-como-funcionam-os-apoios-para-comprar-casa-antes-dos-35-anos/?utm_source=rss&utm_medium=rss&utm_campaign=como-funcionam-os-apoios-para-comprar-casa-antes-dos-35-anos": {
-   "s": "neutro",
-   "d": "2026-08-08",
    "v": 2
   },
   "https://eco.sapo.pt/2026/08/10/norueguesa-credin-compra-espanhola-de-confeitaria-com-vendas-de-nove-milhoes/": {
@@ -25810,46 +24990,6 @@
   "https://observador.pt/opiniao/o-drama-da-alta-hospitalar-para-quem-sofreu-um-dano-cerebral-adquirido/": {
    "s": "negativo",
    "d": "2026-08-09",
-   "v": 2
-  },
-  "https://observador.pt/2026/08/08/medicos-pedem-intervencao-urgente-em-ceuta-de-ministerio-da-saude-espanhol/": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/maria-afiuni/venezuela/governo-venezuelano-liberta-ex-juiza-maria-afiuni-apos-16-anos-de-prisao/20260808/6a76dab4d34e511da0b32484": {
-   "s": "positivo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/mundo/noticia/zelensky-agradece-eua-sancoes-russia-ataque-kiev-faz-tres-mortos-2184468": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://jornaleconomico.sapo.pt/noticias/psi-recua-02-em-julho-para-9-11604-pontos-mas-sobe-182-em-termos-homologos/": {
-   "s": "neutro",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://cnnportugal.iol.pt/videos/ataque-russo-a-um-pais-nato-o-resultado-obvio-seria-uma-confrontacao-direta/6a76d8740cf2f6a1a1e73609": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.publico.pt/2026/08/08/local/noticia/argus-continua-agonizar-cais-ha-novo-esforco-tentar-salvar-2184416": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/mundo/medicos-pedem-intervencao-urgente-em-ceuta-de-ministerio-da-saude-espanhol_n1758314": {
-   "s": "negativo",
-   "d": "2026-08-08",
-   "v": 2
-  },
-  "https://www.rtp.pt/noticias/lusa/acordo-com-paquistaneses-e-sauditas-nao-contradiz-compromissos-com-nato-garante-turquia_n1758313": {
-   "s": "neutro",
-   "d": "2026-08-08",
    "v": 2
   },
   "https://cnnportugal.iol.pt/videos/caso-meta-nao-podemos-olhar-so-para-o-tempo-que-os-jovens-passam-nas-redes-temos-de-olhar-para-o-tipo-de-conteudo-e-para-o-contexto/6a8a1c530cf2b42132dbeb84": {
@@ -81057,6 +80197,426 @@
    "v": 2
   },
   "https://jornaleconomico.sapo.pt/noticias/lebron-james-escolhe-angola-para-a-sua-primeira-visita-a-africa/": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/guerra-na-ucrania/encontro-putin-zelensky-no-g20-em-miami-e-impossivel-diz-kremlin_n1765049": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "http://www.acorianooriental.pt/noticia/ucrania-encontro-putin-zelensky-no-g20-em-miami-e-impossivel-380334": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/2026/09/12/kremlin-garante-que-encontro-putin-zelensky-no-g20-em-miami-e-impossivel/": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi1gFBVV95cUxNOExaYV8tTVhkanItdTVsc3pFRS1PYndBVWxUNUJTRHpzVXg3NkVLZVc1Y0JMTWJ0eTVkRy12UkgyY3JiT3d1OWtHenR3MFFfSzk4d2lJOGhOUHgyVG5XNTNNMW1qTVlqWHB3ZzhNUDl3N1hobWg0ZFNJVzl4VUI3blNpa0xIb2NMRHcya0hmNE4xdEdCUXVHQ25iXy1BSWlqYVhtb25rLXFmZFJ1REFQWFZxUDNYRHB1QnVNRThRazIwcElKNmoxNW4zUWMwaXBuRUpRTXlR?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitwFBVV95cUxONEFkTzFVcGhueWJheTVhNHl3OHVYeS1Bdk9kSU15MlhrZWNsMW5mYWd2S3RFclJBejZYRldFQjJLUTMyWS13dktrcDB1V1VaUHIzX3ZDQnd3cDZvLWllUUJJbXlBaF9fMkp5MUx1eXBZX3Z6Yld4YjdZRDFGeTY3ZkZ0OVZiZXJWU2hBeXNpWTQ4RnlocmZwZlpzV1NZYnV4QjhtRF8zcnhKQ2RxbjFuSzlGNXhSQm_SAbcBQVVfeXFMTjRBZE8xVXBobnliYXk1YTR5dzh1WHktQXZPZElNeTJYa2VjbDFuZmFndkt0RXJSQXo2WEZXRUIyS1EzMlktd3ZLa3AwdVdVWlByM192Q0J3d3A2by1pZVFCSW15QWhfXzJKeTFMdXlwWV92emJXeGI3WUQxRnk2N2ZGdDlWYmVyVlNoQXlzaVk0OEZ5aHJmcGZac1dTWWJ1eEI4bURfM3J4SkNkcW4xbks5RjV4UkJv?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMirwFBVV95cUxOLTFqZE5JWWdXYm03Qlc1VjVwRHlrTDhUeUZ6QVAzdERUV21tLTZ4Z2dUSlFFNGM3TF93TVZlR2o2LW5oSGFScFEyelFhTTV0ak93dkUwTHBtTFRDSXJWZmZmamdycF94QnlTckNRNG92dkFSX3kzNml3Q1NjTnh5R0pFZnpJeEMyOVhoeXNTcUp5UHFHTXp6dFRQYm1hMmhsWUpMdmQ4emtxNnRuWU5z0gGvAUFVX3lxTE4tMWpkTklZZ1dibTdCVzVWNXBEeWtMOFR5RnpBUDN0RFRXbW0tNnhnZ1RKUUU0YzdMX3dNVmVHajYtbmhIYVJwUTJ6UWFNNXRqT3d2RTBMcG1MVENJclZmZmZqZ3JwX3hCeVNyQ1E0b3Z2QVJfeTM2aXdDU2NOeHlHSkVmekl4QzI5WGh5c1NxSnlQcUdNenp0VFBibWEyaGxZSkx2ZDh6a3E2dG5ZTnM?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPQkhkaXB4RnlmR0ZvS0w0S21FZ3F6eXF4U2lUbVQtX0I4SmtKNTAwaGQ2Tl80RlNYYnd5WDlTWTRtZ3NuVkNfa1BiQlgzNko0Tm85SzRrRVpLeURKZHVuNVdWZUpKQUdWSVMxWDl6c3NBZmxrRGZ2Z1BYSU9sb010VlpOT1NfODgzTmRIcW1xVkRwamNObHdFdkdVNE0xWWplYVNicUFjZVhLVG_SAasBQVVfeXFMT0JIZGlweEZ5ZkdGb0tMNEttRWdxenlxeFNpVG1ULV9COEprSjUwMGhkNk5fNEZTWGJ3eVg5U1k0bWdzblZDX2tQYkJYMzZKNE5vOUs0a0VaS3lESmR1bjVXVmVKSkFHVklTMVg5enNzQWZsa0RmdmdQWElPbG9NdFZaTk9TXzg4M05kSHFtcVZEcGpjTmx3RXZHVTRNMVlqZWFTYnFBY2VYS1Rv?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMirwFBVV95cUxPVFo2T2x2dXZEUUtlZ0JXcEh2b3pRczh0cGdrUExVYVEwWFFHdTlwdHQ2cGNwc0RHcXA1WjlFNDVNdmFZSmp3WGVFYXVTdzFRLUlaaXBQV0hTYzBLVmUyS0d3cEMzU2hMY0JlRkFYNTByeEt6Q3FabnpUMkxrMlEtd3BpeE1CMFZNR2J2c3hqQW9KLVJoTV9USkw4T2pvSTBtSDlSYk5tUWQ3R3p0eEJz0gGvAUFVX3lxTE9UWjZPbHZ1dkRRS2VnQldwSHZvelFzOHRwZ2tQTFVhUTBYUUd1OXB0dDZwY3BzREdxcDVaOUU0NU12YVlKandYZUVhdVN3MVEtSVppcFBXSFNjMEtWZTJLR3dwQzNTaExjQmVGQVg1MHJ4S3pDcVpuelQyTGsyUS13cGl4TUIwVk1HYnZzeGpBb0otUmhNX1RKTDhPam9JMG1IOVJiTm1RZDdHenR4QnM?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi4wFBVV95cUxNX21saFowMy03NjVWdGFyS3U3bWpQZ3Y5SjdNN3pXYkxZa3RsQ0YwUHhhYVA0cTdpNU5CZ05FRFRGWTJxUmFieTFLalhQWU1seXBFQlNjTGtTdlh2MUdxcUwyODdTTGcwNFhGa0tPcWh0b00yTjdZQmpGV0lUNTlTYklRaGZvbmNvNmlmVkxfVGdQMWpWLS1sOVgzanA4LUpFUFd4Y3Nsbjg0dlROZUgwZWV0dTR6TE1YNi1ETzlxdllhT0JWYWdnR0dHNFBQSjA2QWZZRUhUQ2NLSjJvTUFSRWxtdw?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMivAFBVV95cUxPNHA1anFpM3pzSkpIbGZsb1FyeC0yX1VldG5sMFd1TVFLRHBvZ3F4RFBuOEtDSFluZFIxOUtISmhoRVZJaFlvcDJkMlV3eTVGWE90bmNVN2xmZzNfeVNuM3lZc2J3NHdsZHV4MlFJRDYxdEY3Yjd1Q2NGbW42V25OZ29kbEN5YUktMUhYVmNNZW9qYWF4OFJPOHVyZklLZXo4SnRwVVdKeTJ3NUxXdUNCNUc5Q2JSZmRKZkJuMtIBvAFBVV95cUxPNHA1anFpM3pzSkpIbGZsb1FyeC0yX1VldG5sMFd1TVFLRHBvZ3F4RFBuOEtDSFluZFIxOUtISmhoRVZJaFlvcDJkMlV3eTVGWE90bmNVN2xmZzNfeVNuM3lZc2J3NHdsZHV4MlFJRDYxdEY3Yjd1Q2NGbW42V25OZ29kbEN5YUktMUhYVmNNZW9qYWF4OFJPOHVyZklLZXo4SnRwVVdKeTJ3NUxXdUNCNUc5Q2JSZmRKZkJuMg?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitgFBVV95cUxOZGJicndDX3VLNzlHYXBfVGFIMS1DS1JPMHE3clA4NVRNc2x3OEszV0tqaXdlZ09rRjFmSjBaejZ1MGtDU3Y4ejZJWnBrZFZ2bUVLNG5aZFF2SlBvRXNYdUxhcTl2ZFBKWUhURWM0Ykg5MS1CSGx1aE1qZkljT2NzZGtMYmFoUmVxenlzaTUwNTMtQW1zTnBhUnV4eFZiUDV6M1cwRFlZcEFUS3hnNnhiaERDRExPUQ?oc=5": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/mundo/3050339/delegacao-russa-participa-em-reuniao-do-g20-sobre-energia-em-houston-embaixador#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/2026/09/12/galamba-ataca-ps-e-carneiro-por-proposta-de-agravamento-fiscal-sobre-renovaveis-prestam-um-pessimo-servico-ao-pais/": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/cultura/festival-de-cinema-de-veneza-woman-unkown-venceu-leao-de-ouro_v1765074": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-22h-1863/": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/pais/alteracoes-climaticas-estudo-revela-que-jovens-estao-preocupados-com-o-futuro_v1765071": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOLTU5cDRZR2R4REh3Ynl3bWtfMmt6LTN6cVJmUVRoTDl5NXFCRExZcmpJa293R1pDQ0J0QUxSOUh4TkZzT1BzWXJWWEVPUGN4dExTeURDOXZRNGlJTUxLT0tYTk5MX21EU1k0V1NaZ2VxcExNQlowNUNyd2hiZ0tkOS1RaEtFUGZFb0hKSE5fcFB6dG1Uc0dtbER3c0RtTm5JWnkyVnItVTZ6XzhQaF9Ed3RzQ3Z1MjBYZnJ3em8xSmRBZ9IBwgFBVV95cUxOLTU5cDRZR2R4REh3Ynl3bWtfMmt6LTN6cVJmUVRoTDl5NXFCRExZcmpJa293R1pDQ0J0QUxSOUh4TkZzT1BzWXJWWEVPUGN4dExTeURDOXZRNGlJTUxLT0tYTk5MX21EU1k0V1NaZ2VxcExNQlowNUNyd2hiZ0tkOS1RaEtFUGZFb0hKSE5fcFB6dG1Uc0dtbER3c0RtTm5JWnkyVnItVTZ6XzhQaF9Ed3RzQ3Z1MjBYZnJ3em8xSmRBZw?oc=5": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/2026/09/12/suspeito-de-duplo-homicidio-em-lagos-fica-em-prisao-preventiva/": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZUNMNGNIMnQyUjM5SVlMVzZzUkc0NWwwWl9WNXZILTFUUWZ5RlZFUVd0a0hZY093aHlkYWxuNlVGU29INGhtcnRXX3BrV0hvSmtZR19PWVBzcmtXeEhkY1dhYTh1el9iTERWeXZjdXd3Yk5NRmw3NjRoQjl4UURERVpNNlVtUGxuZmZNMmlMVEpvcHFqV1NHemlNNzZzRTdjajR5MzB6c2pFSUlvMUNj?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/09/12/politica/noticia/jorge-pinto-quer-livre-passar-ofensiva-jogar-tabuleiro-extremadireita-2187864": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/2026/09/12/incendio-de-sintra-provocou-quatro-feridos-ligeiros/": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/economia/empresas-deviam-ser-obrigadas-a-nao-pagar-salarios-minimos-defende-presidente-da-confederacao-do-comercio-e-servicos_v1764981": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/politica/convencao-autarquica-do-ps-carneiro-quer-dar-receita-das-renovaveis-as-autarquias_v1765067": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/pais/duplo-homicidio-em-lagos-suspeito-era-o-caseiro-das-vitimas_v1765066": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/2026/09/12/dois-sindicatos-da-psp-exigem-ao-mai-negociacao-de-materias-que-interessam-verdadeiramente/": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi1wFBVV95cUxQR2t0REVMSG9fT2NHdGZfXzJsVnVnaVdVcG1paG8xT1dPXzE1UVVLZDZtZ2wyeGhfWUs5anJYbDZYWm9rdV9TN3ZsOWl6ZHI2V2dpbS12alhxS3htV2ZuM0ZJTzNyX0E2ay1pVDhhQlc2aVQ5N2VzWDJjUHVyTXhub2NJUWg2Ym1NWmdiWDlPVURGWjFJMlVyVVpiWGpCb29HYXJFLU1wXzZwLVZDV2VxVkRGTFZncUpLZGtnMGVxZ2VCdWNLc0hMdWRIbjc1cVIyOUJ1MGZiYw?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/pais/3050520/psp-dois-sindicatos-exigem-negociacao-de-materias-que-interessam-a-mai#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMilgFBVV95cUxQeURTNUljMndoNE03blNoa05VWGtZMGZXUDV6YlB5T0w0V1dXV2dMbmF1bVM2cll6SExLeXBLdVJROTFaek9BSmlrMnFlM2V6QlZZZ1BycE9kQnB0OFBCQVcwQVVZZURwNDY1RXh1LWkyVTJfaTY5Y0tObzZ2eGVuVzNfOXdpMy1TSnktU21IeHlaTmg2OHc?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMihwJBVV95cUxQc0JFUUJPSV9EeTNhRlpTRmEtM25MT0JVdHMtbUhOSlFtdDZtYzNuakVCcVJDSFNsNjN2b0NYalYwc21JZ2xiaEtJQXZmcXFZRjZGR0tzb3NhVmdQdExyYUxlMDJfOURZeTVlQVhodkxSUWxQRHdPN1NFSHkzNlZIRVMtTTF3bU4wZE92NzVsYXUtOGROSzFnY2FyQjI2WlFxaGx5ajJDLUVTblo2NDVWQVljdUhITGFQSEJJc1F0bzNxa3BtTC1jR2hKQUljRGN6S1hZNDZ6WmtwNS00QjczN3lQcEtCRzVJZFJ4aDQ1YnZRVzl5TzRleWxYbjhLNGVRVEI0SGh6OA?oc=5": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiowFBVV95cUxPTllMaXFRZzM1QUJreVhaeEtyS0haNVpTcl9EVmlTZl93dVNBM1R6eHFoQkprUXVlbUplenFzN1RRbjZKZXFENS05al8teHJmVFZlMXRKcXRqc0NESjlMVHR2cjM5SkxWTUNYZUQ2c0lBNFNoOHM3Ym9lVFBBYjF3V3dKMlBVX3BFV1ZxcG1LakxmMXpRUm1BVUx5UEpuT2hjcXhZ?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/especiais/temos-de-regular-o-ritmo-da-fronteira-o-artigo-do-ceo-da-anthropic-que-deixa-o-alerta-sobre-a-ia/": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/2026/09/12/organizacao-da-marcha-dos-imigrantes-em-lisboa-lamenta-ausencia-de-politicos/": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/pais/ministro-da-educacao-vai-investigar-casos-de-centenas-de-alunos-que-ainda-nao-foram-colocados_v1765058": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/pais/3050523/suspeito-de-duplo-homicidio-em-lagos-fica-em-prisao-preventiva#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.jornaldenegocios.pt/empresas/detalhe/lider-da-ccp-pior-inimigo-do-salario-medio-e-o-decreto-do-salario-minimo": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/programas/resposta-pronta/ia-nao-estou-a-ver-todos-os-blocos-de-acordo-para-uma-regulacao-mundial/": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi7gFBVV95cUxOdUJ2Z2lWRDFxcXBJMmg1b0MxU0RENG80LVVnSmNaa3FKTUIzMllMRFRPRXE1VjlITXNtUGJEcTl3SGVqN0wtOVZhN0dNR3lPQ0JsUy1WSDNZVjJqVTBISzYxUHgydlM3LTRTcG94MmRMa2I1MnR5OW1SUkdBZ3RJQWZBU2dlaVZ3S0M4ZnRCSmI4Nm5MSkhTeXJqWG1YNjhWRWNPZGZoX192YmJGSWlVNUVVSWVGYk9FclZiNGFyWEE4RW4wSXZrM3FxWnhDcGl6dkJyNzhDX1luRklROFpyMm5raGNlSlBTdTdvdXFn?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "http://www.acorianooriental.pt/noticia/discurso-sobre-o-estado-da-ue-domina-agenda-da-proxima-sessao-plenaria-do-pe-380336": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMijAFBVV95cUxPREFFaERwMmowNUl3Z1Q0TGhOTzhoSW9YeWtBcmlJR0s5SlYxSnZIVndjeDhsUzdzOVF6d2RHdHpMcmRCQmJWNHF0RlZocXJCd0ozQWQ5bU4yZHZndlQwN1JucW9NcWQ5U2sxd0J5Ym5iWEs3LVpraEtlM2lrMlM5M1dVVm9tbnh5THJaT9IBjAFBVV95cUxPREFFaERwMmowNUl3Z1Q0TGhOTzhoSW9YeWtBcmlJR0s5SlYxSnZIVndjeDhsUzdzOVF6d2RHdHpMcmRCQmJWNHF0RlZocXJCd0ozQWQ5bU4yZHZndlQwN1JucW9NcWQ5U2sxd0J5Ym5iWEs3LVpraEtlM2lrMlM5M1dVVm9tbnh5THJaTw?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi4wFBVV95cUxPTk1mUmpKa0F3VkZ3YnZNUVNQVEN5MjFVVl85QktLd1FoYlpBcVFwdTVXaUZ1R01oNGFCMHlKb2pNd19feHlxeVF1MHo3U3ZfZkZoc2k0NXVFUnE2eFctOGdrM1U0MUVZOGR4b1FFN0dLY0lzeDY0ODRqdVl3S3FvS3BHZGNDc1FBbWxMeW1JMllnQmVrRzVfSkJtczRJZklqcVBiVThGcTNhX0Q0UGhmR09sc0dsM0VJaGstRTVLaE40bVRNc3FadTMyTU83YzMyMjdDMGp0azdnbDV2a1hQcUtSVQ?oc=5": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMifkFVX3lxTE5jQzNMZkliVzg4cFVUX1VBSEJGMVZrNjlpLWVZQUUxN2Y4dFJsUEhfQ0IxQUNfXzNCQ1lRd0xDSEQzRW14eTBPTkdJLXZJcGV0UkNkLS1iTWNIU2VvYXhyZEduRG5Xc0M0ZC1WQ2o0VXNHbjhyazBTMnlWdl9uQdIBfkFVX3lxTE5jQzNMZkliVzg4cFVUX1VBSEJGMVZrNjlpLWVZQUUxN2Y4dFJsUEhfQ0IxQUNfXzNCQ1lRd0xDSEQzRW14eTBPTkdJLXZJcGV0UkNkLS1iTWNIU2VvYXhyZEduRG5Xc0M0ZC1WQ2o0VXNHbjhyazBTMnlWdl9uQQ?oc=5": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMizwFBVV95cUxPMDYyVHpJODNJZE0yek9WTkFIMTVBenNaZV96UnJHUnlaRl9aNWhFcEMyYkxldmJaLV90Zm43eGVTTDBOMml0blJGNkFfNjdwZllGS1V4Y0JGaUhtT0N2aVF6ZkhDLWR3LTlaOUQtVTNmZThpS3hvQXJkY1ZGUWpSaFV1SUtpTU82V1BfT0EzSU9SZjE3bm5WdEJCTWV2ZWJzVGV5a2Fydk1jc2tjX1BZTkVsdEZPbEo2YlFXSDBHRkZ6c0l5MHJULVJNZEJCVnc?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/2026/09/12/kiwior-foi-a-dose-q-b-de-energia-do-dragao-que-se-preparou-para-esquecer-as-memorias-do-passado-a-cronica-do-casa-pia-fc-porto/": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://jornaleconomico.sapo.pt/noticias/lebron-james-mergulha-na-historia-da-escravatura-em-angola/": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMixwFBVV95cUxQSjVnR195MVdqLWlDbDVBR3ZnNnJweXZGSWNiMFBITVJ1NnVDS28wZ0JoLW9ZQ0Q3YTY2Uk9KSF9tdDRiQ1pnUmcwTlRxOWJxckp5NU5SdXM2WTlyMmRjODAxSDhrVlRxbGpGeHNUWDBUTVA4OWJ3TE9XX19zYVBEM0JPNW16eVVZd1AzZWVzYWpPV1ZsbkxqXzhYSTVWanRnOEhreVF5NDk5aVlXUThyWDRHNTBVeFdZcWJfbmt2cE5BdXBnejhV?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMizgFBVV95cUxQeEx5Ukt3enRhVTFKTEM2ZXFDZTQxZ0dLOW1lQ0YwTnNQYlNsZ01uWVM2RW5TVHZONlZ2aTNnUXpOYTNvRlV0YlNxcU5UUm5uVUtmNXpoNnNKSGdoY01iZmVIU1ZGN3BxcW9wNFM4UnVuZFJnb2EydXZyMFRTVG9oQ2NYYzJFcXNvWGJBWjBYOHdEV2hPQ3NpbklhZkJwNXBzUmdNRXZwQlc4ekFzdmU4NHFvaDlHQXFJWVZtWk91dTRNWTZtdEdqQUJvaHB5Zw?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMivwFBVV95cUxPTE0zb1I4UUM3b25nQXVIblNOVjU0dUotU3o4UWphd1FFaE5qcjQ2ZFh0YnlkREdRREZGOUlxWDdBS3NTd3pYbDJHUFE5RUttZGdoV0cwYXZ0c201bFZ5STR2YlhlYXcySEUzeHBMWlI3X0Y5dFV1eTBEVnpadmdVUFBkaWRuWVNjS3NrMUJNYWhZemlPZ05UZnZZQktKN0huejEwaEU3Y0MybzAydWVWQjE4QlRhLTU1SGxtMmVJZw?oc=5": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMivgFBVV95cUxPWEk3R3NGYVc3WUJQNDl4Y2dETUdFNXhNN1VlLW1nbGJSdE05blJsc1YyUlowNGlNRUNBVklzaUQtUWJxRlZUdFR4V2w0NlczX2w2eHQ1WFZUeWZZSEczZndNOUxtMmtNZmU2eEQ2SS1GU210c3VPVHU5eFVnd3I2WW9uaVEtb2dzSDJEODBabXBhc3NlZ2dfaU9ibkhoSkNPaUxEa0pGZkEtZHlaZTZzWFZxRUhBc0dsRWdmM21R?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMilAFBVV95cUxNQm45TWJqOFNSSVdXRlFrWXN4RVBheTBZakJ5UVBZZ29vOTJZNUJFZk03WEtjOUFKSVdKdjFGNTU2Qi1Hd19WUk5UdWJOZTJranhTbUFXSHNOOFZhbXZfUUNOTnk3RFU5MDNzVld0dXg3cjA4S1Nyb3MxZTVQTVNDUm5MZWVHOExzNlA3aHFzMFdDY3dE?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMinwFBVV95cUxORllXcnR0ak5ERzk0MTFrUjRHVlk2eTQwbmNxcTJYSExySFZVaXhaQm5JY011dktEQmVjbTR0NVloOU5NeG12amRJN2M2WlFNM01OQUgwZXp6LXo3emVjT1dzRi1tdFJPU3Fxb3JvQ0JzaUt3VWxRY3VvX3p1UjdrdXlVcWZ0ZVJDbGZHbWI1N3JLTlE5bTlJNE5pekZmZzg?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi5wFBVV95cUxOSVNwRFVFVU5ZZ01TSTBsOGtUckV0SlFoTzdFak1zeXRKcy1VdnZrUkhYMGlUOVBMMGtjRHAxM1VUZW5fcjd3a0RCREtZN2hUdU5RbFZvU29JY2tadFFRbGdta0NaUC0tR2hvU0lxR3JqM3E2MG52X2J0elNCZUdaakh1aVJhSGcyZHY3U3hWd2pCZ3pDSUpzdWxsbGdsb3VQQUE4alJkRHE5OUN4TUVqblNNQktRYmhWSEFnRUpZMDRxbFREN2FLLWxxdzd1elIxNHktajlmc2FtNU5ZYk5kUFlNWE1VXzA?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/videos/wegovy-testado-em-menores-todas-as-criancas-que-tenham-doenca-causada-pelo-excesso-de-peso-beneficiam-e-muito-com-este-medicamento/6aa5948b0cf20dc52778c0d1": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMitAFBVV95cUxOLWxlak9zQVZTbXdKTzZ2anVNMjJnS2ZkWXBaM205M3ZLZUgyWnU0YVAxOTdPb0dSNDNqMk9jcVlKZHNDLVVET2l2a25qWWRpUTZ1SHR5SDB1MWtYaEpTR0prSkVqZjB3X2tEVThWMDRjVlhRNGpidGZCdlNvZFNTYXBucmh4V2dXX0VpZWVma0diTjhMSk5KWWVhRzl2U0VvM05tR0U5dGc5ZGlhRzZkcUM2eDk?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-19h-2164/": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiywFBVV95cUxQY3R1TFNQUzRkOVZic2hKZTVURkFUcnE5NkRibTFFYkU4LUpFd3ZrVDZmY0lkNk1adGNweXJVaWFNWnZMSXk2bEZOd3R1YkNKUG9YZVo3OWszLTdKU0hvSVpxLURYcjVlOG5LWlJZemZzemVhNFJIR2tjdkI0X09wc1JrejhDTWpKNFpIZjBPV3c1SFoxazB1MUxvMTJHTHByTTh6RnJoWkFrbWd3TUxxNWpUNlRRNW5LZlE5RHJwLTYtNVFweDc2RTRTTQ?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiogFBVV95cUxONkMxWVZGM29mRU1ERnJsVGx2ZnFwREJWY0Zwc2lEM1RmbHVsWE5WeVJCekp0cVFWcjFVLWNPem5IUVZlQ3dxalM3Z29qeURkQmJFdHFGMVp1anRGenpraTlRUlBBNmJyRFBHQ2YtMzlpUVVJNnpXeDVrNTlNQmRiV3l1Tm56bjVrWGtXTkllLXdYcllJXzUwWXl3VHl3eFJTVGfSAaIBQVVfeXFMTjZDMVlWRjNvZkVNREZybFRsdmZxcERCVmNGcHNpRDNUZmx1bFhOVnlSQnpKdHFRVnIxVS1jT3puSFFWZUN3cWpTN2dvanlEZEJiRXRxRjFadWp0Rnp6a2k5UVJQQTZickRQR0NmLTM5aVFVSTZ6V3g1azU5TUJkYld5dU5uem41a1hrV05JZS13WHJZSV81MFl5d1R5d3hSU1Rn?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNWjVOQ3MyZXdQRzAxbzFKVk5hd05Rclh5Nkh4UWJnMW0yenNkTUExVk42MloxSnhTS0JtT2s5T0JUemxVSjVKYUNMNUYxYmxkWmNxNE43TkhrLVd6bFVmclppT2NXZWJGZTVNQTlqbVdzajBwQXc1V3Rqdlpuekt2eVNEcTdQaG5xb0MweldsTHUtMHUzWk16aUJ6YkppOURhQzI4eWlMVTZ5R3JHR1VtQlJCcFN2R24zV3JLblU3SnZvdkRzXzNWQg?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://healthnews.pt/2026/09/12/madeira-em-alerta-vento-e-seca-aticam-risco-de-fogo-ate-terca/#utm_source=rss&utm_medium=rss&utm_campaign=madeira-em-alerta-vento-e-seca-aticam-risco-de-fogo-ate-terca": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMizAFBVV95cUxQYklrVnB4QVpNZ3pZdFFHOUhDd3hiYXNQZU81VzNmWU5EbzVLY2Z0ZFhqLVFYQ2RjZXAzbXRvUlJIVlkzZkdmcWRHNzBiWnpLU0JYbVJtSTRYdE9lY1Qwc2ljOHpPbXA1TlU5VVo2RzZnSFdjang2RERZc0tseU1TSkFqUDlRY3JkMWZrMEwtbUF6cGRUU2RBTkFQRHpmQVktejhtVEpUOC0wNWxvWEZXR0EzTW03SlVJVWxRQV9uUVNWZTEtcGw3aVVTUTTSAcwBQVVfeXFMUGJJa1ZweEFaTWd6WXRRRzlIQ3d4YmFzUGVPNVczZllORG81S2NmdGRYai1RWENkY2VwM210b1JSSFZZM2ZHZnFkRzcwYlp6S1NCWG1SbUk0WHRPZWNUMHNpYzh6T21wNU5VOVVaNkc2Z0hXY2p4NkREWXNLbHlNU0pBalA5UWNyZDFmazBMLW1BenBkVFNkQU5BUER6ZkFZLXo4bVRKVDgtMDVsb1hGV0dBM01tN0pVSVVsUUFfblFTVmUxLXBsN2lVU1E0?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://healthnews.pt/2026/09/12/california-trava-algoritmos-viciantes-para-menores-de-16-anos/#utm_source=rss&utm_medium=rss&utm_campaign=california-trava-algoritmos-viciantes-para-menores-de-16-anos": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQN25VdkxYYUZWOUpTbjdtaTBSc0xlYlJUa3pMUFBKZmZDUlZleV9XLUhROTlrMUZ3SkZaWlJyazl2UG00YzhZRDVXTzU5djZORW1jd2VOY1FOa3d0eDV4MzdzdmtqTUZ1MjBoT3Z0eEhXdlZsYXA3UkY4OEJseE03aU83LV9pdVQtZERPRWNSVkFUbHN0Rm5rRERIRTVhekJPa2lwZDJjOEMxYk44X040WXpOaklNSkNy?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiugFBVV95cUxNVTZ2WjRENEZzQUtLVHZLQm1NTFdqMnRWVGd5MFBQWE01YVIzVEZ2dGdzZ09aR2Joa2p6TWNoNHRsNmNzelhUOF84Z2tEekw4X184cVJJNU5ZSkNja2pxYWxDbVNOcVRPVU1scV9lVExwQXpiM1ZZNEtNYm10MWdtM1hrckZOaHMzR3dRSFFFdVZSMzYwRk15RE15Zzg0c0htR2ZQOWFmMWlFTzhXelFXSmp4dWhlZ2RXVFE?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMixAFBVV95cUxOUjREcWR6VXJCdGpLbDJlaW11R2FBUlJKNEhTMGV4dEZCNzIxcHR6UkEzOC1Pa2s3RWcyMEpGYU9qM01YejlsbVY1eE1pRENWbXFueDBTRExSQ2VsUWxRZUN3SzRCZU9Wc1JZYWtXVlQ2X1l2Nm1kcGZBTXNFYXNfYmtablYtaGF4OUU5N3ZVdXNrRmt3ZXFlYTVxS3pIdVNIWVBwNVpPWjExeGRUTXdEUjBZY3c5TXQxODhTUE01dXVIdVZF?oc=5": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/opiniao/dois-precos-duas-escolhas-o-que-estamos-a-pagar-por-viver-em-portugal/": {
+   "s": "neutro",
+   "d": "2026-09-13",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/09/13/opiniao/opiniao/legislar-destruir-ensino-superior-portugues-2187577": {
+   "s": "negativo",
+   "d": "2026-09-13",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/09/13/opiniao/opiniao/ilusao-convergencia-erosao-estrutural-diagnostico-pisa-2025-2187755": {
+   "s": "neutro",
+   "d": "2026-09-13",
+   "v": 2
+  },
+  "https://observador.pt/opiniao/ex-ministro-da-educacao-penitencia-se-por-minha-culpa-minha-tao-grande-culpa/": {
+   "s": "negativo",
+   "d": "2026-09-13",
+   "v": 2
+  },
+  "https://observador.pt/opiniao/transparencia-nao-pode-depender-da-insistencia-dos-cidadaos/": {
+   "s": "neutro",
+   "d": "2026-09-13",
+   "v": 2
+  },
+  "https://observador.pt/opiniao/armazenar-para-integrar-o-proximo-passo-do-sistema-eletrico/": {
+   "s": "neutro",
+   "d": "2026-09-13",
+   "v": 2
+  },
+  "https://observador.pt/opiniao/foi-o-algoritmo-que-decidiu-nao-pode-ser-uma-resposta-do-estado/": {
+   "s": "neutro",
+   "d": "2026-09-13",
+   "v": 2
+  },
+  "https://www.publico.pt/2026/09/13/opiniao/opiniao/mobilidade-centro-historico-lisboa-oportunidade-pensar-cidade-2187611": {
+   "s": "positivo",
+   "d": "2026-09-13",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMijwFBVV95cUxOTWlqVTEtbWhuQ3NUdXlLVl9qOURscWMwQzVEVGFENkh4RlAtcjFZdU1FMy1aUlUyR25UU2hwSXZHSmVTaGJ0M0RmZnJVYmhTc2ltbVFJd29FVDh1eG94eVlsQ2NON1RsaloySldtSFFSLU9xVTBDSEpIeHc3MG1EcnhXWHdKMmN6bEY0Q25Mbw?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/videos/imagens-que-associam-a-misoginia-a-um-estilo-de-vida-luxuoso-desportivo-e-de-poder-atrai-jovens-que-nao-tem-nada-disso-na-sua-vida/6aa5d2dc0cf20dc52778c0fc": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi8wFBVV95cUxPeDIzeDhnSGljUFd4UzZGdTVadmVnQ1lPTThfMVYyNTRtQlFFTHJQN1lSZmhFOVNPRWFYTDlmNm1kdVdaeXlMeWFjYzlOekpxYVFtRE5MQzcyM01vOWVPZ21lb21IT2RUNTR0Zm80SHh1cEJYY294Wm8tMzdKbWFieWJ2UUZNWmlXMEtBbW5vczRIRnV6eWhtTXJYYXo4a0p1aklmcTlScm5aZHpsaFhnNWl3N1dWUUx4cjhDeVoyQmpLSmlhUHREUTlHSy0yNHBoRVJITUhEZGpabFJTQk5qa0EzQUo1S09Gb1cwOXJZMGQxSXc?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMijARBVV95cUxQVmFIY0pkTUdKSXBvdzYxSTdCMjVUOEpzZU5oM0t1WGRtcVdtSHF3NzE3YVUwNGZRNDBudXhKSHlQWHJXNk51QXFJRXBlWGhSTFEyTXdHbUpjbGhNdlBQTVNTb0JFNC0wbDhFRk5BS2NpaElrWFJuSWYyeWI3X3psYkZrMlQyN25wUmozN2lmd1A5UkFfMThpOXdibEJhRVMzUjdvUVl6NHB2MEIzWnBCbl9VRnZHT1kxQmdfVTFhcVdYUGJ0eUNDdlBfamF3NDJMMUQtcUZMQkpJbnBubkRoV3dSTGc4UjhoOHUzUkFSRWpic29EV0RlaDloanRCVDVqa1hFd21YUmRCRTZzVVpCVHpVaHgyOHI4c0hYQ01wazYwdk9qOWlGWEduZ2NIdHpPcUpuclhqNk1mcXJteFE3LU9RZ3U5eURjUnBLTVh2QUlBOTA4TGgxaTF6VGpLMDRiVmpUZVhFZkNNY0ZRdDVZMkktZzFFd2NYVkktTy1wYnlDdU1wYzM5ZURQWS1LU09tWnFzcjl2Ui1FR0dPcDRvREtaZHFKNExsazVlMUgwTDBnNlBRd1NfVEJQdFFnVU9kR25PbDJweUhoSkNuVkhpUjJpRkREOG01eVVrb0ZfYUNBMlNwdnR4bm8tbkFLYUdsN2dQUWJDczlyLTBFQ2dUY0l2aW9aNkE5V2xCVA?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMivwFBVV95cUxOZDZUcXAxYWpEUGdieVlIbWllYTdzenpERmxlb0lLcnpGWjl3TXR1U2hGdWJyX1UwZTZINzJsQ1VCQkg4dVM0Nk53V1VZVHhCV1BXUGRrVDd5cDJzd0NhZWx2YmF2YUZpOFE5V2pEVlV6YTdhTFptaDJiUm1VeTlvdUI2TnktTmo5VkNMMkhJTUpDS2FtYjVHTkJscU5JcGhVZDN5TVNQSUk3c091WlRlOHZjeTJEQWc1Ri04dkVmRdIBvwFBVV95cUxOZDZUcXAxYWpEUGdieVlIbWllYTdzenpERmxlb0lLcnpGWjl3TXR1U2hGdWJyX1UwZTZINzJsQ1VCQkg4dVM0Nk53V1VZVHhCV1BXUGRrVDd5cDJzd0NhZWx2YmF2YUZpOFE5V2pEVlV6YTdhTFptaDJiUm1VeTlvdUI2TnktTmo5VkNMMkhJTUpDS2FtYjVHTkJscU5JcGhVZDN5TVNQSUk3c091WlRlOHZjeTJEQWc1Ri04dkVmRQ?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMi5wFBVV95cUxPMXpoemlRWnBJa1picHZfSllxRjduQ1hHQlkwRDJFYS13alU1WDVDUXQzZzN5R1dKZGtjQlhaN0xfN1ZkRm5vcTd3a1V4SkhWVXpPd3lEZDhYLVdSZ3QzX0p4Rm1wYWl0M2htYkNkbnNiTTQ2LTRDN0NMZVk4Ym9QRWtkTV9zazNycmxfd0ViOTlQeDRpVlFWTEdLaGZLUjdmU1RWVVpneUQ2WXZtMlMtRlUyWUY1UzZhcHduakZncmtHcFphWmhYMWU5TGJSdEdQSW1HQl9iSUdtNVp5d2owMmhaSUNxd1k?oc=5": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/programas/noticiario/as-noticias-das-23h-2171/": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://observador.pt/2026/09/12/pessoa-com-dificuldades-respiratorias-resgatada-na-serra-da-estrela/": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://cnnportugal.iol.pt/videos/costa-silva-alerta-que-preco-do-barril-de-petroleo-nem-e-a-grande-preocupacao-a-entrevista-ao-ex-ministro-da-economia-na-integra/6aa5befa0cf299bc2953c2ed": {
+   "s": "neutro",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMixwFBVV95cUxQT013eXlMWjM2cG1xVU9sS2VMVFBnWTg5NzFFZUxMbnFKUlZsU0doeUk2YTFLMlhxZVVtTzY5NDN6aFZTRmZPQ1A0TF9WbWFLbFk1Z2Q0U2ZDbDlITVJhM0I1WjBNTGh1T3ZGSnoxeFlTdkk0UUtpS0JJV2laNUl0YTMzTVFpR3g4cUY2T3VfQ2tFb3BxVTNCUDhZRUQybi1XR29oVUY1enREelotTXdMVnRYVHdWdHlFaHNjSmpQcWJjVjZuNnQw?oc=5": {
+   "s": "positivo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.rtp.pt/noticias/pais/organizacao-da-marcha-dos-imigrantes-em-lisboa-lamenta-ausencia-de-politicos_n1765059": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://www.noticiasaominuto.com/pais/3050507/organizacao-da-marcha-dos-imigrantes-em-lisboa-lamenta-ausencia-de-politicos-caudio-e-video#utm_source=rss-ultima-hora&utm_medium=rss&utm_campaign=rssfeed": {
+   "s": "negativo",
+   "d": "2026-09-12",
+   "v": 2
+  },
+  "https://news.google.com/rss/articles/CBMiogFBVV95cUxPS1RfSk0xeUF0ZW5TVXdQUEgyRU1FZVgzN1JyS0I2SzVlaEt3VUVxb2tWVS0xa0tKVHZSbzlRMGxXb3QycVlmaDNzOHE5bk5ZZl9DcnBCUjQ4VUdjWlB6LXJlcVlGYVVLQUpNeWYxR3BGNlVYTHRkU1Rsb2EyZkdUWmw3X3V3TnhXM1dOcGJzbDBEVnpYREFxUEdlbV9pWDJsdlE?oc=5": {
    "s": "neutro",
    "d": "2026-09-12",
    "v": 2
