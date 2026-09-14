@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-13 17:36",
+ "gerado": "2026-09-14 01:11",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -304,21 +304,9 @@
    "pct": 53,
    "lado": "positivas"
   },
-  "2026-09-06|Justiça": {
-   "texto": "No dia 2026-09-06, registaram-se múltiplos acontecimentos na área da Justiça. O Governo Trump renovou um apelo junto do Supremo Tribunal para restringir o voto por correspondência, enquanto, no Brasil, o Supremo Tribunal Federal enfrenta uma crise. Em Portugal, verificou-se a colocação da Instrução Criminal junto ao tribunal de Menores, suscitando críticas, e um tribunal determinou o encerramento de uma pedreira devido a incumprimento de normas ambientais. Adicionalmente, um educador foi levado a tribunal por agressão e insultos racistas. O tema dominante parece ser a contestação de decisões judiciais e a resolução de litígios.",
-   "n": 9,
-   "pct": 91,
-   "lado": "negativas"
-  },
   "2026-09-07|Justiça": {
    "texto": "No dia 2026-09-07, a área da Justiça registou múltiplos acontecimentos de natureza diversa, predominantemente relacionados com processos criminais, questões de responsabilidade e gestão de instituições. Destacam-se a demissão do procurador-geral ucraniano face a acusações de corrupção, processos contra figuras públicas como o antigo primeiro-ministro José Sócrates e a prisão preventiva de suspeitos em casos de tráfico de droga, burlas e crimes violentos. Adicionalmente, verificaram-se decisões judiciais sobre prescrição, perda de mandato de um autarca e condenações em casos de incitamento ao ódio e violência doméstica. O tema dominante foi a instabilidade e controvérsia em torno de figuras de proeminência e a atividade do Ministério Público em processos criminais.",
    "n": 35,
-   "pct": 78,
-   "lado": "negativas"
-  },
-  "2026-09-13|Saúde": {
-   "texto": "No dia 2026-09-13, foram noticiados dois incidentes de violência física em Lisboa: um jovem baleado junto a uma sala de espetáculos e um ataque à pedrada contra um hospital, respondido pela PSP com um disparo na perna do agressor. Adicionalmente, a área da saúde internacional foi afetada por relatos de uma crise humanitária na região de Kutupalong, onde crianças rohingya apresentaram agravamento de estado de saúde devido a atrasos no acesso a cuidados médicos. Por fim, a cobertura noticiosa internacional destacou a situação de emergência humanitária no Irão, com Teerão a denunciar a impossibilidade de acesso a alimentos e medicamentos devido a bloqueios decorrentes de conflito armado. O tema dominante foi a crise humanitária e a violência física, com impacto tanto a nível nacional como internacional.",
-   "n": 6,
    "pct": 78,
    "lado": "negativas"
   },
@@ -327,6 +315,12 @@
    "n": 29,
    "pct": 53,
    "lado": "positivas"
+  },
+  "2026-09-06|Justiça": {
+   "texto": "No dia 2026-09-06, registaram-se múltiplos acontecimentos na área da Justiça. O Governo Trump renovou um apelo junto do Supremo Tribunal para restringir o voto por correspondência, enquanto, no Brasil, o Supremo Tribunal Federal enfrenta uma crise. Em Portugal, verificou-se a colocação da Instrução Criminal junto ao tribunal de Menores, suscitando críticas, e um tribunal determinou o encerramento de uma pedreira devido a incumprimento de normas ambientais. Adicionalmente, um educador foi levado a tribunal por agressão e insultos racistas. O tema dominante parece ser a contestação de decisões judiciais e a resolução de litígios.",
+   "n": 9,
+   "pct": 90,
+   "lado": "negativas"
   }
  }
 }
