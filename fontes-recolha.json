@@ -1,6 +1,6 @@
 {
- "recolhido": "2026-09-14 01:01",
- "horas_desde_a_anterior": 3.3,
+ "recolhido": "2026-09-14 09:49",
+ "horas_desde_a_anterior": 8.8,
  "fontes": 66,
  "sem_artigos": 4,
  "por_recurso": 0,
@@ -56,8 +56,8 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 1,
-   "marcados": 0,
+   "lidos": 5,
+   "marcados": 1,
    "erro": ""
   },
   {
@@ -69,6 +69,17 @@
    "via": "direta",
    "lidos": 5,
    "marcados": 2,
+   "erro": ""
+  },
+  {
+   "fonte": "Dinheiro Vivo",
+   "dominio": "dinheirovivo.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 8,
+   "marcados": 1,
    "erro": ""
   },
   {
@@ -91,17 +102,6 @@
    "via": "direta",
    "lidos": 10,
    "marcados": 7,
-   "erro": ""
-  },
-  {
-   "fonte": "Carta de Moçambique",
-   "dominio": "cartamz.com",
-   "origem": "lusofonas",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 10,
-   "marcados": 6,
    "erro": ""
   },
   {
@@ -134,7 +134,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 2,
+   "marcados": 3,
    "erro": ""
   },
   {
@@ -149,17 +149,6 @@
    "erro": ""
   },
   {
-   "fonte": "Público",
-   "dominio": "publico.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 10,
-   "marcados": 1,
-   "erro": ""
-  },
-  {
    "fonte": "STP-Press (São Tomé)",
    "dominio": "stp-press.st",
    "origem": "lusofonas",
@@ -171,14 +160,14 @@
    "erro": ""
   },
   {
-   "fonte": "Tatoli (Timor-Leste)",
-   "dominio": "tatoli.tl",
-   "origem": "lusofonas",
-   "pt": true,
+   "fonte": "The Washington Post · Mundo",
+   "dominio": "washingtonpost.com",
+   "origem": "internacionais",
+   "pt": false,
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 3,
+   "marcados": 0,
    "erro": ""
   },
   {
@@ -189,29 +178,29 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 10,
-   "marcados": 8,
+   "marcados": 6,
    "erro": ""
   },
   {
-   "fonte": "The Washington Post · Mundo",
-   "dominio": "washingtonpost.com",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 11,
-   "marcados": 0,
-   "erro": ""
-  },
-  {
-   "fonte": "Dinheiro Vivo",
-   "dominio": "dinheirovivo.pt",
-   "origem": "nacionais",
+   "fonte": "Carta de Moçambique",
+   "dominio": "cartamz.com",
+   "origem": "lusofonas",
    "pt": true,
    "via_config": "feed",
-   "via": "direta",
-   "lidos": 13,
-   "marcados": 0,
+   "via": "direta + Google",
+   "lidos": 11,
+   "marcados": 5,
+   "erro": ""
+  },
+  {
+   "fonte": "Tatoli (Timor-Leste)",
+   "dominio": "tatoli.tl",
+   "origem": "lusofonas",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta + Google",
+   "lidos": 14,
+   "marcados": 1,
    "erro": ""
   },
   {
@@ -232,8 +221,19 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 17,
+   "lidos": 19,
    "marcados": 1,
+   "erro": ""
+  },
+  {
+   "fonte": "Le Figaro",
+   "dominio": "lefigaro.fr",
+   "origem": "internacionais",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 19,
+   "marcados": 0,
    "erro": ""
   },
   {
@@ -255,18 +255,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 20,
-   "marcados": 12,
-   "erro": ""
-  },
-  {
-   "fonte": "Le Figaro",
-   "dominio": "lefigaro.fr",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 20,
-   "marcados": 0,
+   "marcados": 7,
    "erro": ""
   },
   {
@@ -278,6 +267,17 @@
    "via": "direta",
    "lidos": 20,
    "marcados": 0,
+   "erro": ""
+  },
+  {
+   "fonte": "RFI (português)",
+   "dominio": "rfi.fr",
+   "origem": "internacionais",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 21,
+   "marcados": 16,
    "erro": ""
   },
   {
@@ -299,29 +299,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 22,
-   "marcados": 15,
-   "erro": ""
-  },
-  {
-   "fonte": "RFI (português)",
-   "dominio": "rfi.fr",
-   "origem": "internacionais",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 22,
-   "marcados": 17,
-   "erro": ""
-  },
-  {
-   "fonte": "BBC News · Mundo",
-   "dominio": "bbc.co.uk",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 23,
-   "marcados": 0,
+   "marcados": 8,
    "erro": ""
   },
   {
@@ -331,7 +309,7 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 23,
+   "lidos": 22,
    "marcados": 0,
    "erro": ""
   },
@@ -347,14 +325,14 @@
    "erro": ""
   },
   {
-   "fonte": "Deutsche Welle (português)",
-   "dominio": "dw.com",
+   "fonte": "BBC News · Mundo",
+   "dominio": "bbc.co.uk",
    "origem": "internacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
    "lidos": 24,
-   "marcados": 1,
+   "marcados": 0,
    "erro": ""
   },
   {
@@ -391,28 +369,6 @@
    "erro": ""
   },
   {
-   "fonte": "El Mundo",
-   "dominio": "elmundo.es",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 27,
-   "marcados": 0,
-   "erro": ""
-  },
-  {
-   "fonte": "France Info",
-   "dominio": "francetvinfo.fr",
-   "origem": "internacionais",
-   "pt": false,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 27,
-   "marcados": 0,
-   "erro": ""
-  },
-  {
    "fonte": "ANSA",
    "dominio": "ansa.it",
    "origem": "internacionais",
@@ -424,8 +380,41 @@
    "erro": ""
   },
   {
+   "fonte": "Deutsche Welle (português)",
+   "dominio": "dw.com",
+   "origem": "internacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 28,
+   "marcados": 3,
+   "erro": ""
+  },
+  {
+   "fonte": "El Mundo",
+   "dominio": "elmundo.es",
+   "origem": "internacionais",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 28,
+   "marcados": 0,
+   "erro": ""
+  },
+  {
    "fonte": "France 24 (inglês)",
    "dominio": "france24.com",
+   "origem": "internacionais",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 30,
+   "marcados": 0,
+   "erro": ""
+  },
+  {
+   "fonte": "France Info",
+   "dominio": "francetvinfo.fr",
    "origem": "internacionais",
    "pt": false,
    "via_config": "feed",
@@ -468,6 +457,17 @@
    "erro": ""
   },
   {
+   "fonte": "Jornal de Angola",
+   "dominio": "jornaldeangola.ao",
+   "origem": "lusofonas",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 34,
+   "marcados": 2,
+   "erro": ""
+  },
+  {
    "fonte": "The Guardian · Mundo",
    "dominio": "theguardian.com",
    "origem": "internacionais",
@@ -479,28 +479,6 @@
    "erro": ""
   },
   {
-   "fonte": "TSF",
-   "dominio": "tsf.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 46,
-   "marcados": 6,
-   "erro": ""
-  },
-  {
-   "fonte": "Diário de Notícias",
-   "dominio": "dn.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 49,
-   "marcados": 11,
-   "erro": ""
-  },
-  {
    "fonte": "CNN Portugal",
    "dominio": "cnnportugal.iol.pt",
    "origem": "nacionais",
@@ -508,7 +486,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 50,
-   "marcados": 10,
+   "marcados": 14,
    "erro": ""
   },
   {
@@ -519,7 +497,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 50,
-   "marcados": 23,
+   "marcados": 27,
    "erro": ""
   },
   {
@@ -530,40 +508,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 50,
-   "marcados": 9,
-   "erro": ""
-  },
-  {
-   "fonte": "RTP Notícias",
-   "dominio": "rtp.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 50,
-   "marcados": 23,
-   "erro": ""
-  },
-  {
-   "fonte": "Expresso",
-   "dominio": "expresso.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "google",
-   "via": "google",
-   "lidos": 51,
-   "marcados": 10,
-   "erro": ""
-  },
-  {
-   "fonte": "Observador",
-   "dominio": "observador.pt",
-   "origem": "nacionais",
-   "pt": true,
-   "via_config": "feed",
-   "via": "direta",
-   "lidos": 51,
-   "marcados": 15,
+   "marcados": 8,
    "erro": ""
   },
   {
@@ -573,19 +518,30 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 54,
+   "lidos": 53,
    "marcados": 0,
    "erro": ""
   },
   {
-   "fonte": "JM Madeira",
-   "dominio": "jm-madeira.pt",
+   "fonte": "TSF",
+   "dominio": "tsf.pt",
    "origem": "nacionais",
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 64,
-   "marcados": 11,
+   "lidos": 58,
+   "marcados": 8,
+   "erro": ""
+  },
+  {
+   "fonte": "Expresso",
+   "dominio": "expresso.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 68,
+   "marcados": 15,
    "erro": ""
   },
   {
@@ -600,14 +556,25 @@
    "erro": ""
   },
   {
-   "fonte": "Jornal de Angola",
-   "dominio": "jornaldeangola.ao",
-   "origem": "lusofonas",
+   "fonte": "JM Madeira",
+   "dominio": "jm-madeira.pt",
+   "origem": "nacionais",
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 76,
-   "marcados": 6,
+   "lidos": 69,
+   "marcados": 9,
+   "erro": ""
+  },
+  {
+   "fonte": "Diário de Notícias",
+   "dominio": "dn.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "google",
+   "via": "google",
+   "lidos": 90,
+   "marcados": 14,
    "erro": ""
   },
   {
@@ -617,8 +584,8 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 80,
-   "marcados": 25,
+   "lidos": 99,
+   "marcados": 21,
    "erro": ""
   },
   {
@@ -628,8 +595,8 @@
    "pt": true,
    "via_config": "google",
    "via": "google",
-   "lidos": 92,
-   "marcados": 27,
+   "lidos": 99,
+   "marcados": 26,
    "erro": ""
   },
   {
@@ -640,7 +607,7 @@
    "via_config": "google",
    "via": "google",
    "lidos": 100,
-   "marcados": 6,
+   "marcados": 5,
    "erro": ""
   },
   {
@@ -651,7 +618,7 @@
    "via_config": "feed",
    "via": "direta",
    "lidos": 100,
-   "marcados": 38,
+   "marcados": 35,
    "erro": ""
   },
   {
@@ -662,7 +629,7 @@
    "via_config": "google",
    "via": "google",
    "lidos": 100,
-   "marcados": 15,
+   "marcados": 14,
    "erro": ""
   },
   {
@@ -684,7 +651,18 @@
    "via_config": "google",
    "via": "google",
    "lidos": 100,
-   "marcados": 11,
+   "marcados": 17,
+   "erro": ""
+  },
+  {
+   "fonte": "Público",
+   "dominio": "publico.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta + Google",
+   "lidos": 108,
+   "marcados": 21,
    "erro": ""
   },
   {
@@ -699,14 +677,25 @@
    "erro": ""
   },
   {
-   "fonte": "El País",
-   "dominio": "elpais.com",
-   "origem": "internacionais",
-   "pt": false,
+   "fonte": "Observador",
+   "dominio": "observador.pt",
+   "origem": "nacionais",
+   "pt": true,
    "via_config": "feed",
-   "via": "direta",
-   "lidos": 142,
-   "marcados": 0,
+   "via": "direta + Google",
+   "lidos": 126,
+   "marcados": 39,
+   "erro": ""
+  },
+  {
+   "fonte": "RTP Notícias",
+   "dominio": "rtp.pt",
+   "origem": "nacionais",
+   "pt": true,
+   "via_config": "feed",
+   "via": "direta + Google",
+   "lidos": 133,
+   "marcados": 26,
    "erro": ""
   },
   {
@@ -716,7 +705,18 @@
    "pt": false,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 154,
+   "lidos": 136,
+   "marcados": 0,
+   "erro": ""
+  },
+  {
+   "fonte": "El País",
+   "dominio": "elpais.com",
+   "origem": "internacionais",
+   "pt": false,
+   "via_config": "feed",
+   "via": "direta",
+   "lidos": 145,
    "marcados": 0,
    "erro": ""
   },
@@ -727,8 +727,8 @@
    "pt": true,
    "via_config": "feed",
    "via": "direta",
-   "lidos": 700,
-   "marcados": 89,
+   "lidos": 490,
+   "marcados": 54,
    "erro": ""
   }
  ]
