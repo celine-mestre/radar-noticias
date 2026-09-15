@@ -1,65 +1,96 @@
 {
- "atualizado": "2026-09-15 16:20",
+ "atualizado": "2026-09-15 17:53",
  "dia": "2026-09-15",
- "corte": "16:20",
+ "corte": "17:53",
  "dias_base": 28,
- "regra": "Tempestade quando a contagem do dia, até às 16:20, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 13 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
+ "regra": "Tempestade quando a contagem do dia, até às 17:53, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual). A leitura alargou-se a 2026-08-19; até 2026-09-16, hoje e a base são contados apenas nas 16 publicações cuja leitura não mudou, para a comparação ser entre iguais.",
  "transicao_fontes": {
   "marco": "2026-08-19",
   "fim": "2026-09-16",
-  "publicacoes_de_referencia": 13
+  "publicacoes_de_referencia": 16
  },
- "tempestades": [],
+ "tempestades": [
+  {
+   "area": "Justiça",
+   "hoje": 44,
+   "mediana": 26.0,
+   "limiar": 43.8,
+   "excesso": 18.0,
+   "variacao_pct": 69,
+   "dias_base": 28,
+   "tempestade": true
+  },
+  {
+   "area": "Finanças",
+   "hoje": 27,
+   "mediana": 13.0,
+   "limiar": 24.9,
+   "excesso": 14.0,
+   "variacao_pct": 108,
+   "dias_base": 28,
+   "tempestade": true
+  },
+  {
+   "area": "Reforma do Estado",
+   "hoje": 20,
+   "mediana": 8.5,
+   "limiar": 16.5,
+   "excesso": 11.5,
+   "variacao_pct": 135,
+   "dias_base": 28,
+   "tempestade": true
+  }
+ ],
  "momentum": [
   {
    "area": "Educação, Ciência e Inovação",
-   "hoje": 31,
-   "mediana": 16.0,
-   "limiar": 38.2,
-   "excesso": 15.0,
-   "variacao_pct": 94,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Economia e Coesão Territorial",
-   "hoje": 25,
-   "mediana": 17.0,
-   "limiar": 28.9,
-   "excesso": 8.0,
-   "variacao_pct": 47,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Defesa Nacional",
-   "hoje": 28,
-   "mediana": 21.0,
-   "limiar": 32.9,
-   "excesso": 7.0,
-   "variacao_pct": 33,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Saúde",
-   "hoje": 19,
-   "mediana": 13.0,
-   "limiar": 23.4,
-   "excesso": 6.0,
-   "variacao_pct": 46,
+   "hoje": 49,
+   "mediana": 28.0,
+   "limiar": 57.7,
+   "excesso": 21.0,
+   "variacao_pct": 75,
    "dias_base": 28,
    "tempestade": false
   },
   {
    "area": "Justiça",
-   "hoje": 16,
-   "mediana": 11.5,
-   "limiar": 24.8,
-   "excesso": 4.5,
-   "variacao_pct": 39,
+   "hoje": 44,
+   "mediana": 26.0,
+   "limiar": 43.8,
+   "excesso": 18.0,
+   "variacao_pct": 69,
+   "dias_base": 28,
+   "tempestade": true
+  },
+  {
+   "area": "Economia e Coesão Territorial",
+   "hoje": 50,
+   "mediana": 34.0,
+   "limiar": 60.7,
+   "excesso": 16.0,
+   "variacao_pct": 47,
    "dias_base": 28,
    "tempestade": false
+  },
+  {
+   "area": "Finanças",
+   "hoje": 27,
+   "mediana": 13.0,
+   "limiar": 24.9,
+   "excesso": 14.0,
+   "variacao_pct": 108,
+   "dias_base": 28,
+   "tempestade": true
+  },
+  {
+   "area": "Reforma do Estado",
+   "hoje": 20,
+   "mediana": 8.5,
+   "limiar": 16.5,
+   "excesso": 11.5,
+   "variacao_pct": 135,
+   "dias_base": 28,
+   "tempestade": true
   }
  ],
  "historico": [
@@ -814,6 +845,13 @@
   },
   {
    "data": "2026-09-10",
+   "area": "Reforma do Estado",
+   "hoje": 21,
+   "mediana": 10.5,
+   "limiar": 20.9
+  },
+  {
+   "data": "2026-09-10",
    "area": "Saúde",
    "hoje": 24,
    "mediana": 12.0,
@@ -853,6 +891,27 @@
    "hoje": 33,
    "mediana": 7.0,
    "limiar": 15.9
+  },
+  {
+   "data": "2026-09-15",
+   "area": "Finanças",
+   "hoje": 27,
+   "mediana": 13.0,
+   "limiar": 24.9
+  },
+  {
+   "data": "2026-09-15",
+   "area": "Justiça",
+   "hoje": 44,
+   "mediana": 26.0,
+   "limiar": 43.8
+  },
+  {
+   "data": "2026-09-15",
+   "area": "Reforma do Estado",
+   "hoje": 20,
+   "mediana": 8.5,
+   "limiar": 16.5
   }
  ]
 }
