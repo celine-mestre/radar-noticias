@@ -408,6 +408,8 @@ table.esp .esp-ind{font-weight:600;color:var(--azul)}
 
 /* Matrizes de cruzamento */
 .mtz-rolo{overflow-x:auto;margin-top:.9rem}
+.pp-rolo{margin-top:.9rem}
+.pp-rolo .pp{width:100%;table-layout:auto}
 table.mtz{border-collapse:collapse;font-size:.74rem;min-width:100%}
 table.mtz th{font-weight:500;color:var(--texto-suave);padding:.3rem .35rem;white-space:nowrap}
 table.mtz tr:first-child th{font-size:.68rem;color:var(--texto-ligeiro)}
@@ -1245,6 +1247,17 @@ function cargoInclusivo(p){
        pasta, e a lista dessa área são apelidos e não cargos. */
     .replace(/(?<!primeiro-)\bministr[oa]\b/gi, m =>
       m[0] === m[0].toUpperCase() ? "Ministro/a" : "ministro/a");
+}
+
+/* A matriz do tom cresce para a direita com o tempo. Aberta à esquerda, o que
+   se via primeiro eram os dias mais antigos e o dia de hoje ficava escondido
+   no fim — o contrário do que se procura num painel de acompanhamento. Depois
+   de cada desenho, encosta-se o contentor à direita; quem quiser recuar
+   arrasta para a esquerda, que é o gesto natural para ir ao passado. */
+function encostarMatrizADireita(){
+  document.querySelectorAll(".mtz-rolo").forEach(r => {
+    r.scrollLeft = r.scrollWidth;
+  });
 }
 
 function nuvem(expressoes){
@@ -2400,7 +2413,11 @@ function blocoPesoPublicacoes(linhas){
   return `
     <div class="bloco">
       <h2>De onde vêm as notícias <span class="h2-foco">· peso de cada publicação</span>${sufixoFoco()}</h2>
-      <div class="mtz-rolo">
+      <!-- Sem deslocamento horizontal: a tabela tem sempre as mesmas seis
+           colunas, cabe em qualquer ecrã, e o contentor deslizante só servia
+           para, deslocado, esconder a coluna dos nomes das publicações — que é
+           justamente a que dá sentido às barras. -->
+      <div class="pp-rolo">
         <table class="pp">
           <tr><th></th><th>Publicação</th><th></th><th class="num">Marcações</th>
             <th class="num">Parte</th><th class="num">Acum.</th></tr>
@@ -3145,6 +3162,8 @@ function desenhar(){
   });
   const limpar = document.getElementById("limparDia");
   if(limpar) limpar.addEventListener("click", () => { diaEscolhido = null; desenhar(); });
+
+  encostarMatrizADireita();
 }
 
 
