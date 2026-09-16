@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-16 01:19",
+ "gerado": "2026-09-16 12:46",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -345,6 +345,12 @@
    "n": 48,
    "pct": 75,
    "lado": "negativas"
+  },
+  "2026-09-16|Saúde|+": {
+   "texto": "Na área da saúde, verificou-se uma previsão de admissão a curto prazo de mais enfermeiros no Hospital de São João, no Porto, face à exaustão nas urgências, conforme noticiado por vários órgãos de comunicação social. Adicionalmente, a ULS de Leiria manifestou interesse na construção de uma terceira torre no Hospital de Santo André, visando reforçar a capacidade assistencial. Estes acontecimentos refletem um esforço institucional para colmatar carências de recursos humanos e infraestruturas nos serviços de saúde.",
+   "n": 11,
+   "pct": 65,
+   "lado": "positivas"
   }
  }
 }
