@@ -381,7 +381,18 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
   restantes quadros**, que contam tudo — no mesmo dia e na mesma área, um pico pode dizer
   52 notícias e o gráfico de volume dizer 109, sem que nenhum esteja errado. O painel
   assinala-o com a etiqueta «contagem restrita», e a restrição desaparece sozinha quando a
-  base ficar toda no método novo.
+  base ficar toda no método novo. **O regime vigorou de 19 de agosto a 16 de setembro de
+  2026 e já terminou**: desde então conta-se o universo completo.
+- **Um pico registado é permanente, e os dias passados não são recalculados.** A régua é
+  móvel: uma área cuja cobertura se intensifica faz subir a própria mediana, pelo que um
+  dia que foi excecional pode deixar de o parecer semanas depois. Se a reavaliação apagasse
+  esses registos, o histórico deixaria de contar o que aconteceu e passaria a contar apenas
+  o que ainda hoje seria raro. Por isso a reavaliação **acrescenta** picos em falta e nunca
+  apaga os que lá estão. E um dia só é reavaliado quando toda a sua linha de base é
+  posterior à última mudança de método — comparar um dia já alargado com uma base que ainda
+  não o era produz picos falsos em massa, como se verificou a 16 de setembro de 2026,
+  quando o registo saltou de 118 para 148 com onze das dezassete áreas «em pico» no mesmo
+  dia.
 - **O tom não se reparte por publicação.** A avaliação do Amália mede o tom do
   acontecimento noticiado, não a orientação editorial de quem o noticia, e é automática
   e ainda em validação. Por isso o painel mostra o tom da área e dos seus assuntos, e
@@ -395,7 +406,7 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
   no resumo. Um artigo que trate do tema sem usar a expressão não é apanhado.
 - **As expressões são curtas, como a imprensa escreve.** "política de imigração" quase
   nunca aparece num título; "imigração", "imigrantes" e "migrantes" aparecem sempre. Uma
-  expressão longa é precisa e não apanha nada. São 276 expressões nas 17 áreas, incluindo os cargos governativos (ministro e secretários de Estado de cada pasta, com alternância automática de género).
+  expressão longa é precisa e não apanha nada. São 276 expressões nas 17 áreas, incluindo os cargos governativos (ministro e secretários de Estado de cada pasta, com alternância automática de género: a expressão escrita como «ministro da Saúde» encontra também «ministra da Saúde», e nos painéis a etiqueta mostra-se como «ministro/a da Saúde»).
 - **O Primeiro-Ministro é a 17.ª área,** no topo da ordem protocolar. Como não tem
   matéria setorial própria — não há «assuntos do PM» com léxico específico —, a área
   assenta no titular e no cargo: «Luís Montenegro», «primeiro-ministro português»,
@@ -442,7 +453,8 @@ temporais dizem respeito ao mesmo relógio — e deixa de haver notícias com ho
   não são afetados: em vez de ficarem calados durante semanas, passam a medir no
   subconjunto de publicações cuja leitura não mudou — ver a ressalva sobre as transições
   de método, acima. A restrição levanta-se sozinha a 16 de setembro de 2026, quando a base
-  de 28 dias estiver toda no método novo.
+  de 28 dias estiver toda no método novo — o que sucedeu a 16 de setembro de 2026, data em
+  que o regime terminou.
 
 - **Imprensa apenas.** As plataformas sociais não publicam feeds e estão fora do
   âmbito da aplicação.
@@ -779,9 +791,14 @@ explicada:
 - **Um período escolhido vale para tudo**: cada quadro escreve no título o período a que
   responde. As exceções dizem-no: a trajetória percorre sempre o intervalo inteiro e
   assinala o período com um ponto.
-- Seletores de janela (30 dias, 90, um ano, tudo), de agregação (dia, semana, mês), de
+- Seletores de janela (**série comparável**, 30 dias, 90, um ano, tudo), de agregação
+  (dia, semana, mês), de
   origem (Portugal, lusofonia, internacional, todas), de **agrupamento temático** e de
-  **área governativa**, que reduzem todos os quadros ao que se escolheu.
+  **área governativa**, que reduzem todos os quadros ao que se escolheu. A janela
+  predefinida é a **série comparável**, fixa no dia em que o conjunto de publicações
+  estabilizou (19 de agosto de 2026): sendo fixa, e não móvel, o início não avança um dia
+  por dia. Na leitura diária, o gráfico do volume cresce e desliza na horizontal quando os
+  dias deixam de caber no ecrã, em vez de trocar o dia a dia por semanas.
 - Modo claro e escuro, ecrã inteiro, impressão em PDF, exportação para Excel com oito
   folhas, e manual de leitura embutido.
 

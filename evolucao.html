@@ -567,11 +567,9 @@ footer p{font-size:.75rem;opacity:.82;line-height:1.7}
 <div class="barra">
   <div class="wrap">
     <div class="seg" id="periodo">
-      <button data-p="serie" class="ativo">Série comparável</button>
+      <button data-p="365" class="ativo">Série completa</button>
       <button data-p="30">Últimos 30 dias</button>
       <button data-p="90">90 dias</button>
-      <button data-p="365">Um ano</button>
-      <button data-p="0">Tudo</button>
     </div>
     <div class="seg" id="origem">
       <button data-o="todas" class="ativo">Todas</button>
@@ -789,10 +787,16 @@ const AREAS = [
    palavras-chave a mudar, contagens que ainda não valiam. Incluí-los faria a
    série começar por um degrau que nada diz sobre o que foi noticiado.
 
+   A data é a da ESTABILIZAÇÃO DAS FONTES. Até 19 de agosto de 2026 a recolha
+   leu um conjunto de publicações que ainda estava a crescer, pelo que uma
+   subida de volume mediria o alargamento e não a atualidade. Os dias
+   anteriores existem no repositório e não se perdem — mas não se mostram, para
+   que tudo o que o painel apresenta seja comparável entre si.
+
    Datas anteriores a esta ficam de fora de tudo — gráfico, contagens e
    exportação. Para as repor, basta esvaziar: INICIO_SERIE = "".
    ────────────────────────────────────────────────────────────────────────── */
-const INICIO_SERIE = "2026-08-04";
+const INICIO_SERIE = "2026-08-19";
 
 /* ── ALARGAMENTO DAS FONTES ────────────────────────────────────────────────
    A 17 de agosto de 2026 o conjunto de publicações efetivamente lidas cresceu:
@@ -809,12 +813,11 @@ const INICIO_SERIE = "2026-08-04";
    juntar uma linha a esta lista — a data é a do primeiro dia já no regime novo.
    ────────────────────────────────────────────────────────────────────────── */
 const MARCOS = [
-  { data: "2026-08-18", rotulo: "+ publicações",
-    curto: "mais publicações",
-    nota: "Passaram a contar publicações que estavam na lista mas não chegavam a "
-        + "ser recolhidas: umas por correção do endereço do feed, outras por "
-        + "passarem a ser lidas pelo Google Notícias, que é a via usada quando "
-        + "um órgão não disponibiliza feed acessível." },
+  /* O marco de 18 de agosto — a entrada das publicações que estavam na lista
+     mas não chegavam a ser recolhidas — saiu da lista quando a série passou a
+     começar a 19: a marca assinalava uma mudança anterior ao primeiro dia
+     mostrado e não tinha onde pousar no gráfico. A mudança está registada no
+     README, que é onde o método se documenta. */
   { data: "2026-08-19", rotulo: "+ profundidade",
     curto: "mais notícias por publicação",
     nota: "Passou a ler-se mais fundo em cada publicação: os feeds que mostram "
@@ -845,15 +848,11 @@ let TRANSICAO_PICOS = null; // {marco, fim, publicacoes_de_referencia} — do al
 const MINIMO_AVALIADAS = 8;
 
 let SENTIMENTO = [];   // [{data, fechado, areas:{nome:{nacionais, avaliadas, positivo, neutro, negativo}}}]
-/* A data em que o conjunto de publicações estabilizou. Daqui para a frente,
-   volumes e tom comparam-se igual com igual; antes disto o Radar lia menos
-   fontes, pelo que uma subida mediria o alargamento e não a atualidade. É o
-   mesmo marco que o alertas.py usa para a linha de base dos picos. */
-const INICIO_SERIE_COMPARAVEL = "2026-08-19";
-/* «serie» é uma janela FIXA, ao contrário das janelas móveis de N dias: o
-   início não anda para a frente um dia por dia, que era o que fazia a série
-   encolher pela esquerda a cada manhã. */
-let dias = "serie", agregacao = "dia", diaEscolhido = null, origem = "todas", areaEscolhida = "", grupoEscolhido = "";
+/* A janela abre no máximo disponível: como a série só existe a partir do corte
+   acima, «um ano» mostra tudo o que há e o início não anda para a frente um dia
+   por dia — que era o que fazia a série encolher pela esquerda a cada manhã.
+   Os botões mais curtos servem para estreitar, não para alargar. */
+let dias = 365, agregacao = "dia", diaEscolhido = null, origem = "todas", areaEscolhida = "", grupoEscolhido = "";
 /* Como se lê o registo dos picos. Por omissão, do mais recente para o mais
    antigo: quem abre o painel pergunta primeiro «o que houve ontem?», e um
    pico de ontem importa mais do que um pico maior de há três semanas. Quem
@@ -1056,8 +1055,6 @@ async function carregarSentimento(){
 
 /* Só os dias dentro da janela escolhida */
 function janela(){
-  if(dias === "serie")
-    return SERIE.filter(d => (d.data || "") >= INICIO_SERIE_COMPARAVEL);
   if(!dias) return SERIE;
   const limite = new Date();
   limite.setDate(limite.getDate() - dias);
@@ -1232,6 +1229,24 @@ function expressoesPorArea(linhas, quantas = 1){
    que puxou cobertura no período, com o tamanho a valer pela quantidade. Lê-se
    melhor do que uma tabela quando o que se quer é ver, num olhar, se as
    expressões que temos estão a render. */
+/* ETIQUETA INCLUSIVA DOS CARGOS. A deteção já apanha os dois géneros — a
+   correspondência trata «ministro» e «ministra» como a mesma forma —, mas a
+   expressão está escrita no masculino na configuração e era assim que aparecia
+   no painel. Aqui reescreve-se apenas o RÓTULO, à vista: a cadeia original é a
+   que serve para procurar e não se toca nela. Conforme o livro de estilo da
+   casa, que manda evitar o masculino universal. */
+function cargoInclusivo(p){
+  return String(p)
+    .replace(/\bsecret[áa]rio de Estado\b/gi, m =>
+      m[0] === m[0].toUpperCase() ? "Secretário/a de Estado" : "secretário/a de Estado")
+    .replace(/\bsecret[áa]ria de Estado\b/gi, m =>
+      m[0] === m[0].toUpperCase() ? "Secretário/a de Estado" : "secretário/a de Estado")
+    /* «primeiro-ministro» fica de fora: é o nome da área, não um cargo com
+       pasta, e a lista dessa área são apelidos e não cargos. */
+    .replace(/(?<!primeiro-)\bministr[oa]\b/gi, m =>
+      m[0] === m[0].toUpperCase() ? "Ministro/a" : "ministro/a");
+}
+
 function nuvem(expressoes){
   const palavras = [];
   expressoes.forEach(e => (e.topo || []).concat(e.resto || []).forEach(([p, n]) => {
@@ -1255,7 +1270,7 @@ function nuvem(expressoes){
       font-size:${(0.82 + f * 1.5).toFixed(2)}rem;
       font-weight:${f > .6 ? 600 : f > .3 ? 500 : 400};
       opacity:${(0.62 + f * 0.38).toFixed(2)}"
-      title="${p.area} · ${num(p.n)} ${p.n === 1 ? "notícia" : "notícias"}">${p.palavra}</span>`;
+      title="${p.area} · ${num(p.n)} ${p.n === 1 ? "notícia" : "notícias"}">${cargoInclusivo(p.palavra)}</span>`;
   }).join("")}</div>`;
 }
 
@@ -1272,7 +1287,7 @@ function semRender(expressoes){
     <div class="sr-lista">
       ${areas.map(e => `<div class="sr-area" style="--cor:${cor(grupoDaArea(e.area))}">
         <h4>${e.area}</h4>
-        <p>${e.semRender.join(" · ")}</p>
+        <p>${e.semRender.map(cargoInclusivo).join(" · ")}</p>
       </div>`).join("")}
     </div>
   </details>`;
@@ -3647,7 +3662,7 @@ window.addEventListener("scroll", () =>
 $("#periodo").addEventListener("click", e => {
   const b = e.target.closest("button"); if(!b) return;
   document.querySelectorAll("#periodo button").forEach(x => x.classList.toggle("ativo", x === b));
-  dias = b.dataset.p === "serie" ? "serie" : +b.dataset.p; desenhar();
+  dias = +b.dataset.p; desenhar();
 });
 
 /* O seletor só oferece áreas que existem na série: com dois dias de registo,
@@ -3739,12 +3754,16 @@ $("#agregacao").addEventListener("click", e => {
     .filter(d => d && d.data && (!INICIO_SERIE || d.data >= INICIO_SERIE))
     .sort((a, b) => a.data.localeCompare(b.data));
   encherAreas();
+  /* A frase de abertura diz a data que o painel MOSTRA, e não a data em que a
+     recolha começou: abrindo em «Série comparável», anunciar 4 de agosto
+     prometia dias que o leitor não encontra nos gráficos. A data do arranque da
+     recolha fica dita a seguir, porque também é informação — mas em segundo
+     plano, e com a razão da diferença à vista. */
   const marca = $("#inicio");
   if(marca && INICIO_SERIE){
-    const d = new Date(INICIO_SERIE + "T00:00:00");
-    marca.textContent = "A série começa em "
-      + d.toLocaleDateString("pt-PT", { day:"numeric", month:"long", year:"numeric" })
-      + ".";
+    const porExtenso = iso => new Date(iso + "T00:00:00")
+      .toLocaleDateString("pt-PT", { day:"numeric", month:"long", year:"numeric" });
+    marca.textContent = `A série começa em ${porExtenso(INICIO_SERIE)}.`;
   }
 
   /* A linha do intervalo passou a acompanhar a JANELA escolhida e não a série

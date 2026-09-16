@@ -1477,6 +1477,24 @@ function sufixo(){
 }
 
 function consulta(a){
+/* ETIQUETA INCLUSIVA DOS CARGOS. A deteção já apanha os dois géneros — a
+   correspondência trata «ministro» e «ministra» como a mesma forma —, mas a
+   expressão está escrita no masculino na configuração e era assim que aparecia
+   no painel. Aqui reescreve-se apenas o RÓTULO, à vista: a cadeia original é a
+   que serve para procurar e não se toca nela. Conforme o livro de estilo da
+   casa, que manda evitar o masculino universal. */
+function cargoInclusivo(p){
+  return String(p)
+    .replace(/\bsecret[áa]rio de Estado\b/gi, m =>
+      m[0] === m[0].toUpperCase() ? "Secretário/a de Estado" : "secretário/a de Estado")
+    .replace(/\bsecret[áa]ria de Estado\b/gi, m =>
+      m[0] === m[0].toUpperCase() ? "Secretário/a de Estado" : "secretário/a de Estado")
+    /* «primeiro-ministro» fica de fora: é o nome da área, não um cargo com
+       pasta, e a lista dessa área são apelidos e não cargos. */
+    .replace(/(?<!primeiro-)\bministr[oa]\b/gi, m =>
+      m[0] === m[0].toUpperCase() ? "Ministro/a" : "ministro/a");
+}
+
   const termos = "(" + a.palavras.map(p => `"${p}"`).join(" OR ") + ")";
   const excl = (a.excluir || []).map(t => ` -"${t}"`).join("");
   return termos + excl + sufixo();
@@ -1900,7 +1918,7 @@ function abrirExportacao(id){
       </div>
       <div class="chips" id="listaChips" hidden>${a.palavras.map(p =>
         `<span class="chip${(consultaAtiva.termos || []).includes(p) ? " sel" : ""}"
-               data-termo="${esc(p)}" style="--cor:${cor(a.grupo)}">${esc(p)}</span>`).join("")}</div>
+               data-termo="${esc(p)}" style="--cor:${cor(a.grupo)}">${esc(cargoInclusivo(p))}</span>`).join("")}</div>
     </div>
 
     <div class="barra-criterios">
