@@ -2827,6 +2827,11 @@ function desenhar(){
   const corpo = $("#corpo");
   const autoAgregado = ajustarAgregacao(linhas);
 
+  $("#cobertura").textContent = linhas.length
+    ? `${linhas.length} ${linhas.length === 1 ? "dia" : "dias"} · de `
+      + `${linhas[0].data} a ${linhas[linhas.length - 1].data}`
+    : "sem série registada";
+
   if(!linhas.length){
     corpo.innerHTML = `<div class="vazio">
       Ainda não há dias registados nesta janela.<br>
@@ -3742,9 +3747,10 @@ $("#agregacao").addEventListener("click", e => {
       + ".";
   }
 
-  $("#cobertura").textContent = SERIE.length
-    ? `${SERIE.length} ${SERIE.length === 1 ? "dia" : "dias"} · de ${SERIE[0].data} a ${SERIE[SERIE.length - 1].data}`
-    : "sem série registada";
+  /* A linha do intervalo passou a acompanhar a JANELA escolhida e não a série
+     inteira: com a janela fixa a começar no marco das fontes, dizer «desde 4 de
+     agosto» anunciava dias que o painel já não mostra. Atualiza-se a cada
+     redesenho, por isso vive dentro de desenhar(). */
   desenhar();
 })();
 </script>
