@@ -371,6 +371,21 @@ def principal():
     while d.strftime("%Y-%m-%d") < hoje:
         dia_passado = d.strftime("%Y-%m-%d")
         d += timedelta(days=1)
+        # BASE HOMOGÉNEA, OU NÃO SE MEXE. A reavaliação de um dia passado usa a
+        # contagem de HOJE — o universo completo de publicações — mas a sua
+        # linha de base são os 28 dias anteriores a ESSE dia, que podem ser
+        # anteriores ao alargamento da leitura. Comparar um dia já alargado com
+        # uma base que ainda não o era produz picos falsos em massa: medido a
+        # 16/9/2026, o registo saltou de 31 para 148, com onze das dezassete
+        # áreas «em pico» no mesmo dia. Enquanto durou a transição, a contagem
+        # restrita protegia disto; ao terminar, o que protege é esta condição.
+        # Um dia só é reavaliado quando toda a sua base é posterior ao marco;
+        # os anteriores conservam o registo que tiveram à data, que foi feito
+        # com a régua certa para eles.
+        base_comeca = (datetime.strptime(dia_passado, "%Y-%m-%d")
+                       - timedelta(days=args.dias)).strftime("%Y-%m-%d")
+        if base_comeca < MARCO_FONTES:
+            continue
         t_dia, _, base_dia = avaliar(dias_fechados, dia_passado, args.dias,
                                      inicio)
         total_dia = sum(dias_fechados.get(dia_passado, {}).values())
