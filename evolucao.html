@@ -413,7 +413,19 @@ table.esp .esp-ind{font-weight:600;color:var(--azul)}
 table.mtz{border-collapse:collapse;font-size:.74rem;min-width:100%}
 table.mtz th{font-weight:500;color:var(--texto-suave);padding:.3rem .35rem;white-space:nowrap}
 table.mtz tr:first-child th{font-size:.68rem;color:var(--texto-ligeiro)}
-table.mtz .mtz-lin{text-align:left;max-width:190px;overflow:hidden;text-overflow:ellipsis}
+/* A coluna das áreas fica FIXA à esquerda. Sem isto, a matriz aberta à direita
+   mostrava números sem se saber de que área eram, e ao recuar o nome vinha
+   cortado por reticências. Agora acompanha o deslocamento, com fundo próprio
+   para os números não passarem por baixo, e o nome quebra em duas linhas em
+   vez de ser truncado — uma área chamada «Trabalho, Solidariedade e Segurança
+   Social» não se identifica pelas primeiras palavras. */
+table.mtz .mtz-lin{text-align:left;width:150px;min-width:150px;max-width:150px;
+  white-space:normal;line-height:1.25;hyphens:auto;
+  position:sticky;left:0;z-index:2;background:var(--superficie);
+  box-shadow:1px 0 0 var(--borda)}
+/* O canto superior esquerdo tapa o cruzamento das duas fixações */
+table.mtz tr:first-child th:first-child{position:sticky;left:0;z-index:3;
+  background:var(--superficie)}
 table.mtz td{text-align:center;padding:.3rem .35rem;font-variant-numeric:tabular-nums;
   background:color-mix(in srgb, var(--vermelho) calc(var(--i) * 72%), transparent);
   color:var(--texto);border-radius:4px}
