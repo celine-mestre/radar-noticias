@@ -1,80 +1,100 @@
 {
- "atualizado": "2026-09-17 12:44",
+ "atualizado": "2026-09-17 16:12",
  "dia": "2026-09-17",
- "corte": "12:44",
+ "corte": "16:12",
  "dias_base": 28,
- "regra": "Tempestade quando a contagem do dia, até às 12:44, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 16:12, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "transicao_fontes": null,
  "tempestades": [
   {
+   "area": "Assuntos Parlamentares",
+   "hoje": 27,
+   "mediana": 4.5,
+   "limiar": 14.9,
+   "excesso": 22.5,
+   "variacao_pct": 500,
+   "dias_base": 28,
+   "tempestade": true
+  },
+  {
    "area": "Primeiro-Ministro",
-   "hoje": 18,
-   "mediana": 5.5,
-   "limiar": 13.5,
-   "excesso": 12.5,
-   "variacao_pct": 227,
+   "hoje": 26,
+   "mediana": 7.0,
+   "limiar": 15.0,
+   "excesso": 19.0,
+   "variacao_pct": 271,
    "dias_base": 28,
    "tempestade": true
   },
   {
    "area": "Reforma do Estado",
-   "hoje": 19,
-   "mediana": 7.5,
-   "limiar": 15.5,
-   "excesso": 11.5,
-   "variacao_pct": 153,
+   "hoje": 30,
+   "mediana": 11.5,
+   "limiar": 21.9,
+   "excesso": 18.5,
+   "variacao_pct": 161,
+   "dias_base": 28,
+   "tempestade": true
+  },
+  {
+   "area": "Negócios Estrangeiros",
+   "hoje": 37,
+   "mediana": 20.0,
+   "limiar": 33.3,
+   "excesso": 17.0,
+   "variacao_pct": 85,
    "dias_base": 28,
    "tempestade": true
   }
  ],
  "momentum": [
   {
-   "area": "Educação, Ciência e Inovação",
-   "hoje": 55,
-   "mediana": 33.5,
-   "limiar": 70.6,
-   "excesso": 21.5,
-   "variacao_pct": 64,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Administração Interna",
-   "hoje": 38,
-   "mediana": 21.5,
-   "limiar": 42.3,
-   "excesso": 16.5,
-   "variacao_pct": 77,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Finanças",
+   "area": "Assuntos Parlamentares",
    "hoje": 27,
-   "mediana": 13.0,
-   "limiar": 30.8,
-   "excesso": 14.0,
-   "variacao_pct": 108,
+   "mediana": 4.5,
+   "limiar": 14.9,
+   "excesso": 22.5,
+   "variacao_pct": 500,
+   "dias_base": 28,
+   "tempestade": true
+  },
+  {
+   "area": "Educação, Ciência e Inovação",
+   "hoje": 73,
+   "mediana": 51.5,
+   "limiar": 109.3,
+   "excesso": 21.5,
+   "variacao_pct": 42,
    "dias_base": 28,
    "tempestade": false
   },
   {
    "area": "Primeiro-Ministro",
-   "hoje": 18,
-   "mediana": 5.5,
-   "limiar": 13.5,
-   "excesso": 12.5,
-   "variacao_pct": 227,
+   "hoje": 26,
+   "mediana": 7.0,
+   "limiar": 15.0,
+   "excesso": 19.0,
+   "variacao_pct": 271,
    "dias_base": 28,
    "tempestade": true
   },
   {
+   "area": "Finanças",
+   "hoje": 37,
+   "mediana": 18.5,
+   "limiar": 43.7,
+   "excesso": 18.5,
+   "variacao_pct": 100,
+   "dias_base": 28,
+   "tempestade": false
+  },
+  {
    "area": "Reforma do Estado",
-   "hoje": 19,
-   "mediana": 7.5,
-   "limiar": 15.5,
-   "excesso": 11.5,
-   "variacao_pct": 153,
+   "hoje": 30,
+   "mediana": 11.5,
+   "limiar": 21.9,
+   "excesso": 18.5,
+   "variacao_pct": 161,
    "dias_base": 28,
    "tempestade": true
   }
@@ -908,17 +928,31 @@
   },
   {
    "data": "2026-09-17",
+   "area": "Assuntos Parlamentares",
+   "hoje": 27,
+   "mediana": 4.5,
+   "limiar": 14.9
+  },
+  {
+   "data": "2026-09-17",
+   "area": "Negócios Estrangeiros",
+   "hoje": 37,
+   "mediana": 20.0,
+   "limiar": 33.3
+  },
+  {
+   "data": "2026-09-17",
    "area": "Primeiro-Ministro",
-   "hoje": 18,
-   "mediana": 5.5,
-   "limiar": 13.5
+   "hoje": 26,
+   "mediana": 7.0,
+   "limiar": 15.0
   },
   {
    "data": "2026-09-17",
    "area": "Reforma do Estado",
-   "hoje": 19,
-   "mediana": 7.5,
-   "limiar": 15.5
+   "hoje": 30,
+   "mediana": 11.5,
+   "limiar": 21.9
   }
  ]
 }
