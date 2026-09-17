@@ -555,7 +555,12 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
   <tr><td style="padding:18px 24px;background:{CINZA_TEXTO}">
     <div style="font:400 11px Arial,sans-serif;color:#ffffff;opacity:.85;line-height:1.6">
       Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas<br>
-      Dúvidas, subscrições e cancelamentos: upe@sggoverno.gov.pt<br>
+      <!-- O endereço vai como ligação explícita e com a cor forçada: deixado
+           em texto simples, o Outlook converte-o sozinho em hiperligação azul,
+           que sobre o fundo escuro deste rodapé fica ilegível. -->
+      Dúvidas, subscrições e cancelamentos:
+      <a href="mailto:upe@sggoverno.gov.pt"
+         style="color:#ffffff;text-decoration:underline">upe@sggoverno.gov.pt</a><br>
       Recolha automática a partir dos feeds das publicações subscritas.
       A leitura e a verificação são de quem recebe.
     </div>
