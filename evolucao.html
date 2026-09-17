@@ -419,10 +419,9 @@ table.mtz tr:first-child th{font-size:.68rem;color:var(--texto-ligeiro)}
    para os números não passarem por baixo, e o nome quebra em duas linhas em
    vez de ser truncado — uma área chamada «Trabalho, Solidariedade e Segurança
    Social» não se identifica pelas primeiras palavras. */
-table.mtz .mtz-lin{text-align:left;width:150px;min-width:150px;max-width:150px;
-  white-space:normal;line-height:1.25;hyphens:auto;
+table.mtz .mtz-lin{text-align:left;white-space:nowrap;
   position:sticky;left:0;z-index:2;background:var(--superficie);
-  box-shadow:1px 0 0 var(--borda)}
+  box-shadow:1px 0 0 var(--borda);padding-right:.7rem}
 /* O canto superior esquerdo tapa o cruzamento das duas fixações */
 table.mtz tr:first-child th:first-child{position:sticky;left:0;z-index:3;
   background:var(--superficie)}
