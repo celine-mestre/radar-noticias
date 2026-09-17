@@ -466,9 +466,8 @@ def bloco_alertas(alertas, areas=None):
           &#9889; Pico noticioso — volume de notícias muito acima do habitual</div>
         {''.join(linhas)}
         <div style="font:400 11px Arial,sans-serif;color:#8a9098;padding-top:8px;line-height:1.5">
-          Alerta automático: contagem do dia acima da mediana dos últimos
-          {alertas.get('dias_base', '—')} dias à mesma hora, em pelo menos dois
-          desvios robustos. A leitura do que se passa é de quem recebe.</div>
+          Alerta automático, de base estatística: o volume do dia está muito
+          acima do padrão das últimas quatro semanas à mesma hora.</div>
       </td></tr>
     </table>
   </td></tr>"""
