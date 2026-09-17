@@ -286,7 +286,15 @@ jobs:
           password: ${{ secrets.SMTP_SENHA }}
           subject: ${{ matrix.envio.assunto }}
           to: ${{ steps.dest.outputs.para }}
-          from: Radar de Noticias <${{ secrets.SMTP_UTILIZADOR }}>
+          # NOME E RESPOSTA INSTITUCIONAIS. Enquanto o envio correr por uma
+          # caixa pessoal — o endereco da unidade exige autorizacao do tenant
+          # da Secretaria-Geral —, o destinatario nao deve ver nem usar essa
+          # caixa: o nome apresentado e o da unidade e as respostas seguem para
+          # o endereco institucional. O envelope continua a ser o do remetente
+          # autenticado, que os servidores verificam; altera-lo sem autorizacao
+          # faria a mensagem cair em spam.
+          from: Radar de Noticias · UPE <${{ secrets.SMTP_UTILIZADOR }}>
+          reply_to: ${{ secrets.RESPONDER_A || 'upe@sggoverno.gov.pt' }}
           # As duas versões seguem juntas: o cliente apresenta a que sabe ler.
           html_body: file://${{ matrix.envio.ficheiro }}
           body: file://${{ matrix.envio.texto }}
