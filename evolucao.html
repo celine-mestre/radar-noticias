@@ -141,7 +141,35 @@ header .accoes{margin-left:auto;display:flex;gap:.45rem;flex-wrap:wrap;justify-c
   .tp-seta{display:none !important}
   details.sem-render > *{display:block !important}
   details.sem-render summary{list-style:none;font-weight:600}
+  /* Um bloco mais alto do que uma página não pode «evitar a quebra»: o
+     navegador cortava-o em vez de o continuar na página seguinte — era assim
+     que a lista dos picos, com os resumos abertos, saía truncada no PDF. Os
+     blocos longos passam a poder quebrar; o que se mantém inteiro é cada pico
+     com o seu resumo, e cada resumo da matriz. */
+  .bloco{break-inside:auto}
+  .tp, .tp-resumo, .imp-resumo{break-inside:avoid}
+  .tp-resumo{display:block !important}
+  /* Conteúdo que só existe no papel: o outro lado da matriz do tom e a lista
+     dos resumos das coberturas marcantes, que no ecrã vivem no cursor e no
+     toque e num PDF não teriam como aparecer. */
+  .so-impressao{display:block !important}
+  .so-impressao .mtz-rolo{overflow:visible}
+  .mtz-rolo{overflow:visible !important}
+  /* A matriz é mais larga do que uma folha A4 ao alto; no ecrã desliza, no
+     papel não. Compacta-se para caber inteira: com trinta colunas de dois
+     algarismos, 8px de letra e 3px de margem chegam para os 190mm úteis. */
+  /* (!important porque este bloco de impressão vem antes das regras de ecrã
+     da matriz no ficheiro, e sem isso perdia para elas.) */
+  table.mtz{font-size:7.5px !important;width:100% !important;min-width:0 !important;table-layout:auto}
+  table.mtz td, table.mtz th{padding:2px 2px !important;font-size:7.5px !important}
+  table.mtz tr:first-child th{font-size:7px !important}
+  table.mtz .mtz-lin{font-size:7.5px !important;position:static !important;box-shadow:none;padding-right:5px !important}
+  table.mtz tr:first-child th:first-child{position:static !important}
+  .imp-resumo{margin:.6rem 0 .9rem;padding:.6rem .9rem;border-left:3px solid #BE9C54;
+    background:#fbf7ef;font-size:.84rem;line-height:1.5}
+  .imp-resumo strong{display:block;margin-bottom:.25rem;color:#1F2A37}
 }
+.so-impressao{display:none}
 
 main{padding:1.6rem 0 3rem}
 .aviso{background:#fdfbf6;border:1px solid #efe4cd;border-radius:var(--raio-s);
@@ -3679,6 +3707,53 @@ $("#btnPDF").addEventListener("click", () => window.print());
    depois. E imprime-se sempre no tema claro: no escuro, texto claro sobre
    papel branco desaparecia. */
 let estadoImpressao = null;
+/* O bloco da matriz do tom, tal como está desenhado neste momento. */
+function blocoDaMatriz(){
+  return [...document.querySelectorAll("#corpo .bloco")]
+    .find(b => /Tom por área e período/.test(b.querySelector("h2")?.textContent || ""));
+}
+
+/* Prepara o que só existe no papel. A matriz mostra um lado de cada vez —
+   negativas ou positivas — e os resumos das coberturas marcantes abrem no
+   cursor ou ao toque; nada disso chega a um PDF. Aqui desenha-se o outro lado
+   e escreve-se a lista dos resumos dos dois lados, num contentor que o ecrã
+   não mostra e a impressão sim. Tudo é desfeito no afterprint. */
+function prepararImpressao(){
+  const original = ladoTom;
+  const outro = original === "negativas" ? "positivas" : "negativas";
+  const html = {};
+  for(const lado of [original, outro]){
+    ladoTom = lado; desenhar();
+    const b = blocoDaMatriz();
+    html[lado] = b ? b.outerHTML : "";
+  }
+  ladoTom = original; desenhar();
+  const alvo = blocoDaMatriz();
+  if(!alvo) return;
+
+  const resumos = [];
+  const tmp = document.createElement("div");
+  for(const lado of ["negativas", "positivas"]){
+    tmp.innerHTML = html[lado] || "";
+    tmp.querySelectorAll("td.mtz-com-resumo").forEach(td => {
+      resumos.push({ lado, cab: td.dataset.cab || "", texto: td.dataset.resumo || "" });
+    });
+  }
+  const bloco = document.createElement("div");
+  bloco.className = "so-impressao";
+  bloco.innerHTML = (html[outro] || "") + (resumos.length ? `
+    <div class="bloco">
+      <h2>Resumos das coberturas marcantes <span class="h2-foco">· ${resumos.length}
+        ${resumos.length === 1 ? "célula" : "células"} acima do limiar, escritos pelo Amália</span></h2>
+      <p class="nota">Cada resumo corresponde a uma célula da matriz — negativas com 75% ou mais,
+        positivas com 50% ou mais — e foi redigido a partir dos títulos das notícias desse dia
+        e dessa área. Em validação por leitura humana.</p>
+      ${resumos.map(r => `<div class="imp-resumo"><strong>${r.cab}</strong>${r.texto}</div>`).join("")}
+    </div>` : "");
+  alvo.insertAdjacentElement("afterend", bloco);
+  estadoImpressao.extra = bloco;
+}
+
 window.addEventListener("beforeprint", () => {
   if(estadoImpressao) return;
   estadoImpressao = {
@@ -3687,12 +3762,17 @@ window.addEventListener("beforeprint", () => {
     escondidos: [...document.querySelectorAll(".tp-resumo[hidden], .tp-lista[hidden]")]
   };
   document.documentElement.setAttribute("data-tema", "claro");
+  try{ prepararImpressao(); }catch(e){ console.warn("impressão:", e); }
+  /* o desenhar() da preparação refez o DOM: reler o que há para abrir */
+  estadoImpressao.detalhes = [...document.querySelectorAll("details.sem-render")].map(d => [d, d.open]);
+  estadoImpressao.escondidos = [...document.querySelectorAll(".tp-resumo[hidden], .tp-lista[hidden]")];
   estadoImpressao.detalhes.forEach(([d]) => d.open = true);
   estadoImpressao.escondidos.forEach(e => e.hidden = false);
 });
 window.addEventListener("afterprint", () => {
   if(!estadoImpressao) return;
   document.documentElement.setAttribute("data-tema", estadoImpressao.tema || "claro");
+  if(estadoImpressao.extra) estadoImpressao.extra.remove();
   estadoImpressao.detalhes.forEach(([d, aberto]) => d.open = aberto);
   estadoImpressao.escondidos.forEach(e => e.hidden = true);
   estadoImpressao = null;
