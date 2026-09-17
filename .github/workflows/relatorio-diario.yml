@@ -64,7 +64,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  PAINEL: "https://celine-mestre.github.io/radar-noticias/"
+  PAINEL: "https://upe-sggov.github.io/radar-noticias/"
   # Origens a incluir no relatório: nacionais, lusofonas, internacionais.
   # Vazio inclui as três.
   ORIGENS: ""
