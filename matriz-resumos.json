@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-16 18:27",
+ "gerado": "2026-09-17 22:49",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -346,10 +346,16 @@
    "pct": 76,
    "lado": "negativas"
   },
-  "2026-09-16|Saúde|+": {
-   "texto": "A área da saúde registou, num único dia, múltiplos desenvolvimentos, destacando-se a previsão de admissão a curto prazo de mais enfermeiros no Hospital de São João, no Porto, face à exaustão nas urgências. Adicionalmente, a Sword Health prepara a aquisição da aplicação Headspace, com impacto na saúde digital, e a Hovione inaugura uma nova fábrica em Nova Jérsia, reforçando a capacidade de produção farmacêutica. Observou-se ainda uma tendência de perda de quota de mercado para os genéricos nas farmácias portuguesas, enquanto a ULS de Leiria manifesta a necessidade de uma terceira torre no Hospital de Santo André para responder ao aumento da procura. O tema dominante é, assim, o reforço de recursos humanos e infraestruturas nos serviços de saúde.",
+  "2026-09-17|Justiça": {
+   "texto": "No dia 17 de setembro de 2026, registaram-se múltiplos acontecimentos de natureza judicial e de segurança pública. Destacam-se a prisão preventiva de três suspeitos de um tiroteio na Baixa de Lisboa que feriu uma turista sueca, bem como de uma mulher que ateou fogo ao marido na Madeira. Paralelamente, verificou-se a prisão preventiva de um homem por esfaqueamento da companheira em Lisboa, de uma suspeita de fogo posto e de um suspeito de roubos com arma branca. Adicionalmente, houve detenções de um homem procurado pela Interpol e de um suspeito de violência doméstica. Relativamente à esfera administrativa, o antigo ministro Mário Lino reafirmou, em tribunal, ter sido ele a antecipar o concurso do TGV, contrariando o Ministério Público.",
+   "n": 46,
+   "pct": 76,
+   "lado": "negativas"
+  },
+  "2026-09-17|Presidência|+": {
+   "texto": "No dia 17 de setembro de 2026, o Governo aprovou medidas de alívio ao custo de vida, nomeadamente no âmbito fiscal e energético. Foram confirmadas a descida das taxas de IRS entre 0,3 e 0,5 pontos até ao 6.º escalão, o pagamento de um suplemento extraordinário a pensionistas pelo terceiro ano consecutivo e a extensão do apoio de 10 cêntimos por litro de gasóleo profissional até ao fim do ano. Adicionalmente, o Primeiro-Ministro comprometeu-se com a concretização de um superávite orçamental no final do ano, enquanto se preparava para informar o país sobre as medidas fiscais e os apoios aos combustíveis. O tema dominante é o alívio económico aos cidadãos e empresas, através de medidas fiscais e de apoio direto.",
    "n": 14,
-   "pct": 50,
+   "pct": 56,
    "lado": "positivas"
   }
  }
