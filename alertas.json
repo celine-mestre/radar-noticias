@@ -1,71 +1,60 @@
 {
- "atualizado": "2026-09-16 23:42",
- "dia": "2026-09-16",
- "corte": "23:42",
- "dias_base": 28,
- "regra": "Tempestade quando a contagem do dia, até às 23:42, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "atualizado": "2026-09-17 01:16",
+ "dia": "2026-09-17",
+ "corte": "01:16",
+ "dias_base": 27,
+ "regra": "Tempestade quando a contagem do dia, até às 01:16, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "transicao_fontes": null,
- "tempestades": [
-  {
-   "area": "Reforma do Estado",
-   "hoje": 52,
-   "mediana": 16.5,
-   "limiar": 31.3,
-   "excesso": 35.5,
-   "variacao_pct": 215,
-   "dias_base": 28,
-   "tempestade": true
-  }
- ],
+ "tempestades": [],
  "momentum": [
   {
-   "area": "Educação, Ciência e Inovação",
-   "hoje": 127,
-   "mediana": 82.0,
-   "limiar": 172.4,
-   "excesso": 45.0,
-   "variacao_pct": 55,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Reforma do Estado",
-   "hoje": 52,
-   "mediana": 16.5,
-   "limiar": 31.3,
-   "excesso": 35.5,
-   "variacao_pct": 215,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
-   "area": "Ambiente e Energia",
-   "hoje": 57,
-   "mediana": 35.0,
-   "limiar": 64.7,
-   "excesso": 22.0,
-   "variacao_pct": 63,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Negócios Estrangeiros",
-   "hoje": 45,
-   "mediana": 29.0,
-   "limiar": 46.8,
-   "excesso": 16.0,
-   "variacao_pct": 55,
-   "dias_base": 28,
+   "area": "Infraestruturas e Habitação",
+   "hoje": 4,
+   "mediana": 1,
+   "limiar": 9,
+   "excesso": 3,
+   "variacao_pct": 300,
+   "dias_base": 27,
    "tempestade": false
   },
   {
    "area": "Assuntos Parlamentares",
-   "hoje": 28,
-   "mediana": 12.0,
-   "limiar": 38.7,
-   "excesso": 16.0,
-   "variacao_pct": 133,
-   "dias_base": 28,
+   "hoje": 3,
+   "mediana": 0,
+   "limiar": 8,
+   "excesso": 3,
+   "variacao_pct": null,
+   "dias_base": 27,
+   "tempestade": false
+  },
+  {
+   "area": "Educação, Ciência e Inovação",
+   "hoje": 5,
+   "mediana": 4,
+   "limiar": 12,
+   "excesso": 1,
+   "variacao_pct": 25,
+   "dias_base": 27,
+   "tempestade": false
+  },
+  {
+   "area": "Administração Interna",
+   "hoje": 2,
+   "mediana": 1,
+   "limiar": 9,
+   "excesso": 1,
+   "variacao_pct": 100,
+   "dias_base": 27,
+   "tempestade": false
+  },
+  {
+   "area": "Ambiente e Energia",
+   "hoje": 2,
+   "mediana": 1,
+   "limiar": 9,
+   "excesso": 1,
+   "variacao_pct": 100,
+   "dias_base": 27,
    "tempestade": false
   }
  ],
