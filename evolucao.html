@@ -1605,8 +1605,20 @@ function faisca(valores, corLinha, iMarca = -1, tons = null, valoresPT = null,
    azedar ou a melhorar? Uma percentagem em linha mostra isso; barras empilhadas,
    não. Os períodos sem avaliações que cheguem interrompem a linha, em vez de a
    fazerem cair a zero, que seria uma leitura falsa. */
+/* OS PICOS SÃO DA COBERTURA NACIONAL. O alertas.py calcula-os sobre a
+   comunicação social portuguesa — é aí que o volume por área tem significado
+   comparável. Escolhida a lusofonia ou a imprensa internacional, os restantes
+   quadros passam a contar OUTRO universo, e mostrar por cima deles picos
+   medidos no universo português seria cruzar réguas: uma trajetória de
+   notícias brasileiras com losangos que assinalam dias portugueses. Por isso,
+   nessas origens, os picos calam-se e o painel diz porquê. */
+function picosAplicaveis(){
+  return origem === "todas" || origem === "nacionais";
+}
+
 /* Em que períodos esta área teve pico, na grelha do gráfico. */
 function picosDaArea(nome, chaves){
+  if(!picosAplicaveis()) return [];
   if(!TEMPESTADES.length) return [];
   const comPico = new Set(TEMPESTADES.filter(t => t.area === nome)
     .map(t => chaveDoPeriodo(t.data)));
@@ -1726,7 +1738,13 @@ function textoAtributo(s){
 
 function blocoMatrizTom(linhas, pares, areas){
   if(!SENTIMENTO.length || !linhas.length) return "";
-  if(origem === "lusofonas" || origem === "internacionais") return "";
+  if(origem === "lusofonas" || origem === "internacionais")
+    return `<div class="bloco">
+      <h2>Tom por área e período</h2>
+      <p class="nota">O tom é avaliado apenas na <strong>comunicação social
+        nacional</strong>, enquanto decorre a validação humana. Para o ver,
+        escolha <em>Portugal</em> ou <em>todas</em> no seletor de origem.</p>
+    </div>`;
   const tons = tomPorAreaPeriodo(linhas);
   if(!Object.keys(tons).length) return "";
 
@@ -2014,7 +2032,7 @@ function blocoComparacao(linhas, pares){
 
   /* Picos registados de cada área no período — a comparação de intensidade que
      o gráfico sozinho não dá. */
-  const picos = nomes.map(n => TEMPESTADES.filter(t => t.area === n &&
+  const picos = nomes.map(n => !picosAplicaveis() ? [] : TEMPESTADES.filter(t => t.area === n &&
     t.data >= primeiro && t.data <= ultimo).length);
 
   /* Os ASSUNTOS de cada área no período, das palavras-chave que trouxeram as
@@ -2472,6 +2490,14 @@ function blocoPesoPublicacoes(linhas){
    alertas para mostrar, e a série de alertas começa quando o método começou. */
 function blocoTempestades(linhas){
   if(!TEMPESTADES.length || !linhas.length) return "";
+  if(!picosAplicaveis())
+    return `<div class="bloco">
+      <h2>Picos noticiosos</h2>
+      <p class="nota">Os picos são calculados sobre a cobertura da
+        <strong>comunicação social nacional</strong>, que é o universo em que o
+        volume por área tem uma linha de base comparável. Para os ver, escolha
+        <em>Portugal</em> ou <em>todas</em> no seletor de origem.</p>
+    </div>`;
   const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
   const dentro = TEMPESTADES.filter(t =>
     t.data >= primeiro && t.data <= ultimo &&
@@ -2672,7 +2698,13 @@ function blocoTempestades(linhas){
    comunicação social nacional é avaliada. */
 function blocoSentimento(linhas){
   if(!SENTIMENTO.length || !linhas.length) return "";
-  if(origem === "lusofonas" || origem === "internacionais") return "";
+  if(origem === "lusofonas" || origem === "internacionais")
+    return `<div class="bloco">
+      <h2>Sentimento da cobertura</h2>
+      <p class="nota">O tom é avaliado apenas na <strong>comunicação social
+        nacional</strong>, enquanto decorre a validação humana. Para o ver,
+        escolha <em>Portugal</em> ou <em>todas</em> no seletor de origem.</p>
+    </div>`;
   const primeiro = linhas[0].data, ultimo = linhas[linhas.length - 1].data;
   /* Segue a agregação escolhida, como o volume: por dia, por semana ou por
      mês. E respeita o período em foco seja ele qual for — antes só reagia ao
@@ -3117,9 +3149,12 @@ function desenhar(){
         trajetória.${diaEscolhido ? ` O ponto assinala ${descreverPeriodo(diaEscolhido)}, e o
         número mostra quanto esse período se afasta da média da área no intervalo.` : ""}</p>
       <p class="nota">A trajetória mostra <strong>volume</strong>: é a leitura de quem
-        procura onde a atenção subiu ou desceu. Os <strong>losangos vermelhos</strong>
-        assinalam os dias em que a área teve um pico noticioso — vê-se assim a forma que
-        cada pico fez na história da área, e o quadro seguinte diz o que o motivou.
+        procura onde a atenção subiu ou desceu. ${picosAplicaveis()
+        ? `Os <strong>losangos vermelhos</strong> assinalam os dias em que a área teve um
+           pico noticioso — vê-se assim a forma que cada pico fez na história da área, e o
+           quadro seguinte diz o que o motivou.`
+        : `Nesta origem não se assinalam picos: são calculados sobre a cobertura nacional,
+           e marcá-los aqui misturaria dois universos de contagem.`}
         <strong>Cada cartão tem a sua própria escala</strong> — do menor ao maior valor
         dessa área, indicados à esquerda —, pelo que as alturas <em>não</em> se comparam
         entre cartões: uma subida numa área pequena pode parecer maior do que uma numa
