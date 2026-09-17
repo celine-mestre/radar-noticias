@@ -285,7 +285,15 @@ jobs:
           username: ${{ secrets.SMTP_UTILIZADOR }}
           password: ${{ secrets.SMTP_SENHA }}
           subject: ${{ matrix.envio.assunto }}
-          to: ${{ steps.dest.outputs.para }}
+          # DESTINATARIOS EM CÓPIA OCULTA. Os subscritores de uma área são
+          # pessoas diferentes, de gabinetes diferentes, e não têm de saber
+          # quem mais recebe o relatório — nem os seus endereços devem circular
+          # entre elas. Com todos no campo «Para», cada mensagem divulgava a
+          # lista inteira a cada destinatário. O campo «Para» passa a ser o
+          # endereço da unidade, que é público e institucional, e os
+          # subscritores seguem em Bcc, invisíveis uns aos outros.
+          to: ${{ secrets.RESPONDER_A || 'upe@sggoverno.gov.pt' }}
+          bcc: ${{ steps.dest.outputs.para }}
           # NOME E RESPOSTA INSTITUCIONAIS. Enquanto o envio correr por uma
           # caixa pessoal — o endereco da unidade exige autorizacao do tenant
           # da Secretaria-Geral —, o destinatario nao deve ver nem usar essa
