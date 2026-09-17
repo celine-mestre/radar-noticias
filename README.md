@@ -6,7 +6,7 @@ do XXV Governo Constitucional.
 **Secretaria-Geral do Governo** · Direção de Serviços de Suporte à Decisão ·
 Unidade de Pesquisa e Estatísticas
 
-👉 **[Abrir o painel](https://celine-mestre.github.io/radar-noticias/)**
+👉 **[Abrir o painel](https://upe-sggov.github.io/radar-noticias/)**
 
 ---
 
@@ -599,7 +599,7 @@ página da execução.
 ```bash
 python relatorio_email.py --dados arquivo.json --area "Saúde" --periodo 24h
 python relatorio_email.py --dados arquivo.json --todas --um-por-area \
-    --painel "https://celine-mestre.github.io/radar-noticias/"
+    --painel "https://upe-sggov.github.io/radar-noticias/"
 ```
 
 ---
