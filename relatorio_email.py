@@ -555,6 +555,7 @@ def construir(dados, areas, periodo, origens, endereco_painel="", sinteses=None,
   <tr><td style="padding:18px 24px;background:{CINZA_TEXTO}">
     <div style="font:400 11px Arial,sans-serif;color:#ffffff;opacity:.85;line-height:1.6">
       Direção de Serviços de Suporte à Decisão · Unidade de Pesquisa e Estatísticas<br>
+      Dúvidas, subscrições e cancelamentos: upe@sggoverno.gov.pt<br>
       Recolha automática a partir dos feeds das publicações subscritas.
       A leitura e a verificação são de quem recebe.
     </div>
@@ -688,6 +689,7 @@ def versao_texto(dados, areas, periodo, origens, painel, sinteses=None):
     linhas += ["--",
                "Direção de Serviços de Suporte à Decisão",
                "Unidade de Pesquisa e Estatísticas",
+               "Dúvidas, subscrições e cancelamentos: upe@sggoverno.gov.pt",
                "Recolha automática a partir dos feeds das publicações subscritas."]
     return "\n".join(linhas)
 
