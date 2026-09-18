@@ -1,101 +1,40 @@
 {
- "atualizado": "2026-09-17 22:19",
- "dia": "2026-09-17",
- "corte": "22:19",
- "dias_base": 28,
- "regra": "Tempestade quando a contagem do dia, até às 22:19, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "atualizado": "2026-09-18 01:02",
+ "dia": "2026-09-18",
+ "corte": "01:02",
+ "dias_base": 27,
+ "regra": "Tempestade quando a contagem do dia, até às 01:02, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "transicao_fontes": null,
- "tempestades": [
-  {
-   "area": "Finanças",
-   "hoje": 87,
-   "mediana": 30.5,
-   "limiar": 64.6,
-   "excesso": 56.5,
-   "variacao_pct": 185,
-   "dias_base": 28,
-   "tempestade": true
-  },
+ "tempestades": [],
+ "momentum": [
   {
    "area": "Primeiro-Ministro",
-   "hoje": 65,
-   "mediana": 12.0,
-   "limiar": 32.8,
-   "excesso": 53.0,
-   "variacao_pct": 442,
-   "dias_base": 28,
-   "tempestade": true
+   "hoje": 3,
+   "mediana": 1,
+   "limiar": 9,
+   "excesso": 2,
+   "variacao_pct": 200,
+   "dias_base": 27,
+   "tempestade": false
+  },
+  {
+   "area": "Trabalho, Solidariedade e Segurança Social",
+   "hoje": 2,
+   "mediana": 1,
+   "limiar": 9,
+   "excesso": 1,
+   "variacao_pct": 100,
+   "dias_base": 27,
+   "tempestade": false
   },
   {
    "area": "Reforma do Estado",
-   "hoje": 37,
-   "mediana": 16.5,
-   "limiar": 31.3,
-   "excesso": 20.5,
-   "variacao_pct": 124,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
-   "area": "Negócios Estrangeiros",
-   "hoje": 50,
-   "mediana": 30.0,
-   "limiar": 47.8,
-   "excesso": 20.0,
-   "variacao_pct": 67,
-   "dias_base": 28,
-   "tempestade": true
-  }
- ],
- "momentum": [
-  {
-   "area": "Finanças",
-   "hoje": 87,
-   "mediana": 30.5,
-   "limiar": 64.6,
-   "excesso": 56.5,
-   "variacao_pct": 185,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
-   "area": "Primeiro-Ministro",
-   "hoje": 65,
-   "mediana": 12.0,
-   "limiar": 32.8,
-   "excesso": 53.0,
-   "variacao_pct": 442,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
-   "area": "Administração Interna",
-   "hoje": 81,
-   "mediana": 53.5,
-   "limiar": 95.0,
-   "excesso": 27.5,
-   "variacao_pct": 51,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Educação, Ciência e Inovação",
-   "hoje": 103,
-   "mediana": 79.5,
-   "limiar": 171.4,
-   "excesso": 23.5,
-   "variacao_pct": 30,
-   "dias_base": 28,
-   "tempestade": false
-  },
-  {
-   "area": "Assuntos Parlamentares",
-   "hoje": 34,
-   "mediana": 12.0,
-   "limiar": 43.1,
-   "excesso": 22.0,
-   "variacao_pct": 183,
-   "dias_base": 28,
+   "hoje": 1,
+   "mediana": 0,
+   "limiar": 8,
+   "excesso": 1,
+   "variacao_pct": null,
+   "dias_base": 27,
    "tempestade": false
   }
  ],
