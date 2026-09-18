@@ -1,80 +1,80 @@
 {
- "atualizado": "2026-09-18 09:13",
+ "atualizado": "2026-09-18 12:07",
  "dia": "2026-09-18",
- "corte": "09:13",
+ "corte": "12:07",
  "dias_base": 28,
- "regra": "Tempestade quando a contagem do dia, até às 09:13, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 12:07, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "transicao_fontes": null,
  "tempestades": [
   {
-   "area": "Primeiro-Ministro",
-   "hoje": 21,
-   "mediana": 3.5,
-   "limiar": 11.5,
-   "excesso": 17.5,
-   "variacao_pct": 500,
+   "area": "Finanças",
+   "hoje": 37,
+   "mediana": 12.5,
+   "limiar": 30.3,
+   "excesso": 24.5,
+   "variacao_pct": 196,
    "dias_base": 28,
    "tempestade": true
   },
   {
-   "area": "Finanças",
-   "hoje": 19,
-   "mediana": 6.0,
-   "limiar": 14.9,
-   "excesso": 13.0,
-   "variacao_pct": 217,
+   "area": "Primeiro-Ministro",
+   "hoje": 24,
+   "mediana": 5.5,
+   "limiar": 13.5,
+   "excesso": 18.5,
+   "variacao_pct": 336,
    "dias_base": 28,
    "tempestade": true
   }
  ],
  "momentum": [
   {
-   "area": "Primeiro-Ministro",
-   "hoje": 21,
-   "mediana": 3.5,
-   "limiar": 11.5,
-   "excesso": 17.5,
-   "variacao_pct": 500,
-   "dias_base": 28,
-   "tempestade": true
-  },
-  {
    "area": "Finanças",
-   "hoje": 19,
-   "mediana": 6.0,
-   "limiar": 14.9,
-   "excesso": 13.0,
-   "variacao_pct": 217,
+   "hoje": 37,
+   "mediana": 12.5,
+   "limiar": 30.3,
+   "excesso": 24.5,
+   "variacao_pct": 196,
    "dias_base": 28,
    "tempestade": true
   },
   {
-   "area": "Negócios Estrangeiros",
-   "hoje": 11,
-   "mediana": 5.0,
-   "limiar": 13.0,
-   "excesso": 6.0,
-   "variacao_pct": 120,
+   "area": "Primeiro-Ministro",
+   "hoje": 24,
+   "mediana": 5.5,
+   "limiar": 13.5,
+   "excesso": 18.5,
+   "variacao_pct": 336,
    "dias_base": 28,
-   "tempestade": false
+   "tempestade": true
   },
   {
    "area": "Infraestruturas e Habitação",
-   "hoje": 11,
-   "mediana": 6.0,
-   "limiar": 14.0,
-   "excesso": 5.0,
-   "variacao_pct": 83,
+   "hoje": 21,
+   "mediana": 12.5,
+   "limiar": 25.8,
+   "excesso": 8.5,
+   "variacao_pct": 68,
    "dias_base": 28,
    "tempestade": false
   },
   {
-   "area": "Defesa Nacional",
-   "hoje": 19,
-   "mediana": 15.0,
-   "limiar": 32.8,
-   "excesso": 4.0,
-   "variacao_pct": 27,
+   "area": "Economia e Coesão Territorial",
+   "hoje": 30,
+   "mediana": 25.5,
+   "limiar": 55.2,
+   "excesso": 4.5,
+   "variacao_pct": 18,
+   "dias_base": 28,
+   "tempestade": false
+  },
+  {
+   "area": "Negócios Estrangeiros",
+   "hoje": 16,
+   "mediana": 11.5,
+   "limiar": 21.9,
+   "excesso": 4.5,
+   "variacao_pct": 39,
    "dias_base": 28,
    "tempestade": false
   }
@@ -937,16 +937,16 @@
   {
    "data": "2026-09-18",
    "area": "Finanças",
-   "hoje": 19,
-   "mediana": 6.0,
-   "limiar": 14.9
+   "hoje": 37,
+   "mediana": 12.5,
+   "limiar": 30.3
   },
   {
    "data": "2026-09-18",
    "area": "Primeiro-Ministro",
-   "hoje": 21,
-   "mediana": 3.5,
-   "limiar": 11.5
+   "hoje": 24,
+   "mediana": 5.5,
+   "limiar": 13.5
   }
  ]
 }
