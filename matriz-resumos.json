@@ -1,5 +1,5 @@
 {
- "gerado": "2026-09-17 22:49",
+ "gerado": "2026-09-18 09:43",
  "modelo": "amalia-llm/AMALIA-9B-0626-DPO",
  "limiar": 75,
  "limiar_positivo": 50,
@@ -346,16 +346,28 @@
    "pct": 76,
    "lado": "negativas"
   },
-  "2026-09-17|Justiça": {
-   "texto": "No dia 17 de setembro de 2026, registaram-se múltiplos acontecimentos de natureza judicial e de segurança pública. Destacam-se a prisão preventiva de três suspeitos de um tiroteio na Baixa de Lisboa que feriu uma turista sueca, bem como de uma mulher que ateou fogo ao marido na Madeira. Paralelamente, verificou-se a prisão preventiva de um homem por esfaqueamento da companheira em Lisboa, de uma suspeita de fogo posto e de um suspeito de roubos com arma branca. Adicionalmente, houve detenções de um homem procurado pela Interpol e de um suspeito de violência doméstica. Relativamente à esfera administrativa, o antigo ministro Mário Lino reafirmou, em tribunal, ter sido ele a antecipar o concurso do TGV, contrariando o Ministério Público.",
-   "n": 46,
-   "pct": 76,
-   "lado": "negativas"
-  },
   "2026-09-17|Presidência|+": {
    "texto": "No dia 17 de setembro de 2026, o Governo aprovou medidas de alívio ao custo de vida, nomeadamente no âmbito fiscal e energético. Foram confirmadas a descida das taxas de IRS entre 0,3 e 0,5 pontos até ao 6.º escalão, o pagamento de um suplemento extraordinário a pensionistas pelo terceiro ano consecutivo e a extensão do apoio de 10 cêntimos por litro de gasóleo profissional até ao fim do ano. Adicionalmente, o Primeiro-Ministro comprometeu-se com a concretização de um superávite orçamental no final do ano, enquanto se preparava para informar o país sobre as medidas fiscais e os apoios aos combustíveis. O tema dominante é o alívio económico aos cidadãos e empresas, através de medidas fiscais e de apoio direto.",
    "n": 14,
    "pct": 56,
+   "lado": "positivas"
+  },
+  "2026-09-17|Justiça": {
+   "texto": "No dia 17 de setembro de 2026, registaram-se múltiplos acontecimentos de natureza judicial e de segurança pública na área da Justiça. Destacam-se a aplicação de prisão preventiva a indivíduos por crimes violentos, incluindo agressões a passageiros, ferimentos graves em turistas e homicídio tentado, bem como casos de incêndio doloso e violência doméstica. Adicionalmente, verificaram-se reações judiciais a alegações de práticas ilegais, como a utilização de escutas ilegais, e a controvérsia em torno de decisões administrativas e concursos públicos, nomeadamente a antecipação do concurso do TGV. O tema dominante é a aplicação da lei penal e a resposta institucional a crimes graves e irregularidades administrativas.",
+   "n": 49,
+   "pct": 75,
+   "lado": "negativas"
+  },
+  "2026-09-18|Finanças|+": {
+   "texto": "O Conselho de Ministros aprovou uma redução no IRS, abrangendo os escalões até ao sexto, e medidas de apoio financeiro a pensionistas. Adicionalmente, foi noticiado um acordo para levar à União Europeia, em conjunto com outros cinco países, uma proposta de imposto sobre lucros extraordinários de petrolíferas. O tema dominante é a política fiscal, com destaque para a diminuição do IRS e medidas de alívio para rendimentos de pensões, bem como a contestação de benefícios fiscais para empresas do setor energético.",
+   "n": 11,
+   "pct": 65,
+   "lado": "positivas"
+  },
+  "2026-09-18|Negócios Estrangeiros|+": {
+   "texto": "No dia 18 de setembro de 2026, a comunidade imigrante peruana na região de Tulare, nos Estados Unidos, manifestou o seu apoio aos Açores através de uma declaração de sentido de pertença. Paralelamente, o Peru solicitou à Rússia informações sobre cidadãos peruanos alegadamente recrutados para a guerra, num contexto de preocupação diplomática. A China e os Estados Unidos mantiveram conversações sobre a estabilidade nas relações bilaterais, com a perspetiva de uma visita do Presidente chinês, tendo sido referida a necessidade de diálogo construtivo e estratégico. A Assembleia Geral das Nações Unidas aprovou a participação da Palestina por videoconferência, permitindo a sua representação num fórum internacional. A União Europeia estabeleceu uma aliança estratégica com o Canadá, reforçando a cooperação em áreas de interesse comum.",
+   "n": 6,
+   "pct": 55,
    "lado": "positivas"
   }
  }
