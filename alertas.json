@@ -1,29 +1,40 @@
 {
- "atualizado": "2026-09-19 11:52",
+ "atualizado": "2026-09-19 16:51",
  "dia": "2026-09-19",
- "corte": "11:52",
+ "corte": "16:51",
  "dias_base": 28,
- "regra": "Tempestade quando a contagem do dia, até às 11:52, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
+ "regra": "Tempestade quando a contagem do dia, até às 16:51, excede a mediana dos últimos 28 dias à mesma hora em máx(2 desvios robustos, 8 notícias) e atinge pelo menos 12 notícias; sem alertas com menos de 7 dias de série, contada desde 2026-08-04 (método de recolha atual).",
  "transicao_fontes": null,
- "tempestades": [],
+ "tempestades": [
+  {
+   "area": "Primeiro-Ministro",
+   "hoje": 31,
+   "mediana": 8.0,
+   "limiar": 16.9,
+   "excesso": 23.0,
+   "variacao_pct": 288,
+   "dias_base": 28,
+   "tempestade": true
+  }
+ ],
  "momentum": [
   {
    "area": "Primeiro-Ministro",
-   "hoje": 13,
-   "mediana": 5.5,
-   "limiar": 13.5,
-   "excesso": 7.5,
-   "variacao_pct": 136,
+   "hoje": 31,
+   "mediana": 8.0,
+   "limiar": 16.9,
+   "excesso": 23.0,
+   "variacao_pct": 288,
    "dias_base": 28,
-   "tempestade": false
+   "tempestade": true
   },
   {
    "area": "Negócios Estrangeiros",
-   "hoje": 17,
-   "mediana": 11.5,
-   "limiar": 21.9,
-   "excesso": 5.5,
-   "variacao_pct": 48,
+   "hoje": 31,
+   "mediana": 22.5,
+   "limiar": 38.8,
+   "excesso": 8.5,
+   "variacao_pct": 38,
    "dias_base": 28,
    "tempestade": false
   }
@@ -896,6 +907,13 @@
    "hoje": 72,
    "mediana": 31.0,
    "limiar": 68.1
+  },
+  {
+   "data": "2026-09-19",
+   "area": "Primeiro-Ministro",
+   "hoje": 31,
+   "mediana": 8.0,
+   "limiar": 16.9
   }
  ]
 }
